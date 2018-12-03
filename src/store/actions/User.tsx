@@ -1,26 +1,69 @@
+import axios from '../../config/axios'
+
 import * as constants from '../constants'
 import { User } from '../types'
 
-export interface SetUserData { 
-  type: constants.SET_USER_DATA,
+export interface FetchUser {
+  (dispatch: any): void
+}
+
+export interface FetchUserBegin { 
+  type: constants.FETCH_USER_BEGIN,
+}
+
+export interface FetchUserSuccess { 
+  type: constants.FETCH_USER_SUCCESS,
   data: User,
 }
 
-export interface ClearUserData {
-  type: constants.CLEAR_USER_DATA
+export interface FetchUserFailure { 
+  type: constants.FETCH_USER_FAILURE,
+  error: string,
 }
 
-export type UserDataAction = SetUserData | ClearUserData
+export interface ClearUserData {
+  type: constants.CLEAR_USER_DATA,
+}
 
-export function setUserData (payload: User): SetUserData {
+export type UserDataAction = FetchUserBegin | FetchUserSuccess | FetchUserFailure | ClearUserData
+
+const fetchUserBegin = (): FetchUserBegin => {
   return {
-    type: constants.SET_USER_DATA,
-    data: {name: payload.name},
+    type: constants.FETCH_USER_BEGIN,
   }
 }
 
-export function clearUserData (): ClearUserData {
+const fetchUserSuccess = (payload: User): FetchUserSuccess => {
   return {
-    type: constants.CLEAR_USER_DATA
+    type: constants.FETCH_USER_SUCCESS,
+    data: payload,
+  }
+}
+
+const fetchUserFailure = (error: string): FetchUserFailure => {
+  return {
+    type: constants.FETCH_USER_FAILURE,
+    error,
+  }
+}
+
+export const fetchUser = () => {
+  return (dispatch: React.Dispatch<UserDataAction>) => {
+    
+    dispatch(fetchUserBegin())
+
+    axios.get('users/me')
+      .then(res => {
+        dispatch(fetchUserSuccess(res.data))
+      })
+      .catch(e => {
+        dispatch(fetchUserFailure(e.message))
+      })
+  }
+}
+
+export const clearUserData = (): ClearUserData => {
+  return {
+    type: constants.CLEAR_USER_DATA,
   }
 }

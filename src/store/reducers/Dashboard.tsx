@@ -1,5 +1,5 @@
 import { Dashboard } from '../types'
-import { DashboardDataAction } from '../actions'
+import { DashboardDataAction } from '../actions/Dashboard'
 import { 
   FETCH_DASHBOARD_BEGIN, 
   FETCH_DASHBOARD_SUCCESS, 

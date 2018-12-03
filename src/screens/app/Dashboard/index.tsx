@@ -3,30 +3,36 @@ import { connect } from 'react-redux'
 
 import Header from '../../../components/Header'
 
-import * as actions from '../../../store/actions'
+import * as userActions from '../../../store/actions/User'
+import * as dashboardActions from '../../../store/actions/Dashboard'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
+  user: {}
   dashboard: {}
+  fetchUser: () => void
   fetchDashboard: () => void
 }
 
-export function mapStateToProps ({ dashboard }: State) {
+export function mapStateToProps ({ user, dashboard }: State) {
   return {
+    user,
     dashboard,
   }
 }
 
 // TODO: Figure out why removing "any" type is throwing error
-export function mapDispatchToProps (dispatch: React.Dispatch<actions.FetchDashboard | any>) {
+export function mapDispatchToProps (dispatch: React.Dispatch<userActions.FetchUser | dashboardActions.FetchDashboard | any>) {
   return {
-    fetchDashboard: () => dispatch(actions.fetchDashboard()),
+    fetchUser: () => dispatch(userActions.fetchUser()),
+    fetchDashboard: () => dispatch(dashboardActions.fetchDashboard()),
   }
 }
 
 class Dashboard extends React.Component<Props> {
   
   componentDidMount () {
+    this.props.fetchUser()
     this.props.fetchDashboard()
   }
 
@@ -35,6 +41,7 @@ class Dashboard extends React.Component<Props> {
       <section className="section--wrapper">
         <Header title={"Dashboard"} />
         <div className="section__content">
+          User data: {JSON.stringify(this.props.user)}
           Dashboard data: { JSON.stringify(this.props.dashboard) }
         </div>
       </section>

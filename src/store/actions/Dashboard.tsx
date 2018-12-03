@@ -45,7 +45,7 @@ const fetchDashboardFailure = (error: string): FetchDashboardFailure => {
 
 export const fetchDashboard = (): FetchDashboard => {
   return (dispatch: React.Dispatch<DashboardDataAction>) => {
-    console.log('hello')
+    
     dispatch(fetchDashboardBegin())
 
     axios.get('dashboard')
