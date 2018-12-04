@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 
 import Header from '../../../components/Header'
 import Spinner from '../../../components/Spinner'
+import Button from '../../../components/ui/Button'
 
 import * as dashboardActions from '../../../store/actions/Dashboard'
 import * as types from '../../../store/types'
@@ -11,6 +12,9 @@ import { State } from '../../../store/reducers/index'
 type Props = {
   dashboard: {
     dashboard: types.Dashboard
+  }
+  user: {
+    user: types.User
   }
   booksMap: {
     booksMap: types.BooksMap
@@ -21,9 +25,10 @@ type Props = {
   fetchDashboard: () => void
 }
 
-export const mapStateToProps = ({ dashboard, booksMap, modulesMap }: State) => {
+export const mapStateToProps = ({ dashboard, user, booksMap, modulesMap }: State) => {
   return {
     dashboard,
+    user,
     booksMap,
     modulesMap,
   }
@@ -35,8 +40,9 @@ export const mapDispatchToProps = (dispatch: dashboardActions.FetchDashboard) =>
   }
 }
 
-class Dashboard extends React.Component<Props, any, any> {
+class Dashboard extends React.Component<Props> {
 
+  private user = this.props.user.user
   private booksMap = this.props.booksMap.booksMap
   private modulesMap = this.props.modulesMap.modulesMap
   
@@ -44,7 +50,19 @@ class Dashboard extends React.Component<Props, any, any> {
   private drafts = this.props.dashboard.dashboard.drafts
   private assigned = this.props.dashboard.dashboard.assigned
 
-  listOfDrafts (arr: types.DashboardDraft[]) {
+  private goToDraft (id: string) {
+    console.log('goToDraft', id)
+  }
+
+  private deleteDraft (id: string) {
+    console.log('deleteDraft', id)
+  }
+
+  private createDraft (moduleId: string) {
+    console.log('createDraft', moduleId)
+  }
+
+  private listOfDrafts (arr: types.DashboardDraft[]) {
     if (arr.length > 0) {
       return (
         <ul className="list list--drafts">
@@ -53,7 +71,27 @@ class Dashboard extends React.Component<Props, any, any> {
               const currModule = this.modulesMap.get(draftId)
               const title = currModule ? currModule.title : 'undefined'
 
-              return <li key={draftId} className="list__item">{title}</li>
+              return <li key={draftId} className="list__item">
+                  <span className="list__title">
+                    {title}
+                  </span>
+                  <span className="list__buttons">
+                    <Button 
+                      color="green" 
+                      size="small" 
+                      clickHandler={() => this.goToDraft(draftId)}
+                    >
+                      View changes
+                    </Button>
+                    <Button 
+                      color="red" 
+                      size="small" 
+                      clickHandler={() => this.deleteDraft(draftId)}
+                    >
+                      Delete
+                    </Button>
+                  </span>
+                </li>
             })
           }
         </ul>
@@ -63,7 +101,7 @@ class Dashboard extends React.Component<Props, any, any> {
     }
   }
 
-  listOfAssigned (arr: types.DashboardAssignedModule[]) {
+  private listOfAssigned (arr: types.DashboardAssignedModule[]) {
     console.log('listOfAssigned')
     if (arr.length > 0) {
       return (
@@ -72,8 +110,36 @@ class Dashboard extends React.Component<Props, any, any> {
             arr.map(el => {
               const currModule = this.modulesMap.get(el.id)
               const title = currModule ? currModule.title : 'undefined'
+              
+              let isUserAssigned = false
+              if (currModule && currModule.assignee === this.user.id) {
+                isUserAssigned = true
+              }
 
-              return <li key={el.id} className="list__item">{title}</li>
+              return <li key={el.id} className="list__item">
+                  <span className="list__title">
+                    {title}
+                  </span>
+                  <span className="list__buttons">
+                    {
+                      isUserAssigned ?
+                        <Button 
+                          size="small" 
+                          clickHandler={() => this.goToDraft(el.id)}
+                        >
+                          View draft
+                        </Button>
+                      :
+                        <Button 
+                          color="green" 
+                          size="small" 
+                          clickHandler={() => this.createDraft(el.id)}
+                        >
+                          New draft
+                        </Button>
+                    }
+                  </span>
+                </li>
             })
           }
         </ul>
