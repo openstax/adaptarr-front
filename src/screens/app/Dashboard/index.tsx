@@ -21,8 +21,7 @@ export function mapStateToProps ({ user, dashboard }: State) {
   }
 }
 
-// TODO: Figure out why removing "any" type is throwing error
-export function mapDispatchToProps (dispatch: React.Dispatch<userActions.FetchUser | dashboardActions.FetchDashboard | any>) {
+export function mapDispatchToProps (dispatch: userActions.FetchUser | dashboardActions.FetchDashboard) {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchDashboard: () => dispatch(dashboardActions.fetchDashboard()),
