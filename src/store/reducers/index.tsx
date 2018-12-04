@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import * as fromDashboard from './Dashboard'
 import * as fromUser from './User'
+import * as fromNotifications from './Notifications'
 
 /*
  * This is the root state of the app
@@ -10,6 +11,7 @@ import * as fromUser from './User'
 export interface State {
   dashboard: fromDashboard.State
   user: fromUser.State
+  notifications: fromNotifications.State
 }
 
 /*
@@ -18,6 +20,7 @@ export interface State {
 export const initialState: State = {
   dashboard: fromDashboard.initialState,
   user: fromUser.initialState,
+  notifications: fromNotifications.initialState,
 }
 
 /*
@@ -27,4 +30,5 @@ export const initialState: State = {
 export const reducer = combineReducers<State>({
   dashboard: fromDashboard.reducer,
   user: fromUser.reducer,
+  notifications: fromNotifications.reducer,
 })
