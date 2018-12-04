@@ -14,7 +14,6 @@ export interface State {
 export const initialState: State = {
   dashboard: {
     isLoading: false,
-    books: [],
     assigned: [],
     drafts: [],
   }

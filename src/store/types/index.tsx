@@ -12,11 +12,12 @@ export type DashboardAssignedModule = {id: string, title: string, book: string}
 
 export type DashboardBook = {id: string, title: string}
 
+export type DashboardDraft = {id: string, title: string}
+
 export interface Dashboard {
   isLoading: boolean
-  books: DashboardBook[]
   assigned: DashboardAssignedModule[]
-  drafts: string[]
+  drafts: DashboardDraft[]
   error?: string
 }
 
