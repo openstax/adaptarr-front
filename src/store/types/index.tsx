@@ -8,10 +8,14 @@ export interface User {
   error?: string 
 }
 
+export type DashboardAssignedModule = {id: string, title: string, book: string}
+
+export type DashboardBook = {id: string, title: string}
+
 export interface Dashboard {
   isLoading: boolean
-  books: {id: string, title: string}[]
-  assigned: {id: string, title: string, book: string}[]
+  books: DashboardBook[]
+  assigned: DashboardAssignedModule[]
   drafts: string[]
   error?: string
 }
