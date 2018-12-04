@@ -21,7 +21,7 @@ export type ModulesMap = Map<string, ModuleShortInfo>
 
 export type DashboardAssignedModule = {id: string, title: string, book: string}
 export type DashboardBook = {id: string, title: string}
-export type DashboardDraft = {id: string, title: string}
+export type DashboardDraft = string //{id: string, title: string}
 export interface Dashboard {
   isLoading: boolean
   assigned: DashboardAssignedModule[]
