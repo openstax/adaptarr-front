@@ -3,27 +3,22 @@ import { connect } from 'react-redux'
 
 import Header from '../../../components/Header'
 
-import * as userActions from '../../../store/actions/User'
 import * as dashboardActions from '../../../store/actions/Dashboard'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
-  user: {}
   dashboard: {}
-  fetchUser: () => void
   fetchDashboard: () => void
 }
 
-export function mapStateToProps ({ user, dashboard }: State) {
+export const mapStateToProps = ({ dashboard }: State) => {
   return {
-    user,
     dashboard,
   }
 }
 
-export function mapDispatchToProps (dispatch: userActions.FetchUser | dashboardActions.FetchDashboard) {
+export const mapDispatchToProps = (dispatch: dashboardActions.FetchDashboard) => {
   return {
-    fetchUser: () => dispatch(userActions.fetchUser()),
     fetchDashboard: () => dispatch(dashboardActions.fetchDashboard()),
   }
 }
@@ -31,7 +26,6 @@ export function mapDispatchToProps (dispatch: userActions.FetchUser | dashboardA
 class Dashboard extends React.Component<Props> {
   
   componentDidMount () {
-    this.props.fetchUser()
     this.props.fetchDashboard()
   }
 
@@ -40,7 +34,6 @@ class Dashboard extends React.Component<Props> {
       <section className="section--wrapper">
         <Header title={"Dashboard"} />
         <div className="section__content">
-          User data: {JSON.stringify(this.props.user)}
           Dashboard data: { JSON.stringify(this.props.dashboard) }
         </div>
       </section>

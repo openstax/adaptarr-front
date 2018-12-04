@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import Navigation from './components/Navigation'
 
@@ -10,9 +11,34 @@ import Book from './screens/app/Book'
 import Resources from './screens/app/Resources'
 import Settings from './screens/app/Settings'
 
+import * as userActions from './store/actions/User'
+import { State } from './store/reducers/index'
+
 import './assets/styles/shared.css'
 
-class App extends React.Component {
+type Props = {
+  user: {}
+  fetchUser: () => void
+}
+
+export const mapStateToProps = ({ user }: State) => {
+  return {
+    user,
+  }
+}
+
+export const mapDispatchToProps = (dispatch: userActions.FetchUser) => {
+  return {
+    fetchUser: () => dispatch(userActions.fetchUser()),
+  }
+}
+
+class App extends React.Component<Props> {
+
+  componentDidMount () {
+    this.props.fetchUser()
+  }
+
   public render() {
     return (
       <Router>
@@ -32,4 +58,4 @@ class App extends React.Component {
   }
 }
 
-export default App
+export default connect(mapStateToProps, mapDispatchToProps)(App)
