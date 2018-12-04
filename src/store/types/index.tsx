@@ -8,12 +8,20 @@ export interface User {
   error?: string 
 }
 
+
+
+export type BookShortInfo = {id: string, title: string}
+export type BooksMap = Map<string, BookShortInfo>
+
+
+export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number}
+export type ModulesMap = Map<string, ModuleShortInfo>
+
+
+
 export type DashboardAssignedModule = {id: string, title: string, book: string}
-
 export type DashboardBook = {id: string, title: string}
-
 export type DashboardDraft = {id: string, title: string}
-
 export interface Dashboard {
   isLoading: boolean
   assigned: DashboardAssignedModule[]
@@ -21,10 +29,10 @@ export interface Dashboard {
   error?: string
 }
 
+
+
 export type NotificationStatus = 'unread' | 'read'
-
 export type NotificationKind = 'comment' | 'mention' | 'assigned'
-
 export type Notification = {
   user: number
   status: NotificationStatus
@@ -34,7 +42,6 @@ export type Notification = {
   module?: string
   conversation?: string
 }
-
 export interface Notifications {
   isLoading: boolean
   notifications: Notification[]

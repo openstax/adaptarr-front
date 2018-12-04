@@ -12,6 +12,16 @@ export type CLEAR_USER_DATA = typeof CLEAR_USER_DATA
 
 
 
+export const SET_BOOKS_MAP = 'SET_BOOKS_MAP'
+export type SET_BOOKS_MAP = typeof SET_BOOKS_MAP
+
+
+
+export const SET_MODULES_MAP = 'SET_MODULES_MAP'
+export type SET_MODULES_MAP = typeof SET_MODULES_MAP
+
+
+
 export const FETCH_DASHBOARD_BEGIN = 'FETCH_DASHBOARD_BEGIN'
 export type FETCH_DASHBOARD_BEGIN = typeof FETCH_DASHBOARD_BEGIN
 
