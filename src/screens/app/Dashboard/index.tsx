@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import Header from '../../../components/Header'
-import Loader from '../../../components/Loader'
+import Spinner from '../../../components/Spinner'
 
 import * as dashboardActions from '../../../store/actions/Dashboard'
 import * as types from '../../../store/types'
@@ -52,7 +52,7 @@ class Dashboard extends React.Component<Props, any, any> {
             arr.map(draftId => {
               const currModule = this.modulesMap.get(draftId)
               const title = currModule ? currModule.title : 'undefined'
-              
+
               return <li key={draftId} className="list__item">{title}</li>
             })
           }
@@ -64,6 +64,7 @@ class Dashboard extends React.Component<Props, any, any> {
   }
 
   listOfAssigned (arr: types.DashboardAssignedModule[]) {
+    console.log('listOfAssigned')
     if (arr.length > 0) {
       return (
         <ul className="list list--assigned">
@@ -89,23 +90,26 @@ class Dashboard extends React.Component<Props, any, any> {
   public render() {
     return (
       <section className="section--wrapper">
-        <Header title={"Dashboard"} />
-        <div className="section__content">
-          <Loader isLoading={this.isLoading}>
-            <div className="section__half">
-              <h3 className="section__heading">Your drafts:</h3>
-              {
-                this.listOfDrafts(this.drafts)
-              }
+        <Header title={"Dashboard"} />          
+        {
+          !this.isLoading ?
+            <div className="section__content">
+              <div className="section__half">
+                <h3 className="section__heading">Your drafts:</h3>
+                {
+                  this.listOfDrafts(this.drafts)
+                }
+              </div>
+              <div className="section__half">
+                <h3 className="section__heading">Assigned to you:</h3>
+                {
+                  this.listOfAssigned(this.assigned)
+                }
+              </div>
             </div>
-            <div className="section__half">
-              <h3 className="section__heading">Assigned to you:</h3>
-              {
-                this.listOfAssigned(this.assigned)
-              }
-            </div>
-          </Loader>
-        </div>
+          :
+            <Spinner/>
+        }
       </section>
     )
   }
