@@ -50,10 +50,6 @@ class Dashboard extends React.Component<Props> {
   private drafts = this.props.dashboard.dashboard.drafts
   private assigned = this.props.dashboard.dashboard.assigned
 
-  private goToDraft (id: string) {
-    console.log('goToDraft', id)
-  }
-
   private deleteDraft (id: string) {
     console.log('deleteDraft', id)
   }
@@ -79,9 +75,9 @@ class Dashboard extends React.Component<Props> {
                     <Button 
                       color="green" 
                       size="small" 
-                      clickHandler={() => this.goToDraft(draftId)}
+                      to={`/modules/${draftId}`}
                     >
-                      View changes
+                      View draft
                     </Button>
                     <Button 
                       color="red" 
@@ -124,8 +120,8 @@ class Dashboard extends React.Component<Props> {
                     {
                       isUserAssigned ?
                         <Button 
-                          size="small" 
-                          clickHandler={() => this.goToDraft(el.id)}
+                          size="small"
+                          to={`/modules/${el.id}`}
                         >
                           View draft
                         </Button>
