@@ -1,3 +1,7 @@
+export type RequestStatus = {status: number, message?: string | {}}
+
+
+
 export interface User {
   isLoading: boolean
   id: number | null
