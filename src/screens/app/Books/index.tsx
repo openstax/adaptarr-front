@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
 import BookCard from '../../../components/BookCard'
+import Spinner from '../../../components/Spinner'
 
 import * as types from '../../../store/types'
 import { State } from '../../../store/reducers/index'
@@ -41,11 +42,16 @@ class Books extends React.Component<Props> {
     return (
       <Section>
         <Header title={"Books"} />
-        <div className="section__content">
-          {
-            this.listOfBookCards(booksMap)
-          }
-        </div>
+        {
+          booksMap.size > 0 ?
+            <div className="section__content">
+              {
+                this.listOfBookCards(booksMap)
+              }
+            </div>
+          :
+            <Spinner/>
+        }
       </Section>
     )
   }
