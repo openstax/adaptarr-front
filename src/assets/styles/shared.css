@@ -69,6 +69,7 @@ html, body, #root, .container {
   -webkit-font-smoothing: inherit;
   -moz-osx-font-smoothing: inherit;
   -webkit-appearance: none;
+  text-decoration: none;
   /* end of reset */
 
   font-size: 1rem;
@@ -233,16 +234,21 @@ main {
 }
 
 .list {
-  
+  width: 100%;
+}
+
+.list .list {
+  margin-top: 10px;
+  padding-left: 20px;
 }
 
 .list__item {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   margin-bottom: 5px;
   padding: 5px 0 9px 0;
-  border-bottom: 1px solid var(--secondary-decoration);
 }
 
 .list__buttons button {

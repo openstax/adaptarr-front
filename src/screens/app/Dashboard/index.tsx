@@ -61,7 +61,7 @@ class Dashboard extends React.Component<Props> {
       deleteDraft(this.state.draftToDelete.id)
     } else {
       console.log('There is no draft with given id.')
-    }    
+    }
   }
 
   private closeDeleteDraftDialog () {
@@ -75,43 +75,81 @@ class Dashboard extends React.Component<Props> {
 
   private listOfDrafts (arr: types.DashboardDraft[]) {
     const modulesMap = this.props.modulesMap.modulesMap
+    const booksMap = this.props.booksMap.booksMap
 
-    if (arr.length > 0) {
+    // Create {bookId: { title: string, id: number, drafts: []}}
+    let booksWithDrafts = {}
+    arr.forEach(draftId => {
+      let currentModule = modulesMap.get(draftId)
+      let currentBook = currentModule ? booksMap.get(currentModule.book) : null
+      
+      if (currentBook) {
+        if (booksWithDrafts[currentBook.id]) {
+          booksWithDrafts[currentBook.id].drafts.push(currentModule)
+        } else {
+          booksWithDrafts[currentBook.id] = {
+            ...currentBook,
+            drafts: [currentModule]
+          }
+        }
+      } else {
+        console.log(`Couldn't find book for draft with id: ${draftId}`)
+      }
+    })
+
+    if (Object.keys(booksWithDrafts).length > 0) {
       return (
-        <ul className="list list--drafts">
+        <ul className="list">
           {
-            arr.map(draftId => {
-              const currModule = modulesMap.get(draftId)
-              const title = currModule ? currModule.title : 'undefined'
-
-              return <li key={draftId} className="list__item">
-                  <span className="list__title">
-                    {title}
-                  </span>
-                  <span className="list__buttons">
-                    <Button 
-                      color="green" 
-                      size="small" 
-                      to={`/modules/${draftId}`}
+            Object.keys(booksWithDrafts).map(key => {
+              const el: {id: string, title: string, drafts: []} = booksWithDrafts[key]
+              
+              return (
+                <li key={el.id} className="list__item">
+                  <span className="list__title">{el.title}</span>
+                  <span className="list__button">
+                    <Button
+                      size="small"
+                      to={`/books/${el.id}`}
                     >
-                      View draft
-                    </Button>
-                    <Button 
-                      color="red" 
-                      size="small" 
-                      clickHandler={() => this.deleteDraft(draftId)}
-                    >
-                      Delete
+                      View book
                     </Button>
                   </span>
+                  <ul className="list">
+                    {
+                      el.drafts.map((draft: {id: string, title: string}) => {
+                        return <li key={draft.id} className="list__item">
+                          <span className="list__title">
+                            {draft.title}
+                          </span>
+                          <span className="list__buttons">
+                            <Button 
+                              size="small" 
+                              to={`/modules/${draft.id}`}
+                            >
+                              View draft
+                            </Button>
+                            <Button 
+                              color="red" 
+                              size="small" 
+                              clickHandler={() => this.deleteDraft(draft.id)}
+                            >
+                              Delete
+                            </Button>
+                          </span>
+                        </li>
+                      })
+                    }
+                  </ul>
                 </li>
+              )
             })
           }
         </ul>
       )
-    } else {
-      return 'You don\'t have any drafts.'
     }
+
+    return <span>You don't have any drafts.</span>
   }
 
   private listOfAssigned (arr: types.DashboardAssignedModule[]) {
