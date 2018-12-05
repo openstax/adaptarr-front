@@ -106,7 +106,7 @@ class Dashboard extends React.Component<Props> {
               
               return (
                 <li key={el.id} className="list__item">
-                  <span className="list__title">{el.title}</span>
+                  <span className="list__title bold">{el.title}</span>
                   <span className="list__button">
                     <Button
                       size="small"
@@ -187,7 +187,7 @@ class Dashboard extends React.Component<Props> {
               
               return (
                 <li key={el.id} className="list__item">
-                  <span className="list__title">{el.title}</span>
+                  <span className="list__title bold">{el.title}</span>
                   <span className="list__button">
                     <Button
                       size="small"

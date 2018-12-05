@@ -56,6 +56,10 @@ html, body, #root, .container {
   100% { transform: rotate(360deg); }
 }
 
+.bold {
+  font-weight: 700;
+}
+
 .button {
   /* reset button styling */
   display: inline-block;
