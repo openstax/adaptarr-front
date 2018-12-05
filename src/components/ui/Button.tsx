@@ -5,16 +5,18 @@ import { LocationDescriptor } from 'history'
 type Props = {
   color?: 'green' | 'red'
   size?: 'small' | 'medium' | 'big'
+  className? : string
   children: React.ReactNode
   clickHandler?: any
   to?: LocationDescriptor
 }
 
-const button = ({ color, size, children, clickHandler, to }: Props) => {
+const button = ({ color, size, className, children, clickHandler, to }: Props) => {
   const classes: string[] = ['button']
 
   if (color) classes.push(`button--${color}`)
   if (size) classes.push(`button--${size}`)
+  if (className) classes.push(className)
 
   return (
     <React.Fragment>
