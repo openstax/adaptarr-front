@@ -60,6 +60,29 @@ html, body, #root, .container {
   font-weight: 700;
 }
 
+.icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+}
+
+.icon--small {
+  width: 15px;
+  height: 15px;
+}
+
+.icon--medium {
+  width: 25px;
+  height: 25px;
+}
+
+.icon--big {
+  width: 40px;
+  height: 40px;
+}
+
 .button {
   /* reset button styling */
   display: inline-block;
