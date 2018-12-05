@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import axios from '../../../config/axios'
 
+import Section from '../../../components/Section'
 import Header from '../../../components/Header'
 import Spinner from '../../../components/Spinner'
 import Button from '../../../components/ui/Button'
@@ -242,7 +243,6 @@ class Dashboard extends React.Component<Props> {
   private fetchDashboard = () => {
     axios.get('dashboard')
       .then((res: AxiosResponse) => {
-        console.log('done')
         this.setState({
           isLoading: false,
           assigned: res.data.assigned,
@@ -263,7 +263,7 @@ class Dashboard extends React.Component<Props> {
     const { isLoading, drafts, assigned, draftToDelete } = this.state
 
     return (
-      <section className="section--wrapper">
+      <Section>
         <Header title={"Dashboard"} />
         {
           this.state.showDeleteDraftDialog ?
@@ -300,7 +300,7 @@ class Dashboard extends React.Component<Props> {
           :
             <Spinner/>
         }
-      </section>
+      </Section>
     )
   }
 }
