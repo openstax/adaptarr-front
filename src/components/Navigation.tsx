@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
+import { NavLink } from 'react-router-dom'
 
 import Header from './Header'
 import Icon from './ui/Icon'
@@ -21,19 +21,19 @@ const navigation = () => {
       <nav className="nav">
         <ul>
           <li className="nav__link">
-            <Link to="/">Dashboard</Link>
+            <NavLink exact to="/" activeClassName="active">Dashboard</NavLink>
           </li>
           <li className="nav__link">
-            <Link to="/notifications">Notifications</Link>
+            <NavLink to="/notifications" activeClassName="active">Notifications</NavLink>
           </li>
           <li className="nav__link">
-            <Link to="/books">Books</Link>
+            <NavLink to="/books" activeClassName="active">Books</NavLink>
           </li>
           <li className="nav__link">
-            <Link to="/resources">Resources</Link>
+            <NavLink to="/resources" activeClassName="active">Resources</NavLink>
           </li>
           <li className="nav__link">
-            <Link to="/settings">Settings</Link>
+            <NavLink to="/settings" activeClassName="active">Settings</NavLink>
           </li>
         </ul>
       </nav>
