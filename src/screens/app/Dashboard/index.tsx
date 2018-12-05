@@ -1,20 +1,19 @@
 import * as React from 'react'
+import { AxiosResponse } from 'axios'
 import { connect } from 'react-redux'
+
+import axios from '../../../config/axios'
 
 import Header from '../../../components/Header'
 import Spinner from '../../../components/Spinner'
 import Button from '../../../components/ui/Button'
 import Dialog from '../../../components/ui/Dialog'
 
-import * as dashboardActions from '../../../store/actions/Dashboard'
 import * as types from '../../../store/types'
 import { createDraft, deleteDraft } from '../../../store/actions/Drafts'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
-  dashboard: {
-    dashboard: types.Dashboard
-  }
   user: {
     user: types.User
   }
@@ -24,43 +23,34 @@ type Props = {
   modulesMap: {
     modulesMap: types.ModulesMap
   }
-  fetchDashboard: () => void
 }
 
-export const mapStateToProps = ({ dashboard, user, booksMap, modulesMap }: State) => {
+export const mapStateToProps = ({ user, booksMap, modulesMap }: State) => {
   return {
-    dashboard,
     user,
     booksMap,
     modulesMap,
   }
 }
 
-export const mapDispatchToProps = (dispatch: dashboardActions.FetchDashboard) => {
-  return {
-    fetchDashboard: () => dispatch(dashboardActions.fetchDashboard()),
-  }
-}
-
 class Dashboard extends React.Component<Props> {
 
   public state: {
+    isLoading: boolean,
+    drafts: types.DashboardDraft[],
+    assigned: types.DashboardAssignedModule[],
     showDeleteDraftDialog: boolean, 
     draftToDelete?: types.ModuleShortInfo
   } = {
+    isLoading: true,
+    drafts: [],
+    assigned: [],
     showDeleteDraftDialog: false,
   }
 
-  private user = this.props.user.user
-  private booksMap = this.props.booksMap.booksMap
-  private modulesMap = this.props.modulesMap.modulesMap
-  
-  private isLoading = this.props.dashboard.dashboard.isLoading
-  private drafts = this.props.dashboard.dashboard.drafts
-  private assigned = this.props.dashboard.dashboard.assigned
-
   private deleteDraft (id: string) {
-    const draftToDelete = this.modulesMap.get(id)
+    const modulesMap = this.props.modulesMap.modulesMap
+    const draftToDelete = modulesMap.get(id)
     console.log('draftToDelete', draftToDelete)
     this.setState({showDeleteDraftDialog: true, draftToDelete})
   }
@@ -84,12 +74,14 @@ class Dashboard extends React.Component<Props> {
   }
 
   private listOfDrafts (arr: types.DashboardDraft[]) {
+    const modulesMap = this.props.modulesMap.modulesMap
+
     if (arr.length > 0) {
       return (
         <ul className="list list--drafts">
           {
             arr.map(draftId => {
-              const currModule = this.modulesMap.get(draftId)
+              const currModule = modulesMap.get(draftId)
               const title = currModule ? currModule.title : 'undefined'
 
               return <li key={draftId} className="list__item">
@@ -123,17 +115,19 @@ class Dashboard extends React.Component<Props> {
   }
 
   private listOfAssigned (arr: types.DashboardAssignedModule[]) {
-    console.log('listOfAssigned')
+    const modulesMap = this.props.modulesMap.modulesMap
+    const user = this.props.user.user
+
     if (arr.length > 0) {
       return (
         <ul className="list list--assigned">
           {
             arr.map(el => {
-              const currModule = this.modulesMap.get(el.id)
+              const currModule = modulesMap.get(el.id)
               const title = currModule ? currModule.title : 'undefined'
               
               let isUserAssigned = false
-              if (currModule && currModule.assignee === this.user.id) {
+              if (currModule && currModule.assignee === user.id) {
                 isUserAssigned = true
               }
 
@@ -170,11 +164,29 @@ class Dashboard extends React.Component<Props> {
     }
   }
 
+  private fetchDashboard = () => {
+    axios.get('dashboard')
+      .then((res: AxiosResponse) => {
+        console.log('done')
+        this.setState({
+          isLoading: false,
+          assigned: res.data.assigned,
+          drafts: res.data.drafts,
+        })
+      })
+      .catch((e: ErrorEvent) => {
+        console.log(e.message)
+        this.setState({isLoading: false})
+      })
+  }
+
   componentDidMount () {
-    this.props.fetchDashboard()
+    this.fetchDashboard()
   }
 
   public render() {
+    const { isLoading, drafts, assigned, draftToDelete } = this.state
+
     return (
       <section className="section--wrapper">
         <Header title={"Dashboard"} />
@@ -182,7 +194,7 @@ class Dashboard extends React.Component<Props> {
           this.state.showDeleteDraftDialog ?
             <Dialog onClose={() => this.closeDeleteDraftDialog()}>
               <h3>
-                Do you want to delete draft {this.state.draftToDelete ? this.state.draftToDelete.title : 'undefined'}?
+                Do you want to delete draft {draftToDelete ? draftToDelete.title : 'undefined'}?
               </h3>
               <Button color="red" clickHandler={() => this.deleteDraftPermamently()}>
                 Delete
@@ -195,18 +207,18 @@ class Dashboard extends React.Component<Props> {
             null
         }
         {
-          !this.isLoading ?
+          !isLoading ?
             <div className="section__content">
               <div className="section__half">
                 <h3 className="section__heading">Your drafts:</h3>
                 {
-                  this.listOfDrafts(this.drafts)
+                  this.listOfDrafts(drafts)
                 }
               </div>
               <div className="section__half">
                 <h3 className="section__heading">Assigned to you:</h3>
                 {
-                  this.listOfAssigned(this.assigned)
+                  this.listOfAssigned(assigned)
                 }
               </div>
             </div>
@@ -218,4 +230,4 @@ class Dashboard extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(mapStateToProps)(Dashboard)
