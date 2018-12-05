@@ -69,11 +69,11 @@ class App extends React.Component<Props> {
           <Navigation />
           <main>
             <Route exact path="/" component={Dashboard} />
-            <Route exact path="/notifications" component={NotificationsCentre} />
+            <Route path="/notifications" component={NotificationsCentre} />
             <Route exact path="/books" component={Books} />
-            <Route exact path="/book/:id" component={Book} />
-            <Route exact path="/resources" component={Resources} />
-            <Route exact path="/settings" component={Settings} />
+            <Route path="/books/:id" component={Book} />
+            <Route path="/resources" component={Resources} />
+            <Route path="/settings" component={Settings} />
           </main>
         </div>
       </Router>
