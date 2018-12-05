@@ -4,9 +4,11 @@ import { connect } from 'react-redux'
 import Header from '../../../components/Header'
 import Spinner from '../../../components/Spinner'
 import Button from '../../../components/ui/Button'
+import Dialog from '../../../components/ui/Dialog'
 
 import * as dashboardActions from '../../../store/actions/Dashboard'
 import * as types from '../../../store/types'
+import { createDraft, deleteDraft } from '../../../store/actions/Drafts'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
@@ -42,6 +44,13 @@ export const mapDispatchToProps = (dispatch: dashboardActions.FetchDashboard) =>
 
 class Dashboard extends React.Component<Props> {
 
+  public state: {
+    showDeleteDraftDialog: boolean, 
+    draftToDelete?: types.ModuleShortInfo
+  } = {
+    showDeleteDraftDialog: false,
+  }
+
   private user = this.props.user.user
   private booksMap = this.props.booksMap.booksMap
   private modulesMap = this.props.modulesMap.modulesMap
@@ -51,11 +60,27 @@ class Dashboard extends React.Component<Props> {
   private assigned = this.props.dashboard.dashboard.assigned
 
   private deleteDraft (id: string) {
-    console.log('deleteDraft', id)
+    const draftToDelete = this.modulesMap.get(id)
+    console.log('draftToDelete', draftToDelete)
+    this.setState({showDeleteDraftDialog: true, draftToDelete})
+  }
+
+  private deleteDraftPermamently () {
+    console.log('deleteDraft')
+    if (this.state.draftToDelete) {
+      deleteDraft(this.state.draftToDelete.id)
+    } else {
+      console.log('There is no draft with given id.')
+    }    
+  }
+
+  private closeDeleteDraftDialog () {
+    this.setState({showDeleteDraftDialog: false, draftToDelete: {}})
   }
 
   private createDraft (moduleId: string) {
     console.log('createDraft', moduleId)
+    createDraft(moduleId)
   }
 
   private listOfDrafts (arr: types.DashboardDraft[]) {
@@ -152,7 +177,23 @@ class Dashboard extends React.Component<Props> {
   public render() {
     return (
       <section className="section--wrapper">
-        <Header title={"Dashboard"} />          
+        <Header title={"Dashboard"} />
+        {
+          this.state.showDeleteDraftDialog ?
+            <Dialog onClose={() => this.closeDeleteDraftDialog()}>
+              <h3>
+                Do you want to delete draft {this.state.draftToDelete ? this.state.draftToDelete.title : 'undefined'}?
+              </h3>
+              <Button color="red" clickHandler={() => this.deleteDraftPermamently()}>
+                Delete
+              </Button>
+              <Button clickHandler={() => this.closeDeleteDraftDialog()}>
+                Cancel
+              </Button>
+            </Dialog>
+          :
+            null
+        }
         {
           !this.isLoading ?
             <div className="section__content">
