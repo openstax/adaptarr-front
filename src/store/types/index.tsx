@@ -1,4 +1,4 @@
-export type RequestStatus = {status: number, message?: string | {}}
+export type RequestStatus = {status: string, message?: string | {}}
 
 
 
