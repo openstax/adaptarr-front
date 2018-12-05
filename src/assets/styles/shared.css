@@ -189,8 +189,33 @@ html, body, #root, .container {
   width: 250px;
 }
 
-.nav {
+.sidebar__toggle {
+  display: inline-flex;
+  background: none;
+}
 
+.sidebar.small {
+  width: 70px;
+}
+
+.sidebar.small .header__title {
+  font-size: 0;
+}
+
+.sidebar.small .sidebar__toggle {
+  margin-left: -10px;
+}
+
+.sidebar.small .nav__text {
+  font-size: 0;
+}
+
+.sidebar.small .nav__link a {
+  justify-content: center;
+}
+
+.sidebar.small .nav__link a .icon {
+  margin-right: 0;
 }
 
 .nav__link {
@@ -200,7 +225,8 @@ html, body, #root, .container {
 .nav__link a {
   text-decoration: none;
   color: var(--font-main-color);
-  display: block;
+  display: flex;
+  align-items: center;
   cursor: pointer;
   padding: 15px 20px;
 }
@@ -211,6 +237,10 @@ html, body, #root, .container {
 
 .nav__link a.active {
   background-color: green;
+}
+
+.nav__link a .icon {
+  margin-right: 10px;
 }
 
 main {

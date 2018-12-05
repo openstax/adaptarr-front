@@ -2,43 +2,70 @@ import * as React from 'react'
 import { NavLink } from 'react-router-dom'
 
 import Header from './Header'
+import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-const navigation = () => {
-  const toggleMenu = () => {
-    console.log('toggle')
+class Navigation extends React.Component {
+
+  state: {
+    toggleSidebar: boolean,
+  } = {
+    toggleSidebar: false,
   }
 
-  return (
-    <aside className="sidebar frame">
-      <Header title={"Menu"}>
-        <button 
-          className="sidebar__toggle" 
-          onClick={toggleMenu}>
-          <Icon name={'menu'} />
-        </button>
-      </Header>
-      <nav className="nav">
-        <ul>
-          <li className="nav__link">
-            <NavLink exact to="/" activeClassName="active">Dashboard</NavLink>
-          </li>
-          <li className="nav__link">
-            <NavLink to="/notifications" activeClassName="active">Notifications</NavLink>
-          </li>
-          <li className="nav__link">
-            <NavLink to="/books" activeClassName="active">Books</NavLink>
-          </li>
-          <li className="nav__link">
-            <NavLink to="/resources" activeClassName="active">Resources</NavLink>
-          </li>
-          <li className="nav__link">
-            <NavLink to="/settings" activeClassName="active">Settings</NavLink>
-          </li>
-        </ul>
-      </nav>
-    </aside>
-  )
+  private toggleSidebar = () => {
+    this.setState({toggleSidebar: !this.state.toggleSidebar})
+  }
+
+  public render() {
+    const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
+    
+    return (
+      <aside className={sidebarClasses}>
+        <Header title={"Menu"}>
+          <Button 
+            className="sidebar__toggle" 
+            clickHandler={this.toggleSidebar}>
+            <Icon name={'menu'} />
+          </Button>
+        </Header>
+        <nav className="nav">
+          <ul>
+            <li className="nav__link" title="Dashboard">
+              <NavLink exact to="/" activeClassName="active">
+                <Icon name="dashboard" />
+                <span className="nav__text">Dashboard</span>
+              </NavLink>
+            </li>
+            <li className="nav__link" title="Notifications">
+              <NavLink to="/notifications" activeClassName="active">
+                <Icon name="bell" />
+                <span className="nav__text">Notifications</span>
+              </NavLink>
+            </li>
+            <li className="nav__link" title="Books">
+              <NavLink to="/books" activeClassName="active">
+                <Icon name="book" />
+                <span className="nav__text">Books</span>
+              </NavLink>
+            </li>
+            <li className="nav__link" title="Resources">
+              <NavLink to="/resources" activeClassName="active">
+                <Icon name="info" />
+                <span className="nav__text">Resources</span>
+              </NavLink>
+            </li>
+            <li className="nav__link" title="Settings">
+              <NavLink to="/settings" activeClassName="active">
+                <Icon name="cog" />
+                <span className="nav__text">Settings</span>
+              </NavLink>
+            </li>
+          </ul>
+        </nav>
+      </aside>
+    )
+  }
 }
 
-export default navigation
+export default Navigation
