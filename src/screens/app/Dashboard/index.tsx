@@ -153,53 +153,90 @@ class Dashboard extends React.Component<Props> {
   }
 
   private listOfAssigned (arr: types.DashboardAssignedModule[]) {
-    const modulesMap = this.props.modulesMap.modulesMap
     const user = this.props.user.user
+    const modulesMap = this.props.modulesMap.modulesMap
+    const booksMap = this.props.booksMap.booksMap
 
-    if (arr.length > 0) {
+    // Create {bookId: { title: string, id: number, modules: []}}
+    let booksWithModules = {}
+    arr.forEach(el => {
+      const moduleId = el.id
+      let currentModule = modulesMap.get(moduleId)
+      let currentBook = currentModule ? booksMap.get(currentModule.book) : null
+      
+      if (currentBook) {
+        if (booksWithModules[currentBook.id]) {
+          booksWithModules[currentBook.id].modules.push(currentModule)
+        } else {
+          booksWithModules[currentBook.id] = {
+            ...currentBook,
+            modules: [currentModule]
+          }
+        }
+      } else {
+        console.log(`Couldn't find book for draft with id: ${moduleId}`)
+      }
+    })
+
+    if (Object.keys(booksWithModules).length > 0) {
       return (
-        <ul className="list list--assigned">
+        <ul className="list">
           {
-            arr.map(el => {
-              const currModule = modulesMap.get(el.id)
-              const title = currModule ? currModule.title : 'undefined'
+            Object.keys(booksWithModules).map(key => {
+              const el: {id: string, title: string, modules: []} = booksWithModules[key]
               
-              let isUserAssigned = false
-              if (currModule && currModule.assignee === user.id) {
-                isUserAssigned = true
-              }
-
-              return <li key={el.id} className="list__item">
-                  <span className="list__title">
-                    {title}
+              return (
+                <li key={el.id} className="list__item">
+                  <span className="list__title">{el.title}</span>
+                  <span className="list__button">
+                    <Button
+                      size="small"
+                      to={`/books/${el.id}`}
+                    >
+                      View book
+                    </Button>
                   </span>
-                  <span className="list__buttons">
+                  <ul className="list">
                     {
-                      isUserAssigned ?
-                        <Button 
-                          size="small"
-                          to={`/modules/${el.id}`}
-                        >
-                          View draft
-                        </Button>
-                      :
-                        <Button 
-                          color="green" 
-                          size="small" 
-                          clickHandler={() => this.createDraft(el.id)}
-                        >
-                          New draft
-                        </Button>
+                      el.modules.map((mod: {id: string, title: string, assignee: number}) => {
+                        const isUserAssigned = mod.assignee === user.id ? true : false
+
+                        return <li key={mod.id} className="list__item">
+                          <span className="list__title">
+                            {mod.title}
+                          </span>
+                          <span className="list__buttons">
+                            {
+                              isUserAssigned ?
+                                <Button 
+                                  size="small"
+                                  to={`/modules/${mod.id}`}
+                                >
+                                  View draft
+                                </Button>
+                              :
+                                <Button 
+                                  color="green" 
+                                  size="small" 
+                                  clickHandler={() => this.createDraft(mod.id)}
+                                >
+                                  New draft
+                                </Button>
+                            }
+                          </span>
+                        </li>
+                      })
                     }
-                  </span>
+                  </ul>
                 </li>
+              )
             })
           }
         </ul>
       )
-    } else {
-      return 'You are not assigned to any module.'
     }
+
+    return <span>You are not assigned to any module.</span>
   }
 
   private fetchDashboard = () => {

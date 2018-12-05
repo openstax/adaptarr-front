@@ -58,6 +58,7 @@ html, body, #root, .container {
 
 .button {
   /* reset button styling */
+  display: inline-block;
   border: none;
   margin: 0;
   padding: 0;
@@ -248,7 +249,7 @@ main {
   align-items: center;
   flex-wrap: wrap;
   margin-bottom: 5px;
-  padding: 5px 0 9px 0;
+  padding: 4px 0;
 }
 
 .list__buttons button {
