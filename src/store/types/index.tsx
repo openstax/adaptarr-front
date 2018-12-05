@@ -17,6 +17,14 @@ export interface User {
 export type BookShortInfo = {id: string, title: string}
 export type BooksMap = Map<string, BookShortInfo>
 
+export type BookPartKind = 'part' | 'module'
+export type BookPart = {id: string, kind: BookPartKind, title: string, parts?: BookPart[]}
+export interface Book {
+  id: string
+  title: string
+  parts: BookPart[]
+}
+
 
 export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number}
 export type ModulesMap = Map<string, ModuleShortInfo>
