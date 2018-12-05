@@ -1,54 +1,54 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
+import BookCard from '../../../components/BookCard'
 
-type State = {
-  showBookInfo: boolean,
-  bookInfo: {
-    id?: number,
-    title?: string,
+import * as types from '../../../store/types'
+import { State } from '../../../store/reducers/index'
+
+type Props = {
+  booksMap: {
+    booksMap: types.BooksMap
   }
 }
 
-class Books extends React.Component {
-  state: State = {
-    showBookInfo: false,
-    bookInfo: {},
+export const mapStateToProps = ({ booksMap }: State) => {
+  return {
+    booksMap,
   }
-  
-  setBookInfo = (id: number): void => {
-    const bookInfo = {
-      id: id,
-      title: 'Psychology',
-    }
+}
 
-    this.setState({showBookInfo: true, bookInfo})
+class Books extends React.Component<Props> {
+
+  private listOfBookCards = (booksMap: types.BooksMap) => {
+    let books: types.BookShortInfo[] = []
+
+    // Create new array because we can't render list
+    booksMap.forEach(book => {
+      books.push(book)
+    })
+
+    return books.map((book: types.BookShortInfo) => {
+      return <BookCard book={book}/>
+    })
   }
 
   public render() {
+    const { booksMap } = this.props.booksMap
+
     return (
-      <div className="container container--splitted">
-        <Section>
-          <Header title={"Books"} />
-          <div className="section__content">
-            Books
-            <button onClick={() => this.setBookInfo(2)}>Show book info</button>
-          </div>
-        </Section>
-        {
-          this.state.showBookInfo ? 
-        <Section>
-          <Header title={this.state.bookInfo.title} />
-          <div className="section__content">
-            Book info
-          </div>
-        </Section>
-          : null
-        }
-      </div>
+      <Section>
+        <Header title={"Books"} />
+        <div className="section__content">
+          {
+            this.listOfBookCards(booksMap)
+          }
+        </div>
+      </Section>
     )
   }
 }
 
-export default Books
+export default connect(mapStateToProps)(Books)
