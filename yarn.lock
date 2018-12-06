@@ -5862,9 +5862,9 @@ react-lifecycles-compat@^3.0.0:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
-react-nestable@^1.1.0:
+"react-nestable@https://github.com/DhruvSheth/react-nestable.git#e1afbac9d168dd78629c9f85fe395b03a1c1e127":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-nestable/-/react-nestable-1.1.0.tgz#b1f997dc81b317f0e2ddbbf2127e5e12c356c995"
+  resolved "https://github.com/DhruvSheth/react-nestable.git#e1afbac9d168dd78629c9f85fe395b03a1c1e127"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"

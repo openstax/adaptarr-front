@@ -30,7 +30,7 @@
     "react": "^16.6.3",
     "react-dev-utils": "^5.0.2",
     "react-dom": "^16.6.3",
-    "react-nestable": "^1.1.0",
+    "react-nestable": "https://github.com/DhruvSheth/react-nestable.git#e1afbac9d168dd78629c9f85fe395b03a1c1e127",
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",
     "redux": "^4.0.1",
