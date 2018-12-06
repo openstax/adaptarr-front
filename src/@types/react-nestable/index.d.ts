@@ -9,6 +9,7 @@ declare module 'react-nestable' {
   export type RenderItem = {item: {}, index: number, collapseIcon: any, handler: any}
 
   export interface NestableProps {
+    isDisabled?: boolean
     items: Item[]
     threshold?: number
     maxDepth?: number
@@ -16,10 +17,11 @@ declare module 'react-nestable' {
     group?: string | number
     handler?: React.Component
     childrenProp?: string
+    className?: string
     renderItem: (payload: RenderItem) => any
-    renderCollapseIcon?: any//({isCollapsed: boolean})
+    renderCollapseIcon?: () => {isCollapsed: boolean}
     onMove?: () => boolean
-    onChange?: any//(items: [], item: any)
+    onChange?: (newItems: Item[], changedItem: Item) => any
   }
 
   export default class Nestable extends React.Component<NestableProps> {}
