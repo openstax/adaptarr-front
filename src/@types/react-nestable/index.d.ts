@@ -20,8 +20,8 @@ declare module 'react-nestable' {
     className?: string
     renderItem: (payload: RenderItem) => any
     renderCollapseIcon?: () => {isCollapsed: boolean}
-    onMove?: () => boolean
-    onChange?: (newItems: Item[], changedItem: Item) => any
+    onMove?: (newItems: Item[], changedItem: Item, realPathTo: number[]) => boolean
+    onChange?: (newItems: Item[], changedItem: Item, realPathTo: number[]) => any
   }
 
   export default class Nestable extends React.Component<NestableProps> {}
