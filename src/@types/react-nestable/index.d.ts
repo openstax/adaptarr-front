@@ -19,7 +19,7 @@ declare module 'react-nestable' {
     childrenProp?: string
     className?: string
     renderItem: (payload: RenderItem) => any
-    renderCollapseIcon?: () => {isCollapsed: boolean}
+    renderCollapseIcon?: ({isCollapsed}: {isCollapsed: boolean}) => any
     onMove?: (newItems: Item[], changedItem: Item, realPathTo: number[]) => boolean
     onChange?: (newItems: Item[], changedItem: Item, realPathTo: number[]) => any
   }

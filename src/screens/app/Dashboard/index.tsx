@@ -267,10 +267,10 @@ class Dashboard extends React.Component<Props> {
         <Header title={"Dashboard"} />
         {
           this.state.showDeleteDraftDialog ?
-            <Dialog onClose={() => this.closeDeleteDraftDialog()}>
-              <h3>
-                Do you want to delete draft {draftToDelete ? draftToDelete.title : 'undefined'}?
-              </h3>
+            <Dialog 
+              title={`Do you want to delete draft ${draftToDelete ? draftToDelete.title : 'undefined'}?`} 
+              onClose={() => this.closeDeleteDraftDialog()}
+            >
               <Button color="red" clickHandler={() => this.deleteDraftPermamently()}>
                 Delete
               </Button>

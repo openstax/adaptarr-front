@@ -118,13 +118,6 @@ class Book extends React.Component<Props> {
           className="bookpart__title" 
           onClick={() => this.showModuleDetails(item)}
         >
-          {
-            item.kind === 'part' ?
-              <span className="bookpart__icon">
-                {collapseIcon}
-              </span>
-            : null
-          }
           {item.title}
         </span>
         <span className="bookpart__info">
@@ -140,9 +133,24 @@ class Book extends React.Component<Props> {
               <Avatar size="small" user={user} />
             : null
           }
+          {
+            item.kind === 'part' ?
+              <span className="bookpart__icon">
+                {collapseIcon}
+              </span>
+            : null
+          }
         </span>
       </div>
     )
+  }
+
+  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+    if (isCollapsed) {
+      return <Icon name="arrow-right"/>
+    }
+
+    return <Icon name="arrow-down" />
   }
 
   private findParentWithinItems = (items: types.BookPart[], path: number[]) => {
@@ -223,17 +231,16 @@ class Book extends React.Component<Props> {
               <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
             </div>
           </Header>
-          <div className="section__content">
-            <Nestable
-              isDisabled={false}
-              items={book.parts}
-              className="book-collection"
-              childrenProp="parts"
-              renderItem={this.renderItem}
-              onMove={this.handleOnMove}
-              onChange={this.handlePositionChange}
-            />
-          </div>
+          <Nestable
+            isDisabled={false}
+            items={book.parts}
+            className="book-collection"
+            childrenProp="parts"
+            renderItem={this.renderItem}
+            renderCollapseIcon={this.renderCollapseIcon}
+            onMove={this.handleOnMove}
+            onChange={this.handlePositionChange}
+          />
         </Section>
         {
           showModuleDetails ?
