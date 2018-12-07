@@ -17,8 +17,20 @@ type Props = {
   }
 }
 
-const renderItem = ({ item }: { item: types.BookPart }) => {
-  return item.title;
+const renderItem = ({ item, collapseIcon }: { item: types.BookPart, index: number, collapseIcon: any, handler: any }) => {
+  return (
+    <div className="bookpart__item">
+      <span className="bookpart__icon">
+        {collapseIcon}
+      </span>
+      {
+        item.kind == 'part' ?
+          <h2 className="bookpart__title bookpart__title--chapter">{item.title}</h2>
+        :
+          <h3 className="bookpart__title bookpart__title--module">{item.title}</h3>
+      }
+    </div>
+  )
 }
 
 // Nested component is adding `parts: []` to every item and we do not want that
@@ -108,8 +120,47 @@ class Book extends React.Component<Props> {
     },
   }
 
-  private handlePositionChange = (newItems: types.BookPart[], changedItem: types.BookPart) => {
-    console.log('changed item:', changedItem)
+  private findParentWithinItems = (items: types.BookPart[], path: number[]) => {
+    let pathToParent = [...path]
+    pathToParent.pop() // remove last index because it's pointing to changedItem
+
+    let parent: types.BookPart | types.Book
+
+    if (pathToParent.length === 0) {
+      parent = this.state.book
+    } else {
+      parent = items[pathToParent[0]]
+      pathToParent.shift()
+
+      // If there are still some indexes then process them
+      if (pathToParent.length > 0) {
+        pathToParent.forEach(index => {
+          if (parent && parent.parts && parent.parts[index]) {
+            parent = parent.parts[index]
+          } else {
+            throw new Error(`Couldn't find parent for item at path: ${JSON.stringify(path)}`)
+          }
+        })
+      } 
+    }
+
+    return parent
+  }
+
+  private handleOnMove = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
+    // Do not move bookparts into modules
+    // TODO: Create new part when user move module into module
+    const parent: types.BookPart | types.Book = this.findParentWithinItems(newItems, realPathTo)
+
+    if ((parent as types.BookPart).kind && (parent as types.BookPart).kind === 'module') {
+      console.log('You can not move modules into modules.')
+      return false
+    }
+    
+    return true
+  }
+
+  private handlePositionChange = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
     this.setState({
       book: {
         ...this.state.book,
@@ -133,27 +184,28 @@ class Book extends React.Component<Props> {
   }
 
   componentDidMount () {
-    //this.fetchBook(this.props.match.params.id)
+    this.fetchBook(this.props.match.params.id)
   }
   
   public render() {
     const { book } = this.state
-    const style = {width: '100%'}
 
     return (
       <Section>
         <Header title={book.title} />
         <div className="section__content">
-          <div style={style}>
+          {/*<div style={{width: '100%'}}>
             <pre>{JSON.stringify(book.parts, undefined, 2)}</pre>
-          </div>
+          </div>*/}
+          <Nestable
+            isDisabled={false}
+            items={book.parts}
+            childrenProp="parts"
+            renderItem={renderItem}
+            onMove={this.handleOnMove}
+            onChange={this.handlePositionChange}
+          />
         </div>
-        <Nestable
-          items={book.parts}
-          childrenProp="parts"
-          renderItem={renderItem}
-          onChange={this.handlePositionChange}
-        />
       </Section>
     )
   }
