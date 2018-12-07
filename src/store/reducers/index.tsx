@@ -2,6 +2,7 @@ import { combineReducers } from 'redux'
 
 import * as fromDashboard from './Dashboard'
 import * as fromUser from './User'
+import * as fromTeam from './Team'
 import * as fromNotifications from './Notifications'
 import * as fromBooks from './Books'
 import * as fromModules from './Modules'
@@ -13,6 +14,7 @@ import * as fromModules from './Modules'
 export interface State {
   dashboard: fromDashboard.State
   user: fromUser.State
+  team: fromTeam.State
   notifications: fromNotifications.State
   booksMap: fromBooks.State
   modulesMap: fromModules.State
@@ -24,6 +26,7 @@ export interface State {
 export const initialState: State = {
   dashboard: fromDashboard.initialState,
   user: fromUser.initialState,
+  team: fromTeam.initialState,
   notifications: fromNotifications.initialState,
   booksMap: fromBooks.initialState,
   modulesMap: fromModules.initialState,
@@ -36,6 +39,7 @@ export const initialState: State = {
 export const reducer = combineReducers<State>({
   dashboard: fromDashboard.reducer,
   user: fromUser.reducer,
+  team: fromTeam.reducer,
   notifications: fromNotifications.reducer,
   booksMap: fromBooks.reducer,
   modulesMap: fromModules.reducer,
