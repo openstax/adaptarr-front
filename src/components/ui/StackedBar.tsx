@@ -34,7 +34,7 @@ const stackedBar = ({ data }: Props) => {
               key={`${el}-${index}-${val}`} 
               className={`stacked__bar stacked__bar--${el}`} 
               style={{width: `${val/total * 100}%`}}
-              title={el}
+              title={`${val} - ${el}`}
             ></span>
           )
         })

@@ -218,7 +218,11 @@ class Book extends React.Component<Props> {
     return (
       <div className="container container--splitted">
         <Section>
-          <Header title={book.title} />
+          <Header title={book.title}>
+            <div className="book__status">
+              <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
+            </div>
+          </Header>
           <div className="section__content">
             <Nestable
               isDisabled={false}
