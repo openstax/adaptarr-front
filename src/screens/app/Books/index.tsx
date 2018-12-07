@@ -32,7 +32,7 @@ class Books extends React.Component<Props> {
     })
 
     return books.map((book: types.BookShortInfo) => {
-      return <BookCard book={book}/>
+      return <BookCard key={book.id} book={book}/>
     })
   }
 

@@ -331,3 +331,20 @@ main {
   font-size: 1.2rem;
   font-weight: 700;
 }
+
+.bookpart__item {
+  display: flex;
+  align-items: center;
+}
+
+.bookpart__title {
+  font-size: 1.1rem;
+}
+
+.bookpart__title--chapter {
+  font-weight: bold;
+}
+
+.bookpart__title--module {
+  
+}
