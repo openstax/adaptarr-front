@@ -353,7 +353,7 @@ main {
   align-items: center;
 }
 
-.bookpart__item--chapter .bookpart__title {
+.bookpart__item--part .bookpart__title {
   font-weight: bold;
 }
 

@@ -8,6 +8,8 @@ import axios from '../../../config/axios'
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
 import Avatar from '../../../components/ui/Avatar'
+import Button from '../../../components/ui/Button'
+import Icon from '../../../components/ui/Icon'
 
 import * as types from '../../../store/types'
 import { State } from '../../../store/reducers'
@@ -61,6 +63,7 @@ class Book extends React.Component<Props> {
   state: {
     isLoading: boolean,
     book: types.Book,
+    showModuleDetails: types.ModuleShortInfo | undefined
   } = {
     isLoading: true,
     book: {
@@ -68,6 +71,17 @@ class Book extends React.Component<Props> {
       title: 'Loading...',
       parts: []
     },
+    showModuleDetails: undefined,
+  }
+
+  private showModuleDetails = (item: types.BookPart) => {
+    if (item.kind !== 'module') return
+    const details = this.props.modulesMap.modulesMap.get(item.id)
+    this.setState({ showModuleDetails: details })
+  }
+
+  private closeModuleDetails = () => {
+    this.setState({ showModuleDetails: undefined })
   }
 
   private renderItem = ({ item, collapseIcon }: { item: types.BookPart, index: number, collapseIcon: any, handler: any }) => {
@@ -91,7 +105,12 @@ class Book extends React.Component<Props> {
             </span>
           : null
         }
-        <span className="bookpart__title">{item.title}</span>
+        <span 
+          className="bookpart__title" 
+          onClick={() => this.showModuleDetails(item)}
+        >
+          {item.title}
+        </span>
         {
           item.kind === 'module' && user ?
             <Avatar size="small" user={user} />
@@ -169,7 +188,7 @@ class Book extends React.Component<Props> {
   }
   
   public render() {
-    const { book } = this.state
+    const { book, showModuleDetails } = this.state
 
     return (
       <div className="container container--splitted">
@@ -190,6 +209,20 @@ class Book extends React.Component<Props> {
             />
           </div>
         </Section>
+        {
+          showModuleDetails ?
+            <Section>
+              <Header title={showModuleDetails.title}>
+                <Button size="small" clickHandler={this.closeModuleDetails}>
+                  <Icon name="close" />
+                </Button>
+              </Header>
+              <div className="section__content">
+                {JSON.stringify(showModuleDetails)}
+              </div>
+            </Section>
+          : null
+        }
       </div>
     )
   }
