@@ -12,6 +12,10 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
   --status-online: green;
   --status-unread: red;
+  --status-ready: blue;
+  --status-translation: orange;
+  --status-review: red;
+  --status-done: green;
 }
 
 body {
@@ -345,11 +349,12 @@ main {
 
 .book-collection {
   width: 100%;
-  max-width: 50%;
+  max-width: 575px;
 }
 
 .bookpart__item {
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -357,12 +362,12 @@ main {
   font-weight: bold;
 }
 
-.bookpart__item--module {
-  justify-content: space-between;
-}
-
 .bookpart__title {
   font-size: 1.1rem;
+}
+
+.bookpart__info .stacked {
+  width: 170px;
 }
 
 .avatar {
@@ -434,4 +439,47 @@ main {
   display: block;
   width: 100%;
   height: 100%;
+}
+
+.stacked {
+  display: flex;
+  width: 200px;
+  height: 10px;
+}
+
+.stacked__bar {
+  display: inline-block;
+  height: 100%;
+}
+
+.stacked__bar--ready {
+  background-color: var(--status-ready);
+}
+
+.stacked__bar--translation {
+  background-color: var(--status-translation);
+}
+
+.stacked__bar--review {
+  background-color: var(--status-review);
+}
+
+.stacked__bar--done {
+  background-color: var(--status-done);
+}
+
+.module__status--ready {
+  color: var(--status-ready);
+}
+
+.module__status--translation {
+  color: var(--status-translation);
+}
+
+.module__status--review {
+  color: var(--status-review);
+}
+
+.module__status--done {
+  color: var(--status-done);
 }

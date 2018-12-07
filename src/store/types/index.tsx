@@ -26,7 +26,8 @@ export interface Book {
 }
 
 
-export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number}
+export type ModuleStatus = 'ready' | 'translation' | 'review' | 'done'
+export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number, status: ModuleStatus}
 export type ModulesMap = Map<string, ModuleShortInfo>
 
 

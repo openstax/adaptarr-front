@@ -10,6 +10,7 @@ import Header from '../../../components/Header'
 import Avatar from '../../../components/ui/Avatar'
 import Button from '../../../components/ui/Button'
 import Icon from '../../../components/ui/Icon'
+import StackedBar from '../../../components/ui/StackedBar'
 
 import * as types from '../../../store/types'
 import { State } from '../../../store/reducers'
@@ -88,34 +89,58 @@ class Book extends React.Component<Props> {
     const { modulesMap } = this.props.modulesMap
     const { teamMap } = this.props.team
     let user
+    let moduleStatus = (
+      <span className="module__status module__status--ready">
+        ready
+      </span>
+    )
+    const placeholder: types.ModuleStatus[] = ['ready', 'ready', 'done', 'translation', 'review', 'review']
 
     if (item.kind === 'module') {
       const mod = modulesMap.get(item.id)
       const assigne = mod ? mod.assignee : undefined
       user = assigne ? teamMap.get(assigne) : undefined
+      if (mod && mod.status) {
+        moduleStatus = (
+          <span 
+            className={`module__status module__status--${mod.status}`}
+          >
+            {mod.status}
+          </span>
+        )
+      }
     }
 
     let classes = ['bookpart__item', `bookpart__item--${item.kind}`]
     return (
       <div className={classes.join(' ')}>
-        {
-          item.kind === 'part' ?
-            <span className="bookpart__icon">
-              {collapseIcon}
-            </span>
-          : null
-        }
         <span 
           className="bookpart__title" 
           onClick={() => this.showModuleDetails(item)}
         >
+          {
+            item.kind === 'part' ?
+              <span className="bookpart__icon">
+                {collapseIcon}
+              </span>
+            : null
+          }
           {item.title}
         </span>
-        {
-          item.kind === 'module' && user ?
-            <Avatar size="small" user={user} />
-          : null
-        }
+        <span className="bookpart__info">
+          <span className="bookpart__status">
+            {
+              item.kind === 'part' ?
+                <StackedBar data={placeholder}/>
+              : moduleStatus
+            }
+          </span>
+          {
+            item.kind === 'module' && user ?
+              <Avatar size="small" user={user} />
+            : null
+          }
+        </span>
       </div>
     )
   }
@@ -195,9 +220,6 @@ class Book extends React.Component<Props> {
         <Section>
           <Header title={book.title} />
           <div className="section__content">
-            {/*<div style={{width: '100%'}}>
-              <pre>{JSON.stringify(book.parts, undefined, 2)}</pre>
-            </div>*/}
             <Nestable
               isDisabled={false}
               items={book.parts}
