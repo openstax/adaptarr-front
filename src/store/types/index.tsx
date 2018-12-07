@@ -3,14 +3,14 @@ export type RequestStatus = {status: string, message?: string | {}}
 
 
 export interface User {
-  isLoading: boolean
   id: number | null
   name: string | null
   avatar: string | null
   avatarSmall: string | null
   role: string | null
-  error?: string 
 }
+
+export type TeamMap = Map<number, User>
 
 
 

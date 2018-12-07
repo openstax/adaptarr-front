@@ -4,7 +4,7 @@ import {
   FETCH_USER_BEGIN,
   FETCH_USER_SUCCESS,
   FETCH_USER_FAILURE,
-  CLEAR_USER_DATA
+  CLEAR_USER_DATA,
 } from '../constants'
 
 export interface State {
@@ -13,7 +13,6 @@ export interface State {
 
 export const initialState = {
   user: {
-    isLoading: false,
     id: null,
     name: null,
     avatar: null,

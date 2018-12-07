@@ -10,6 +10,9 @@ export type FETCH_USER_FAILURE = typeof FETCH_USER_FAILURE
 export const CLEAR_USER_DATA = 'CLEAR_USER_DATA'
 export type CLEAR_USER_DATA = typeof CLEAR_USER_DATA
 
+export const SET_TEAM_MAP = 'SET_TEAM_MAP'
+export type SET_TEAM_MAP = typeof SET_TEAM_MAP
+
 
 
 export const SET_BOOKS_MAP = 'SET_BOOKS_MAP'
