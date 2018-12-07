@@ -12,6 +12,7 @@ import Resources from './screens/app/Resources'
 import Settings from './screens/app/Settings'
 
 import * as userActions from './store/actions/User'
+import * as teamActions from './store/actions/Team'
 import * as notificationsActions from './store/actions/Notifications'
 import * as booksActions from './store/actions/Books'
 import * as modulesActions from './store/actions/Modules'
@@ -22,6 +23,9 @@ import './assets/styles/shared.css'
 
 type Props = {
   user: {}
+  team: {
+    teamMap: types.TeamMap
+  }
   notifications: {}
   booksMap: {
     booksMap: types.BooksMap
@@ -30,14 +34,16 @@ type Props = {
     modulesMap: types.ModulesMap
   }
   fetchUser: () => void
+  fetchTeamMap: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
 
-export const mapStateToProps = ({ user, notifications, booksMap, modulesMap }: State) => {
+export const mapStateToProps = ({ user, notifications, team, booksMap, modulesMap }: State) => {
   return {
     user,
+    team,
     notifications,
     booksMap,
     modulesMap,
@@ -47,6 +53,7 @@ export const mapStateToProps = ({ user, notifications, booksMap, modulesMap }: S
 export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
+    fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
