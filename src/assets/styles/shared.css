@@ -246,14 +246,54 @@ html, body, #root, .container {
   margin-right: 0;
 }
 
+.sidebar.small .notifications__counter {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 13px;
+  height: 13px;
+}
+
 .nav__link {
+  position: relative;
   border-bottom: 1px solid var(--light-bg);
+}
+
+.nav__link:hover .nav__hoverbox {
+  display: flex;
+}
+
+.nav__hoverbox {
+  display: none;
+  flex-direction: column;
+  width: 400px;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 99;
+  border: 1px solid var(--light-bg);
+  background-color: #fff;
+}
+
+.nav__link .nav__hoverbox a {
+  padding: 0;
+}
+
+.nav__hoverbox .notification {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.nav__hoverbox a.show-more {
+  padding: 10px;
+  justify-content: center;
 }
 
 .nav__link a {
   text-decoration: none;
   color: var(--font-dark);
   display: flex;
+  justify-content: space-between;
   align-items: center;
   cursor: pointer;
   padding: 15px 20px;
@@ -270,6 +310,37 @@ html, body, #root, .container {
 
 .nav__link a .icon {
   margin-right: 10px;
+}
+
+.notification {
+  width: 100%;
+}
+
+.notification__content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.notification__who {
+  margin-top: 5px;
+  margin-right: 15px;
+}
+
+.notification__action {
+  font-weight: 700;
+  margin-bottom: 5px;
+}
+
+.notifications__counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  font-size: 0.9rem;
+  color: var(--font-light);
+  border-radius: 50%;
+  background-color: var(--status-unread);
 }
 
 main {
