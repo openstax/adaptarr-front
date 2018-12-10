@@ -1,4 +1,4 @@
-import { Dashboard } from '../types'
+import { IsLoading, Dashboard } from '../types'
 import { DashboardDataAction } from '../actions/Dashboard'
 import { 
   FETCH_DASHBOARD_BEGIN, 
@@ -7,16 +7,18 @@ import {
 } from '../constants'
 
 export interface State {
+  isLoading: IsLoading
   dashboard: Dashboard
+  error?: string
 }
 
 // Define our initialState
 export const initialState: State = {
+  isLoading: true,
   dashboard: {
-    isLoading: false,
     assigned: [],
     drafts: [],
-  }
+  },
 }
 
 export function reducer (state: State = initialState, action: DashboardDataAction) {
@@ -24,27 +26,21 @@ export function reducer (state: State = initialState, action: DashboardDataActio
     case FETCH_DASHBOARD_BEGIN:
       return {
         ...state,
-        dashboard: {
-          ...state.dashboard,
-          isLoading: true,
-        },
+        isLoading: true,
+        dashboard: state.dashboard,
       }
     case FETCH_DASHBOARD_SUCCESS:
       return {
         ...state,
-        dashboard: {
-          ...action.data,
-          isLoading: false,
-        },
+        isLoading: false,
+        dashboard: action.data,
       }
     case FETCH_DASHBOARD_FAILURE:
       return {
         ...state,
-        dashboard: {
-          ...state.dashboard,
-          isLoading: false,
-          error: action.error,
-        },
+        isLoading: false,
+        error: action.error,
+        dashboard: state.dashboard,
       }
   }
   return state

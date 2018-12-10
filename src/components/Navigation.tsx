@@ -6,17 +6,20 @@ import { withNamespaces } from 'react-i18next'
 
 import Header from './Header'
 import NotificationComp from './Notification'
+import Spinner from './Spinner'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-import { Notification, Notifications } from '../store/types'
+import { IsLoading, Notification } from '../store/types'
 import { State } from '../store/reducers'
 
 type Props = {
   t: any,
   i18n: any,
   notifications: {
-    notifications: Notifications
+    isLoading: IsLoading
+    notifications: Notification[]
+    error?: string
   }
 }
 
@@ -54,7 +57,7 @@ class Navigation extends React.Component<Props> {
     }
 
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
-    const { notifications } = this.props.notifications.notifications
+    const { isLoading, notifications } = this.props.notifications
     const unreadNotifications = this.getUnreadNotifications(notifications)
     
     return (
@@ -94,16 +97,22 @@ class Navigation extends React.Component<Props> {
                 unreadNotifications.length > 0 ?
                   <div className="nav__hoverbox">
                     {
-                      unreadNotifications.map((noti: Notification, index: number) => {
-                        if (index > 2) return
-                        return (
-                          <NotificationComp key={noti.kind + index} notification={noti}/>
-                        )
-                      })
+                      !isLoading ?
+                        <React.Fragment>
+                          {
+                            unreadNotifications.map((noti: Notification, index: number) => {
+                              if (index > 2) return
+                              return (
+                                <NotificationComp key={noti.kind + index} notification={noti}/>
+                              )
+                            })
+                          }
+                          <Link to="/notifications" className="show-more">
+                            {t('Notifications.showAll')}
+                          </Link>
+                        </React.Fragment>
+                      : <Spinner />
                     }
-                    <Link to="/notifications" className="show-more">
-                      {t('Notifications.showAll')}
-                    </Link>
                   </div>
                 : null
               }

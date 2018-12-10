@@ -1,4 +1,4 @@
-import { isLoading, BooksMap } from '../types'
+import { IsLoading, BooksMap } from '../types'
 import { BooksAction } from '../actions/Books'
 import {
   FETCH_BOOKS_MAP_BEGIN,
@@ -7,9 +7,9 @@ import {
 } from '../constants'
 
 export interface State {
-  isLoading: isLoading
+  isLoading: IsLoading
   booksMap: BooksMap
-  error?: String
+  error?: string
 }
 
 // Define our initialState

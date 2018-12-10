@@ -6,13 +6,13 @@ import Header from '../../../components/Header'
 import BookCard from '../../../components/BookCard'
 import Spinner from '../../../components/Spinner'
 
-import * as types from '../../../store/types'
+import { IsLoading, BooksMap, BookShortInfo } from '../../../store/types'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
   booksMap: {
-    isLoading: types.isLoading
-    booksMap: types.BooksMap
+    isLoading: IsLoading
+    booksMap: BooksMap
   }
 }
 
@@ -24,15 +24,15 @@ export const mapStateToProps = ({ booksMap }: State) => {
 
 class Books extends React.Component<Props> {
 
-  private listOfBookCards = (booksMap: types.BooksMap) => {
-    let books: types.BookShortInfo[] = []
+  private listOfBookCards = (booksMap: BooksMap) => {
+    let books: BookShortInfo[] = []
 
     // Create new array because we can't render list
     booksMap.forEach(book => {
       books.push(book)
     })
 
-    return books.map((book: types.BookShortInfo) => {
+    return books.map((book: BookShortInfo) => {
       return <BookCard key={book.id} book={book}/>
     })
   }

@@ -1,7 +1,7 @@
 import axios from '../../config/axios'
 
 import * as constants from '../constants'
-import { isLoading, BooksMap, BookShortInfo } from '../types'
+import { BooksMap, BookShortInfo } from '../types'
 
 export interface FetchBooksMap {
   (dispatch: any): void
@@ -18,7 +18,7 @@ export interface FetchBooksMapSuccess {
 
 export interface FetchBooksMapFailure {
   type: constants.FETCH_BOOKS_MAP_FAILURE,
-  error: String,
+  error: string,
 }
 
 export type BooksAction = FetchBooksMapBegin | FetchBooksMapSuccess | FetchBooksMapFailure
@@ -36,7 +36,7 @@ const fetchBooksMapSuccess = (payload: BooksMap): FetchBooksMapSuccess => {
   }
 }
 
-const fetchBooksMapFailure = (payload: String): FetchBooksMapFailure => {
+const fetchBooksMapFailure = (payload: string): FetchBooksMapFailure => {
   return {
     type: constants.FETCH_BOOKS_MAP_FAILURE,
     error: payload,

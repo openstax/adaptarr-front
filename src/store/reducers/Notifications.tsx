@@ -1,5 +1,5 @@
 import { NotificationsAction } from '../actions/Notifications'
-import { Notifications } from '../types'
+import { IsLoading, Notification } from '../types'
 import { 
   FETCH_NOTIFICATIONS_BEGIN,
   FETCH_NOTIFICATIONS_SUCCESS,
@@ -7,14 +7,14 @@ import {
 } from '../constants'
 
 export interface State {
-  notifications: Notifications
+  isLoading: IsLoading
+  notifications: Notification[]
+  error?: string
 }
 
 export const initialState = {
-  notifications: {
-    isLoading: false,
-    notifications: [],
-  }
+  isLoading: false,
+  notifications: [],
 }
 
 export function reducer (state: State = initialState, action: NotificationsAction) {
@@ -22,27 +22,21 @@ export function reducer (state: State = initialState, action: NotificationsActio
     case FETCH_NOTIFICATIONS_BEGIN:
       return {
         ...state,
-        notifications: {
-          ...state.notifications,
-          isLoading: true,
-        }
+        isLoading: true,
+        notifications: state.notifications,
       }
     case FETCH_NOTIFICATIONS_SUCCESS:
       return {
         ...state,
-        notifications: {
-          notifications: action.data,
-          isLoading: false,
-        }
+        isLoading: false,
+        notifications: action.data,
       }
     case FETCH_NOTIFICATIONS_FAILURE:
       return {
         ...state,
-        notifications: {
-          ...state.notifications,
-          isLoading: false,
-          error: action.error,
-        }
+        isLoading: false,
+        error: action.error,
+        notifications: state.notifications,
       }
   }
   return state

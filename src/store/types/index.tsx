@@ -1,4 +1,4 @@
-export type isLoading = boolean
+export type IsLoading = boolean
 export type RequestStatus = {status: string, message?: string | {}}
 
 
@@ -37,10 +37,8 @@ export type DashboardAssignedModule = {id: string, title: string, book: string}
 export type DashboardBook = {id: string, title: string}
 export type DashboardDraft = string //{id: string, title: string}
 export interface Dashboard {
-  isLoading: boolean
   assigned: DashboardAssignedModule[]
   drafts: DashboardDraft[]
-  error?: string
 }
 
 
@@ -55,8 +53,4 @@ export type Notification = {
   message?: string
   module?: string
   conversation?: string
-}
-export interface Notifications {
-  isLoading: boolean
-  notifications: Notification[]
 }
