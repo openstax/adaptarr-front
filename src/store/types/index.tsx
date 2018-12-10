@@ -1,3 +1,4 @@
+export type isLoading = boolean
 export type RequestStatus = {status: string, message?: string | {}}
 
 

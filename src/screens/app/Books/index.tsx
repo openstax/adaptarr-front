@@ -11,6 +11,7 @@ import { State } from '../../../store/reducers/index'
 
 type Props = {
   booksMap: {
+    isLoading: types.isLoading
     booksMap: types.BooksMap
   }
 }
@@ -37,16 +38,18 @@ class Books extends React.Component<Props> {
   }
 
   public render() {
-    const { booksMap } = this.props.booksMap
+    const { isLoading, booksMap } = this.props.booksMap
 
     return (
       <Section>
         <Header title={"Books"} />
         {
-          booksMap.size > 0 ?
+          !isLoading ?
             <div className="section__content">
               {
-                this.listOfBookCards(booksMap)
+                booksMap.size > 0 ?
+                  this.listOfBookCards(booksMap)
+                : 'No books found.'
               }
             </div>
           :
