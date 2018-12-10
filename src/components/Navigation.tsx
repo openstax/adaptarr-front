@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { NavLink, Link } from 'react-router-dom'
+import { compose } from 'lodash/fp'
+import { withNamespaces } from 'react-i18next'
 
 import Header from './Header'
 import NotificationComp from './Notification'
@@ -11,6 +13,8 @@ import { Notification, Notifications } from '../store/types'
 import { State } from '../store/reducers'
 
 type Props = {
+  t: any,
+  i18n: any,
   notifications: {
     notifications: Notifications
   }
@@ -43,6 +47,12 @@ class Navigation extends React.Component<Props> {
   }
 
   public render() {
+    const { t, i18n } = this.props;
+
+    const changeLanguage = (lng: string) => {
+      i18n.changeLanguage(lng)
+    }
+
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
     const { notifications } = this.props.notifications.notifications
     const unreadNotifications = this.getUnreadNotifications(notifications)
@@ -58,19 +68,19 @@ class Navigation extends React.Component<Props> {
         </Header>
         <nav className="nav">
           <ul>
-            <li className="nav__link" title="Dashboard">
+            <li className="nav__link" title={t('Navigation.dashboardLink')}>
               <NavLink exact to="/" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="dashboard" />
-                  <span className="nav__text">Dashboard</span>
+                  <span className="nav__text">{t('Navigation.dashboardLink')}</span>
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title="Notifications">
+            <li className="nav__link" title={t('Navigation.notificationsLink')}>
               <NavLink to="/notifications" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="bell" />
-                  <span className="nav__text">Notifications</span>
+                  <span className="nav__text">{t('Navigation.notificationsLink')}</span>
                 </span>
                 {
                   unreadNotifications.length > 0 ?
@@ -92,35 +102,40 @@ class Navigation extends React.Component<Props> {
                       })
                     }
                     <Link to="/notifications" className="show-more">
-                      Show all
+                      {t('Notifications.showAll')}
                     </Link>
                   </div>
                 : null
               }
             </li>
-            <li className="nav__link" title="Books">
+            <li className="nav__link" title={t('Navigation.booksLink')}>
               <NavLink to="/books" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="book" />
-                  <span className="nav__text">Books</span>
+                  <span className="nav__text">{t('Navigation.booksLink')}</span>
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title="Resources">
+            <li className="nav__link" title={t('Navigation.resourcesLink')}>
               <NavLink to="/resources" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="info" />
-                  <span className="nav__text">Resources</span>
+                  <span className="nav__text">{t('Navigation.resourcesLink')}</span>
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title="Settings">
+            <li className="nav__link" title={t('Navigation.settingsLink')}>
               <NavLink to="/settings" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="cog" />
-                  <span className="nav__text">Settings</span>
+                  <span className="nav__text">{t('Navigation.settingsLink')}</span>
                 </span>
               </NavLink>
+              <div className="nav__hoverbox">
+                <Button clickHandler={() => changeLanguage('pl')}>
+                  Change language to Polish
+                </Button>
+              </div>
             </li>
           </ul>
         </nav>
@@ -129,4 +144,4 @@ class Navigation extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Navigation)
+export default compose(withNamespaces('translations'), connect(mapStateToProps))(Navigation)
