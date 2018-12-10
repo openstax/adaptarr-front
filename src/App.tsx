@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Navigation from './components/Navigation'
+import Spinner from './components/Spinner'
 
 import Dashboard from './screens/app/Dashboard'
 import NotificationsCentre from './screens/app/NotificationsCentre'
@@ -22,7 +23,10 @@ import { State } from './store/reducers/index'
 import './assets/styles/shared.css'
 
 type Props = {
-  user: {}
+  user: {
+    isLoading: types.IsLoading
+    user: types.User
+  }
   team: {
     teamMap: types.TeamMap
   }
@@ -70,19 +74,25 @@ class App extends React.Component<Props> {
   }
 
   public render() {
+    const { isLoading, user } = this.props.user
+
     return (
       <Router>
-        <div className="container container--main">
-          <Navigation />
-          <main>
-            <Route exact path="/" component={Dashboard} />
-            <Route path="/notifications" component={NotificationsCentre} />
-            <Route exact path="/books" component={Books} />
-            <Route path="/books/:id" component={Book} />
-            <Route path="/resources" component={Resources} />
-            <Route path="/settings" component={Settings} />
-          </main>
-        </div>
+        {
+          !isLoading && user.id ?
+            <div className="container container--main">
+              <Navigation />
+              <main>
+                <Route exact path="/" component={Dashboard} />
+                <Route path="/notifications" component={NotificationsCentre} />
+                <Route exact path="/books" component={Books} />
+                <Route path="/books/:id" component={Book} />
+                <Route path="/resources" component={Resources} />
+                <Route path="/settings" component={Settings} />
+              </main>
+            </div>
+          : <Spinner />
+        }
       </Router>
     )
   }
