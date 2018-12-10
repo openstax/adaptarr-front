@@ -58,6 +58,8 @@ export const fetchUser = () => {
       })
       .catch(e => {
         dispatch(fetchUserFailure(e.message))
+        dispatch(clearUserData())
+        window.location.href = `/login?next=${window.location.pathname}`
       })
   }
 }
