@@ -6,6 +6,7 @@ export default {
     "Navigation.booksLink": "Książki",
     "Navigation.resourcesLink": "Zasoby",
     "Navigation.settingsLink": "Ustawienia",
+    "Navigation.invitationsLink": "Zaproszenia",
     "Dashboard.title": "Panel główny",
     "Dashboard.yourDrafts": "Twoje szkice:",
     "Dashboard.assignedToYou": "Przypisane do Ciebie:",
@@ -26,8 +27,10 @@ export default {
     "Buttons.viewBook": "Zobacz książkę",
     "Buttons.viewDraft": "Zobacz szkic",
     "Buttons.newDraft": "Nowy szkic",
+    "Buttons.invite": "Wyślij zaproszenie",
     "Resources.title": "Zasoby",
     "Settings.title": "Ustawienia",
+    "Invitations.title": "Zaproś nowego użytkownika",
     "Admin.confirmSuperSession": "Proszę potwierdzić akcję.",
   }
 }

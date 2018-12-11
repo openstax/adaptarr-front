@@ -11,6 +11,7 @@ import Books from './screens/app/Books'
 import Book from './screens/app/Book'
 import Resources from './screens/app/Resources'
 import Settings from './screens/app/Settings'
+import Invitations from './screens/app/Invitations'
 
 import * as userActions from './store/actions/User'
 import * as teamActions from './store/actions/Team'
@@ -89,6 +90,7 @@ class App extends React.Component<Props> {
                 <Route path="/books/:id" component={Book} />
                 <Route path="/resources" component={Resources} />
                 <Route path="/settings" component={Settings} />
+                <Route path="/invitations" component={Invitations} />
               </main>
             </div>
           : <Spinner />

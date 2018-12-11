@@ -6,6 +6,7 @@ export default {
     "Navigation.booksLink": "Books",
     "Navigation.resourcesLink": "Resources",
     "Navigation.settingsLink": "Settings",
+    "Navigation.invitationsLink": "Invitations",
     "Dashboard.title": "Dashboard",
     "Dashboard.yourDrafts": "Your drafts:",
     "Dashboard.assignedToYou": "Assigned to you:",
@@ -26,8 +27,10 @@ export default {
     "Buttons.viewBook": "View book",
     "Buttons.viewDraft": "View draft",
     "Buttons.newDraft": "New draft",
+    "Buttons.invite": "Send invitation",
     "Resources.title": "Resources",
     "Settings.title": "Settings",
+    "Invitations.title": "Invite new user",
     "Admin.confirmSuperSession": "Please confirm action.",
   }
 }

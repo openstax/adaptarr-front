@@ -7,6 +7,7 @@ import { withNamespaces } from 'react-i18next'
 import Header from './Header'
 import NotificationComp from './Notification'
 import Spinner from './Spinner'
+import AdminUI from './AdminUI'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
@@ -146,6 +147,16 @@ class Navigation extends React.Component<Props> {
                 </Button>
               </div>
             </li>
+            <AdminUI>
+              <li className="nav__link" title={t('Navigation.invitationsLink')}>
+                <NavLink to="/invitations" activeClassName="active">
+                  <span className="nav__content">
+                    <Icon name="users" />
+                    <span className="nav__text">{t('Navigation.invitationsLink')}</span>
+                  </span>
+                </NavLink>
+              </li>
+            </AdminUI>
           </ul>
         </nav>
       </aside>

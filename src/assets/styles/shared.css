@@ -275,6 +275,7 @@ button[disabled] {
 
 .nav__link {
   position: relative;
+  width: 100%;
   border-bottom: 1px solid var(--light-bg);
 }
 
@@ -658,6 +659,12 @@ main {
 .error {
   display: block;
   color: var(--red);
+  margin-bottom: 20px;
+}
+
+.success {
+  display: block;
+  color: var(--green);
   margin-bottom: 20px;
 }
 
