@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { AxiosResponse } from 'axios'
 import { connect } from 'react-redux'
+import { Trans } from 'react-i18next'
 
 import axios from '../../../config/axios'
 
@@ -113,7 +114,7 @@ class Dashboard extends React.Component<Props> {
                       size="small"
                       to={`/books/${el.id}`}
                     >
-                      View book
+                      <Trans i18nKey="Buttons.viewBook" />
                     </Button>
                   </span>
                   <ul className="list">
@@ -128,14 +129,14 @@ class Dashboard extends React.Component<Props> {
                               size="small" 
                               to={`/modules/${draft.id}`}
                             >
-                              View draft
+                              <Trans i18nKey="Buttons.viewDraft" />
                             </Button>
                             <Button 
                               color="red" 
                               size="small" 
                               clickHandler={() => this.deleteDraft(draft.id)}
                             >
-                              Delete
+                              <Trans i18nKey="Buttons.delete" />
                             </Button>
                           </span>
                         </li>
@@ -150,7 +151,11 @@ class Dashboard extends React.Component<Props> {
       )
     }
 
-    return <span>You don't have any drafts.</span>
+    return (
+      <span>
+        <Trans i18nKey="Dashboard.noDraftsFound" />
+      </span>
+    )
   }
 
   private listOfAssigned (arr: types.DashboardAssignedModule[]) {
@@ -194,7 +199,7 @@ class Dashboard extends React.Component<Props> {
                       size="small"
                       to={`/books/${el.id}`}
                     >
-                      View book
+                      <Trans i18nKey="Buttons.viewBook" />
                     </Button>
                   </span>
                   <ul className="list">
@@ -213,7 +218,7 @@ class Dashboard extends React.Component<Props> {
                                   size="small"
                                   to={`/modules/${mod.id}`}
                                 >
-                                  View draft
+                                  <Trans i18nKey="Buttons.viewDraft" />
                                 </Button>
                               :
                                 <Button 
@@ -221,7 +226,7 @@ class Dashboard extends React.Component<Props> {
                                   size="small" 
                                   clickHandler={() => this.createDraft(mod.id)}
                                 >
-                                  New draft
+                                  <Trans i18nKey="Buttons.newDraft" />
                                 </Button>
                             }
                           </span>
@@ -237,7 +242,11 @@ class Dashboard extends React.Component<Props> {
       )
     }
 
-    return <span>You are not assigned to any module.</span>
+    return (
+      <span>
+        <Trans i18nKey="Dashboard.noAssigned" />
+      </span>
+    )
   }
 
   private fetchDashboard = () => {
@@ -264,7 +273,7 @@ class Dashboard extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={"Dashboard"} />
+        <Header i18nKey="Dashboard.title" />
         {
           this.state.showDeleteDraftDialog ?
             <Dialog 
@@ -272,10 +281,10 @@ class Dashboard extends React.Component<Props> {
               onClose={() => this.closeDeleteDraftDialog()}
             >
               <Button color="red" clickHandler={() => this.deleteDraftPermamently()}>
-                Delete
+                <Trans i18nKey="Buttons.delete" />
               </Button>
               <Button clickHandler={() => this.closeDeleteDraftDialog()}>
-                Cancel
+                <Trans i18nKey="Buttons.cancel" />
               </Button>
             </Dialog>
           :
@@ -285,13 +294,17 @@ class Dashboard extends React.Component<Props> {
           !isLoading ?
             <div className="section__content">
               <div className="section__half">
-                <h3 className="section__heading">Your drafts:</h3>
+                <h3 className="section__heading">
+                  <Trans i18nKey="Dashboard.yourDrafts" />
+                </h3>
                 {
                   this.listOfDrafts(drafts)
                 }
               </div>
               <div className="section__half">
-                <h3 className="section__heading">Assigned to you:</h3>
+                <h3 className="section__heading">
+                  <Trans i18nKey="Dashboard.assignedToYou" />
+                </h3>
                 {
                   this.listOfAssigned(assigned)
                 }

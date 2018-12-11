@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Trans } from 'react-i18next'
 
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
@@ -42,14 +43,14 @@ class Books extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={"Books"} />
+        <Header i18nKey="Books.title" />
         {
           !isLoading ?
             <div className="section__content">
               {
                 booksMap.size > 0 ?
                   this.listOfBookCards(booksMap)
-                : 'No books found.'
+                : <Trans i18nKey="Books.noBooksFound" />
               }
             </div>
           :

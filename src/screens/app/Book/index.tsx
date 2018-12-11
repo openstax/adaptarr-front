@@ -69,7 +69,7 @@ class Book extends React.Component<Props> {
     isLoading: true,
     book: {
       id: 'loading',
-      title: 'Loading...',
+      title: '...',
       parts: []
     },
     showModuleDetails: undefined,

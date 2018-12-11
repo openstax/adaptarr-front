@@ -7,7 +7,7 @@ const notificationsCentre = (props: any) => {
   return (
     <div className="container container--splitted">
       <Section>
-        <Header title={"Notifications"} />
+        <Header i18nKey="Notifications.title" />
         <div className="section__content">
           Notifications Centre
         </div>

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Trans } from 'react-i18next'
 
 import Avatar from './ui/Avatar'
 
@@ -32,19 +33,41 @@ const trimMessage = (message: string) => {
   return message.substring(0, 30) + '...'
 }
 
-const notificationAction = (noti: Notification, mod: ModuleShortInfo | undefined) => {
-  if (noti.kind === 'comment') {
-    return `commented at ${ mod ? mod.title : 'Undefined module' }`
-  } else if (noti.kind === 'assigned') {
-    return `assigned you to ${ mod ? mod.title : 'Undefined module' }`
-  } else if (noti.kind === 'mention') { 
-    return `mentioned you in a conversation`
-  }
-
-  return 'Unknow action'
-}
-
 class NotificationComp extends React.Component<Props> {
+
+  private notificationAction = (noti: Notification, mod: ModuleShortInfo | undefined) => {
+    if (noti.kind === 'comment') {
+      return (
+        <React.Fragment>
+          <Trans i18nKey="Notifications.commentedAt" />
+          {
+            mod ? 
+              mod.title
+            : 
+              <Trans i18nKey="Notifications.undefinedModule" />
+          }
+        </React.Fragment>
+      )
+    } else if (noti.kind === 'assigned') {
+      return (
+        <React.Fragment>
+          <Trans i18nKey="Notifications.assigned" />
+          {
+            mod ? 
+              mod.title
+            : 
+              <Trans i18nKey="Notifications.undefinedModule" />
+          }
+        </React.Fragment>
+      )
+    } else if (noti.kind === 'mention') { 
+      return (
+        <Trans i18nKey="Notifications.mentioned" />
+      )
+    }
+  
+    return <Trans i18nKey="Notifications.unknowAction" />
+  }
 
   public render() {
     const { teamMap } = this.props.team
@@ -68,7 +91,7 @@ class NotificationComp extends React.Component<Props> {
             </span>
             <span className="notification__text">
               <div className="notification__action">
-                {notificationAction(noti, mod)}
+                {this.notificationAction(noti, mod)}
               </div>
               { noti.message ? trimMessage(noti.message) : null }
             </span>

@@ -62,7 +62,7 @@ class Navigation extends React.Component<Props> {
     
     return (
       <aside className={sidebarClasses}>
-        <Header title={"Menu"}>
+        <Header i18nKey="Navigation.title">
           <Button 
             className="sidebar__toggle" 
             clickHandler={this.toggleSidebar}>
