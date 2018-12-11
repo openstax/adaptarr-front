@@ -5,13 +5,14 @@ import { LocationDescriptor } from 'history'
 type Props = {
   color?: 'green' | 'red'
   size?: 'small' | 'medium' | 'big'
-  className? : string
+  className?: string
+  isDisabled?: boolean
   children: React.ReactNode
   clickHandler?: any
   to?: LocationDescriptor
 }
 
-const button = ({ color, size, className, children, clickHandler, to }: Props) => {
+const button = ({ color, size, className, isDisabled, children, clickHandler, to }: Props) => {
   const classes: string[] = ['button']
 
   if (color) classes.push(`button--${color}`)
@@ -24,7 +25,12 @@ const button = ({ color, size, className, children, clickHandler, to }: Props) =
         to ?
           <Link to={to} className={classes.join(' ')}>{children}</Link>
         :
-          <button className={classes.join(' ')} onClick={clickHandler}>
+          <button 
+            className={classes.join(' ')} 
+            onClick={clickHandler} 
+            disabled={isDisabled}
+            type="button"
+          >
             {children}
           </button>
       }

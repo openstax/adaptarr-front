@@ -22,10 +22,12 @@ export default {
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
     "Buttons.delete": "Usuń",
     "Buttons.cancel": "Analuj",
+    "Buttons.confirm": "Potwierdź",
     "Buttons.viewBook": "Zobacz książkę",
     "Buttons.viewDraft": "Zobacz szkic",
     "Buttons.newDraft": "Nowy szkic",
     "Resources.title": "Zasoby",
     "Settings.title": "Ustawienia",
+    "Admin.confirmSuperSession": "Proszę potwierdzić akcję.",
   }
 }

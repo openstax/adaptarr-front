@@ -1,26 +1,36 @@
 import * as React from 'react'
+import { Trans } from 'react-i18next'
 
 import Icon from './Icon'
 
 type Props = {
-  title: string
+  i18nKey?: string
+  title?: string
+  className?: string
   onClose: () => void
   children: React.ReactNode
 }
 
-const dialog = ({ title, onClose, children }: Props) => {
+const dialog = ({ i18nKey, title, className, onClose, children }: Props) => {
   const clickOnOverlay = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement
     if (/dialog__container/.test(element.className)) onClose()
   }
 
   return (
-    <div className="dialog__container" onClick={clickOnOverlay}>
+    <div className={`dialog__container ${className}`} onClick={clickOnOverlay}>
       <div className="dialog__content">
         <span className="dialog__close" onClick={onClose}>
           <Icon name="close" />
         </span>
-        <h2 className="dialog__title">{title}</h2>
+        <h2 className="dialog__title">
+          {
+            i18nKey ?
+              <Trans i18nKey={i18nKey}/>
+            :
+              title
+          }
+        </h2>
         {children}
       </div>
     </div>

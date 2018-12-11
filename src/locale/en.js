@@ -22,10 +22,12 @@ export default {
     "Books.noBooksFound": "No books found.",
     "Buttons.delete": "Delete",
     "Buttons.cancel": "Cancel",
+    "Buttons.confirm": "Confirm",
     "Buttons.viewBook": "View book",
     "Buttons.viewDraft": "View draft",
     "Buttons.newDraft": "New draft",
     "Resources.title": "Resources",
     "Settings.title": "Settings",
+    "Admin.confirmSuperSession": "Please confirm action.",
   }
 }

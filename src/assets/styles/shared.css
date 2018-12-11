@@ -121,6 +121,11 @@ html, body, #root, .container {
   border-radius: 4px;
 }
 
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 .button--small {
   font-size: 0.8rem;
   padding: 4px 7px;
@@ -150,9 +155,14 @@ html, body, #root, .container {
   width: 100vw;
   height: 100vh;
   position: fixed;
+  z-index: 99;
   top: 0;
   left: 0;
   background-color: rgba(0,0,0,0.5);
+}
+
+.dialog__container.supersession {
+  z-index: 999;
 }
 
 .dialog__content {
@@ -205,6 +215,15 @@ html, body, #root, .container {
   font-size: 1.5rem;
   text-transform: uppercase;
   margin-right: 20px;
+}
+
+.adminui {
+  display: flex;
+  align-items: center;
+}
+
+.adminui input {
+  margin-right: 10px;
 }
 
 .sidebar {
@@ -414,6 +433,7 @@ main {
 }
 
 .card {
+  position: relative;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -430,6 +450,13 @@ main {
 .card__title {
   font-size: 1.2rem;
   font-weight: 700;
+}
+
+.card .adminui {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 20px;
 }
 
 [draggable="true"] {
@@ -626,4 +653,39 @@ main {
 
 .module__status--done {
   color: var(--status-done);
+}
+
+.error {
+  display: block;
+  color: var(--red);
+  margin-bottom: 20px;
+}
+
+form input {
+  margin-bottom: 20px;
+}
+
+input {
+  padding: 10px;
+  font-size: 0.8rem;
+  outline: none;
+  background-color: #fff;
+  border: 1px solid var(--dark-bg);
+  border-radius: 4px;
+}
+
+input[type="submit"] {
+  color: var(--font-light);
+  margin-bottom: 0;
+  cursor: pointer;
+  background-color: var(--dark-bg);
+}
+
+input[type="submit"]:hover {
+  background-color: #303d50;
+}
+
+input[type="disabled"] {
+  opacity: 0.6;
+  cursor: not-allowed;
 }

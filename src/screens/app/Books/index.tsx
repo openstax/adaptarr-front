@@ -2,12 +2,19 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
+import axios from '../../../config/axios'
+
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
+import AdminUI from '../../../components/AdminUI'
 import BookCard from '../../../components/BookCard'
 import Spinner from '../../../components/Spinner'
+import SuperSession from '../../../components/SuperSession'
+import Button from '../../../components/ui/Button'
+import Icon from '../../../components/ui/Icon'
 
 import { IsLoading, BooksMap, BookShortInfo } from '../../../store/types'
+import { FetchBooksMap, fetchBooksMap } from '../../../store/actions/Books'
 import { State } from '../../../store/reducers/index'
 
 type Props = {
@@ -15,6 +22,7 @@ type Props = {
     isLoading: IsLoading
     booksMap: BooksMap
   }
+  fetchBooksMap: () => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -23,7 +31,21 @@ export const mapStateToProps = ({ booksMap }: State) => {
   }
 }
 
+export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
+  return {
+    fetchBooksMap: () => dispatch(fetchBooksMap()),
+  }
+}
+
 class Books extends React.Component<Props> {
+
+  state: {
+    titleInput: string,
+    showSuperSession: boolean,
+  } = {
+    titleInput: '',
+    showSuperSession: false,
+  }
 
   private listOfBookCards = (booksMap: BooksMap) => {
     let books: BookShortInfo[] = []
@@ -38,12 +60,53 @@ class Books extends React.Component<Props> {
     })
   }
 
+  private addBook = () => {
+    axios.post('books', `title=${this.state.titleInput}`)
+      .then(() => {
+        this.props.fetchBooksMap()
+        this.setState({ titleInput: '' })
+      })
+      .catch(() => {
+        this.setState({ showSuperSession: true })
+      })
+  }
+
+  private updateTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement
+    this.setState({ titleInput: input.value })
+  }
+
+  private superSessionSuccess = (res: Response) => {
+    this.addBook()
+    this.setState({ showSuperSession: false })
+  }
+
+  private superSessionFailure = (e: Error) => {
+    console.log('failure', e.message)
+  }
+
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
+    const { titleInput, showSuperSession } = this.state
 
     return (
       <Section>
-        <Header i18nKey="Books.title" />
+        <Header i18nKey="Books.title">
+          <AdminUI>
+            <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Book title" />
+            <Button color="green" isDisabled={!(titleInput.length > 0)} clickHandler={this.addBook}>
+              <Icon name="plus"/>
+            </Button>
+          </AdminUI>
+        </Header>
+        {
+          showSuperSession ?
+            <SuperSession 
+              onSuccess={this.superSessionSuccess} 
+              onFailure={this.superSessionFailure}
+              onAbort={() => this.setState({ showSuperSession: false })}/>
+          : null
+        }
         {
           !isLoading ?
             <div className="section__content">
@@ -61,4 +124,4 @@ class Books extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Books)
+export default connect(mapStateToProps, mapDispatchToProps)(Books)

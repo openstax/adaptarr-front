@@ -3,7 +3,7 @@ import { Trans } from 'react-i18next'
 
 type Props = {
   i18nKey?: string
-  title?: string,
+  title?: string
   children?: any
 }
 
