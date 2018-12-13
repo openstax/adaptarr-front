@@ -2,7 +2,7 @@ declare module 'react-nestable' {
   import * as React from 'react'
 
   export interface Item {
-    id: string | number
+    number: string | number
     [key: string]: any
   }
 

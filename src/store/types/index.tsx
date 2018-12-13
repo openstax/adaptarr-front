@@ -18,8 +18,8 @@ export type TeamMap = Map<number, User>
 export type BookShortInfo = {id: string, title: string}
 export type BooksMap = Map<string, BookShortInfo>
 
-export type BookPartKind = 'part' | 'module'
-export type BookPart = {id: string, kind: BookPartKind, title: string, parts?: BookPart[]}
+export type BookPartKind = 'group' | 'module'
+export type BookPart = {id?: string, number: number, kind: BookPartKind, title: string, parts?: BookPart[]}
 export interface Book {
   id: string
   title: string

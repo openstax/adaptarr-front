@@ -473,7 +473,11 @@ main {
 }
 
 .nestable-list {
+  position: relative;
   margin-top: 0 !important;
+}
+
+.nestable-item-0 > .nestable-list {
   padding-left: 0 !important;
 }
 
@@ -491,8 +495,31 @@ main {
   outline-offset: -1px;
 }
 
+.nestable-item-0.nestable-has-children {
+  background-color: #fff;
+}
+
 .nestable-has-children {
   background-color: var(--light-bg);
+}
+
+.nestable-item-0.nestable-has-children > .nestable-list .nestable-item-name {
+  padding-left: 40px;
+}
+
+.nestable-item-0 .nestable-list:before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 100%;
+  position: absolute;
+  z-index: 1;
+  background-color: var(--dark-bg);
+}
+
+.nestable-item-0 > .nestable-list {
+  position: relative;
+  margin-left: 20px;
 }
 
 .nestable-has-children .nestable-list .nestable-item-name {
@@ -517,6 +544,10 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.bookpart__item button {
+  margin-right: 10px;
 }
 
 .bookpart__item--part .bookpart__title {

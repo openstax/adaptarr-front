@@ -2,15 +2,20 @@ import * as React from 'react'
 import Nestable from 'react-nestable'
 import { connect } from 'react-redux'
 import { AxiosResponse } from 'axios'
+import { Trans } from 'react-i18next'
 
 import axios from '../../../config/axios'
 
 import Section from '../../../components/Section'
 import Header from '../../../components/Header'
+import Spinner from '../../../components/Spinner'
+import AdminUI from '../../../components/AdminUI'
+import SuperSession from '../../../components/SuperSession'
 import Avatar from '../../../components/ui/Avatar'
 import Button from '../../../components/ui/Button'
 import Icon from '../../../components/ui/Icon'
 import StackedBar from '../../../components/ui/StackedBar'
+import Dialog from '../../../components/ui/Dialog'
 
 import * as types from '../../../store/types'
 import { State } from '../../../store/reducers'
@@ -64,7 +69,12 @@ class Book extends React.Component<Props> {
   state: {
     isLoading: boolean,
     book: types.Book,
-    showModuleDetails: types.ModuleShortInfo | undefined
+    showModuleDetails: types.ModuleShortInfo | undefined,
+    showAddModule: boolean,
+    showAddGroup: boolean,
+    showSuperSession: boolean,
+    groupNameValue: string,
+    targetGroup: types.BookPart | null,
   } = {
     isLoading: true,
     book: {
@@ -73,12 +83,18 @@ class Book extends React.Component<Props> {
       parts: []
     },
     showModuleDetails: undefined,
+    showAddModule: false,
+    showAddGroup: false,
+    showSuperSession: false,
+    groupNameValue: '',
+    targetGroup: null,
   }
 
   private showModuleDetails = (item: types.BookPart) => {
-    if (item.kind !== 'module') return
-    const details = this.props.modulesMap.modulesMap.get(item.id)
-    this.setState({ showModuleDetails: details })
+    if (item.kind === 'module' && item.id) {
+      const details = this.props.modulesMap.modulesMap.get(item.id)
+      this.setState({ showModuleDetails: details })
+    }
   }
 
   private closeModuleDetails = () => {
@@ -96,7 +112,7 @@ class Book extends React.Component<Props> {
     )
     const placeholder: types.ModuleStatus[] = ['ready', 'ready', 'done', 'translation', 'review', 'review']
 
-    if (item.kind === 'module') {
+    if (item.kind === 'module' && item.id) {
       const mod = modulesMap.get(item.id)
       const assigne = mod ? mod.assignee : undefined
       user = assigne ? teamMap.get(assigne) : undefined
@@ -121,9 +137,23 @@ class Book extends React.Component<Props> {
           {item.title}
         </span>
         <span className="bookpart__info">
+          {
+            item.kind === 'group' ?
+              <AdminUI>
+                <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
+                  <Icon name="plus" />
+                  Add group
+                </Button>
+                <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
+                  <Icon name="plus" />
+                  Add module
+                </Button>
+              </AdminUI>
+            : null
+          }
           <span className="bookpart__status">
             {
-              item.kind === 'part' ?
+              item.kind === 'group' ?
                 <StackedBar data={placeholder}/>
               : moduleStatus
             }
@@ -134,7 +164,7 @@ class Book extends React.Component<Props> {
             : null
           }
           {
-            item.kind === 'part' ?
+            item.kind === 'group' ?
               <span className="bookpart__icon">
                 {collapseIcon}
               </span>
@@ -202,45 +232,164 @@ class Book extends React.Component<Props> {
     })
   }
 
-  private fetchBook = (id: string) => {
+  private showAddGroupDialog = (target: types.BookPart) => {
+    this.setState({ showAddGroup: true, targetGroup: target })
+  }
+
+  private closeAddGroupDialog = () => {
+    this.setState({ showAddGroup: false, groupNameValue: '', targetGroup: null })
+  }
+
+  private addGroup = () => {
+    const { targetGroup, groupNameValue } = this.state
+    if (groupNameValue.length === 0) return
+    console.log('addGroup to:', targetGroup)
+
+    if (targetGroup) {
+      const bookId = this.props.match.params.id
+      const payload = {
+        title: this.state.groupNameValue,
+        parent: targetGroup.number,
+        index: targetGroup.parts ? targetGroup.parts.length : 0,
+        parts: [],
+      }
+
+      axios.post(`books/${bookId}/parts`, payload)
+        .then(() => {
+          this.closeAddGroupDialog()
+          this.fetchBook()
+        })
+        .catch((e) => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+          } else {
+            console.error(e.message)
+            this.closeAddGroupDialog()
+          }
+        })
+      }
+  }
+
+  private showAddModuleDialog = (target: types.BookPart) => {
+    this.setState({ showAddModule: true, targetGroup: target })
+  }
+
+  private closeAddModuleDialog = () => {
+    this.setState({ showAddModule: false, targetGroup: null })
+  }
+
+  private addModule = (target: types.BookPart) => {
+    console.log('addModule to:', target)
+  }
+
+  private fetchBook = (id: string = this.props.match.params.id) => {
     axios.get(`books/${id}`)
       .then((res: AxiosResponse) => {
-        this.setState({
-          isLoading: false,
-          book: res.data,
-        })
+        this.setState({ book: res.data })
+        axios.get(`books/${id}/parts`)
+          .then((res: AxiosResponse) => {
+            this.setState({
+              isLoading: false,
+              book: {
+                ...this.state.book,
+                parts: [res.data]
+              }
+            })
+          })
+          .catch((e: Error) => {
+            console.error(e.message)
+            this.setState({ isLoading: false })
+          })
       })
       .catch((e: ErrorEvent) => {
-        console.log(e.message)
-        this.setState({isLoading: false})
+        console.error(e.message)
+        this.setState({ isLoading: false })
       })
+  }
+
+  private superSessionSuccess = () => {
+    this.addGroup()
+    this.setState({ showSuperSession: false })
+  }
+
+  private superSessionFailure = (e: Error) => {
+    console.log('failure', e.message)
+  }
+
+  private updateGroupNameValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ groupNameValue: e.target.value })
   }
 
   componentDidMount () {
-    this.fetchBook(this.props.match.params.id)
+    this.fetchBook()
   }
   
   public render() {
-    const { book, showModuleDetails } = this.state
+    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue } = this.state
 
     return (
       <div className="container container--splitted">
+        {
+          showSuperSession ?
+            <SuperSession 
+              onSuccess={this.superSessionSuccess} 
+              onFailure={this.superSessionFailure}
+              onAbort={() => this.setState({ showSuperSession: false })}/>
+          : null
+        }
+        {
+          showAddGroup ?
+            <Dialog onClose={this.closeAddGroupDialog} i18nKey="Book.addGroupDialog">
+              <input 
+                type="text" 
+                value={groupNameValue}
+                placeholder="Title"
+                onChange={(e) => this.updateGroupNameValue(e)} />
+              <Button 
+                color="green" 
+                clickHandler={this.addGroup}
+                isDisabled={!(groupNameValue.length > 0)}
+              >
+                <Trans i18nKey="Buttons.confirm" />
+              </Button>
+              <Button 
+                color="red"
+                clickHandler={this.closeAddGroupDialog}
+              >
+                <Trans i18nKey="Buttons.cancel" />
+              </Button>
+            </Dialog>
+          : null
+        }
+        {
+          showAddModule ?
+            <Dialog onClose={() => this.setState({ showAddModule: false })} i18nKey="Book.addModuleDialog">
+              module 1
+              module 2
+              module 3
+            </Dialog>
+          : null
+        }
         <Section>
           <Header title={book.title}>
             <div className="book__status">
               <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
             </div>
           </Header>
-          <Nestable
-            isDisabled={false}
-            items={book.parts}
-            className="book-collection"
-            childrenProp="parts"
-            renderItem={this.renderItem}
-            renderCollapseIcon={this.renderCollapseIcon}
-            onMove={this.handleOnMove}
-            onChange={this.handlePositionChange}
-          />
+          {
+          !isLoading ?
+            <Nestable
+              isDisabled={false}
+              items={book.parts}
+              className="book-collection"
+              childrenProp="parts"
+              renderItem={this.renderItem}
+              renderCollapseIcon={this.renderCollapseIcon}
+              onMove={this.handleOnMove}
+              onChange={this.handlePositionChange}
+            />
+            : <Spinner />
+          }
         </Section>
         {
           showModuleDetails ?

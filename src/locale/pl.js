@@ -21,6 +21,8 @@ export default {
     "Notifications.unknowAction": "Nieznana akcja",
     "Books.title": "Książki",
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
+    "Book.addGroupDialog": "Podaj nazwę rozdziału.",
+    "Book.addModuleDialog": "Wybierz moduł do dodania.",
     "Buttons.delete": "Usuń",
     "Buttons.cancel": "Analuj",
     "Buttons.confirm": "Potwierdź",
