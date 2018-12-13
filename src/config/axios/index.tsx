@@ -5,9 +5,9 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use((config) => {
-  /* config.headers = {
+  config.headers = {
     'Content-Type': 'application/json; charset=utf-8',
-  } */
+  }
 
   return config
 })

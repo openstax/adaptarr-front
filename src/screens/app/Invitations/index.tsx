@@ -33,7 +33,7 @@ class Invitations extends React.Component {
       return
     }
 
-    axios.post('users/invite', `email=${email}`)
+    axios.post('users/invite', {email})
       .then(() => {
         console.log(`Invitation sent to ${email}`)
         this.setState({ emailValue: '', successMessage: `Invitation sent to ${email}`, errorMessage: '' })

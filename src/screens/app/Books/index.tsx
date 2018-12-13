@@ -61,7 +61,7 @@ class Books extends React.Component<Props> {
   }
 
   private addBook = () => {
-    axios.post('books', `title=${this.state.titleInput}`)
+    axios.post('books', {title: this.state.titleInput})
       .then(() => {
         this.props.fetchBooksMap()
         this.setState({ titleInput: '' })
