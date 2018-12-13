@@ -46,7 +46,7 @@ const mapStateToProps = ({ team, modulesMap }: State) => {
 // Nested component is adding `parts: []` to every item and we do not want that
 const listWithoutEmptyParts = (arr: types.BookPart[]): types.BookPart[] => {
   const removeEmptyPartsFromItem = (item: types.BookPart): types.BookPart => {
-    if (item.parts && item.parts.length === 0) {
+    if (item.kind !== 'group') {
       const newItem = Object.assign({}, {...item})
       delete newItem.parts
       return newItem
