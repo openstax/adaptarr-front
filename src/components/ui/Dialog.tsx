@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next'
 import Icon from './Icon'
 
 type Props = {
+  size?: 'small' | 'medium' | 'big'
   i18nKey?: string
   title?: string
   className?: string
@@ -11,14 +12,17 @@ type Props = {
   children: React.ReactNode
 }
 
-const dialog = ({ i18nKey, title, className, onClose, children }: Props) => {
+const dialog = ({ size, i18nKey, title, className, onClose, children }: Props) => {
   const clickOnOverlay = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement
     if (/dialog__container/.test(element.className)) onClose()
   }
 
   return (
-    <div className={`dialog__container ${className}`} onClick={clickOnOverlay}>
+    <div 
+      className={`dialog__container dialog__container--${size ? size : 'small'} ${className ? className : null}`}
+      onClick={clickOnOverlay}
+    >
       <div className="dialog__content">
         <span className="dialog__close" onClick={onClose}>
           <Icon name="close" />

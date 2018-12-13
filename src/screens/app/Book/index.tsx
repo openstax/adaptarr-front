@@ -17,6 +17,8 @@ import Icon from '../../../components/ui/Icon'
 import StackedBar from '../../../components/ui/StackedBar'
 import Dialog from '../../../components/ui/Dialog'
 
+import ModulesList from '../../../containers/ModulesList'
+
 import * as types from '../../../store/types'
 import { State } from '../../../store/reducers'
 
@@ -75,6 +77,7 @@ class Book extends React.Component<Props> {
     showSuperSession: boolean,
     groupNameValue: string,
     targetGroup: types.BookPart | null,
+    selectedModule: types.ModuleShortInfo | null
   } = {
     isLoading: true,
     book: {
@@ -88,6 +91,7 @@ class Book extends React.Component<Props> {
     showSuperSession: false,
     groupNameValue: '',
     targetGroup: null,
+    selectedModule: null,
   }
 
   private showModuleDetails = (item: types.BookPart) => {
@@ -214,8 +218,11 @@ class Book extends React.Component<Props> {
     // Do not move bookparts into modules
     // TODO: Create new part when user move module into module
     const parent: types.BookPart | types.Book = this.findParentWithinItems(newItems, realPathTo)
-
-    if ((parent as types.BookPart).kind && (parent as types.BookPart).kind === 'module') {
+    console.log(parent)
+    if (typeof (parent as types.BookPart).number !== 'number') {
+      console.log('You can not move items outside book.')
+      return false
+    } else if ((parent as types.BookPart).kind === 'module') {
       console.log('You can not move modules into modules.')
       return false
     }
@@ -275,11 +282,39 @@ class Book extends React.Component<Props> {
   }
 
   private closeAddModuleDialog = () => {
-    this.setState({ showAddModule: false, targetGroup: null })
+    this.setState({ showAddModule: false, targetGroup: null, selectedModule: null })
   }
 
-  private addModule = (target: types.BookPart) => {
-    console.log('addModule to:', target)
+  private handleModuleClick = (mod: types.ModuleShortInfo) => {
+    this.setState({ selectedModule: mod }, this.addModule)
+  }
+
+  private addModule = () => {
+    const { targetGroup, selectedModule } = this.state
+    console.log('addModule to:', targetGroup)
+
+    if (targetGroup && selectedModule) {
+      const bookId = this.props.match.params.id
+      const payload = {
+        module: selectedModule.id,
+        parent: targetGroup.number,
+        index: targetGroup.parts ? targetGroup.parts.length : 0,
+      }
+
+      axios.post(`books/${bookId}/parts`, payload)
+        .then(() => {
+          this.closeAddModuleDialog()
+          this.fetchBook()
+        })
+        .catch((e) => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+          } else {
+            console.error(e.message)
+            this.closeAddModuleDialog()
+          }
+        })
+    }
   }
 
   private fetchBook = (id: string = this.props.match.params.id) => {
@@ -308,7 +343,11 @@ class Book extends React.Component<Props> {
   }
 
   private superSessionSuccess = () => {
-    this.addGroup()
+    if (this.state.selectedModule) {
+      this.addModule()
+    } else if (this.state.groupNameValue) {
+      this.addGroup()
+    }
     this.setState({ showSuperSession: false })
   }
 
@@ -340,33 +379,37 @@ class Book extends React.Component<Props> {
         {
           showAddGroup ?
             <Dialog onClose={this.closeAddGroupDialog} i18nKey="Book.addGroupDialog">
-              <input 
-                type="text" 
-                value={groupNameValue}
-                placeholder="Title"
-                onChange={(e) => this.updateGroupNameValue(e)} />
-              <Button 
-                color="green" 
-                clickHandler={this.addGroup}
-                isDisabled={!(groupNameValue.length > 0)}
-              >
-                <Trans i18nKey="Buttons.confirm" />
-              </Button>
-              <Button 
-                color="red"
-                clickHandler={this.closeAddGroupDialog}
-              >
-                <Trans i18nKey="Buttons.cancel" />
-              </Button>
+              <form>
+                <input 
+                  type="text" 
+                  value={groupNameValue}
+                  placeholder="Title"
+                  onChange={(e) => this.updateGroupNameValue(e)} />
+                <Button 
+                  color="green" 
+                  clickHandler={this.addGroup}
+                  isDisabled={!(groupNameValue.length > 0)}
+                >
+                  <Trans i18nKey="Buttons.confirm" />
+                </Button>
+                <Button 
+                  color="red"
+                  clickHandler={this.closeAddGroupDialog}
+                >
+                  <Trans i18nKey="Buttons.cancel" />
+                </Button>
+              </form>
             </Dialog>
           : null
         }
         {
           showAddModule ?
-            <Dialog onClose={() => this.setState({ showAddModule: false })} i18nKey="Book.addModuleDialog">
-              module 1
-              module 2
-              module 3
+            <Dialog 
+              size="medium"
+              onClose={this.closeAddModuleDialog} 
+              i18nKey="Book.addModuleDialog"
+            >
+              <ModulesList onModuleClick={this.handleModuleClick} />
             </Dialog>
           : null
         }

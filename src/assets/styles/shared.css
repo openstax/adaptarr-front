@@ -173,6 +173,18 @@ button[disabled] {
   border-radius: 5px;
 }
 
+.dialog__container--small .dialog__content {
+  width: 300px;
+}
+
+.dialog__container--medium .dialog__content {
+  width: 600px;
+}
+
+.dialog__container--big .dialog__content {
+  width: 900px;
+}
+
 .dialog__title {
   padding: 20px 0;
 }
@@ -511,7 +523,7 @@ main {
   content: "";
   display: block;
   width: 1px;
-  height: 100%;
+  height: calc(100% - 34px);
   position: absolute;
   z-index: 1;
   background-color: var(--dark-bg);
@@ -532,6 +544,10 @@ main {
   outline: none;
 }
 
+.nestable-has-children .nestable-item-name:hover .bookpart__item::before {
+  background-color: #fff;
+}
+
 .nestable-children-collapsed {
   background-color: #fff;
 }
@@ -544,6 +560,20 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.bookpart__item::before {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 1px;
+  position: absolute;
+  left: 0;
+  background-color: var(--dark-bg);
+}
+
+.nestable-item-0 > .nestable-item-name .bookpart__item::before {
+  display: none;
 }
 
 .bookpart__item button {
@@ -726,4 +756,39 @@ input[type="submit"]:hover {
 input[type="disabled"] {
   opacity: 0.6;
   cursor: not-allowed;
+}
+
+.modulesList {
+  width: 100%;
+}
+
+.modulesList__new {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.modulesList__new input {
+  margin-right: 10px;
+}
+
+.modulesList__list {
+  margin-top: 20px;
+}
+
+.modulesList__item:hover {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.modulesList__info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.modulesList__title {
+
 }
