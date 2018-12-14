@@ -1,7 +1,7 @@
-import axios from '../../config/axios'
+import axios from 'src/config/axios'
 
-import * as constants from '../constants'
-import { Notification } from '../types'
+import * as constants from 'src/store/constants'
+import { Notification } from 'src/store/types'
 
 export interface FetchNotifications {
   (dispatch: any): void

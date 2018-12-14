@@ -1,10 +1,10 @@
-import { IsLoading, Dashboard } from '../types'
-import { DashboardDataAction } from '../actions/Dashboard'
+import { IsLoading, Dashboard } from 'src/store/types'
+import { DashboardDataAction } from 'src/store/actions/Dashboard'
 import { 
   FETCH_DASHBOARD_BEGIN, 
   FETCH_DASHBOARD_SUCCESS, 
   FETCH_DASHBOARD_FAILURE,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   isLoading: IsLoading

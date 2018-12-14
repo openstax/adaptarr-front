@@ -2,20 +2,20 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
-import axios from '../../../config/axios'
+import axios from 'src/config/axios'
 
-import Section from '../../../components/Section'
-import Header from '../../../components/Header'
-import AdminUI from '../../../components/AdminUI'
-import BookCard from '../../../components/BookCard'
-import Spinner from '../../../components/Spinner'
-import SuperSession from '../../../components/SuperSession'
-import Button from '../../../components/ui/Button'
-import Icon from '../../../components/ui/Icon'
+import Section from 'src/components/Section'
+import Header from 'src/components/Header'
+import AdminUI from 'src/components/AdminUI'
+import BookCard from 'src/components/BookCard'
+import Spinner from 'src/components/Spinner'
+import SuperSession from 'src/components/SuperSession'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
-import { IsLoading, BooksMap, BookShortInfo } from '../../../store/types'
-import { FetchBooksMap, fetchBooksMap } from '../../../store/actions/Books'
-import { State } from '../../../store/reducers/index'
+import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { State } from 'src/store/reducers/index'
 
 type Props = {
   booksMap: {

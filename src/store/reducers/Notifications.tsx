@@ -1,10 +1,10 @@
-import { NotificationsAction } from '../actions/Notifications'
-import { IsLoading, Notification } from '../types'
+import { NotificationsAction } from 'src/store/actions/Notifications'
+import { IsLoading, Notification } from 'src/store/types'
 import { 
   FETCH_NOTIFICATIONS_BEGIN,
   FETCH_NOTIFICATIONS_SUCCESS,
   FETCH_NOTIFICATIONS_FAILURE,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   isLoading: IsLoading

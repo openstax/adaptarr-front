@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 
-import { State, reducer, initialState } from './reducers'
+import { State, reducer, initialState } from 'src/store/reducers'
 
 const logger = () => {
   return (next: any) => {

@@ -1,7 +1,7 @@
-import axios from '../../config/axios'
+import axios from 'src/config/axios'
 
-import * as constants from '../constants'
-import { ModulesMap, ModuleShortInfo } from '../types'
+import * as constants from 'src/store/constants'
+import { ModulesMap, ModuleShortInfo } from 'src/store/types'
 
 export interface FetchModulesMap {
   (dispatch: any): void

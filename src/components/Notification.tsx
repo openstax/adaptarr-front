@@ -5,8 +5,8 @@ import { Trans } from 'react-i18next'
 
 import Avatar from './ui/Avatar'
 
-import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User } from '../store/types'
-import { State } from '../store/reducers'
+import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User } from 'src/store/types'
+import { State } from 'src/store/reducers'
 
 type Props = {
   team: {

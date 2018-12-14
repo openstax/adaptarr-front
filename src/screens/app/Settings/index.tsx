@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import Header from '../../../components/Header'
+import Header from 'src/components/Header'
 
 const settings = (props: any) => {
   return (

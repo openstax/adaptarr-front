@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { ModuleStatus } from '../../store/types'
+import { ModuleStatus } from 'src/store/types'
 
 type Props = {
   data: ModuleStatus[]

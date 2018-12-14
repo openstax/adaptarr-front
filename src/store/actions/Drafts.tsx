@@ -1,6 +1,6 @@
-import axios from '../../config/axios'
+import axios from 'src/config/axios'
 
-import { RequestStatus } from '../types'
+import { RequestStatus } from 'src/store/types'
 
 export const createDraft = async (id: string): Promise<RequestStatus> => {
   const res: RequestStatus = await axios.post(`modules/${id}`)

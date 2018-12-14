@@ -1,10 +1,10 @@
-import { ModulesMap } from '../types'
-import { ModulesAction } from '../actions/Modules'
+import { ModulesMap } from 'src/store/types'
+import { ModulesAction } from 'src/store/actions/Modules'
 import {
   SET_MODULES_MAP,
   ADD_MODULE_TO_MAP,
   REMOVE_MODULE_FROM_MAP,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   modulesMap: ModulesMap

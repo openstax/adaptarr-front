@@ -1,11 +1,11 @@
-import { UserDataAction } from '../actions/User'
-import { IsLoading, User } from '../types'
+import { UserDataAction } from 'src/store/actions/User'
+import { IsLoading, User } from 'src/store/types'
 import { 
   FETCH_USER_BEGIN,
   FETCH_USER_SUCCESS,
   FETCH_USER_FAILURE,
   CLEAR_USER_DATA,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   isLoading: IsLoading

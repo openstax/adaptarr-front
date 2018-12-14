@@ -1,7 +1,7 @@
-import axios from '../../config/axios'
+import axios from 'src/config/axios'
 
-import * as constants from '../constants'
-import { User } from '../types'
+import * as constants from 'src/store/constants'
+import { User } from 'src/store/types'
 
 export interface FetchUser {
   (dispatch: any): void

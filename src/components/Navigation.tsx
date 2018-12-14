@@ -11,8 +11,8 @@ import AdminUI from './AdminUI'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-import { IsLoading, Notification } from '../store/types'
-import { State } from '../store/reducers'
+import { IsLoading, Notification } from 'src/store/types'
+import { State } from 'src/store/reducers'
 
 type Props = {
   t: any,

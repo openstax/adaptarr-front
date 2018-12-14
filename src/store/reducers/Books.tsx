@@ -1,10 +1,10 @@
-import { IsLoading, BooksMap } from '../types'
-import { BooksAction } from '../actions/Books'
+import { IsLoading, BooksMap } from 'src/store/types'
+import { BooksAction } from 'src/store/actions/Books'
 import {
   FETCH_BOOKS_MAP_BEGIN,
   FETCH_BOOKS_MAP_SUCCESS,
   FETCH_BOOKS_MAP_FAILURE,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   isLoading: IsLoading

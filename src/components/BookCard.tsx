@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
-import axios from '../config/axios'
+import axios from 'src/config/axios'
 
 import AdminUI from './AdminUI'
 import SuperSession from './SuperSession'
@@ -11,9 +11,9 @@ import Dialog from './ui/Dialog'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-import { IsLoading, BooksMap, BookShortInfo } from '../store/types'
-import { FetchBooksMap, fetchBooksMap } from '../store/actions/Books'
-import { State } from '../store/reducers/index'
+import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { State } from 'src/store/reducers/index'
 
 type Props = {
   book: BookShortInfo

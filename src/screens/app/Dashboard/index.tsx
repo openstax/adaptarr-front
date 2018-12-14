@@ -3,17 +3,17 @@ import { AxiosResponse } from 'axios'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
-import axios from '../../../config/axios'
+import axios from 'src/config/axios'
 
-import Section from '../../../components/Section'
-import Header from '../../../components/Header'
-import Spinner from '../../../components/Spinner'
-import Button from '../../../components/ui/Button'
-import Dialog from '../../../components/ui/Dialog'
+import Section from 'src/components/Section'
+import Header from 'src/components/Header'
+import Spinner from 'src/components/Spinner'
+import Button from 'src/components/ui/Button'
+import Dialog from 'src/components/ui/Dialog'
 
-import * as types from '../../../store/types'
-import { createDraft, deleteDraft } from '../../../store/actions/Drafts'
-import { State } from '../../../store/reducers/index'
+import * as types from 'src/store/types'
+import { createDraft, deleteDraft } from 'src/store/actions/Drafts'
+import { State } from 'src/store/reducers/index'
 
 type Props = {
   user: {

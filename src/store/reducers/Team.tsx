@@ -1,8 +1,8 @@
-import { TeamAction } from '../actions/Team'
-import { TeamMap } from '../types'
+import { TeamAction } from 'src/store/actions/Team'
+import { TeamMap } from 'src/store/types'
 import { 
   SET_TEAM_MAP,
-} from '../constants'
+} from 'src/store/constants'
 
 export interface State {
   teamMap: TeamMap

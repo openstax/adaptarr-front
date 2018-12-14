@@ -1,7 +1,7 @@
 import * as React from 'react'
 
-import Section from '../../../components/Section'
-import Header from '../../../components/Header'
+import Section from 'src/components/Section'
+import Header from 'src/components/Header'
 
 const notificationsCentre = (props: any) => {
   return (

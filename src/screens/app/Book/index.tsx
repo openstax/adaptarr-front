@@ -4,23 +4,23 @@ import { connect } from 'react-redux'
 import { AxiosResponse } from 'axios'
 import { Trans } from 'react-i18next'
 
-import axios from '../../../config/axios'
+import axios from 'src/config/axios'
 
-import Section from '../../../components/Section'
-import Header from '../../../components/Header'
-import Spinner from '../../../components/Spinner'
-import AdminUI from '../../../components/AdminUI'
-import SuperSession from '../../../components/SuperSession'
-import Avatar from '../../../components/ui/Avatar'
-import Button from '../../../components/ui/Button'
-import Icon from '../../../components/ui/Icon'
-import StackedBar from '../../../components/ui/StackedBar'
-import Dialog from '../../../components/ui/Dialog'
+import Section from 'src/components/Section'
+import Header from 'src/components/Header'
+import Spinner from 'src/components/Spinner'
+import AdminUI from 'src/components/AdminUI'
+import SuperSession from 'src/components/SuperSession'
+import Avatar from 'src/components/ui/Avatar'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
+import StackedBar from 'src/components/ui/StackedBar'
+import Dialog from 'src/components/ui/Dialog'
 
-import ModulesList from '../../../containers/ModulesList'
+import ModulesList from 'src/containers/ModulesList'
 
-import * as types from '../../../store/types'
-import { State } from '../../../store/reducers'
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
 
 type Props = {
   match: {
