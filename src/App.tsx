@@ -12,6 +12,7 @@ import Book from './screens/app/Book'
 import Resources from './screens/app/Resources'
 import Settings from './screens/app/Settings'
 import Invitations from './screens/app/Invitations'
+import Error404 from './screens/app/Error404'
 
 import * as userActions from './store/actions/User'
 import * as teamActions from './store/actions/Team'
@@ -91,6 +92,7 @@ class App extends React.Component<Props> {
                 <Route path="/resources" component={Resources} />
                 <Route path="/settings" component={Settings} />
                 <Route path="/invitations" component={Invitations} />
+                <Route component={Error404} />
               </main>
             </div>
           : <Spinner />
