@@ -774,6 +774,14 @@ input[type="disabled"] {
 
 .modulesList__list {
   margin-top: 20px;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--dark-bg);
+  background-color: #fff;
+}
+
+.modulesList__item {
+  border-bottom: 1px solid var(--light-bg);
 }
 
 .modulesList__item:hover {
