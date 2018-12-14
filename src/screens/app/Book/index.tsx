@@ -111,21 +111,54 @@ class Book extends React.Component<Props> {
     this.setState({ showModuleDetails: undefined })
   }
 
-  private renderItem = ({ item, collapseIcon }: { item: types.BookPart, index: number, collapseIcon: any, handler: any }) => {
+  private renderGroup = (item: types.BookPart, collapseIcon: any) => {
+    const placeholder: types.ModuleStatus[] = ['ready', 'ready', 'done', 'translation', 'review', 'review']
+
+    return (
+      <React.Fragment>
+        <span className="bookpart__title">
+          {item.title}
+        </span>
+        <span className="bookpart__info">
+          <AdminUI>
+            <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
+              <Icon name="plus" />
+              Group
+            </Button>
+            <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
+              <Icon name="plus" />
+              Module
+            </Button>
+            <Button color="red" clickHandler={() => this.showRemoveGroupDialog(item)}>
+              <Icon name="minus" />
+              Group
+            </Button>
+          </AdminUI>
+          <span className="bookpart__status">
+            <StackedBar data={placeholder}/>
+          </span>
+          <span className="bookpart__icon">
+            {collapseIcon}
+          </span>
+        </span>
+      </React.Fragment>
+    )
+  }
+
+  private renderModule = (item: types.BookPart) => {
     const { modulesMap } = this.props.modulesMap
     const { teamMap } = this.props.team
-    let user
+    let assignedUser
     let moduleStatus = (
       <span className="module__status module__status--ready">
         ready
       </span>
     )
-    const placeholder: types.ModuleStatus[] = ['ready', 'ready', 'done', 'translation', 'review', 'review']
 
-    if (item.kind === 'module' && item.id) {
+    if (item.id) {
       const mod = modulesMap.get(item.id)
       const assigne = mod ? mod.assignee : undefined
-      user = assigne ? teamMap.get(assigne) : undefined
+      assignedUser = assigne ? teamMap.get(assigne) : undefined
       if (mod && mod.status) {
         moduleStatus = (
           <span 
@@ -137,9 +170,8 @@ class Book extends React.Component<Props> {
       }
     }
 
-    let classes = ['bookpart__item', `bookpart__item--${item.kind}`]
     return (
-      <div className={classes.join(' ')}>
+      <React.Fragment>
         <span 
           className="bookpart__title" 
           onClick={() => this.showModuleDetails(item)}
@@ -147,51 +179,36 @@ class Book extends React.Component<Props> {
           {item.title}
         </span>
         <span className="bookpart__info">
+          <AdminUI>
+            <Button color="red" clickHandler={() => this.showRemoveModuleDialog(item)}>
+              <Icon name="minus" />
+              Module
+            </Button>
+          </AdminUI>
           {
-            item.kind === 'group' ?
-              <AdminUI>
-                <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
-                  <Icon name="plus" />
-                  Group
-                </Button>
-                <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
-                  <Icon name="plus" />
-                  Module
-                </Button>
-                <Button color="red" clickHandler={() => this.showRemoveGroupDialog(item)}>
-                  <Icon name="minus" />
-                  Group
-                </Button>
-              </AdminUI>
-            : 
-              <AdminUI>
-                <Button color="red" clickHandler={() => this.showRemoveModuleDialog(item)}>
-                  <Icon name="minus" />
-                  Module
-                </Button>
-              </AdminUI>
-
+            assignedUser ?
+              <Avatar size="small" user={assignedUser} />
+            :
+              <Button>
+                Assign user
+              </Button>
           }
           <span className="bookpart__status">
-            {
-              item.kind === 'group' ?
-                <StackedBar data={placeholder}/>
-              : moduleStatus
-            }
+            { moduleStatus }
           </span>
-          {
-            item.kind === 'module' && user ?
-              <Avatar size="small" user={user} />
-            : null
-          }
-          {
-            item.kind === 'group' ?
-              <span className="bookpart__icon">
-                {collapseIcon}
-              </span>
-            : null
-          }
         </span>
+      </React.Fragment>
+    )
+  }
+
+  private renderItem = ({ item, collapseIcon }: { item: types.BookPart, index: number, collapseIcon: any, handler: any }) => {
+    return (
+      <div className={`bookpart__item bookpart__item--${item.kind}`}>
+        {
+          item.kind === 'group' ?
+            this.renderGroup(item, collapseIcon)
+          : this.renderModule(item)
+        }
       </div>
     )
   }

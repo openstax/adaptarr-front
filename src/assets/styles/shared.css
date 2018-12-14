@@ -548,13 +548,8 @@ main {
 }
 
 .nestable-has-children .nestable-item-name:hover {
-  color: var(--font-light);
-  background-color: var(--dark-bg);
+  background-color: var(--light-bg);
   outline: none;
-}
-
-.nestable-has-children .nestable-item-name:hover .bookpart__item::before {
-  background-color: #fff;
 }
 
 .nestable-children-collapsed {
