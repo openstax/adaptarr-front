@@ -344,6 +344,11 @@ button[disabled] {
   margin-right: 10px;
 }
 
+.nav__content {
+  display: flex;
+  align-items: center;
+}
+
 .notification {
   width: 100%;
 }
@@ -501,6 +506,14 @@ main {
   padding: 20px;
 }
 
+.nestable-item-name .adminui {
+  display: none;
+}
+
+.nestable-item-name:hover .adminui {
+  display: flex;
+}
+
 .nestable-item-name:hover {
   background-color: var(--light-bg);
   outline: 1px solid var(--dark-bg);
@@ -509,10 +522,6 @@ main {
 
 .nestable-item-0.nestable-has-children {
   background-color: #fff;
-}
-
-.nestable-has-children {
-  background-color: var(--light-bg);
 }
 
 .nestable-item-0.nestable-has-children > .nestable-list .nestable-item-name {
@@ -781,6 +790,9 @@ input[type="disabled"] {
 }
 
 .modulesList__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   border-bottom: 1px solid var(--light-bg);
 }
 
@@ -791,7 +803,7 @@ input[type="disabled"] {
 
 .modulesList__info {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 10px;
   cursor: pointer;

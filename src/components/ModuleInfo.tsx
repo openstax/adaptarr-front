@@ -1,18 +1,22 @@
 import * as React from 'react'
 
-import { ModuleShortInfo } from '../store/types'
+import { ModuleShortInfo } from 'src/store/types'
 
 type Props = {
   mod: ModuleShortInfo
-  [key: string]: any
 }
 
-const moduleInfo = (props: Props) => {
-  return (
-    <div className="modulesList__info" {...props}>
-      <h2 className="modulesList__title">{props.mod.title}</h2>
-    </div>
-  )
+class ModuleInfo extends React.Component<Props> {
+
+  public render() {
+    const { mod } = this.props
+
+    return (
+      <div className="modulesList__info">
+        <h2 className="modulesList__title">{mod.title}</h2>
+      </div>
+    )
+  }
 }
 
-export default moduleInfo
+export default ModuleInfo

@@ -12,7 +12,17 @@ export interface SetModulesMap {
   data: ModulesMap,
 }
 
-export type ModulesAction = SetModulesMap
+export interface AddModuleToMap {
+  type: constants.ADD_MODULE_TO_MAP,
+  data: ModuleShortInfo,
+}
+
+export interface RemoveModuleFromMap {
+  type: constants.REMOVE_MODULE_FROM_MAP,
+  data: string,
+}
+
+export type ModulesAction = SetModulesMap | AddModuleToMap | RemoveModuleFromMap
 
 const setModulesMap = (payload: ModulesMap): SetModulesMap => {
   return {
@@ -31,5 +41,19 @@ export const fetchModulesMap = (): FetchModulesMap => {
         console.log('fetchModulesMap():', e.message)
         throw new Error(e.message)
       })
+  }
+}
+
+export const addModuleToMap = (payload: ModuleShortInfo): AddModuleToMap => {
+  return {
+    type: constants.ADD_MODULE_TO_MAP,
+    data: payload,
+  }
+}
+
+export const removeModuleFromMap = (id: string): RemoveModuleFromMap => {
+  return {
+    type: constants.REMOVE_MODULE_FROM_MAP,
+    data: id,
   }
 }

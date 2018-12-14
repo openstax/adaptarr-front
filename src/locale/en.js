@@ -23,6 +23,8 @@ export default {
     "Books.noBooksFound": "No books found.",
     "Book.addGroupDialog": "Provide chapter title.",
     "Book.addModuleDialog": "Select module or create new one.",
+    "Book.removeGroupDialog": "Remove this group with all containings?",
+    "Book.removeModuleDialog": "Are you sure?",
     "Buttons.addNew": "Add new",
     "Buttons.delete": "Delete",
     "Buttons.cancel": "Cancel",
@@ -35,5 +37,6 @@ export default {
     "Settings.title": "Settings",
     "Invitations.title": "Invite new user",
     "Admin.confirmSuperSession": "Please confirm action.",
+    "ModulesList.deleteModuleDialog": "Deleting module is permament.",
   }
 }

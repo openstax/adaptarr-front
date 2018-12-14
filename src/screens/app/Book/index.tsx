@@ -74,10 +74,13 @@ class Book extends React.Component<Props> {
     showModuleDetails: types.ModuleShortInfo | undefined,
     showAddModule: boolean,
     showAddGroup: boolean,
+    showRemoveGroup: boolean,
     showSuperSession: boolean,
     groupNameValue: string,
     targetGroup: types.BookPart | null,
-    selectedModule: types.ModuleShortInfo | null
+    selectedModule: types.ModuleShortInfo | null,
+    showRemoveModule: boolean,
+    targetModule: types.BookPart | null,
   } = {
     isLoading: true,
     book: {
@@ -88,10 +91,13 @@ class Book extends React.Component<Props> {
     showModuleDetails: undefined,
     showAddModule: false,
     showAddGroup: false,
+    showRemoveGroup: false,
     showSuperSession: false,
     groupNameValue: '',
     targetGroup: null,
     selectedModule: null,
+    showRemoveModule: false,
+    targetModule: null,
   }
 
   private showModuleDetails = (item: types.BookPart) => {
@@ -146,14 +152,25 @@ class Book extends React.Component<Props> {
               <AdminUI>
                 <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
                   <Icon name="plus" />
-                  Add group
+                  Group
                 </Button>
                 <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
                   <Icon name="plus" />
-                  Add module
+                  Module
+                </Button>
+                <Button color="red" clickHandler={() => this.showRemoveGroupDialog(item)}>
+                  <Icon name="minus" />
+                  Group
                 </Button>
               </AdminUI>
-            : null
+            : 
+              <AdminUI>
+                <Button color="red" clickHandler={() => this.showRemoveModuleDialog(item)}>
+                  <Icon name="minus" />
+                  Module
+                </Button>
+              </AdminUI>
+
           }
           <span className="bookpart__status">
             {
@@ -218,7 +235,7 @@ class Book extends React.Component<Props> {
     // Do not move bookparts into modules
     // TODO: Create new part when user move module into module
     const parent: types.BookPart | types.Book = this.findParentWithinItems(newItems, realPathTo)
-    console.log(parent)
+
     if (typeof (parent as types.BookPart).number !== 'number') {
       console.log('You can not move items outside book.')
       return false
@@ -250,7 +267,6 @@ class Book extends React.Component<Props> {
   private addGroup = () => {
     const { targetGroup, groupNameValue } = this.state
     if (groupNameValue.length === 0) return
-    console.log('addGroup to:', targetGroup)
 
     if (targetGroup) {
       const bookId = this.props.match.params.id
@@ -291,7 +307,6 @@ class Book extends React.Component<Props> {
 
   private addModule = () => {
     const { targetGroup, selectedModule } = this.state
-    console.log('addModule to:', targetGroup)
 
     if (targetGroup && selectedModule) {
       const bookId = this.props.match.params.id
@@ -315,6 +330,64 @@ class Book extends React.Component<Props> {
           }
         })
     }
+  }
+
+  private showRemoveGroupDialog = (target: types.BookPart) => {
+    this.setState({ showRemoveGroup: true, targetGroup: target })
+  }
+
+  private closeRemoveGroupDialog = () => {
+    this.setState({ showRemoveGroup: false, targetGroup: null })
+  }
+
+  private removeGroup = () => {
+    const bookId = this.props.match.params.id
+    const targetGroup = this.state.targetGroup
+
+    if (!targetGroup) return
+
+    axios.delete(`books/${bookId}/parts/${targetGroup.number}`)
+      .then(() => {
+        this.closeRemoveGroupDialog()
+        this.fetchBook()
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+          this.closeRemoveGroupDialog()
+        }
+      })
+  }
+
+  private showRemoveModuleDialog = (target: types.BookPart) => {
+    this.setState({ showRemoveModule: true, targetModule: target })
+  }
+
+  private closeRemoveModuleDialog = () => {
+    this.setState({ showRemoveModule: false, targetModule: null })
+  }
+
+  private removeModule = () => {
+    const bookId = this.props.match.params.id
+    const targetModule = this.state.targetModule
+
+    if (!targetModule) return
+
+    axios.delete(`books/${bookId}/parts/${targetModule.number}`)
+      .then(() => {
+        this.closeRemoveModuleDialog()
+        this.fetchBook()
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+          this.closeRemoveModuleDialog()
+        }
+      })
   }
 
   private fetchBook = (id: string = this.props.match.params.id) => {
@@ -343,11 +416,16 @@ class Book extends React.Component<Props> {
   }
 
   private superSessionSuccess = () => {
-    if (this.state.selectedModule) {
+    if (this.state.selectedModule && this.state.showAddModule) {
       this.addModule()
-    } else if (this.state.groupNameValue) {
+    } else if (this.state.groupNameValue && this.state.showAddGroup) {
       this.addGroup()
+    } else if (this.state.targetGroup && this.state.showRemoveGroup) {
+      this.removeGroup()
+    } else if (this.state.targetModule && this.state.showRemoveModule) {
+      this.removeModule()
     }
+
     this.setState({ showSuperSession: false })
   }
 
@@ -364,7 +442,7 @@ class Book extends React.Component<Props> {
   }
   
   public render() {
-    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue } = this.state
+    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue, showRemoveGroup, showRemoveModule } = this.state
 
     return (
       <div className="container container--splitted">
@@ -410,6 +488,48 @@ class Book extends React.Component<Props> {
               i18nKey="Book.addModuleDialog"
             >
               <ModulesList onModuleClick={this.handleModuleClick} />
+            </Dialog>
+          : null
+        }
+        {
+          showRemoveGroup ?
+            <Dialog 
+              onClose={this.closeRemoveGroupDialog} 
+              i18nKey="Book.removeGroupDialog"
+            >
+              <Button 
+                color="green" 
+                clickHandler={this.removeGroup}
+              >
+                <Trans i18nKey="Buttons.delete" />
+              </Button>
+              <Button 
+                color="red"
+                clickHandler={this.closeRemoveGroupDialog}
+              >
+                <Trans i18nKey="Buttons.cancel" />
+              </Button>
+            </Dialog>
+          : null
+        }
+        {
+          showRemoveModule ?
+            <Dialog 
+              onClose={this.closeRemoveModuleDialog} 
+              i18nKey="Book.removeModuleDialog"
+            >
+              <Button 
+                color="green" 
+                clickHandler={this.removeModule}
+              >
+                <Trans i18nKey="Buttons.delete" />
+              </Button>
+              <Button 
+                color="red"
+                clickHandler={this.closeRemoveModuleDialog}
+              >
+                <Trans i18nKey="Buttons.cancel" />
+              </Button>
             </Dialog>
           : null
         }

@@ -23,6 +23,8 @@ export default {
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
     "Book.addGroupDialog": "Podaj nazwę rozdziału.",
     "Book.addModuleDialog": "Wybierz moduł lub utwórz nowy.",
+    "Book.removeGroupDialog": "Usunąć tę grupę wraz ze wszystkimi modułami?",
+    "Book.removeModuleDialog": "Jesteś pewien, że chcesz usunąć ten moduł?",
     "Buttons.addNew": "Dodaj nowy",
     "Buttons.delete": "Usuń",
     "Buttons.cancel": "Analuj",
@@ -35,5 +37,6 @@ export default {
     "Settings.title": "Ustawienia",
     "Invitations.title": "Zaproś nowego użytkownika",
     "Admin.confirmSuperSession": "Proszę potwierdzić akcję.",
+    "ModulesList.deleteModuleDialog": "Usunięcie moduł← jest nieodwracalne.",
   }
 }

@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
 
+import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import ModuleInfo from 'src/components/ModuleInfo'
 import Icon from 'src/components/ui/Icon'
@@ -13,14 +14,15 @@ import { State } from 'src/store/reducers'
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
 
-import { FetchModulesMap, fetchModulesMap } from 'src/store/actions/Modules'
+import * as modulesActions from 'src/store/actions/Modules'
 
 type Props = {
   modulesMap: {
     modulesMap: ModulesMap
   }
   onModuleClick: (mod: ModuleShortInfo) => any
-  fetchModulesMap: () => void
+  addModuleToMap: (mod: ModuleShortInfo) => any
+  removeModuleFromMap: (id: string) => any
 }
 
 const mapStateToProps = ({ modulesMap }: State) => {
@@ -29,9 +31,10 @@ const mapStateToProps = ({ modulesMap }: State) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: FetchModulesMap) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchModulesMap: () => dispatch(fetchModulesMap()),
+    addModuleToMap: (mod: ModuleShortInfo) => dispatch(modulesActions.addModuleToMap(mod)),
+    removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
   }
 }
 
@@ -40,9 +43,13 @@ class ModuleList extends React.Component<Props> {
   state: {
     moduleTitleValue: string
     showSuperSession: boolean
+    moduleToDelete: ModuleShortInfo | null
+    showRemoveModule: boolean
   } = {
     moduleTitleValue: '',
     showSuperSession: false,
+    moduleToDelete: null,
+    showRemoveModule: false,
   }
 
   private listOfModules = (modulesMap: ModulesMap) => {
@@ -55,14 +62,18 @@ class ModuleList extends React.Component<Props> {
     return modules.map((mod: ModuleShortInfo) => {
       return (
         <li key={mod.id} className="modulesList__item">
-          <ModuleInfo mod={mod} onClick={() => this.handleModuleClick(mod)}/>
+          <span onClick={() => this.handleModuleClick(mod)}>
+            <ModuleInfo mod={mod} />
+          </span>
+          <Button color="red" clickHandler={() => this.showRemoveModuleDialog(mod)}>
+            <Icon name="minus" />
+          </Button>
         </li>
       )
     })
   }
 
   private handleModuleClick = (mod: ModuleShortInfo) => {
-    console.log('handleModuleClick', mod.title)
     this.props.onModuleClick(mod)
   }
 
@@ -74,7 +85,33 @@ class ModuleList extends React.Component<Props> {
     axios.post('modules', {title: this.state.moduleTitleValue})
       .then(res => {
         this.props.onModuleClick(res.data)
-        this.props.fetchModulesMap()
+        this.props.addModuleToMap(res.data)
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+        }
+      })
+  }
+
+  private showRemoveModuleDialog = (mod: ModuleShortInfo) => {
+    this.setState({ showRemoveModule: true, moduleToDelete: mod })
+  }
+
+  private closeRemoveModuleDialog = () => {
+    this.setState({ showRemoveModule: false, moduleToDelete: null })
+  }
+
+  private removeModule = () => {
+    const mod = this.state.moduleToDelete
+
+    if (!mod) return
+
+    axios.delete(`/modules/${mod.id}`)
+      .then(() => {
+        this.props.removeModuleFromMap(mod.id)
       })
       .catch(e => {
         if (e.request.status === 403) {
@@ -86,7 +123,12 @@ class ModuleList extends React.Component<Props> {
   }
 
   private superSessionSuccess = () => {
-    this.addNewModule()
+    if (this.state.moduleToDelete && this.state.showRemoveModule) {
+      this.removeModule()
+    } else if (this.state.moduleTitleValue.length > 0) {
+      this.addNewModule()
+    }
+
     this.setState({ showSuperSession: false })
   }
 
@@ -95,7 +137,7 @@ class ModuleList extends React.Component<Props> {
   }
 
   public render() {
-    const { moduleTitleValue, showSuperSession } = this.state
+    const { moduleTitleValue, showSuperSession, showRemoveModule } = this.state
     const modulesMap = this.props.modulesMap.modulesMap
 
     return (
@@ -106,6 +148,21 @@ class ModuleList extends React.Component<Props> {
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
               onAbort={() => this.setState({ showSuperSession: false })}/>
+          : null
+        }
+        {
+          showRemoveModule ?
+            <Dialog
+              i18nKey="ModulesList.deleteModuleDialog"
+              onClose={this.closeRemoveModuleDialog}
+            >
+              <Button color="green" clickHandler={this.removeModule}>
+                <Trans i18nKey="Buttons.delete" />
+              </Button>
+              <Button color="red" clickHandler={this.closeRemoveModuleDialog}>
+                <Trans i18nKey="Buttons.cancel" />
+              </Button>
+            </Dialog>
           : null
         }
         <AdminUI>
