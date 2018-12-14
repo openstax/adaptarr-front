@@ -43,30 +43,6 @@ const mapStateToProps = ({ team, modulesMap }: State) => {
   }
 }
 
-// Nested component is adding `parts: []` to every item and we do not want that
-const listWithoutEmptyParts = (arr: types.BookPart[]): types.BookPart[] => {
-  const removeEmptyPartsFromItem = (item: types.BookPart): types.BookPart => {
-    if (item.kind !== 'group') {
-      const newItem = Object.assign({}, {...item})
-      delete newItem.parts
-      return newItem
-    }
-  
-    return item
-  }
-  
-  return arr.map((item: types.BookPart) => {
-    if (item.parts && item.parts.length > 0) {
-      return {
-        ...item,
-        parts: listWithoutEmptyParts(item.parts)
-      }
-    } else {
-      return removeEmptyPartsFromItem(item)
-    }
-  })
-}
-
 class Book extends React.Component<Props> {
   state: {
     isLoading: boolean,
@@ -225,10 +201,10 @@ class Book extends React.Component<Props> {
     let pathToParent = [...path]
     pathToParent.pop() // remove last index because it's pointing to changedItem
 
-    let parent: types.BookPart | types.Book
+    let parent: types.BookPart
 
     if (pathToParent.length === 0) {
-      parent = this.state.book
+      parent = this.state.book.parts[0]
     } else {
       parent = items[pathToParent[0]]
       pathToParent.shift()
@@ -265,12 +241,24 @@ class Book extends React.Component<Props> {
   }
 
   private handlePositionChange = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
-    this.setState({
-      book: {
-        ...this.state.book,
-        parts: listWithoutEmptyParts(newItems),
-      }
-    })
+  
+    const bookId = this.props.match.params.id
+    const targetPosition = {
+      parent: this.findParentWithinItems(newItems, realPathTo).number,
+      index: realPathTo[realPathTo.length - 1]
+    }
+    axios.put(`/books/${bookId}/parts/${changedItem.number}`, targetPosition)
+      .then(() => {
+        this.fetchBook()
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+        }
+        this.fetchBook()
+      })
   }
 
   private showAddGroupDialog = (target: types.BookPart) => {

@@ -564,6 +564,7 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 22px;
 }
 
 .bookpart__item::before {

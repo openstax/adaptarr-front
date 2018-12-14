@@ -36,7 +36,7 @@ export default {
     "Resources.title": "Zasoby",
     "Settings.title": "Ustawienia",
     "Invitations.title": "Zaproś nowego użytkownika",
-    "Admin.confirmSuperSession": "Proszę potwierdzić akcję.",
+    "Admin.confirmSuperSession": "Rozpocznij supersesję.",
     "ModulesList.deleteModuleDialog": "Usunięcie moduł← jest nieodwracalne.",
   }
 }
