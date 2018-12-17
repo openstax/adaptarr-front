@@ -837,3 +837,18 @@ input[type="disabled"] {
 .modulesList__title {
 
 }
+
+.settings {
+  max-width: 400px;
+}
+
+.settings input, .settings__select {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.settings__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 20px 0;
+}

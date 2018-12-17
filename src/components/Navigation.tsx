@@ -16,7 +16,6 @@ import { State } from 'src/store/reducers'
 
 type Props = {
   t: any,
-  i18n: any,
   notifications: {
     isLoading: IsLoading
     notifications: Notification[]
@@ -51,11 +50,7 @@ class Navigation extends React.Component<Props> {
   }
 
   public render() {
-    const { t, i18n } = this.props;
-
-    const changeLanguage = (lng: string) => {
-      i18n.changeLanguage(lng)
-    }
+    const { t } = this.props
 
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
     const { isLoading, notifications } = this.props.notifications
@@ -141,11 +136,6 @@ class Navigation extends React.Component<Props> {
                   <span className="nav__text">{t('Navigation.settingsLink')}</span>
                 </span>
               </NavLink>
-              <div className="nav__hoverbox">
-                <Button clickHandler={() => changeLanguage('pl')}>
-                  Change language to Polish
-                </Button>
-              </div>
             </li>
             <AdminUI>
               <li className="nav__link" title={t('Navigation.invitationsLink')}>

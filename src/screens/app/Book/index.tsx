@@ -141,8 +141,8 @@ class Book extends React.Component<Props> {
 
     if (item.id) {
       const mod = modulesMap.get(item.id)
-      const assigne = mod ? mod.assignee : undefined
-      assignedUser = assigne ? teamMap.get(assigne) : undefined
+      const assignee = mod ? mod.assignee : undefined
+      assignedUser = assignee ? teamMap.get(assignee) : undefined
       if (mod && mod.status) {
         moduleStatus = (
           <span 
