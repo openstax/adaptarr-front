@@ -57,6 +57,7 @@ class Book extends React.Component<Props> {
     selectedModule: types.ModuleShortInfo | null,
     showRemoveModule: boolean,
     targetModule: types.BookPart | null,
+    titleInput: string,
   } = {
     isLoading: true,
     book: {
@@ -74,6 +75,7 @@ class Book extends React.Component<Props> {
     selectedModule: null,
     showRemoveModule: false,
     targetModule: null,
+    titleInput: '',
   }
 
   private showModuleDetails = (item: types.BookPart) => {
@@ -442,12 +444,39 @@ class Book extends React.Component<Props> {
     this.setState({ groupNameValue: e.target.value })
   }
 
+  private updateTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const input = e.target as HTMLInputElement
+    this.setState({ titleInput: input.value })
+  }
+
+  private changeBookTitle = () => {
+    const bookId = this.props.match.params.id
+    const titleInput = this.state.titleInput
+
+    if (!titleInput) return
+
+    axios.put(`books/${bookId}`, {title: titleInput})
+      .then(() => {
+        this.setState({ 
+          book: {...this.state.book, title: titleInput},
+          titleInput: '',
+        })
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+        }
+      })
+  }
+
   componentDidMount () {
     this.fetchBook()
   }
   
   public render() {
-    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue, showRemoveGroup, showRemoveModule } = this.state
+    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue, showRemoveGroup, showRemoveModule, titleInput } = this.state
 
     return (
       <div className="container container--splitted">
@@ -540,6 +569,15 @@ class Book extends React.Component<Props> {
         }
         <Section>
           <Header title={book.title}>
+            <AdminUI>
+              <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Change title" />
+              <Button 
+                isDisabled={!(titleInput.length > 0)}
+                clickHandler={this.changeBookTitle}
+              >
+                <Icon name="plus"/>
+              </Button>
+            </AdminUI>
             <div className="book__status">
               <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
             </div>

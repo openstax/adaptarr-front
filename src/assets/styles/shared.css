@@ -240,6 +240,10 @@ button[disabled] {
   margin-right: 20px;
 }
 
+.header .adminui {
+  margin-right: 20px;
+}
+
 .adminui {
   display: flex;
   align-items: center;
