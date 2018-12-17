@@ -4,11 +4,11 @@ export type RequestStatus = {status: string, message?: string | {}}
 
 
 export interface User {
-  id: number | null
-  name: string | null
-  avatar: string | null
-  avatarSmall: string | null
-  role: string | null
+  id: number
+  name: string
+  avatar?: string
+  avatarSmall?: string
+  role?: string
 }
 
 export type TeamMap = Map<number, User>

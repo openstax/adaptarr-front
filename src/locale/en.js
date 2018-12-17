@@ -24,6 +24,7 @@ export default {
     "Book.editGroupDialog": "Change chapter title.",
     "Book.addGroupDialog": "Provide chapter title.",
     "Book.addModuleDialog": "Select module or create new one.",
+    "Book.assignUserDialog": "Select user from a list to assign him.",
     "Book.removeGroupDialog": "Remove this group with all containings?",
     "Book.removeModuleDialog": "Are you sure?",
     "Buttons.addNew": "Add new",

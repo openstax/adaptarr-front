@@ -24,6 +24,7 @@ export default {
     "Book.editGroupDialog": "Zmień nazwę rozdziału.",
     "Book.addGroupDialog": "Podaj nazwę rozdziału.",
     "Book.addModuleDialog": "Wybierz moduł lub utwórz nowy.",
+    "Book.assignUserDialog": "Wybierz użytkownika z listy, aby go przypisać.",
     "Book.removeGroupDialog": "Usunąć tę grupę wraz ze wszystkimi modułami?",
     "Book.removeModuleDialog": "Jesteś pewien, że chcesz usunąć ten moduł?",
     "Buttons.addNew": "Dodaj nowy",

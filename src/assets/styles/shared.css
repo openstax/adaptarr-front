@@ -615,6 +615,10 @@ main {
   align-items: center;
 }
 
+.bookpart__info .avatar {
+  margin-right: 10px;
+}
+
 .bookpart__info .bookpart__icon {
   margin-left: 20px;
 }
@@ -834,8 +838,41 @@ input[type="disabled"] {
   cursor: pointer;
 }
 
-.modulesList__title {
+.usersList {
+  width: 100%;
+}
 
+.usersList__list {
+  margin-top: 20px;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--dark-bg);
+  background-color: #fff;
+}
+
+.usersList__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.usersList__item:hover {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.usersList__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.usersList__avatar {
+  margin-right: 10px;
 }
 
 .settings {

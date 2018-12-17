@@ -16,11 +16,8 @@ export interface State {
 export const initialState = {
   isLoading: true,
   user: {
-    id: null,
-    name: null,
-    avatar: null,
-    avatarSmall: null,
-    role: null,
+    id: 0,
+    name: 'Loading...'
   }
 }
 

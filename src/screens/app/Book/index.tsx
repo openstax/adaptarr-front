@@ -18,6 +18,7 @@ import StackedBar from 'src/components/ui/StackedBar'
 import Dialog from 'src/components/ui/Dialog'
 
 import ModulesList from 'src/containers/ModulesList'
+import UsersList from 'src/containers/UsersList'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -57,6 +58,8 @@ class Book extends React.Component<Props> {
     targetGroup: types.BookPart | null,
     selectedModule: types.ModuleShortInfo | null,
     showRemoveModule: boolean,
+    showAssignUser: boolean,
+    userToAssign: types.User | null,
     targetModule: types.BookPart | null,
     titleInput: string,
   } = {
@@ -76,6 +79,8 @@ class Book extends React.Component<Props> {
     targetGroup: null,
     selectedModule: null,
     showRemoveModule: false,
+    showAssignUser: false,
+    userToAssign: null,
     targetModule: null,
     titleInput: '',
   }
@@ -173,7 +178,7 @@ class Book extends React.Component<Props> {
             assignedUser ?
               <Avatar size="small" user={assignedUser} />
             :
-              <Button>
+              <Button clickHandler={() => this.showAssignUserDialog(item)}>
                 Assign user
               </Button>
           }
@@ -438,6 +443,41 @@ class Book extends React.Component<Props> {
       })
   }
 
+  private showAssignUserDialog = (target: types.BookPart) => {
+    this.setState({ showAssignUser: true, targetModule: target })
+  }
+
+  private closeAssignUserDialog = () => {
+    this.setState({ showAssignUser: false, targetModule: null, userToAssign: null })
+  }
+
+  private handleUserClick = (user: types.User) => {
+    this.setState({ userToAssign: user }, this.assignUser)
+  }
+
+  private assignUser = () => {
+    const { userToAssign: user, targetModule } = this.state
+
+    if (!targetModule || !user) return
+
+    const payload = {
+      assignee: user.id
+    }
+
+    axios.put(`modules/${targetModule.id}`, payload)
+      .then(() => {
+        this.fetchBook()
+        this.closeAssignUserDialog()
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+        }
+      })
+  }
+
   private fetchBook = (id: string = this.props.match.params.id) => {
     axios.get(`books/${id}`)
       .then((res: AxiosResponse) => {
@@ -474,6 +514,8 @@ class Book extends React.Component<Props> {
       this.removeGroup()
     } else if (this.state.targetModule && this.state.showRemoveModule) {
       this.removeModule()
+    } else if (this.state.targetModule && this.state.showAssignUser) {
+      this.assignUser()
     }
 
     this.setState({ showSuperSession: false })
@@ -529,7 +571,8 @@ class Book extends React.Component<Props> {
       showAddGroup, 
       groupNameValue, 
       showRemoveGroup, 
-      showRemoveModule, 
+      showRemoveModule,
+      showAssignUser,
       titleInput,
     } = this.state
 
@@ -596,17 +639,6 @@ class Book extends React.Component<Props> {
           : null
         }
         {
-          showAddModule ?
-            <Dialog 
-              size="medium"
-              onClose={this.closeAddModuleDialog} 
-              i18nKey="Book.addModuleDialog"
-            >
-              <ModulesList onModuleClick={this.handleModuleClick} />
-            </Dialog>
-          : null
-        }
-        {
           showRemoveGroup ?
             <Dialog 
               onClose={this.closeRemoveGroupDialog} 
@@ -624,6 +656,28 @@ class Book extends React.Component<Props> {
               >
                 <Trans i18nKey="Buttons.cancel" />
               </Button>
+            </Dialog>
+          : null
+        }
+        {
+          showAddModule ?
+            <Dialog 
+              size="medium"
+              onClose={this.closeAddModuleDialog} 
+              i18nKey="Book.addModuleDialog"
+            >
+              <ModulesList onModuleClick={this.handleModuleClick} />
+            </Dialog>
+          : null
+        }
+        {
+          showAssignUser ?
+            <Dialog 
+              size="medium"
+              onClose={this.closeAssignUserDialog} 
+              i18nKey="Book.assignUserDialog"
+            >
+              <UsersList onUserClick={this.handleUserClick} />
             </Dialog>
           : null
         }
