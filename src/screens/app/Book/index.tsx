@@ -108,19 +108,19 @@ class Book extends React.Component<Props> {
           <AdminUI>
             <Button clickHandler={() => this.showEditGroupDialog(item)}>
               <Icon name="pencil" />
-              Edit
+              <Trans i18nKey="Buttons.edit" />
             </Button>
             <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
               <Icon name="plus" />
-              Group
+              <Trans i18nKey="Buttons.group" />
             </Button>
             <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
               <Icon name="plus" />
-              Module
+              <Trans i18nKey="Buttons.module" />
             </Button>
             <Button color="red" clickHandler={() => this.showRemoveGroupDialog(item)}>
               <Icon name="minus" />
-              Group
+              <Trans i18nKey="Buttons.group" />
             </Button>
           </AdminUI>
           <span className="bookpart__status">
@@ -171,15 +171,20 @@ class Book extends React.Component<Props> {
           <AdminUI>
             <Button color="red" clickHandler={() => this.showRemoveModuleDialog(item)}>
               <Icon name="minus" />
-              Module
+              <Trans i18nKey="Buttons.module" />
             </Button>
           </AdminUI>
           {
             assignedUser ?
-              <Avatar size="small" user={assignedUser} />
+              <React.Fragment>
+                <Avatar size="small" user={assignedUser} />
+                <Button clickHandler={() => this.showAssignUserDialog(item)}>
+                  <Trans i18nKey="Buttons.assignOther" />
+                </Button>
+              </React.Fragment>
             :
               <Button clickHandler={() => this.showAssignUserDialog(item)}>
-                Assign user
+                <Trans i18nKey="Buttons.assign" />
               </Button>
           }
           <span className="bookpart__status">
