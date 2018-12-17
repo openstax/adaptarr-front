@@ -70,6 +70,7 @@ class App extends React.Component<Props> {
 
   componentDidMount () {
     this.props.fetchUser()
+    this.props.fetchTeamMap()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()

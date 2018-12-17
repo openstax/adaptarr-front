@@ -23,7 +23,7 @@ export const setTeamMap = (payload: TeamMap): SetTeamMap => {
 
 export const fetchTeamMap = (): FetchTeamMap => {
   return (dispatch: React.Dispatch<TeamAction>) => {
-    axios.get('team')
+    axios.get('users')
       .then(res => {
         dispatch(setTeamMap(new Map(res.data.map((user: User) => [user.id, user]))))
       })
