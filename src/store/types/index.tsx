@@ -54,3 +54,11 @@ export type Notification = {
   module?: string
   conversation?: string
 }
+
+
+export type AlertKind = 'success' | 'error' | 'warning' | 'info'
+export type Alert = {
+  id: number
+  message: string
+  kind: AlertKind
+}

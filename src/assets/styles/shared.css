@@ -19,6 +19,8 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 
   --red: #db0037;
   --green: #27d768;
+  --orange: #ff9a3e;
+  --blue: #0080db;
 }
 
 body {
@@ -778,6 +780,7 @@ input {
   background-color: #fff;
   border: 1px solid var(--dark-bg);
   border-radius: 4px;
+  box-sizing: border-box;
 }
 
 input[type="submit"] {
@@ -887,4 +890,47 @@ input[type="disabled"] {
   font-size: 1.2rem;
   font-weight: 700;
   margin: 20px 0;
+}
+
+.alerts {
+  position: fixed;
+  z-index: 99;
+  bottom: 20px;
+  right: 20px;
+}
+
+.alerts__alert {
+  position: relative;
+  display: flex;
+  width: 300px;
+  margin-top: 10px;
+  padding: 20px;
+  line-height: 1.4;
+  border: 1px solid var(--light-bg);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+}
+
+.alerts__close {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.alert--success {
+  border-color: var(--green);
+}
+
+.alert--warning {
+  border-color: var(--orange);
+}
+
+.alert--info {
+  border-color: var(--blue);
+}
+
+.alert--error {
+  border-color: var(--red);
 }

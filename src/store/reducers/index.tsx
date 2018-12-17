@@ -6,6 +6,7 @@ import * as fromTeam from './Team'
 import * as fromNotifications from './Notifications'
 import * as fromBooks from './Books'
 import * as fromModules from './Modules'
+import * as fromAlerts from './Alerts'
 
 /*
  * This is the root state of the app
@@ -18,6 +19,7 @@ export interface State {
   notifications: fromNotifications.State
   booksMap: fromBooks.State
   modulesMap: fromModules.State
+  alerts: fromAlerts.State
 }
 
 /*
@@ -30,6 +32,7 @@ export const initialState: State = {
   notifications: fromNotifications.initialState,
   booksMap: fromBooks.initialState,
   modulesMap: fromModules.initialState,
+  alerts: fromAlerts.initialState,
 }
 
 /*
@@ -43,4 +46,5 @@ export const reducer = combineReducers<State>({
   notifications: fromNotifications.reducer,
   booksMap: fromBooks.reducer,
   modulesMap: fromModules.reducer,
+  alerts: fromAlerts.reducer,
 })

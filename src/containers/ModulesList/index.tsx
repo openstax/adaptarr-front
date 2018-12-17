@@ -4,17 +4,17 @@ import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
 
-import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
-import ModuleInfo from 'src/components/ModuleInfo'
-import Icon from 'src/components/ui/Icon'
-
-import { ModulesMap, ModuleShortInfo } from 'src/store/types'
-import { State } from 'src/store/reducers'
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
+import ModuleInfo from 'src/components/ModuleInfo'
+import Dialog from 'src/components/ui/Dialog'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import * as modulesActions from 'src/store/actions/Modules'
+import { ModulesMap, ModuleShortInfo, AlertKind } from 'src/store/types'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/Alerts'
 
 type Props = {
   modulesMap: {
@@ -23,6 +23,7 @@ type Props = {
   onModuleClick: (mod: ModuleShortInfo) => any
   addModuleToMap: (mod: ModuleShortInfo) => any
   removeModuleFromMap: (id: string) => any
+  addAlert: (kind: AlertKind, message: string) => void
 }
 
 const mapStateToProps = ({ modulesMap }: State) => {
@@ -35,6 +36,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addModuleToMap: (mod: ModuleShortInfo) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
+    addAlert: (kind: AlertKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 
@@ -86,12 +88,14 @@ class ModuleList extends React.Component<Props> {
       .then(res => {
         this.props.onModuleClick(res.data)
         this.props.addModuleToMap(res.data)
+        this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
         }
       })
   }
@@ -112,12 +116,14 @@ class ModuleList extends React.Component<Props> {
     axios.delete(`/modules/${mod.id}`)
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
+        this.props.addAlert('success', `${mod.title} was deleted successfully.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
         }
       })
   }
@@ -133,7 +139,7 @@ class ModuleList extends React.Component<Props> {
   }
 
   private superSessionFailure = (e: Error) => {
-    console.log('failure', e.message)
+    this.props.addAlert('error', e.message)
   }
 
   public render() {

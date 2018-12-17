@@ -22,6 +22,7 @@ import UsersList from 'src/containers/UsersList'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
+import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 
 type Props = {
   match: {
@@ -35,12 +36,19 @@ type Props = {
   modulesMap: {
     modulesMap: types.ModulesMap
   }
+  addAlert: (kind: types.AlertKind, message: string) => void
 }
 
 const mapStateToProps = ({ team, modulesMap }: State) => {
   return {
     team,
     modulesMap,
+  }
+}
+
+const mapDispatchToProps = (dispatch: AddAlert) => {
+  return {
+    addAlert: (kind: types.AlertKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 
@@ -261,19 +269,22 @@ class Book extends React.Component<Props> {
   private handlePositionChange = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
   
     const bookId = this.props.match.params.id
+    const targetParent = this.findParentWithinItems(newItems, realPathTo)
     const targetPosition = {
-      parent: this.findParentWithinItems(newItems, realPathTo).number,
+      parent: targetParent.number,
       index: realPathTo[realPathTo.length - 1]
     }
     axios.put(`/books/${bookId}/parts/${changedItem.number}`, targetPosition)
       .then(() => {
         this.fetchBook()
+        this.props.addAlert('success', `${changedItem.title} was moved to ${targetParent.title}.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
         }
         this.fetchBook()
       })
@@ -302,12 +313,14 @@ class Book extends React.Component<Props> {
       .then(() => {
         this.fetchBook()
         this.closeEditGroupDialog()
+        this.props.addAlert('success', `Group title was change from ${targetGroup.title} to ${groupNameValue}.`)
       })
       .catch((e) => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
           this.closeEditGroupDialog()
         }
       })
@@ -339,12 +352,14 @@ class Book extends React.Component<Props> {
         .then(() => {
           this.closeAddGroupDialog()
           this.fetchBook()
+          this.props.addAlert('success', `New group was added successfully.`)
         })
         .catch((e) => {
           if (e.request.status === 403) {
             this.setState({ showSuperSession: true })
+            this.props.addAlert('info', 'You have to confirm this action.')
           } else {
-            console.error(e.message)
+            this.props.addAlert('error', e.message)
             this.closeAddGroupDialog()
           }
         })
@@ -378,12 +393,14 @@ class Book extends React.Component<Props> {
         .then(() => {
           this.closeAddModuleDialog()
           this.fetchBook()
+          this.props.addAlert('success', `${selectedModule.title} was added to the group.`)
         })
         .catch((e) => {
           if (e.request.status === 403) {
             this.setState({ showSuperSession: true })
+            this.props.addAlert('info', 'You have to confirm this action.')
           } else {
-            console.error(e.message)
+            this.props.addAlert('error', e.message)
             this.closeAddModuleDialog()
           }
         })
@@ -408,12 +425,14 @@ class Book extends React.Component<Props> {
       .then(() => {
         this.closeRemoveGroupDialog()
         this.fetchBook()
+        this.props.addAlert('success', `Group ${targetGroup.title} was removed successfully.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
           this.closeRemoveGroupDialog()
         }
       })
@@ -437,12 +456,14 @@ class Book extends React.Component<Props> {
       .then(() => {
         this.closeRemoveModuleDialog()
         this.fetchBook()
+        this.props.addAlert('success', `Module ${targetModule.title} was removed successfully.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
           this.closeRemoveModuleDialog()
         }
       })
@@ -473,12 +494,15 @@ class Book extends React.Component<Props> {
       .then(() => {
         this.fetchBook()
         this.closeAssignUserDialog()
+        this.props.addAlert('success', `${user.name} was assigned to ${targetModule.title}.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
+          this.closeAssignUserDialog()
         }
       })
   }
@@ -498,13 +522,13 @@ class Book extends React.Component<Props> {
             })
           })
           .catch((e: Error) => {
-            console.error(e.message)
             this.setState({ isLoading: false })
+            this.props.addAlert('error', `Couldn't load parts for: ${res.data.title}. Details: ${e.message}`)
           })
       })
       .catch((e: ErrorEvent) => {
-        console.error(e.message)
         this.setState({ isLoading: false })
+        this.props.addAlert('error', `Couldn't load a book with id: ${id}. Details: ${e.message}`)
       })
   }
 
@@ -527,7 +551,7 @@ class Book extends React.Component<Props> {
   }
 
   private superSessionFailure = (e: Error) => {
-    console.log('failure', e.message)
+    this.props.addAlert('error', e.message)
   }
 
   private updateGroupNameValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -543,7 +567,7 @@ class Book extends React.Component<Props> {
     const bookId = this.props.match.params.id
     const titleInput = this.state.titleInput
 
-    if (!titleInput) return
+    if (!titleInput || titleInput === this.state.book.title) return
 
     axios.put(`books/${bookId}`, {title: titleInput})
       .then(() => {
@@ -551,12 +575,14 @@ class Book extends React.Component<Props> {
           book: {...this.state.book, title: titleInput},
           titleInput: '',
         })
+        this.props.addAlert('success', `Book title was changed to ${titleInput}.`)
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
         } else {
-          console.error(e.message)
+          this.props.addAlert('error', e.message)
         }
       })
   }
@@ -756,4 +782,4 @@ class Book extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Book)
+export default connect(mapStateToProps, mapDispatchToProps)(Book)

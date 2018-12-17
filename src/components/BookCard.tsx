@@ -11,8 +11,9 @@ import Dialog from './ui/Dialog'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
+import { IsLoading, BooksMap, BookShortInfo, AlertKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
@@ -22,6 +23,7 @@ type Props = {
     booksMap: BooksMap
   }
   fetchBooksMap: () => void
+  addAlert: (kind: AlertKind, message: string) => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -30,9 +32,10 @@ export const mapStateToProps = ({ booksMap }: State) => {
   }
 }
 
-export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
+export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
   return {
     fetchBooksMap: () => dispatch(fetchBooksMap()),
+    addAlert: (kind: AlertKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 
@@ -54,9 +57,15 @@ class BookCard extends React.Component<Props> {
     axios.delete(`books/${this.props.book.id}`)
       .then(() => {
         this.props.fetchBooksMap()
+        this.props.addAlert('success', 'Book was deleted successfully.')
       })
-      .catch(() => {
-        this.setState({ showSuperSession: true })
+      .catch((e) => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
+        } else {
+          this.props.addAlert('error', e.message)
+        }
       })
   }
 
@@ -66,7 +75,7 @@ class BookCard extends React.Component<Props> {
   }
 
   private superSessionFailure = (e: Error) => {
-    console.log('failure', e.message)
+    this.props.addAlert('error', e.message)
   }
 
   public render() {

@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -17,8 +19,6 @@ class Invitations extends React.Component {
 
   state: {
     showSuperSession: boolean,
-    successMessage?: string,
-    errorMessage?: string,
     emailValue: string,
   } = {
     showSuperSession: false,
@@ -35,11 +35,16 @@ class Invitations extends React.Component {
 
     axios.post('users/invite', {email})
       .then(() => {
-        console.log(`Invitation sent to ${email}`)
-        this.setState({ emailValue: '', successMessage: `Invitation sent to ${email}`, errorMessage: '' })
+        this.setState({ emailValue: '' })
+        store.dispatch(addAlert('success', `Invitation sent to ${email}`))
       })
       .catch((e) => {
-        this.setState({ showSuperSession: true, successMessage: '', errorMessage: e.message })
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          store.dispatch(addAlert('info', 'You have to confirm this action.'))
+        } else {
+          store.dispatch(addAlert('error', e.message))
+        }
       })
   }
 
@@ -49,7 +54,7 @@ class Invitations extends React.Component {
   }
 
   private superSessionFailure = (e: Error) => {
-    console.log('failure', e.message)
+    store.dispatch(addAlert('error', e.message))
   }
 
   private updateEmailValue = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,7 +62,7 @@ class Invitations extends React.Component {
   }
 
   public render() {
-    const { showSuperSession, emailValue, successMessage, errorMessage } = this.state
+    const { showSuperSession, emailValue } = this.state
 
     return (
       <div className="container">
@@ -73,16 +78,6 @@ class Invitations extends React.Component {
           <Header i18nKey="Invitations.title" />
           <div className="section__content">
             <form>
-              {
-                successMessage ?
-                  <div className="success">{successMessage}</div>
-                : null
-              }
-              {
-                errorMessage ?
-                  <div className="error">{errorMessage}</div>
-                : null
-              }
               <input
                 type="email"
                 value={emailValue}

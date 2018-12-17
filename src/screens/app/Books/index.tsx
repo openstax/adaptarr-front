@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -65,9 +67,15 @@ class Books extends React.Component<Props> {
       .then(() => {
         this.props.fetchBooksMap()
         this.setState({ titleInput: '' })
+        store.dispatch(addAlert('success', 'Book was added successfully.'))
       })
-      .catch(() => {
-        this.setState({ showSuperSession: true })
+      .catch((e) => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          store.dispatch(addAlert('info', 'You have to confirm this action.'))
+        } else {
+          store.dispatch(addAlert('error', e.message))
+        }
       })
   }
 
