@@ -35,7 +35,9 @@ const stackedBar = ({ data }: Props) => {
               className={`stacked__bar stacked__bar--${el}`} 
               style={{width: `${val/total * 100}%`}}
               title={`${val} - ${el}`}
-            ></span>
+            >
+              {val}
+            </span>
           )
         })
       }
