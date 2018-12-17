@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Navigation from 'src/components/Navigation'
@@ -92,7 +92,8 @@ class App extends React.Component<Props> {
                 <Route path="/resources" component={Resources} />
                 <Route path="/settings" component={Settings} />
                 <Route path="/invitations" component={Invitations} />
-                <Route component={Error404} />
+                <Route path='/404' component={Error404} />
+                <Redirect to="/404" />
               </main>
             </div>
           : <Spinner />
