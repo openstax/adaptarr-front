@@ -49,6 +49,7 @@ class Book extends React.Component<Props> {
     book: types.Book,
     showModuleDetails: types.ModuleShortInfo | undefined,
     showAddModule: boolean,
+    showEditGroup: boolean,
     showAddGroup: boolean,
     showRemoveGroup: boolean,
     showSuperSession: boolean,
@@ -67,6 +68,7 @@ class Book extends React.Component<Props> {
     },
     showModuleDetails: undefined,
     showAddModule: false,
+    showEditGroup: false,
     showAddGroup: false,
     showRemoveGroup: false,
     showSuperSession: false,
@@ -99,6 +101,10 @@ class Book extends React.Component<Props> {
         </span>
         <span className="bookpart__info">
           <AdminUI>
+            <Button clickHandler={() => this.showEditGroupDialog(item)}>
+              <Icon name="pencil" />
+              Edit
+            </Button>
             <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
               <Icon name="plus" />
               Group
@@ -261,6 +267,41 @@ class Book extends React.Component<Props> {
         }
         this.fetchBook()
       })
+  }
+
+  private showEditGroupDialog = (target: types.BookPart) => {
+    this.setState({ showEditGroup: true, targetGroup: target })
+  }
+
+  private closeEditGroupDialog = () => {
+    this.setState({ showEditGroup: false, targetGroup: null, groupNameValue: '' })
+  }
+
+  private editGroup = () => {
+    const { targetGroup, groupNameValue } = this.state
+    if (groupNameValue.length === 0) return
+
+    if (!targetGroup) return
+
+    const bookId = this.props.match.params.id
+    const payload = {
+      title: groupNameValue,
+    }
+
+    axios.put(`books/${bookId}/parts/${targetGroup.number}`, payload)
+      .then(() => {
+        this.fetchBook()
+        this.closeEditGroupDialog()
+      })
+      .catch((e) => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+        } else {
+          console.error(e.message)
+          this.closeEditGroupDialog()
+        }
+      })
+    
   }
 
   private showAddGroupDialog = (target: types.BookPart) => {
@@ -427,6 +468,8 @@ class Book extends React.Component<Props> {
       this.addModule()
     } else if (this.state.groupNameValue && this.state.showAddGroup) {
       this.addGroup()
+    } else if (this.state.groupNameValue && this.state.showEditGroup) {
+      this.editGroup()
     } else if (this.state.targetGroup && this.state.showRemoveGroup) {
       this.removeGroup()
     } else if (this.state.targetModule && this.state.showRemoveModule) {
@@ -476,7 +519,19 @@ class Book extends React.Component<Props> {
   }
   
   public render() {
-    const { isLoading, book, showModuleDetails, showSuperSession, showAddModule, showAddGroup, groupNameValue, showRemoveGroup, showRemoveModule, titleInput } = this.state
+    const { 
+      isLoading, 
+      book, 
+      showModuleDetails, 
+      showSuperSession, 
+      showAddModule, 
+      showEditGroup, 
+      showAddGroup, 
+      groupNameValue, 
+      showRemoveGroup, 
+      showRemoveModule, 
+      titleInput,
+    } = this.state
 
     return (
       <div className="container container--splitted">
@@ -486,6 +541,32 @@ class Book extends React.Component<Props> {
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
               onAbort={() => this.setState({ showSuperSession: false })}/>
+          : null
+        }
+        {
+          showEditGroup ?
+            <Dialog onClose={this.closeEditGroupDialog} i18nKey="Book.editGroupDialog">
+              <form>
+                <input 
+                  type="text" 
+                  value={groupNameValue}
+                  placeholder="New title"
+                  onChange={(e) => this.updateGroupNameValue(e)} />
+                <Button 
+                  color="green" 
+                  clickHandler={this.editGroup}
+                  isDisabled={!(groupNameValue.length > 0)}
+                >
+                  <Trans i18nKey="Buttons.confirm" />
+                </Button>
+                <Button 
+                  color="red"
+                  clickHandler={this.closeEditGroupDialog}
+                >
+                  <Trans i18nKey="Buttons.cancel" />
+                </Button>
+              </form>
+            </Dialog>
           : null
         }
         {

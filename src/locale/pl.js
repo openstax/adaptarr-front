@@ -21,6 +21,7 @@ export default {
     "Notifications.unknowAction": "Nieznana akcja",
     "Books.title": "Książki",
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
+    "Book.editGroupDialog": "Zmień nazwę rozdziału.",
     "Book.addGroupDialog": "Podaj nazwę rozdziału.",
     "Book.addModuleDialog": "Wybierz moduł lub utwórz nowy.",
     "Book.removeGroupDialog": "Usunąć tę grupę wraz ze wszystkimi modułami?",

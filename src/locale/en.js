@@ -21,6 +21,7 @@ export default {
     "Notifications.unknowAction": "Unknow action",
     "Books.title": "Books",
     "Books.noBooksFound": "No books found.",
+    "Book.editGroupDialog": "Change chapter title.",
     "Book.addGroupDialog": "Provide chapter title.",
     "Book.addModuleDialog": "Select module or create new one.",
     "Book.removeGroupDialog": "Remove this group with all containings?",
