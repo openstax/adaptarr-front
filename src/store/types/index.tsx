@@ -40,19 +40,27 @@ export type DraftShortInfo = { module: string, title: string }
 export type NotificationStatus = 'unread' | 'read'
 export type NotificationKind = 'comment' | 'mention' | 'assigned'
 export type Notification = {
-  user: number
+  id: number
+  user?: number
   status: NotificationStatus
   kind: NotificationKind
   who: number
+  timestamp: string
   message?: string
   module?: string
   conversation?: string
 }
 
 
-export type AlertKind = 'success' | 'error' | 'warning' | 'info'
+export type RequestInfoKind = 'success' | 'error' | 'warning' | 'info'
+export type RequestInfo = {
+  kind: RequestInfoKind
+  message: string
+}
+
+export type AlertKind = 'alert' | 'notification'
 export type Alert = {
   id: number
-  message: string
   kind: AlertKind
+  data: RequestInfo | Notification
 }

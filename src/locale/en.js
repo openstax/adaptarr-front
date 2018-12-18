@@ -19,6 +19,7 @@ export default {
     "Notifications.assigned": "assigned you to",
     "Notifications.mentioned": "mentioned you in a conversation",
     "Notifications.unknowAction": "Unknow action",
+    "NotificationsCentre.noNotiFound": "No notifications found.",
     "Books.title": "Books",
     "Books.noBooksFound": "No books found.",
     "Book.editGroupDialog": "Change chapter title.",

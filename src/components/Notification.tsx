@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Trans } from 'react-i18next'
 
+import dateDiff from 'src/helpers/dateDiff'
+
 import Avatar from './ui/Avatar'
 
 import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User } from 'src/store/types'
@@ -16,6 +18,8 @@ type Props = {
     modulesMap: ModulesMap
   }
   notification: Notification
+  avatarSize?: 'small' | 'medium' | 'big'
+  disableLink?: boolean
 }
 
 const mapStateToProps = ({ team, modules }: State) => {
@@ -39,7 +43,7 @@ class NotificationComp extends React.Component<Props> {
     if (noti.kind === 'comment') {
       return (
         <React.Fragment>
-          <Trans i18nKey="Notifications.commentedAt" />
+          <Trans i18nKey="Notifications.commentedAt" />{ " " }
           {
             mod ? 
               mod.title
@@ -51,7 +55,7 @@ class NotificationComp extends React.Component<Props> {
     } else if (noti.kind === 'assigned') {
       return (
         <React.Fragment>
-          <Trans i18nKey="Notifications.assigned" />
+          <Trans i18nKey="Notifications.assigned" />{ " " }
           {
             mod ? 
               mod.title
@@ -73,7 +77,7 @@ class NotificationComp extends React.Component<Props> {
     const { teamMap } = this.props.team
     const { modulesMap } = this.props.modules
     const noti = this.props.notification
-    const user: User | undefined = teamMap.get(noti.who)
+    const who: User | undefined = teamMap.get(noti.who)
     const mod = noti.module ? modulesMap.get(noti.module) : undefined
     let linkToNotification: string
     if (noti.conversation) {
@@ -81,24 +85,44 @@ class NotificationComp extends React.Component<Props> {
     } else {
       linkToNotification = '/modules/' + noti.module
     }
+    const avatarSize = this.props.avatarSize ? this.props.avatarSize : 'small'
 
-    return (
-      <Link to={linkToNotification}>
-        <div className="notification">
-          <span className="notification__content">
-            <span className="notification__who">
-              <Avatar disableLink={true} size="small" user={user} />
-            </span>
-            <span className="notification__text">
-              <div className="notification__action">
-                {this.notificationAction(noti, mod)}
-              </div>
-              { noti.message ? trimMessage(noti.message) : null }
+    const body = (
+      <div className="notification">
+        <span className="notification__content">
+          <span className="notification__who">
+            <Avatar disableLink={true} size={avatarSize} user={who} />
+          </span>
+          <span className="notification__text">
+            <div className="notification__action">
+              <strong>
+                { 
+                  who ? who.name + " " : null
+                } 
+              </strong>
+              { this.notificationAction(noti, mod) }
+            </div>
+            { 
+              noti.message ? 
+                <span className="notification__message">
+                  {trimMessage(noti.message)}
+                </span> 
+              : null
+             }
+            <span className="notification__date">
+              { dateDiff(noti.timestamp) }
             </span>
           </span>
-        </div>
-      </Link>
+        </span>
+      </div>
     )
+
+    return this.props.disableLink ?
+        body
+      : 
+        <Link to={linkToNotification} className="notification__link">
+          {body}
+        </Link>
   }
 }
 

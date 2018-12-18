@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 import Navigation from 'src/components/Navigation'
 import Spinner from 'src/components/Spinner'
+import Notification from 'src/components/Notification'
 import Icon from 'src/components/ui/Icon'
 
 import Dashboard from 'src/screens/app/Dashboard'
@@ -49,6 +50,7 @@ type Props = {
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
+  addNotification: (data: types.Notification) => void
   removeAlert: (alert: types.Alert) => void
 }
 
@@ -70,6 +72,7 @@ export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificatio
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
+    addNotification: (data: types.Notification) => dispatch(alertsActions.addNotification(data)),
     removeAlert: (alert: types.Alert) => dispatch(alertsActions.removeAlert(alert))
   }
 }
@@ -82,6 +85,35 @@ class App extends React.Component<Props> {
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
+
+    const socket = new WebSocket('ws://adaptarr.test/api/v1/events')
+
+    socket.onopen = function(event) {
+      console.log('Connection opened', event)
+    }
+
+    socket.onclose = function(event) {
+      console.log('Connection closed', event)
+    }
+
+    socket.onerror = function(event) {
+      console.error('Connection error', event)
+    }
+
+    socket.onmessage = event => {
+      if (event.data instanceof Blob) {
+        const reader = new FileReader()
+        reader.onload = () => {
+          if (typeof reader.result === 'string') {
+            console.log(reader.result)
+            this.props.addNotification(JSON.parse(reader.result))
+          }
+        }
+        reader.readAsText(event.data)
+      } else {
+        console.error('Unhandled instanceof event.data', event)
+      }
+    }
   }
 
   public render() {
@@ -111,14 +143,34 @@ class App extends React.Component<Props> {
                     <ul className="alerts__list">
                       {
                         alerts.map((alert: types.Alert) => {
-                          return (
-                            <li key={alert.id} className={`alerts__alert alert--${alert.kind}`}>
-                              <span className="alerts__close" onClick={() => this.props.removeAlert(alert)}>
-                                <Icon name="close"/>
-                              </span>
-                              {alert.message}
-                            </li>
-                          )
+                          
+                          switch(alert.kind) {
+                            case 'alert':
+                              return (
+                                <li key={alert.id} className={`alerts__alert alert--${alert.data.kind}`}>
+                                  <span 
+                                    className="alerts__close" 
+                                    onClick={() => this.props.removeAlert(alert)}
+                                  >
+                                    <Icon name="close"/>
+                                  </span>
+                                  {alert.data.message}
+                                </li>
+                              )
+                            case 'notification':
+                              return (
+                                <li key={alert.id} className="alerts__alert alert--notification">
+                                  <span 
+                                    className="alerts__close" 
+                                    onClick={() => this.props.removeAlert(alert)}
+                                  >
+                                    <Icon name="close"/>
+                                  </span>
+                                  <Notification
+                                    notification={(alert.data as types.Notification)}/>
+                                </li>
+                              )
+                          }
                         })
                       }
                     </ul>

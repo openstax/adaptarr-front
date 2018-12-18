@@ -12,7 +12,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import * as modulesActions from 'src/store/actions/Modules'
-import { ModulesMap, ModuleShortInfo, AlertKind } from 'src/store/types'
+import { ModulesMap, ModuleShortInfo, RequestInfoKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -23,7 +23,7 @@ type Props = {
   onModuleClick: (mod: ModuleShortInfo) => any
   addModuleToMap: (mod: ModuleShortInfo) => any
   removeModuleFromMap: (id: string) => any
-  addAlert: (kind: AlertKind, message: string) => void
+  addAlert: (kind: RequestInfoKind, message: string) => void
 }
 
 const mapStateToProps = ({ modules }: State) => {
@@ -36,7 +36,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addModuleToMap: (mod: ModuleShortInfo) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
-    addAlert: (kind: AlertKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 

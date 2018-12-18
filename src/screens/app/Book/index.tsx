@@ -37,7 +37,7 @@ type Props = {
   modules: {
     modulesMap: types.ModulesMap
   }
-  addAlert: (kind: types.AlertKind, message: string) => void
+  addAlert: (kind: types.RequestInfoKind, message: string) => void
   setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => void
 }
 
@@ -50,7 +50,7 @@ const mapStateToProps = ({ team, modules }: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addAlert: (kind: types.AlertKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: types.RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
     setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => dispatch(setAssigneeInModulesMap(moduleId, assignee))
   }
 }
@@ -637,7 +637,8 @@ class Book extends React.Component<Props> {
                   type="text" 
                   value={groupNameValue}
                   placeholder="New title"
-                  onChange={(e) => this.updateGroupNameValue(e)} />
+                  onChange={(e) => this.updateGroupNameValue(e)}
+                  autoFocus />
                 <Button 
                   color="green" 
                   clickHandler={this.editGroup}
@@ -663,7 +664,8 @@ class Book extends React.Component<Props> {
                   type="text" 
                   value={groupNameValue}
                   placeholder="Title"
-                  onChange={(e) => this.updateGroupNameValue(e)} />
+                  onChange={(e) => this.updateGroupNameValue(e)}
+                  autoFocus />
                 <Button 
                   color="green" 
                   clickHandler={this.addGroup}

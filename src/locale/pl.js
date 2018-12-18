@@ -19,6 +19,7 @@ export default {
     "Notifications.assigned": "przypisał/a Cię do",
     "Notifications.mentioned": "wspomniał o Tobie w konwersacji",
     "Notifications.unknowAction": "Nieznana akcja",
+    "NotificationsCentre.noNotiFound": "Nie masz żadnych powiadomień.",
     "Books.title": "Książki",
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
     "Book.editGroupDialog": "Zmień nazwę rozdziału.",

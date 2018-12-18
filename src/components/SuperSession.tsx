@@ -62,7 +62,12 @@ type Props = {
               <span className="error">{errorMessage}</span>
             : null
           }
-          <input type="password" ref={this.passwordInput} name="password" placeholder="Password" />
+          <input 
+            type="password" 
+            ref={this.passwordInput} 
+            name="password" 
+            placeholder="Password"
+            autoFocus />
           <Button clickHandler={this.confirmSuperSession}>
             <Trans i18nKey="Buttons.confirm" />
           </Button>

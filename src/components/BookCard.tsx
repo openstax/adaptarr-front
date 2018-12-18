@@ -11,7 +11,7 @@ import Dialog from './ui/Dialog'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
 
-import { IsLoading, BooksMap, BookShortInfo, AlertKind } from 'src/store/types'
+import { IsLoading, BooksMap, BookShortInfo, RequestInfoKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
@@ -23,7 +23,7 @@ type Props = {
     booksMap: BooksMap
   }
   fetchBooksMap: () => void
-  addAlert: (kind: AlertKind, message: string) => void
+  addAlert: (kind: RequestInfoKind, message: string) => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -35,7 +35,7 @@ export const mapStateToProps = ({ booksMap }: State) => {
 export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
   return {
     fetchBooksMap: () => dispatch(fetchBooksMap()),
-    addAlert: (kind: AlertKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 

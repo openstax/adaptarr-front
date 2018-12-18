@@ -68,6 +68,14 @@ html, body, #root, .container {
   100% { transform: rotate(360deg); }
 }
 
+a {
+  text-decoration: none;
+}
+
+strong {
+  font-weight: 700;
+}
+
 .bold {
   font-weight: 700;
 }
@@ -246,6 +254,10 @@ button[disabled] {
   margin-right: 20px;
 }
 
+.header .date {
+  margin-right: 20px;
+}
+
 .adminui {
   display: flex;
   align-items: center;
@@ -368,6 +380,7 @@ button[disabled] {
 
 .notification {
   width: 100%;
+  color: var(--font-dark);
 }
 
 .notification__content {
@@ -381,7 +394,6 @@ button[disabled] {
 }
 
 .notification__action {
-  font-weight: 700;
   margin-bottom: 5px;
 }
 
@@ -639,8 +651,8 @@ main {
 }
 
 .avatar--medium .avatar__image {
-  width: 70px;
-  height: 70px;
+  width: 50px;
+  height: 50px;
 }
 
 .avatar--big .avatar__image {
@@ -933,4 +945,38 @@ input[type="disabled"] {
 
 .alert--error {
   border-color: var(--red);
+}
+
+.notificationsList {
+  width: 100%;
+  margin-top: -20px;
+}
+
+.notificationsList__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.notificationsList .notification {
+  cursor: pointer;
+}
+
+.notificationsList .notification__content {
+  align-items: center;
+}
+
+.notificationsList .notification__who {
+  margin-top: 0;
+}
+
+.notificationsList .notification__action {
+  margin-bottom: 0;
+}
+
+.notificationsList .notification__date {
+  display: inline-block;
+  margin-top: 5px;
 }
