@@ -17,7 +17,7 @@ import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
 type Props = {
-  modulesMap: {
+  modules: {
     modulesMap: ModulesMap
   }
   onModuleClick: (mod: ModuleShortInfo) => any
@@ -26,9 +26,9 @@ type Props = {
   addAlert: (kind: AlertKind, message: string) => void
 }
 
-const mapStateToProps = ({ modulesMap }: State) => {
+const mapStateToProps = ({ modules }: State) => {
   return {
-    modulesMap,
+    modules,
   }
 }
 
@@ -144,7 +144,7 @@ class ModuleList extends React.Component<Props> {
 
   public render() {
     const { moduleTitleValue, showSuperSession, showRemoveModule } = this.state
-    const modulesMap = this.props.modulesMap.modulesMap
+    const modulesMap = this.props.modules.modulesMap
 
     return (
       <div className="modulesList">

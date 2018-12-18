@@ -12,16 +12,16 @@ type Props = {
   team: {
     teamMap: TeamMap
   }
-  modulesMap: {
+  modules: {
     modulesMap: ModulesMap
   }
   notification: Notification
 }
 
-const mapStateToProps = ({ team, modulesMap }: State) => {
+const mapStateToProps = ({ team, modules }: State) => {
   return {
     team,
-    modulesMap,
+    modules,
   }
 }
 
@@ -71,7 +71,7 @@ class NotificationComp extends React.Component<Props> {
 
   public render() {
     const { teamMap } = this.props.team
-    const { modulesMap } = this.props.modulesMap
+    const { modulesMap } = this.props.modules
     const noti = this.props.notification
     const user: User | undefined = teamMap.get(noti.who)
     const mod = noti.module ? modulesMap.get(noti.module) : undefined

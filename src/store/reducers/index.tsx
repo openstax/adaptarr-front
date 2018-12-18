@@ -1,6 +1,5 @@
 import { combineReducers } from 'redux'
 
-import * as fromDashboard from './Dashboard'
 import * as fromUser from './User'
 import * as fromTeam from './Team'
 import * as fromNotifications from './Notifications'
@@ -13,12 +12,11 @@ import * as fromAlerts from './Alerts'
  * It contains every substate of the app
  */
 export interface State {
-  dashboard: fromDashboard.State
   user: fromUser.State
   team: fromTeam.State
   notifications: fromNotifications.State
   booksMap: fromBooks.State
-  modulesMap: fromModules.State
+  modules: fromModules.State
   alerts: fromAlerts.State
 }
 
@@ -26,12 +24,11 @@ export interface State {
  * initialState of the app
  */
 export const initialState: State = {
-  dashboard: fromDashboard.initialState,
   user: fromUser.initialState,
   team: fromTeam.initialState,
   notifications: fromNotifications.initialState,
   booksMap: fromBooks.initialState,
-  modulesMap: fromModules.initialState,
+  modules: fromModules.initialState,
   alerts: fromAlerts.initialState,
 }
 
@@ -40,11 +37,10 @@ export const initialState: State = {
  * Returned reducer will be of type Reducer<State>
  */
 export const reducer = combineReducers<State>({
-  dashboard: fromDashboard.reducer,
   user: fromUser.reducer,
   team: fromTeam.reducer,
   notifications: fromNotifications.reducer,
   booksMap: fromBooks.reducer,
-  modulesMap: fromModules.reducer,
+  modules: fromModules.reducer,
   alerts: fromAlerts.reducer,
 })

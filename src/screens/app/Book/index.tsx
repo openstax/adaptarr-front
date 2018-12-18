@@ -22,7 +22,8 @@ import UsersList from 'src/containers/UsersList'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { addAlert, AddAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/Alerts'
+import { setAssigneeInModulesMap } from 'src/store/actions/Modules'
 
 type Props = {
   match: {
@@ -33,22 +34,24 @@ type Props = {
   team: {
     teamMap: types.TeamMap
   }
-  modulesMap: {
+  modules: {
     modulesMap: types.ModulesMap
   }
   addAlert: (kind: types.AlertKind, message: string) => void
+  setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => void
 }
 
-const mapStateToProps = ({ team, modulesMap }: State) => {
+const mapStateToProps = ({ team, modules }: State) => {
   return {
     team,
-    modulesMap,
+    modules,
   }
 }
 
-const mapDispatchToProps = (dispatch: AddAlert) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     addAlert: (kind: types.AlertKind, message: string) => dispatch(addAlert(kind, message)),
+    setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => dispatch(setAssigneeInModulesMap(moduleId, assignee))
   }
 }
 
@@ -68,6 +71,7 @@ class Book extends React.Component<Props> {
     showRemoveModule: boolean,
     showAssignUser: boolean,
     userToAssign: types.User | null,
+    assignAction: 'assign' | 'remove',
     targetModule: types.BookPart | null,
     titleInput: string,
   } = {
@@ -89,13 +93,14 @@ class Book extends React.Component<Props> {
     showRemoveModule: false,
     showAssignUser: false,
     userToAssign: null,
+    assignAction: 'assign',
     targetModule: null,
     titleInput: '',
   }
 
   private showModuleDetails = (item: types.BookPart) => {
     if (item.kind === 'module' && item.id) {
-      const details = this.props.modulesMap.modulesMap.get(item.id)
+      const details = this.props.modules.modulesMap.get(item.id)
       this.setState({ showModuleDetails: details })
     }
   }
@@ -143,7 +148,7 @@ class Book extends React.Component<Props> {
   }
 
   private renderModule = (item: types.BookPart) => {
-    const { modulesMap } = this.props.modulesMap
+    const { modulesMap } = this.props.modules
     const { teamMap } = this.props.team
     let assignedUser
     let moduleStatus = (
@@ -477,24 +482,30 @@ class Book extends React.Component<Props> {
     this.setState({ showAssignUser: false, targetModule: null, userToAssign: null })
   }
 
-  private handleUserClick = (user: types.User) => {
-    this.setState({ userToAssign: user }, this.assignUser)
+  private handleUserClick = (user: types.User, action: 'assign' | 'remove') => {
+    this.setState({ userToAssign: user, assignAction: action }, this.assignUser)
   }
 
   private assignUser = () => {
-    const { userToAssign: user, targetModule } = this.state
+    const { userToAssign: user, assignAction, targetModule } = this.state
 
     if (!targetModule || !user) return
 
     const payload = {
-      assignee: user.id
+      assignee: assignAction === 'assign' ? user.id : null
     }
 
     axios.put(`modules/${targetModule.id}`, payload)
       .then(() => {
-        this.fetchBook()
+        if (assignAction === 'assign') {
+          this.props.addAlert('success', `${user.name} was assigned to ${targetModule.title}.`)
+        } else if (assignAction === 'remove') {
+          this.props.addAlert('success', `${user.name} was unassigned from ${targetModule.title}.`)
+        }     
         this.closeAssignUserDialog()
-        this.props.addAlert('success', `${user.name} was assigned to ${targetModule.title}.`)
+        if (targetModule.id) {
+          this.props.setAssigneeInModulesMap(targetModule.id, payload.assignee)
+        }
       })
       .catch(e => {
         if (e.request.status === 403) {
@@ -604,6 +615,7 @@ class Book extends React.Component<Props> {
       showRemoveGroup, 
       showRemoveModule,
       showAssignUser,
+      targetModule,
       titleInput,
     } = this.state
 
@@ -708,7 +720,9 @@ class Book extends React.Component<Props> {
               onClose={this.closeAssignUserDialog} 
               i18nKey="Book.assignUserDialog"
             >
-              <UsersList onUserClick={this.handleUserClick} />
+              <UsersList 
+                mod={targetModule} 
+                onUserClick={this.handleUserClick} />
             </Dialog>
           : null
         }

@@ -1,9 +1,10 @@
 import * as React from 'react'
-import { AxiosResponse } from 'axios'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -12,7 +13,7 @@ import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
 import * as types from 'src/store/types'
-import { createDraft, deleteDraft } from 'src/store/actions/Drafts'
+import { FetchModulesAssignedToMe, fetchModulesAssignedToMe } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
@@ -22,16 +23,24 @@ type Props = {
   booksMap: {
     booksMap: types.BooksMap
   }
-  modulesMap: {
+  modules: {
     modulesMap: types.ModulesMap
+    assignedToMe: types.ModuleShortInfo[]
   }
+  fetchModulesAssignedToMe: () => void
 }
 
-export const mapStateToProps = ({ user, booksMap, modulesMap }: State) => {
+const mapStateToProps = ({ user, booksMap, modules }: State) => {
   return {
     user,
     booksMap,
-    modulesMap,
+    modules,
+  }
+}
+
+const mapDispatchToProps = (dispatch: FetchModulesAssignedToMe) => {
+  return {
+    fetchModulesAssignedToMe: () => dispatch(fetchModulesAssignedToMe())
   }
 }
 
@@ -39,237 +48,131 @@ class Dashboard extends React.Component<Props> {
 
   public state: {
     isLoading: boolean,
-    drafts: types.DashboardDraft[],
-    assigned: types.DashboardAssignedModule[],
-    showDeleteDraftDialog: boolean, 
-    draftToDelete?: types.ModuleShortInfo
+    drafts: types.DraftShortInfo[],
+    showDeleteDraftDialog: boolean,
+    targetDraftId: string | null,
   } = {
     isLoading: true,
     drafts: [],
-    assigned: [],
     showDeleteDraftDialog: false,
+    targetDraftId: null,
   }
 
-  private deleteDraft (id: string) {
-    const modulesMap = this.props.modulesMap.modulesMap
-    const draftToDelete = modulesMap.get(id)
-    console.log('draftToDelete', draftToDelete)
-    this.setState({showDeleteDraftDialog: true, draftToDelete})
-  }
-
-  private deleteDraftPermamently () {
-    console.log('deleteDraft')
-    if (this.state.draftToDelete) {
-      deleteDraft(this.state.draftToDelete.id)
-    } else {
-      console.log('There is no draft with given id.')
-    }
+  private showDeleteDraftDialog = (targetDraftId: string) => {
+    this.setState({ showDeleteDraftDialog: true, targetDraftId })
   }
 
   private closeDeleteDraftDialog () {
-    this.setState({showDeleteDraftDialog: false, draftToDelete: {}})
+    this.setState({ showDeleteDraftDialog: false, targetDraftId: null })
   }
 
-  private createDraft (moduleId: string) {
-    console.log('createDraft', moduleId)
-    createDraft(moduleId)
-  }
+  private deleteDraft () {
+    const targetDraftId = this.state.targetDraftId
 
-  private listOfDrafts (arr: types.DashboardDraft[]) {
-    const modulesMap = this.props.modulesMap.modulesMap
-    const booksMap = this.props.booksMap.booksMap
+    if (!targetDraftId) return
 
-    // Create {bookId: { title: string, id: number, drafts: []}}
-    let booksWithDrafts = {}
-    arr.forEach(draftId => {
-      let currentModule = modulesMap.get(draftId)
-      let currentBook = currentModule ? booksMap.get(currentModule.book) : null
-      
-      if (currentBook) {
-        if (booksWithDrafts[currentBook.id]) {
-          booksWithDrafts[currentBook.id].drafts.push(currentModule)
-        } else {
-          booksWithDrafts[currentBook.id] = {
-            ...currentBook,
-            drafts: [currentModule]
-          }
-        }
-      } else {
-        console.log(`Couldn't find book for draft with id: ${draftId}`)
-      }
-    })
-
-    if (Object.keys(booksWithDrafts).length > 0) {
-      return (
-        <ul className="list">
-          {
-            Object.keys(booksWithDrafts).map(key => {
-              const el: {id: string, title: string, drafts: []} = booksWithDrafts[key]
-              
-              return (
-                <li key={el.id} className="list__item">
-                  <span className="list__title bold">{el.title}</span>
-                  <span className="list__button">
-                    <Button
-                      size="small"
-                      to={`/books/${el.id}`}
-                    >
-                      <Trans i18nKey="Buttons.viewBook" />
-                    </Button>
-                  </span>
-                  <ul className="list">
-                    {
-                      el.drafts.map((draft: {id: string, title: string}) => {
-                        return <li key={draft.id} className="list__item">
-                          <span className="list__title">
-                            {draft.title}
-                          </span>
-                          <span className="list__buttons">
-                            <Button 
-                              size="small" 
-                              to={`/modules/${draft.id}`}
-                            >
-                              <Trans i18nKey="Buttons.viewDraft" />
-                            </Button>
-                            <Button 
-                              color="red" 
-                              size="small" 
-                              clickHandler={() => this.deleteDraft(draft.id)}
-                            >
-                              <Trans i18nKey="Buttons.delete" />
-                            </Button>
-                          </span>
-                        </li>
-                      })
-                    }
-                  </ul>
-                </li>
-              )
-            })
-          }
-        </ul>
-      )
-    }
-
-    return (
-      <span>
-        <Trans i18nKey="Dashboard.noDraftsFound" />
-      </span>
-    )
-  }
-
-  private listOfAssigned (arr: types.DashboardAssignedModule[]) {
-    const user = this.props.user.user
-    const modulesMap = this.props.modulesMap.modulesMap
-    const booksMap = this.props.booksMap.booksMap
-
-    // Create {bookId: { title: string, id: number, modules: []}}
-    let booksWithModules = {}
-    arr.forEach(el => {
-      const moduleId = el.id
-      let currentModule = modulesMap.get(moduleId)
-      let currentBook = currentModule ? booksMap.get(currentModule.book) : null
-      
-      if (currentBook) {
-        if (booksWithModules[currentBook.id]) {
-          booksWithModules[currentBook.id].modules.push(currentModule)
-        } else {
-          booksWithModules[currentBook.id] = {
-            ...currentBook,
-            modules: [currentModule]
-          }
-        }
-      } else {
-        console.log(`Couldn't find book for draft with id: ${moduleId}`)
-      }
-    })
-
-    if (Object.keys(booksWithModules).length > 0) {
-      return (
-        <ul className="list">
-          {
-            Object.keys(booksWithModules).map(key => {
-              const el: {id: string, title: string, modules: []} = booksWithModules[key]
-              
-              return (
-                <li key={el.id} className="list__item">
-                  <span className="list__title bold">{el.title}</span>
-                  <span className="list__button">
-                    <Button
-                      size="small"
-                      to={`/books/${el.id}`}
-                    >
-                      <Trans i18nKey="Buttons.viewBook" />
-                    </Button>
-                  </span>
-                  <ul className="list">
-                    {
-                      el.modules.map((mod: {id: string, title: string, assignee: number}) => {
-                        const isUserAssigned = mod.assignee === user.id ? true : false
-
-                        return <li key={mod.id} className="list__item">
-                          <span className="list__title">
-                            {mod.title}
-                          </span>
-                          <span className="list__buttons">
-                            {
-                              isUserAssigned ?
-                                <Button 
-                                  size="small"
-                                  to={`/modules/${mod.id}`}
-                                >
-                                  <Trans i18nKey="Buttons.viewDraft" />
-                                </Button>
-                              :
-                                <Button 
-                                  color="green" 
-                                  size="small" 
-                                  clickHandler={() => this.createDraft(mod.id)}
-                                >
-                                  <Trans i18nKey="Buttons.newDraft" />
-                                </Button>
-                            }
-                          </span>
-                        </li>
-                      })
-                    }
-                  </ul>
-                </li>
-              )
-            })
-          }
-        </ul>
-      )
-    }
-
-    return (
-      <span>
-        <Trans i18nKey="Dashboard.noAssigned" />
-      </span>
-    )
-  }
-
-  private fetchDashboard = () => {
-    axios.get('dashboard')
-      .then((res: AxiosResponse) => {
-        this.setState({
-          isLoading: false,
-          assigned: res.data.assigned,
-          drafts: res.data.drafts,
-        })
+    axios.delete(`drafts/${targetDraftId}`)
+      .then(() => {
+        this.fetchDrafts()
+        store.dispatch(addAlert('success', 'Draft was deleted successfully.'))
       })
-      .catch((e: ErrorEvent) => {
-        console.log(e.message)
-        this.setState({isLoading: false})
+      .catch(e => {
+        store.dispatch(addAlert('error', e.message))
+      })
+
+    this.closeDeleteDraftDialog()
+  }
+
+  private createDraft (targetDraftId: string) {
+    if (!targetDraftId) return
+
+    axios.post(`modules/${targetDraftId}`)
+      .then(() => {
+        this.fetchDrafts()
+        store.dispatch(addAlert('success', 'Draft was created successfully.'))
+      })
+      .catch(e => {
+        store.dispatch(addAlert('error', e.message))
+      })
+  }
+
+  private listOfDrafts (arr: types.DraftShortInfo[]) {   
+    return arr.map((draft: types.DraftShortInfo) => {
+      return (
+        <li key={draft.module} className="list__item">
+          <span className="list__title">
+            {draft.title}
+          </span>
+          <span className="list__buttons">
+            <Button 
+              to={`/modules/${draft.module}`}
+            >
+              <Trans i18nKey="Buttons.viewDraft" />
+            </Button>
+            <Button 
+              color="red" 
+              clickHandler={() => this.showDeleteDraftDialog(draft.module)}
+            >
+              <Trans i18nKey="Buttons.delete" />
+            </Button>
+          </span>
+        </li>
+      )
+    })
+  }
+
+  private listOfAssigned (mods: types.ModuleShortInfo[]) {
+    const drafts = this.state.drafts
+
+    return mods.map(mod => {
+      const isDraftCreated = drafts.some(draft => draft.module === mod.id)
+
+      return (
+        <li key={mod.id} className="list__item">
+          <span className="list__title">
+            {mod.title}
+          </span>
+          <span className="list__buttons">
+            {
+              isDraftCreated ?
+                <Button 
+                  to={`/modules/${mod.id}`}
+                >
+                  <Trans i18nKey="Buttons.viewDraft" />
+                </Button>
+              :
+                <Button 
+                  color="green" 
+                  clickHandler={() => this.createDraft(mod.id)}
+                >
+                  <Trans i18nKey="Buttons.newDraft" />
+                </Button>
+            }
+          </span>
+        </li>
+      )
+    })
+  }
+
+  private fetchDrafts = () => {
+    axios.get('drafts')
+      .then(res => {
+        this.setState({ isLoading: false, drafts: res.data })
+      })
+      .catch(e => {
+        this.setState({ isLoading: false })
+        store.dispatch(addAlert('error', e.message))
       })
   }
 
   componentDidMount () {
-    this.fetchDashboard()
+    this.props.fetchModulesAssignedToMe()
+    this.fetchDrafts()
   }
 
   public render() {
-    const { isLoading, drafts, assigned, draftToDelete } = this.state
+    const { drafts, isLoading } = this.state
+    const { assignedToMe } = this.props.modules
 
     return (
       <Section>
@@ -277,10 +180,10 @@ class Dashboard extends React.Component<Props> {
         {
           this.state.showDeleteDraftDialog ?
             <Dialog 
-              title={`Do you want to delete draft ${draftToDelete ? draftToDelete.title : 'undefined'}?`} 
+              title={`Are you sure you want to delete this draft?`} 
               onClose={() => this.closeDeleteDraftDialog()}
             >
-              <Button color="red" clickHandler={() => this.deleteDraftPermamently()}>
+              <Button color="red" clickHandler={() => this.deleteDraft()}>
                 <Trans i18nKey="Buttons.delete" />
               </Button>
               <Button clickHandler={() => this.closeDeleteDraftDialog()}>
@@ -291,31 +194,45 @@ class Dashboard extends React.Component<Props> {
             null
         }
         {
-          !isLoading ?
-            <div className="section__content">
-              <div className="section__half">
-                <h3 className="section__heading">
-                  <Trans i18nKey="Dashboard.yourDrafts" />
-                </h3>
-                {
-                  this.listOfDrafts(drafts)
-                }
-              </div>
-              <div className="section__half">
-                <h3 className="section__heading">
-                  <Trans i18nKey="Dashboard.assignedToYou" />
-                </h3>
-                {
-                  this.listOfAssigned(assigned)
-                }
-              </div>
-            </div>
+          isLoading ?
+            <Spinner />
           :
-            <Spinner/>
+          <div className="section__content">
+            <div className="section__half">
+              <h3 className="section__heading">
+                <Trans i18nKey="Dashboard.yourDrafts" />
+              </h3>
+              {
+                drafts.length > 0 ?
+                  <ul className="list">
+                    {
+                      this.listOfDrafts(drafts)
+                    }
+                  </ul>
+                :
+                  <Trans i18nKey="Dashboard.noDraftsFound" />
+              }
+            </div>
+            <div className="section__half">
+              <h3 className="section__heading">
+                <Trans i18nKey="Dashboard.assignedToYou" />
+              </h3>
+              {
+                assignedToMe.length > 0 ?
+                  <ul className="list">
+                    {
+                      this.listOfAssigned(assignedToMe)
+                    }
+                  </ul>
+                :
+                  <Trans i18nKey="Dashboard.noAssigned" />
+              }
+            </div>
+          </div>
         }
       </Section>
     )
   }
 }
 
-export default connect(mapStateToProps)(Dashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

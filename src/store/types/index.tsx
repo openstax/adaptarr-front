@@ -28,18 +28,12 @@ export interface Book {
 
 
 export type ModuleStatus = 'ready' | 'translation' | 'review' | 'done'
-export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number, status: ModuleStatus}
+export type ModuleShortInfo = {id: string, title: string, book: string, assignee: number | null, status: ModuleStatus}
 export type ModulesMap = Map<string, ModuleShortInfo>
 
 
 
-export type DashboardAssignedModule = {id: string, title: string, book: string}
-export type DashboardBook = {id: string, title: string}
-export type DashboardDraft = string //{id: string, title: string}
-export interface Dashboard {
-  assigned: DashboardAssignedModule[]
-  drafts: DashboardDraft[]
-}
+export type DraftShortInfo = { module: string, title: string }
 
 
 

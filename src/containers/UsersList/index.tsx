@@ -3,19 +3,27 @@ import { connect } from 'react-redux'
 
 import UserInfo from 'src/components/UserInfo'
 
-import { TeamMap, User } from 'src/store/types'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
+
+import { TeamMap, User, ModulesMap, BookPart } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
+  mod: BookPart | null
   team: {
     teamMap: TeamMap
   }
-  onUserClick: (user: User) =>  any
+  modules: {
+    modulesMap: ModulesMap
+  }
+  onUserClick: (user: User, action: 'assign' | 'remove') =>  any
 }
 
-const mapStateToProps = ({ team }: State) => {
+const mapStateToProps = ({ team, modules }: State) => {
   return {
     team,
+    modules,
   }
 }
 
@@ -29,20 +37,28 @@ class UsersList extends React.Component<Props> {
     })
 
     return users.map((user: User) => {
+      const modulesMap = this.props.modules.modulesMap
+      const modId = this.props.mod ? this.props.mod.id : null
+      const mod = modId ? modulesMap.get(modId) : null
+      
       return (
         <li 
           key={user.id} 
           className="usersList__item"
-          onClick={() => this.handleUserClick(user)}
         >
-          <UserInfo user={user} />
+          <span onClick={() => this.props.onUserClick(user, 'assign')}>
+            <UserInfo user={user} />
+          </span>
+          {
+            mod && mod.assignee === user.id ?
+              <Button color="red" clickHandler={() => this.props.onUserClick(user, 'remove')}>
+                <Icon name="minus" />
+              </Button>
+            : null
+          }
         </li>
       )
     })
-  }
-
-  private handleUserClick = (user: User) => {
-    this.props.onUserClick(user)
   }
 
   public render() {

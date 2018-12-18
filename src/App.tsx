@@ -38,7 +38,7 @@ type Props = {
   booksMap: {
     booksMap: types.BooksMap
   }
-  modulesMap: {
+  modules: {
     modulesMap: types.ModulesMap
   }
   alerts: {
@@ -52,13 +52,13 @@ type Props = {
   removeAlert: (alert: types.Alert) => void
 }
 
-export const mapStateToProps = ({ user, notifications, team, booksMap, modulesMap, alerts }: State) => {
+export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts }: State) => {
   return {
     user,
     team,
     notifications,
     booksMap,
-    modulesMap,
+    modules,
     alerts,
   }
 }
