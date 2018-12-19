@@ -38,7 +38,9 @@ class Navigation extends React.Component<Props> {
   }
 
   private toggleSidebar = () => {
-    this.setState({toggleSidebar: !this.state.toggleSidebar})
+    const currentVal = this.state.toggleSidebar
+    this.setState({toggleSidebar: !currentVal})
+    localStorage.setItem('toggleSidebar', JSON.stringify(!currentVal))
   }
 
   private getUnreadNotifications = (arr: Notification[]): Notification[] => {
@@ -47,6 +49,13 @@ class Navigation extends React.Component<Props> {
     })
 
     return unred
+  }
+
+  componentDidMount = () => {
+    const toggleSidebar = localStorage.getItem('toggleSidebar') 
+    if (toggleSidebar) {
+      this.setState({ toggleSidebar: JSON.parse(toggleSidebar) })
+    }
   }
 
   public render() {
