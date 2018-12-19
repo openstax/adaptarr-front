@@ -1,5 +1,6 @@
 import { PUSH_ALERT, REMOVE_ALERT } from 'src/store/constants'
 import { Alert, Notification, RequestInfoKind } from 'src/store/types'
+import { pushNotificationToStore, PushNotificationToStore } from './Notifications'
 
 export interface AddAlert {
   (dispatch: any): void
@@ -40,7 +41,7 @@ export const addAlert = (kind: RequestInfoKind, message: string): AddAlert => {
 }
 
 export const addNotification = (data: Notification): AddNotification => {
-  return (dispatch: React.Dispatch<AlertsAction>) => {
+  return (dispatch: React.Dispatch<AlertsAction | PushNotificationToStore>) => {
     const alert: Alert = {
       id: new Date().getTime(),
       kind: 'notification',
@@ -48,6 +49,7 @@ export const addNotification = (data: Notification): AddNotification => {
     }
 
     dispatch(pushAlert(alert))
+    dispatch(pushNotificationToStore(data))
     setTimeout(() => {
       dispatch(removeAlert(alert))
     }, 5000)

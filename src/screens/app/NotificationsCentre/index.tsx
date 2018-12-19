@@ -66,16 +66,22 @@ class NotificationsCentre extends React.Component<Props> {
 
   private notificationDetails = (details: Notification) => {
     const modulesMap = this.props.modules.modulesMap
+    const teamMap = this.props.team.teamMap
     const mod = details.module ? modulesMap.get(details.module) : undefined
+    const who = details.who ? teamMap.get(details.who) : undefined
 
     let body
-    if (details.module) {
+    if (details.kind === 'assigned') {
       body = (
-        <Link to={`modules/${mod ? mod.id : undefined }`}>
-          <h2 className="details__title">
+        <React.Fragment>
+          <Link to={`/users/${who ? who.id : undefined}`}>
+            {who ? who.name : 'Unknow user'}
+          </Link>{" "}
+          <Trans i18nKey="Notifications.assigned"/>{" "}
+          <Link to={`/modules/${mod ? mod.id : undefined }`}>
             {mod ? mod.title : 'Unknow module'}
-          </h2>
-        </Link>
+          </Link>
+        </React.Fragment>
       )
     }
 

@@ -24,6 +24,8 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 }
 
 body {
+  position: fixed;
+  width: 100%;
   font-family: 'Roboto', sans-serif;
   font-size: 10px;
   color: var(--font-dark);
@@ -421,6 +423,7 @@ main {
   margin: 0 15px;
   border: 1px solid var(--light-bg);
   border-bottom: none;
+  overflow: auto;
 }
 
 .section--wrapper:first-child {

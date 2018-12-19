@@ -7,6 +7,11 @@ export interface FetchNotifications {
   (dispatch: any): void
 }
 
+export interface PushNotificationToStore {
+  type: constants.PUSH_NOTIFICATION_TO_STORE,
+  data: Notification,
+}
+
 export interface FetchNotificationsBegin {
   type: constants.FETCH_NOTIFICATIONS_BEGIN
 }
@@ -21,7 +26,7 @@ export interface FetchNotificationsFailure {
   error: string,
 }
 
-export type NotificationsAction = FetchNotificationsBegin | FetchNotificationsSuccess | FetchNotificationsFailure
+export type NotificationsAction = FetchNotificationsBegin | FetchNotificationsSuccess | FetchNotificationsFailure | PushNotificationToStore
 
 const fetchNotificationsBegin = (): FetchNotificationsBegin => {
   return {
@@ -55,5 +60,12 @@ export const fetchNotifications = (): FetchNotifications => {
       .catch(e => {
         dispatch(fetchNotificationsFailure(e.message))
       })
+  }
+}
+
+export const pushNotificationToStore = (noti: Notification): PushNotificationToStore => {
+  return {
+    type: constants.PUSH_NOTIFICATION_TO_STORE,
+    data: noti,
   }
 }

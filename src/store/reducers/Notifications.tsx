@@ -4,6 +4,7 @@ import {
   FETCH_NOTIFICATIONS_BEGIN,
   FETCH_NOTIFICATIONS_SUCCESS,
   FETCH_NOTIFICATIONS_FAILURE,
+  PUSH_NOTIFICATION_TO_STORE,
 } from 'src/store/constants'
 
 export interface State {
@@ -38,6 +39,9 @@ export function reducer (state: State = initialState, action: NotificationsActio
         error: action.error,
         notifications: state.notifications,
       }
+    case PUSH_NOTIFICATION_TO_STORE:
+      state.notifications.push(action.data)
+      return state
   }
   return state
 }
