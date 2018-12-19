@@ -19,6 +19,7 @@ import Dialog from 'src/components/ui/Dialog'
 
 import ModulesList from 'src/containers/ModulesList'
 import UsersList from 'src/containers/UsersList'
+import ModulePreview from 'src/containers/ModulePreview'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -787,9 +788,7 @@ class Book extends React.Component<Props> {
                   <Icon name="close" />
                 </Button>
               </Header>
-              <div className="section__content">
-                {JSON.stringify(showModuleDetails)}
-              </div>
+              <ModulePreview moduleId={showModuleDetails.id}/>
             </Section>
           : null
         }
