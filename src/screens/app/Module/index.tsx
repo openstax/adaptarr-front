@@ -33,10 +33,10 @@ class Module extends React.Component<Props> {
   private fetchModuleInfo = () => {
     axios.get(`modules/${this.props.match.params.id}`)
       .then(res => {
-        this.setState({ mod: res.data, error: '' })
+        this.setState({ isLoading: false, mod: res.data, error: '' })
       })
       .catch(e => {
-        this.setState({ error: e.message })
+        this.setState({ isLoading: false, mod: undefined, error: e.message })
         store.dispatch(addAlert('error', e.message))
       })
   }
@@ -46,16 +46,23 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const { mod } = this.state
+    const { isLoading, mod, error } = this.state
 
     return (
       <Section>
         <Header title={mod ? mod.title : 'Unknow module'}/>
         <div className="section__content">
           {
-            mod ?
-              <ModulePreview moduleId={mod.id}/>
-            : <Spinner/>
+            isLoading ?
+              <Spinner/>
+            :
+              <React.Fragment>
+                {
+                  mod ?
+                    <ModulePreview moduleId={mod.id}/>
+                  : error
+                }
+              </React.Fragment>
           }
         </div>
       </Section>
