@@ -1029,3 +1029,84 @@ input[type="disabled"] {
   display: inline-block;
   margin-top: 5px;
 }
+
+.modulePreview {
+  line-height: 1.4;
+}
+
+.modulePreview title {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 700;
+  line-height: 1.8;
+}
+
+.modulePreview para {
+  margin: 5px 0;
+  display: block;
+}
+
+.modulePreview emphasis {
+  font-weight: 700;
+}
+
+.modulePreview emphasis[effect="italics"] {
+  font-style: italic;
+}
+
+.modulePreview footnote {
+  display: block;
+}
+
+.modulePreview footnote::before {
+  counter-increment: footnote;
+  content: counter(footnote) ". ";
+}
+
+.modulePreview note, .modulePreview example {
+  background-color: var(--light-bg);
+  display: block;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.modulePreview section {
+  margin: 10px 0;
+}
+
+.modulePreview exercise {
+  display: block;
+  border-inline-start: 4px solid var(--dark-bg);
+  margin-inline-start: 10px;
+  margin-bottom: 10px;
+  padding-inline-start: 8px;
+}
+
+.modulePreview exercise::before {
+  display: block;
+  color: var(--dark-bg);
+}
+
+.modulePreview exercise * > :first-child {
+  margin-top: 0;
+}
+
+.modulePreview problem, solution, commentary {
+  display: block;
+  margin: 5px 0;
+}
+
+.modulePreview exercise problem::before {
+  content: 'Problem ' counter(exercise) ':';
+  font-weight: 700;
+}
+
+.modulePreview exercise solution::before {
+  content: 'Solution ' counter(exercise_solution) ':';
+  font-weight: 700;
+}
+
+.modulePreview exercise commentary::before {
+  content: 'Commentary: ';
+  font-weight: 700;
+}

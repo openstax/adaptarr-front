@@ -11,6 +11,7 @@ import Dashboard from 'src/screens/app/Dashboard'
 import NotificationsCentre from 'src/screens/app/NotificationsCentre'
 import Books from 'src/screens/app/Books'
 import Book from 'src/screens/app/Book'
+import Module from 'src/screens/app/Module'
 import Resources from 'src/screens/app/Resources'
 import Settings from 'src/screens/app/Settings'
 import Invitations from 'src/screens/app/Invitations'
@@ -127,14 +128,15 @@ class App extends React.Component<Props> {
             <div className="container container--main">
               <Navigation />
               <main>
-                <Route exact path="/" component={Dashboard} />
-                <Route path="/notifications" component={NotificationsCentre} />
-                <Route exact path="/books" component={Books} />
-                <Route path="/books/:id" component={Book} />
-                <Route path="/resources" component={Resources} />
-                <Route path="/settings" component={Settings} />
-                <Route path="/invitations" component={Invitations} />
-                <Route path='/404' component={Error404} />
+                <Route exact path="/" component={Dashboard}/>
+                <Route path="/notifications" component={NotificationsCentre}/>
+                <Route exact path="/books" component={Books}/>
+                <Route path="/books/:id" component={Book}/>
+                <Route path="/modules/:id" component={Module}/>
+                <Route path="/resources" component={Resources}/>
+                <Route path="/settings" component={Settings}/>
+                <Route path="/invitations" component={Invitations}/>
+                <Route path='/404' component={Error404}/>
                 {/*<Redirect to="/404" />*/}
               </main>
               <div className="alerts">
