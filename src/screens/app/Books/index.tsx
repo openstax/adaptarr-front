@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Files, { FilesError, FilesRef } from 'react-files'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
@@ -14,6 +15,7 @@ import Spinner from 'src/components/Spinner'
 import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Dialog from 'src/components/ui/Dialog'
 
 import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
@@ -44,9 +46,13 @@ class Books extends React.Component<Props> {
   state: {
     titleInput: string,
     showSuperSession: boolean,
+    showAddBook: boolean,
+    files: File[],
   } = {
     titleInput: '',
     showSuperSession: false,
+    showAddBook: false,
+    files: [],
   }
 
   private listOfBookCards = (booksMap: BooksMap) => {
@@ -77,11 +83,43 @@ class Books extends React.Component<Props> {
           store.dispatch(addAlert('error', e.message))
         }
       })
+    this.closeAddBookDialog()
+  }
+
+  private showAddBookDialog = ()  => {
+    this.setState({ showAddBook: true })
+  }
+
+  private closeAddBookDialog = () => {
+    this.setState({ showAddBook: false })
   }
 
   private updateTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target as HTMLInputElement
     this.setState({ titleInput: input.value })
+  }
+
+  private onFilesChange = (files: File[]) => {
+    console.log(files)
+    this.setState({ files })
+  }
+
+  private onFilesError = (error: FilesError, file: File) => {
+    store.dispatch(addAlert('error', `Error for: ${file.name}. Details: ${error.message}`))
+  }
+
+  private filesRemoveOne = (file: File) => {
+    const files = this.filesRef.current
+    if (files) {
+      files.removeFile(file)
+    }
+  }
+
+  private filesRemoveAll = () => {
+    const files = this.filesRef.current
+    if (files) {
+      files.removeFiles()
+    }
   }
 
   private superSessionSuccess = (res: Response) => {
@@ -93,16 +131,20 @@ class Books extends React.Component<Props> {
     console.log('failure', e.message)
   }
 
+  filesRef: React.RefObject<FilesRef> = React.createRef()
+
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showSuperSession } = this.state
+    const { titleInput, showSuperSession, showAddBook, files } = this.state
 
     return (
       <Section>
         <Header i18nKey="Books.title">
           <AdminUI>
-            <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Book title" />
-            <Button color="green" isDisabled={!(titleInput.length > 0)} clickHandler={this.addBook}>
+            <Button 
+              color="green"
+              clickHandler={this.showAddBookDialog}
+            >
               <Icon name="plus"/>
             </Button>
           </AdminUI>
@@ -113,6 +155,60 @@ class Books extends React.Component<Props> {
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
               onAbort={() => this.setState({ showSuperSession: false })}/>
+          : null
+        }
+        {
+          showAddBook ?
+            <Dialog 
+              size="medium"
+              onClose={() => this.closeAddBookDialog()}
+              i18nKey="Books.addBookDialog"
+            >
+              <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Book title" />
+              <Files
+                ref={this.filesRef}
+                onChange={this.onFilesChange}
+                onError={this.onFilesError}
+                accepts={['.zip', '.rar']}
+              >
+                <Trans i18nKey="Books.fileUploader"/>
+              </Files>
+              {
+                files.length ?
+                  <React.Fragment>
+                    <Button color="red" clickHandler={() => this.filesRemoveAll()}>
+                      <Trans i18nKey="Buttons.removeAllFiles"/>
+                    </Button>
+                    <ul className="files__list">
+                      {
+                        files.map((file: File, index: number) => {
+                          return (
+                            <li key={file.name + index} className="files__file">
+                              <span className="files__name">
+                                {file.name}
+                              </span>
+                              <span
+                                className="files__close"
+                                onClick={() => this.filesRemoveOne(file)}
+                              >
+                                <Icon name="close"/>
+                              </span>
+                            </li>
+                          )
+                        })
+                      }
+                    </ul>
+                  </React.Fragment>
+                : null
+              }
+              <Button 
+                color="green"
+                isDisabled={titleInput.length === 0}
+                clickHandler={() => this.addBook()}
+              >
+                <Icon name="plus"/>
+              </Button>
+            </Dialog>
           : null
         }
         {

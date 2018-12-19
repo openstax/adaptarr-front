@@ -482,6 +482,38 @@ main {
   margin-left: 5px;
 }
 
+.files-dropzone {
+  padding: 15px 10px;
+  margin: 20px 0;
+  background-color: #fff;
+  border-radius: 3px;
+}
+
+.files-dropzone-active {
+  background-color: var(--green);
+}
+
+.files__list {
+  margin: 10px 0;
+  max-height: 300px;
+  overflow: auto;
+}
+
+.files__file {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  background-color: #fff;
+  border-radius: 3px;
+  margin-bottom: 5px;
+}
+
+.files__close {
+  display: inline-flex;
+  cursor: pointer;
+}
+
 .card {
   position: relative;
   display: inline-flex;
