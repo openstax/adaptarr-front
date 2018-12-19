@@ -18,7 +18,7 @@ type Props = {
   t: any,
   notifications: {
     isLoading: IsLoading
-    notifications: Notification[]
+    unreadNotifications: Notification[]
     error?: string
   }
 }
@@ -43,14 +43,6 @@ class Navigation extends React.Component<Props> {
     localStorage.setItem('toggleSidebar', JSON.stringify(!currentVal))
   }
 
-  private getUnreadNotifications = (arr: Notification[]): Notification[] => {
-    const unred: Notification[] = arr.filter((noti: Notification) => {
-      return noti.status === 'unread' ? noti : false
-    })
-
-    return unred
-  }
-
   componentDidMount = () => {
     const toggleSidebar = localStorage.getItem('toggleSidebar') 
     if (toggleSidebar) {
@@ -62,8 +54,8 @@ class Navigation extends React.Component<Props> {
     const { t } = this.props
 
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
-    const { isLoading, notifications } = this.props.notifications
-    const unreadNotifications = this.getUnreadNotifications(notifications)
+    let { isLoading, unreadNotifications } = this.props.notifications
+    unreadNotifications = [...unreadNotifications].reverse()
     
     return (
       <aside className={sidebarClasses}>
@@ -91,7 +83,7 @@ class Navigation extends React.Component<Props> {
                   <span className="nav__text">{t('Navigation.notificationsLink')}</span>
                 </span>
                 {
-                  unreadNotifications.length > 0 ?
+                  unreadNotifications.length ?
                     <span className="notifications__counter">
                       {unreadNotifications.length}
                     </span>

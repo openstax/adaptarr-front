@@ -314,6 +314,7 @@ button[disabled] {
   right: 6px;
   width: 13px;
   height: 13px;
+  font-size: 0;
 }
 
 .nav__link {
@@ -403,8 +404,8 @@ button[disabled] {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
   font-size: 0.9rem;
   color: var(--font-light);
   border-radius: 50%;

@@ -9,13 +9,13 @@ import {
 
 export interface State {
   isLoading: IsLoading
-  notifications: Notification[]
+  unreadNotifications: Notification[]
   error?: string
 }
 
 export const initialState = {
   isLoading: false,
-  notifications: [],
+  unreadNotifications: [],
 }
 
 export function reducer (state: State = initialState, action: NotificationsAction) {
@@ -24,23 +24,23 @@ export function reducer (state: State = initialState, action: NotificationsActio
       return {
         ...state,
         isLoading: true,
-        notifications: state.notifications,
+        unreadNotifications: state.unreadNotifications,
       }
     case FETCH_NOTIFICATIONS_SUCCESS:
       return {
         ...state,
         isLoading: false,
-        notifications: action.data,
+        unreadNotifications: action.data,
       }
     case FETCH_NOTIFICATIONS_FAILURE:
       return {
         ...state,
         isLoading: false,
         error: action.error,
-        notifications: state.notifications,
+        unreadNotifications: state.unreadNotifications,
       }
     case PUSH_NOTIFICATION_TO_STORE:
-      state.notifications.push(action.data)
+      state.unreadNotifications.push(action.data)
       return state
   }
   return state

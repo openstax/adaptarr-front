@@ -19,7 +19,7 @@ import { State } from 'src/store/reducers'
 type Props = {
   notifications: {
     isLoading: boolean
-    notifications: Notification[]
+    unreadNotifications: Notification[]
   }
   team: {
     teamMap: TeamMap
@@ -95,7 +95,7 @@ class NotificationsCentre extends React.Component<Props> {
   public render() {
     const { showDetails, details } = this.state
     const isLoading = this.props.notifications.isLoading
-    const notifications = [...this.props.notifications.notifications].reverse()
+    const unreadNotifications = [...this.props.notifications.unreadNotifications].reverse()
     const teamMap = this.props.team.teamMap
     let detailsWho = details ? teamMap.get(details.who) : undefined
 
@@ -108,10 +108,10 @@ class NotificationsCentre extends React.Component<Props> {
                 <Header i18nKey="Notifications.title" />
                 <div className="section__content">
                   {
-                    notifications.length > 0 ?
+                    unreadNotifications.length > 0 ?
                       <ul className="notificationsList">
                         {
-                          notifications.map((noti: Notification) => {
+                          unreadNotifications.map((noti: Notification) => {
                             return (
                               <li key={noti.id} className="notificationsList__item">
                                 <span onClick={() => this.showDetails(noti)}>
