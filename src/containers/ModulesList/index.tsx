@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
+import { FilesError } from 'react-files'
 
 import axios from 'src/config/axios'
 
@@ -10,6 +11,8 @@ import ModuleInfo from 'src/components/ModuleInfo'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+
+import FilesUploader from 'src/containers/FilesUploader'
 
 import * as modulesActions from 'src/store/actions/Modules'
 import { ModulesMap, ModuleShortInfo, RequestInfoKind } from 'src/store/types'
@@ -47,11 +50,13 @@ class ModuleList extends React.Component<Props> {
     showSuperSession: boolean
     moduleToDelete: ModuleShortInfo | null
     showRemoveModule: boolean
+    files: File[]
   } = {
     moduleTitleValue: '',
     showSuperSession: false,
     moduleToDelete: null,
     showRemoveModule: false,
+    files: [],
   }
 
   private listOfModules = (modulesMap: ModulesMap) => {
@@ -98,6 +103,14 @@ class ModuleList extends React.Component<Props> {
           this.props.addAlert('error', e.message)
         }
       })
+  }
+
+  private onFilesChange = (files: File[]) => {
+    this.setState({ files })
+  }
+
+  private onFilesError = (error: FilesError, file: File) => {
+    this.props.addAlert('error', error.message)
   }
 
   private showRemoveModuleDialog = (mod: ModuleShortInfo) => {
@@ -173,18 +186,26 @@ class ModuleList extends React.Component<Props> {
         }
         <AdminUI>
           <div className="modulesList__new">
-            <input 
-              type="text" 
-              placeholder="Title"
-              value={moduleTitleValue}
-              onChange={(e) => this.updateModuleTitleValue(e)} />
-            <Button 
-              isDisabled={moduleTitleValue.length === 0}
-              clickHandler={this.addNewModule}
-            >
-              <Icon name="plus" />
-              <Trans i18nKey="Buttons.addNew" />
-            </Button>
+            <div className="modulesList__top-bar">
+              <input 
+                type="text" 
+                placeholder="Title"
+                value={moduleTitleValue}
+                onChange={(e) => this.updateModuleTitleValue(e)}
+              />
+              <Button 
+                isDisabled={moduleTitleValue.length === 0}
+                clickHandler={this.addNewModule}
+              >
+                <Icon name="plus" />
+                <Trans i18nKey="Buttons.addNew" />
+              </Button>
+            </div>
+            <FilesUploader
+              onFilesChange={this.onFilesChange}
+              onFilesError={this.onFilesError}
+              accepts={['.zip', '.rar', '.cnxml']}
+            />
           </div>
         </AdminUI>
         {

@@ -856,7 +856,16 @@ input[type="disabled"] {
 
 .modulesList__new {
   display: flex;
-  justify-content: flex-start;
+  flex-direction: column;
+  width: 100%;
+}
+
+.modulesList__new .files-uploader {
+  margin-top: 0;
+}
+
+.modulesList__top-bar {
+  display: flex;
   align-items: center;
 }
 
