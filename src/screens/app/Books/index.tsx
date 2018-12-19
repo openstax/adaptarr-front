@@ -1,7 +1,7 @@
 import * as React from 'react'
-import Files, { FilesError, FilesRef } from 'react-files'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
+import { FilesError } from 'react-files'
 
 import axios from 'src/config/axios'
 import store from 'src/store'
@@ -16,6 +16,8 @@ import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
+
+import FilesUploader from 'src/containers/FilesUploader'
 
 import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
@@ -100,26 +102,11 @@ class Books extends React.Component<Props> {
   }
 
   private onFilesChange = (files: File[]) => {
-    console.log(files)
     this.setState({ files })
   }
 
   private onFilesError = (error: FilesError, file: File) => {
-    store.dispatch(addAlert('error', `Error for: ${file.name}. Details: ${error.message}`))
-  }
-
-  private filesRemoveOne = (file: File) => {
-    const files = this.filesRef.current
-    if (files) {
-      files.removeFile(file)
-    }
-  }
-
-  private filesRemoveAll = () => {
-    const files = this.filesRef.current
-    if (files) {
-      files.removeFiles()
-    }
+    store.dispatch(addAlert('error', error.message))
   }
 
   private superSessionSuccess = (res: Response) => {
@@ -131,11 +118,9 @@ class Books extends React.Component<Props> {
     console.log('failure', e.message)
   }
 
-  filesRef: React.RefObject<FilesRef> = React.createRef()
-
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showSuperSession, showAddBook, files } = this.state
+    const { titleInput, showSuperSession, showAddBook } = this.state
 
     return (
       <Section>
@@ -164,43 +149,17 @@ class Books extends React.Component<Props> {
               onClose={() => this.closeAddBookDialog()}
               i18nKey="Books.addBookDialog"
             >
-              <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Book title" />
-              <Files
-                ref={this.filesRef}
-                onChange={this.onFilesChange}
-                onError={this.onFilesError}
+              <input 
+                type="text" 
+                value={this.state.titleInput} 
+                onChange={(e) => this.updateTitleInput(e)} 
+                placeholder="Book title" 
+              />
+              <FilesUploader 
+                onFilesChange={this.onFilesChange} 
+                onFilesError={this.onFilesError}
                 accepts={['.zip', '.rar']}
-              >
-                <Trans i18nKey="Books.fileUploader"/>
-              </Files>
-              {
-                files.length ?
-                  <React.Fragment>
-                    <Button color="red" clickHandler={() => this.filesRemoveAll()}>
-                      <Trans i18nKey="Buttons.removeAllFiles"/>
-                    </Button>
-                    <ul className="files__list">
-                      {
-                        files.map((file: File, index: number) => {
-                          return (
-                            <li key={file.name + index} className="files__file">
-                              <span className="files__name">
-                                {file.name}
-                              </span>
-                              <span
-                                className="files__close"
-                                onClick={() => this.filesRemoveOne(file)}
-                              >
-                                <Icon name="close"/>
-                              </span>
-                            </li>
-                          )
-                        })
-                      }
-                    </ul>
-                  </React.Fragment>
-                : null
-              }
+              />
               <Button 
                 color="green"
                 isDisabled={titleInput.length === 0}

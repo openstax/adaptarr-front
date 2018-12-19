@@ -482,9 +482,13 @@ main {
   margin-left: 5px;
 }
 
+.files-uploader {
+  margin-top: 10px;
+}
+
 .files-dropzone {
   padding: 15px 10px;
-  margin: 20px 0;
+  margin: 10px 0;
   background-color: #fff;
   border-radius: 3px;
 }
