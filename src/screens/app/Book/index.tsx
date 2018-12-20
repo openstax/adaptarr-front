@@ -804,6 +804,9 @@ class Book extends React.Component<Props> {
           showModuleDetails ?
             <Section>
               <Header title={showModuleDetails.title}>
+                <Button to={`/modules/${showModuleDetails.id}`}>
+                  <Trans i18nKey="Buttons.goToModule"/>
+                </Button>
                 <Button size="small" clickHandler={this.closeModuleDetails}>
                   <Icon name="close" />
                 </Button>

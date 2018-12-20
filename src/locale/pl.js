@@ -45,6 +45,7 @@ export default {
     "Buttons.module": "Moduł",
     "Buttons.group": "Grupa",
     "Buttons.removeAllFiles": "Usuń wszystkie pliki",
+    "Buttons.goToModule": "Przejdź do modułu",
     "Resources.title": "Zasoby",
     "Settings.title": "Ustawienia",
     "Settings.changeLanguage": "Zmień język",
