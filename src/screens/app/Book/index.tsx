@@ -788,7 +788,9 @@ class Book extends React.Component<Props> {
                   <Icon name="close" />
                 </Button>
               </Header>
-              <ModulePreview moduleId={showModuleDetails.id}/>
+              <div className="section__content">
+                <ModulePreview moduleId={showModuleDetails.id}/>
+              </div>
             </Section>
           : null
         }
