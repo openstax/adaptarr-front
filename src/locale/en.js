@@ -34,6 +34,7 @@ export default {
     "Buttons.delete": "Delete",
     "Buttons.cancel": "Cancel",
     "Buttons.confirm": "Confirm",
+    "Buttons.save": "Save",
     "Buttons.edit": "Edit",
     "Buttons.viewBook": "View book",
     "Buttons.viewDraft": "View draft",

@@ -105,7 +105,7 @@ class Dashboard extends React.Component<Props> {
           </span>
           <span className="list__buttons">
             <Button 
-              to={`/modules/${draft.module}`}
+              to={`/drafts/${draft.module}`}
             >
               <Trans i18nKey="Buttons.viewDraft" />
             </Button>
