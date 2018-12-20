@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { NavLink, Link } from 'react-router-dom'
 import { compose } from 'lodash/fp'
-import { withNamespaces } from 'react-i18next'
+import { Trans, withNamespaces } from 'react-i18next'
 
 import Header from './Header'
 import NotificationComp from './Notification'
@@ -27,6 +27,13 @@ const mapStateToProps = ({ notifications }: State) => {
   return {
     notifications,
   }
+}
+
+const isActive = (phrase: string, exact: boolean, excluded: string[] = []) => {
+  const pathname = window.location.pathname
+  if (excluded.some(ex => pathname.includes(ex))) return false
+  const regex = new RegExp(`^${phrase.replace("/", "\/")}${exact ? "$" : ""}`)
+  return regex.test(pathname)
 }
 
 class Navigation extends React.Component<Props> {
@@ -69,10 +76,12 @@ class Navigation extends React.Component<Props> {
         <nav className="nav">
           <ul>
             <li className="nav__link" title={t('Navigation.dashboardLink')}>
-              <NavLink exact to="/" activeClassName="active">
+              <NavLink exact to="/" className={isActive('/', true) ? 'active2' : undefined} activeClassName="active">
                 <span className="nav__content">
                   <Icon name="dashboard" />
-                  <span className="nav__text">{t('Navigation.dashboardLink')}</span>
+                  <span className="nav__text">
+                    <Trans i18nKey="Navigation.dashboardLink"/>
+                  </span>
                 </span>
               </NavLink>
             </li>
@@ -80,7 +89,9 @@ class Navigation extends React.Component<Props> {
               <NavLink to="/notifications" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="bell" />
-                  <span className="nav__text">{t('Navigation.notificationsLink')}</span>
+                  <span className="nav__text">
+                    <Trans i18nKey="Navigation.notificationsLink"/>
+                  </span>
                 </span>
                 {
                   unreadNotifications.length ?
@@ -105,7 +116,7 @@ class Navigation extends React.Component<Props> {
                             })
                           }
                           <Link to="/notifications" className="show-more">
-                            {t('Notifications.showAll')}
+                            <Trans i18nKey="Notifications.showAll"/>
                           </Link>
                         </React.Fragment>
                       : <Spinner />
@@ -118,7 +129,9 @@ class Navigation extends React.Component<Props> {
               <NavLink to="/books" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="book" />
-                  <span className="nav__text">{t('Navigation.booksLink')}</span>
+                  <span className="nav__text">
+                    <Trans i18nKey="Navigation.booksLink"/>
+                  </span>
                 </span>
               </NavLink>
             </li>
@@ -126,7 +139,9 @@ class Navigation extends React.Component<Props> {
               <NavLink to="/resources" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="info" />
-                  <span className="nav__text">{t('Navigation.resourcesLink')}</span>
+                  <span className="nav__text">
+                    <Trans i18nKey="Navigation.resourcesLink"/>
+                  </span>
                 </span>
               </NavLink>
             </li>
@@ -134,7 +149,9 @@ class Navigation extends React.Component<Props> {
               <NavLink to="/settings" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="cog" />
-                  <span className="nav__text">{t('Navigation.settingsLink')}</span>
+                  <span className="nav__text">
+                    <Trans i18nKey="Navigation.settingsLink"/>
+                  </span>
                 </span>
               </NavLink>
             </li>
@@ -143,7 +160,9 @@ class Navigation extends React.Component<Props> {
                 <NavLink to="/invitations" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="users" />
-                    <span className="nav__text">{t('Navigation.invitationsLink')}</span>
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.invitationsLink"/>
+                    </span>
                   </span>
                 </NavLink>
               </li>
