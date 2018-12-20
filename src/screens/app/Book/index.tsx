@@ -151,7 +151,7 @@ class Book extends React.Component<Props> {
   private renderModule = (item: types.BookPart) => {
     const { modulesMap } = this.props.modules
     const { teamMap } = this.props.team
-    let assignedUser
+    let assignedUser: types.User | undefined
     let moduleStatus = (
       <span className="module__status module__status--ready">
         ready
@@ -192,6 +192,11 @@ class Book extends React.Component<Props> {
             assignedUser ?
               <React.Fragment>
                 <Avatar size="small" user={assignedUser} />
+                <Button
+                  clickHandler={() => this.handleUserClick((assignedUser as types.User), 'remove', item)}
+                >
+                  <Trans i18nKey="Buttons.unassign" />
+                </Button>
                 <Button clickHandler={() => this.showAssignUserDialog(item)}>
                   <Trans i18nKey="Buttons.assignOther" />
                 </Button>
@@ -483,14 +488,29 @@ class Book extends React.Component<Props> {
     this.setState({ showAssignUser: false, targetModule: null, userToAssign: null })
   }
 
-  private handleUserClick = (user: types.User, action: 'assign' | 'remove') => {
-    this.setState({ userToAssign: user, assignAction: action }, this.assignUser)
+  private handleUserClick = (user: types.User, action: 'assign' | 'remove', targetModule?: types.BookPart) => {
+    let newState: {
+      userToAssign: types.User
+      assignAction: 'assign' | 'remove'
+      targetModule?: types.BookPart
+    } = {
+      userToAssign: user,
+      assignAction: action,
+    }
+
+    if (targetModule) {
+      newState.targetModule = targetModule
+    }
+
+    this.setState({ ...newState }, this.assignUser)
   }
 
   private assignUser = () => {
     const { userToAssign: user, assignAction, targetModule } = this.state
 
-    if (!targetModule || !user) return
+    if (!targetModule || !user) {
+      return this.props.addAlert('error', 'Target module or user are undefined.')
+    }
 
     const payload = {
       assignee: assignAction === 'assign' ? user.id : null

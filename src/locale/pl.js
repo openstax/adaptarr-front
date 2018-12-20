@@ -40,6 +40,7 @@ export default {
     "Buttons.newDraft": "Nowy szkic",
     "Buttons.invite": "Wyślij zaproszenie",
     "Buttons.assign": "Przypisz użytkownika",
+    "Buttons.unassign": "Cofnij przypisanie",
     "Buttons.assignOther": "Przypisz innego użytkownika",
     "Buttons.module": "Moduł",
     "Buttons.group": "Grupa",

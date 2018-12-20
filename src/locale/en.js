@@ -41,6 +41,7 @@ export default {
     "Buttons.newDraft": "New draft",
     "Buttons.invite": "Send invitation",
     "Buttons.assign": "Assign user",
+    "Buttons.unassign": "Unassign",
     "Buttons.assignOther": "Assign other user",
     "Buttons.module": "Module",
     "Buttons.group": "Group",
