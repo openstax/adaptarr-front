@@ -40,8 +40,12 @@ export function reducer (state: State = initialState, action: NotificationsActio
         unreadNotifications: state.unreadNotifications,
       }
     case PUSH_NOTIFICATION_TO_STORE:
-      state.unreadNotifications.push(action.data)
-      return state
+      let newUnreadNoti = [...state.unreadNotifications]
+      newUnreadNoti.push(action.data)
+      return {
+        ...state,
+        unreadNotifications: newUnreadNoti
+      }
   }
   return state
 }
