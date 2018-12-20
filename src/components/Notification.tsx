@@ -7,7 +7,8 @@ import dateDiff from 'src/helpers/dateDiff'
 
 import Avatar from './ui/Avatar'
 
-import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User } from 'src/store/types'
+import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User, NotificationStatus } from 'src/store/types'
+import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
 import { State } from 'src/store/reducers'
 
 type Props = {
@@ -20,12 +21,19 @@ type Props = {
   notification: Notification
   avatarSize?: 'small' | 'medium' | 'big'
   disableLink?: boolean
+  changeNotificationStatus: (noti: Notification, status: NotificationStatus) => any
 }
 
 const mapStateToProps = ({ team, modules }: State) => {
   return {
     team,
     modules,
+  }
+}
+
+const mapDispatchToProps = (dispatch: ChangeNotificationStatus) => {
+  return {
+    changeNotificationStatus: (noti: Notification, status: NotificationStatus) => dispatch(changeNotificationStatus(noti, status))
   }
 }
 
@@ -73,6 +81,11 @@ class NotificationComp extends React.Component<Props> {
     return <Trans i18nKey="Notifications.unknowAction" />
   }
 
+  private onNotificationClick = () => {
+    // TODO: Fire this action only on unread notifications
+    this.props.changeNotificationStatus(this.props.notification, 'read')
+  }
+
   public render() {
     const { teamMap } = this.props.team
     const { modulesMap } = this.props.modules
@@ -88,7 +101,7 @@ class NotificationComp extends React.Component<Props> {
     const avatarSize = this.props.avatarSize ? this.props.avatarSize : 'small'
 
     const body = (
-      <div className="notification">
+      <div className="notification" onClick={this.onNotificationClick}>
         <span className="notification__content">
           <span className="notification__who">
             <Avatar disableLink={true} size={avatarSize} user={who} />
@@ -126,4 +139,4 @@ class NotificationComp extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(NotificationComp)
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationComp)

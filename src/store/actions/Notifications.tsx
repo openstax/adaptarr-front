@@ -1,14 +1,29 @@
 import axios from 'src/config/axios'
 
 import * as constants from 'src/store/constants'
-import { Notification } from 'src/store/types'
+import { Notification, NotificationStatus } from 'src/store/types'
+import { addAlert, AddAlert } from './Alerts'
 
 export interface FetchNotifications {
   (dispatch: any): void
 }
 
+export interface ChangeNotificationStatus {
+  (dispatch: any): void
+}
+
 export interface PushNotificationToStore {
   type: constants.PUSH_NOTIFICATION_TO_STORE,
+  data: Notification,
+}
+
+export interface MarkNotificationAsRead {
+  type: constants.MARK_NOTIFICATION_AS_READ,
+  data: Notification,
+}
+
+export interface MarkNotificationAsUnRead {
+  type: constants.MARK_NOTIFICATION_AS_UNREAD,
   data: Notification,
 }
 
@@ -26,7 +41,7 @@ export interface FetchNotificationsFailure {
   error: string,
 }
 
-export type NotificationsAction = FetchNotificationsBegin | FetchNotificationsSuccess | FetchNotificationsFailure | PushNotificationToStore
+export type NotificationsAction = FetchNotificationsBegin | FetchNotificationsSuccess | FetchNotificationsFailure | PushNotificationToStore | MarkNotificationAsRead | MarkNotificationAsUnRead
 
 const fetchNotificationsBegin = (): FetchNotificationsBegin => {
   return {
@@ -49,7 +64,7 @@ const fetchNotificationsFailure = (error: string): FetchNotificationsFailure => 
 }
 
 export const fetchNotifications = (): FetchNotifications => {
-  return (dispatch: React.Dispatch<NotificationsAction>) => {
+  return dispatch => {
     
     dispatch(fetchNotificationsBegin())
 
@@ -66,6 +81,41 @@ export const fetchNotifications = (): FetchNotifications => {
 export const pushNotificationToStore = (noti: Notification): PushNotificationToStore => {
   return {
     type: constants.PUSH_NOTIFICATION_TO_STORE,
+    data: noti,
+  }
+}
+
+export const changeNotificationStatus = (noti: Notification, status: NotificationStatus): ChangeNotificationStatus => {
+  return dispatch => {
+    switch (status) {
+      case 'read':
+        axios.put(`notifications/${noti.id}`, {unread: false})
+          .then(() => {
+            dispatch(markNotificationAsRead(noti))
+          })
+          .catch(e => {
+            dispatch(addAlert('error', e.message))
+          })
+        break
+      case 'unread':
+        dispatch(markNotificationAsUnRead(noti))
+        // TODO: Add api endpoint for 'unread' status
+      default:
+        break
+    }
+  }
+}
+
+const markNotificationAsRead = (noti: Notification): MarkNotificationAsRead => {
+  return {
+    type: constants.MARK_NOTIFICATION_AS_READ,
+    data: noti,
+  }
+}
+
+const markNotificationAsUnRead = (noti: Notification): MarkNotificationAsUnRead => {
+  return {
+    type: constants.MARK_NOTIFICATION_AS_UNREAD,
     data: noti,
   }
 }

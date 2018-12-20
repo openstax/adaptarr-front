@@ -54,16 +54,6 @@ class NotificationsCentre extends React.Component<Props> {
     this.setState({ showDetails: false, details: null })
   }
 
-  private markAsRead = (id: number) => {
-    axios.put(`notifications/${id}`, {unread: false})
-      .then((res) => {
-        console.log(res.data)
-      })
-      .catch(e => {
-        console.error(e.message)
-      })
-  }
-
   private notificationDetails = (details: Notification) => {
     const modulesMap = this.props.modules.modulesMap
     const teamMap = this.props.team.teamMap
@@ -113,16 +103,16 @@ class NotificationsCentre extends React.Component<Props> {
                         {
                           unreadNotifications.map((noti: Notification) => {
                             return (
-                              <li key={noti.id} className="notificationsList__item">
-                                <span onClick={() => this.showDetails(noti)}>
-                                  <NotificationComp 
-                                    notification={noti}
-                                    disableLink={true}
-                                    avatarSize="medium" />
-                                </span>
-                                <Button clickHandler={() => this.markAsRead(noti.id)}>
-                                  Mark as read
-                                </Button>
+                              <li 
+                                key={noti.id} 
+                                className="notificationsList__item"
+                                onClick={() => this.showDetails(noti)}
+                              >
+                                <NotificationComp 
+                                  notification={noti}
+                                  disableLink={true}
+                                  avatarSize="medium"
+                                />
                               </li>
                             )
                           })

@@ -5,6 +5,8 @@ import {
   FETCH_NOTIFICATIONS_SUCCESS,
   FETCH_NOTIFICATIONS_FAILURE,
   PUSH_NOTIFICATION_TO_STORE,
+  MARK_NOTIFICATION_AS_READ,
+  MARK_NOTIFICATION_AS_UNREAD,
 } from 'src/store/constants'
 
 export interface State {
@@ -46,6 +48,19 @@ export function reducer (state: State = initialState, action: NotificationsActio
         ...state,
         unreadNotifications: newUnreadNoti
       }
+    case MARK_NOTIFICATION_AS_READ:
+      let newUnreadNotiRead = [...state.unreadNotifications]
+      const indexToRemove = newUnreadNotiRead.findIndex(el => el.id === action.data.id)
+      if (indexToRemove >= 0) {
+        newUnreadNotiRead.splice(indexToRemove, 1)
+      }
+      return {
+        ...state,
+        unreadNotifications: newUnreadNotiRead
+      }
+    case MARK_NOTIFICATION_AS_UNREAD:
+      // TODO: Add some logic here - waiting for api endpoint for notifications with "read" status
+      return state
   }
   return state
 }
