@@ -88,8 +88,8 @@ class Dashboard extends React.Component<Props> {
 
     axios.post(`modules/${targetDraftId}`)
       .then(() => {
-        this.fetchDrafts()
         store.dispatch(addAlert('success', 'Draft was created successfully.'))
+        window.location.pathname = `/drafts/${targetDraftId}`
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
