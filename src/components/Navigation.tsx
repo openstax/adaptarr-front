@@ -27,11 +27,9 @@ const mapStateToProps = ({ notifications }: State) => {
   }
 }
 
-const isActive = (phrase: string, exact: boolean, excluded: string[] = []) => {
-  const pathname = window.location.pathname
-  if (excluded.some(ex => pathname.includes(ex))) return false
-  const regex = new RegExp(`^${phrase.replace("/", "\/")}${exact ? "$" : ""}`)
-  return regex.test(pathname)
+const isActive = (location: any, pathnames: string[]): boolean => {
+  const pathname = location.pathname
+  return pathnames.some(el => pathname.match(el))
 }
 
 class Navigation extends React.Component<RouteComponentProps & Props> {
@@ -72,7 +70,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
         <nav className="nav">
           <ul>
             <li className="nav__link" title="Dashboard">
-              <NavLink exact to="/" className={isActive('/', true) ? 'active2' : undefined} activeClassName="active">
+              <NavLink exact to="/" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="dashboard" />
                   <span className="nav__text">
@@ -122,7 +120,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               }
             </li>
             <li className="nav__link" title="Books">
-              <NavLink to="/books" activeClassName="active">
+              <NavLink 
+                to="/books"
+                activeClassName="active"
+                isActive={(match, location) => isActive(location, ['books', 'modules'])}
+              >
                 <span className="nav__content">
                   <Icon name="book" />
                   <span className="nav__text">
