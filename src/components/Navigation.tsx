@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { NavLink, Link } from 'react-router-dom'
-import { compose } from 'lodash/fp'
-import { Trans, withNamespaces } from 'react-i18next'
+import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Trans } from 'react-i18next'
 
 import Header from './Header'
 import NotificationComp from './Notification'
@@ -15,7 +14,6 @@ import { IsLoading, Notification } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
-  t: any,
   notifications: {
     isLoading: IsLoading
     unreadNotifications: Notification[]
@@ -36,7 +34,7 @@ const isActive = (phrase: string, exact: boolean, excluded: string[] = []) => {
   return regex.test(pathname)
 }
 
-class Navigation extends React.Component<Props> {
+class Navigation extends React.Component<RouteComponentProps & Props> {
 
   state: {
     toggleSidebar: boolean,
@@ -58,8 +56,6 @@ class Navigation extends React.Component<Props> {
   }
 
   public render() {
-    const { t } = this.props
-
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
     let { isLoading, unreadNotifications } = this.props.notifications
     unreadNotifications = [...unreadNotifications].reverse()
@@ -75,7 +71,7 @@ class Navigation extends React.Component<Props> {
         </Header>
         <nav className="nav">
           <ul>
-            <li className="nav__link" title={t('Navigation.dashboardLink')}>
+            <li className="nav__link" title="Dashboard">
               <NavLink exact to="/" className={isActive('/', true) ? 'active2' : undefined} activeClassName="active">
                 <span className="nav__content">
                   <Icon name="dashboard" />
@@ -85,7 +81,7 @@ class Navigation extends React.Component<Props> {
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title={t('Navigation.notificationsLink')}>
+            <li className="nav__link" title="Notifications">
               <NavLink to="/notifications" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="bell" />
@@ -125,7 +121,7 @@ class Navigation extends React.Component<Props> {
                 : null
               }
             </li>
-            <li className="nav__link" title={t('Navigation.booksLink')}>
+            <li className="nav__link" title="Books">
               <NavLink to="/books" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="book" />
@@ -135,7 +131,7 @@ class Navigation extends React.Component<Props> {
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title={t('Navigation.resourcesLink')}>
+            <li className="nav__link" title="Resources">
               <NavLink to="/resources" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="info" />
@@ -145,7 +141,7 @@ class Navigation extends React.Component<Props> {
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title={t('Navigation.settingsLink')}>
+            <li className="nav__link" title="Settings">
               <NavLink to="/settings" activeClassName="active">
                 <span className="nav__content">
                   <Icon name="cog" />
@@ -156,7 +152,7 @@ class Navigation extends React.Component<Props> {
               </NavLink>
             </li>
             <AdminUI>
-              <li className="nav__link" title={t('Navigation.invitationsLink')}>
+              <li className="nav__link" title="Invitations">
                 <NavLink to="/invitations" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="users" />
@@ -174,4 +170,4 @@ class Navigation extends React.Component<Props> {
   }
 }
 
-export default compose(withNamespaces('translations'), connect(mapStateToProps))(Navigation)
+export default withRouter(connect(mapStateToProps)(Navigation))
