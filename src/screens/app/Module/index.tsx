@@ -41,6 +41,12 @@ class Module extends React.Component<Props> {
       })
   }
 
+  componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.match.params.id !== this.props.match.params.id) {
+      this.fetchModuleInfo()
+    }
+  }
+
   componentDidMount = () => {
     this.fetchModuleInfo()
   }
