@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
-import axios from 'src/config/axios'
 import dateDiff from 'src/helpers/dateDiff'
 
 import Section from 'src/components/Section'
