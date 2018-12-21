@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
+import validateEmail from 'src/helpers/validateEmail'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -9,11 +10,6 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
-
-const validateEmail = (email: string): boolean => {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-  return re.test(String(email).toLowerCase());
-}
 
 class Invitations extends React.Component {
 

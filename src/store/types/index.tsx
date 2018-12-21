@@ -10,6 +10,7 @@ export interface User {
   avatar?: string
   avatarSmall?: string
   role?: string
+  bio?: string
 }
 
 export type TeamMap = Map<number, User>
