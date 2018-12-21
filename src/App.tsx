@@ -14,6 +14,7 @@ import Book from 'src/screens/app/Book'
 import Module from 'src/screens/app/Module'
 import Draft from 'src/screens/app/Draft'
 import Resources from 'src/screens/app/Resources'
+import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
 import Invitations from 'src/screens/app/Invitations'
 import Error404 from 'src/screens/app/Error404'
@@ -136,6 +137,7 @@ class App extends React.Component<Props> {
                 <Route path="/modules/:id" component={Module}/>
                 <Route path="/drafts/:id" component={Draft}/>
                 <Route path="/resources" component={Resources}/>
+                <Route path="/users/:id" component={Profile}/>
                 <Route path="/settings" component={Settings}/>
                 <Route path="/invitations" component={Invitations}/>
                 <Route path='/404' component={Error404}/>

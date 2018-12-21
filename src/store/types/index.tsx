@@ -6,6 +6,7 @@ export type RequestStatus = {status: string, message?: string | {}}
 export interface User {
   id: number
   name: string
+  email?: string
   avatar?: string
   avatarSmall?: string
   role?: string

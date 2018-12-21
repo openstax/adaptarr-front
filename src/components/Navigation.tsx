@@ -143,15 +143,30 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </span>
               </NavLink>
             </li>
-            <li className="nav__link" title="Settings">
-              <NavLink to="/settings" activeClassName="active">
+            <li className="nav__link" title="Your profile">
+              <NavLink
+                to="/users/me"
+                activeClassName="active"
+                isActive={(match, location) => isActive(location, ['users', 'settings'])}
+              >
                 <span className="nav__content">
-                  <Icon name="cog" />
+                  <Icon name="profile"/>
                   <span className="nav__text">
-                    <Trans i18nKey="Navigation.settingsLink"/>
+                    <Trans i18nKey="Navigation.yourProfileLink"/>
                   </span>
                 </span>
               </NavLink>
+              <div className="nav__hoverbox">
+                <NavLink to="/users/me" activeClassName="active" className="nav__link">
+                  <Trans i18nKey="Navigation.yourProfileLink"/>
+                </NavLink>
+                <NavLink to="/settings" activeClassName="active" className="nav__link">
+                  <Trans i18nKey="Navigation.settingsLink"/>
+                </NavLink>
+                <NavLink to="/logout" className="nav__link">
+                  <Trans i18nKey="Navigation.logoutLink"/>
+                </NavLink>
+              </div>
             </li>
             <AdminUI>
               <li className="nav__link" title="Invitations">

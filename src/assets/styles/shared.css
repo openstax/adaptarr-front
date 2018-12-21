@@ -347,6 +347,11 @@ button[disabled] {
   padding: 0;
 }
 
+.nav__hoverbox a.nav__link {
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+
 .nav__hoverbox .notification {
   padding: 15px 20px;
   border-bottom: 1px solid var(--light-bg);
@@ -692,20 +697,42 @@ main {
 .avatar--small .avatar__image {
   width: 30px;
   height: 30px;
+  --border: 4px;
 }
 
 .avatar--medium .avatar__image {
   width: 50px;
   height: 50px;
+  --border: 6px;
 }
 
 .avatar--big .avatar__image {
   width: 150px;
   height: 150px;
+  --border: 8px;
 }
 
 .avatar__image {
   position: relative;
+  --border: 8px;
+}
+
+.avatar__image:before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: calc(var(--border) / -2);
+  left: calc(var(--border) / -2);
+  display: block;
+  width: calc(100% + var(--border));
+  height: calc(100% + var(--border));
+  background-image:  linear-gradient(var(--main-decoration), var(--secondary-decoration));
+  border-radius: 50%;
+}
+
+.avatar__image img {
+  position: relative;
+  z-index: 1;
 }
 
 .avatar__status {
@@ -1113,4 +1140,50 @@ input[type="disabled"] {
 .modulePreview exercise commentary::before {
   content: 'Commentary: ';
   font-weight: 700;
+}
+
+.user {
+  
+}
+
+.user__top {
+  display: flex;
+  align-items: center;
+}
+
+.user__name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-left: 30px;
+}
+
+.user__info {
+  margin-top: 30px;
+}
+
+.user__bio {
+  margin-bottom: 30px;
+}
+
+.user__bio p {
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.teamList {
+  width: 100%;
+  margin-top: -20px;
+}
+
+.teamList__item {
+  display: flex;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--light-bg);
+  cursor: pointer;
+}
+
+.teamList__username {
+  color: var(--font-dark);
+  margin-left: 20px;
 }

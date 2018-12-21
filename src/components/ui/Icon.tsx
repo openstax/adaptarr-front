@@ -2,7 +2,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil',
+  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -63,6 +63,10 @@ const icon = ({ size, name }: Props) => {
       case 'pencil':
         return (
           <svg aria-hidden="true" data-prefix="fas" data-icon="pencil-alt" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M497.9 142.1l-46.1 46.1c-4.7 4.7-12.3 4.7-17 0l-111-111c-4.7-4.7-4.7-12.3 0-17l46.1-46.1c18.7-18.7 49.1-18.7 67.9 0l60.1 60.1c18.8 18.7 18.8 49.1 0 67.9zM284.2 99.8L21.6 362.4.4 483.9c-2.9 16.4 11.4 30.6 27.8 27.8l121.5-21.3 262.6-262.6c4.7-4.7 4.7-12.3 0-17l-111-111c-4.8-4.7-12.4-4.7-17.1 0zM124.1 339.9c-5.5-5.5-5.5-14.3 0-19.8l154-154c5.5-5.5 14.3-5.5 19.8 0s5.5 14.3 0 19.8l-154 154c-5.5 5.5-14.3 5.5-19.8 0zM88 424h48v36.3l-64.5 11.3-31.1-31.1L51.7 376H88v48z"></path></svg>
+        )
+      case 'profile':
+        return (
+          <svg aria-hidden="true" data-prefix="fas" data-icon="user-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"></path></svg>
         )
       default:
         return (
