@@ -892,6 +892,29 @@ input[type="disabled"] {
   cursor: not-allowed;
 }
 
+.input {
+
+}
+
+.input.valid input {
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+.input.invalid input {
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.input__error {
+  position: relative;
+  top: -5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--red);
+}
+
 textarea {
   display: block;
   width: 100%;
@@ -992,6 +1015,7 @@ textarea {
 }
 
 .settings {
+  width: 100%;
   max-width: 400px;
 }
 
