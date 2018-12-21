@@ -5,7 +5,7 @@ import { User } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
-  userId: number
+  userId: number | undefined | null
   user: {
     user: User
   }
