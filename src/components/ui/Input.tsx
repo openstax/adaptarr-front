@@ -9,6 +9,7 @@ type Props = {
   placeholder?: string
   value?: string
   type?: string
+  autoFocus?: boolean
   validation?: {
     minLength?: number
     maxLength?: number
@@ -90,7 +91,7 @@ class Input extends React.Component<Props> {
 
   public render() {
     const { touched, inputVal } = this.state
-    const { errorMessage, placeholder, type } = this.props
+    const { errorMessage, placeholder, type, autoFocus } = this.props
   
     const classes = this.validateInput().classes
     
@@ -100,6 +101,7 @@ class Input extends React.Component<Props> {
           type={type ? type : 'text'}
           placeholder={placeholder ? placeholder : ''}
           value={inputVal}
+          autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
           onChange={this.changeInputVal}
         />
         {
