@@ -121,7 +121,7 @@ class Input extends React.Component<Props> {
           onBlur={this.onBlur}
         />
         {
-          touched && !this.validateInput().status ?
+          touched && !this.validateInput().status && errorMessage ?
             <span className="input__error">{errorMessage}</span>
           : null
         }
