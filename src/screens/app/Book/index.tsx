@@ -1,5 +1,6 @@
 import * as React from 'react'
 import Nestable from 'react-nestable'
+import { History } from 'history'
 import { connect } from 'react-redux'
 import { AxiosResponse } from 'axios'
 import { Trans } from 'react-i18next'
@@ -32,6 +33,7 @@ type Props = {
       id: string
     }
   }
+  history: History
   team: {
     teamMap: types.TeamMap
   }
@@ -558,9 +560,8 @@ class Book extends React.Component<Props> {
             this.props.addAlert('error', `Couldn't load parts for: ${res.data.title}. Details: ${e.message}`)
           })
       })
-      .catch((e: ErrorEvent) => {
-        this.setState({ isLoading: false })
-        this.props.addAlert('error', `Couldn't load a book with id: ${id}. Details: ${e.message}`)
+      .catch(() => {
+        this.props.history.push('/404')
       })
   }
 

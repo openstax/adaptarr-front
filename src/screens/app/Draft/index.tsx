@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { History } from 'history'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
@@ -18,6 +19,7 @@ type Props = {
       id: string
     }
   }
+  history: History
 }
 
 class Module extends React.Component<Props> {
@@ -73,9 +75,8 @@ class Module extends React.Component<Props> {
       .then(res => {
         this.setState({ mod: res.data })
       })
-      .catch(e => {
-        this.setState({ mod: undefined })
-        store.dispatch(addAlert('error', e.message))
+      .catch(() => {
+        this.props.history.push('/404')
       })
   }
 

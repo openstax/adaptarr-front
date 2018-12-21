@@ -1,15 +1,15 @@
 import * as React from 'react'
+import { History } from 'history'
 
 import axios from 'src/config/axios'
-import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 
+import ModulePreview from 'src/containers/ModulePreview'
+
 import { ModuleShortInfo } from 'src/store/types'
-import ModulePreview from 'src/containers/ModulePreview';
 
 type Props = {
   match: {
@@ -17,6 +17,7 @@ type Props = {
       id: string
     }
   }
+  history: History
 }
 
 class Module extends React.Component<Props> {
@@ -35,9 +36,8 @@ class Module extends React.Component<Props> {
       .then(res => {
         this.setState({ isLoading: false, mod: res.data, error: '' })
       })
-      .catch(e => {
-        this.setState({ isLoading: false, mod: undefined, error: e.message })
-        store.dispatch(addAlert('error', e.message))
+      .catch(() => {
+        this.props.history.push('/404')
       })
   }
 
