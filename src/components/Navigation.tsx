@@ -163,9 +163,12 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <NavLink to="/settings" activeClassName="active" className="nav__link">
                   <Trans i18nKey="Navigation.settingsLink"/>
                 </NavLink>
-                <NavLink to="/logout" className="nav__link">
+                <a 
+                  className="nav__link"
+                  href="/logout"
+                >
                   <Trans i18nKey="Navigation.logoutLink"/>
-                </NavLink>
+                </a>
               </div>
             </li>
             <AdminUI>
