@@ -8,6 +8,7 @@ import axios from 'src/config/axios'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
+import Input from 'src/components/ui/Input'
 
 type LanguageOption = {
   value: string
@@ -70,19 +71,16 @@ class Settings extends React.Component {
     return this.setState({ arePasswordsValid: false })
   }
 
-  private updateOldPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ oldPassword: input.value }, this.validatePasswords)
+  private updateOldPassword = (val: string) => {
+    this.setState({ oldPassword: val }, this.validatePasswords)
   }
 
-  private updateNewPassword = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ newPassword: input.value }, this.validatePasswords)
+  private updateNewPassword = (val: string) => {
+    this.setState({ newPassword: val }, this.validatePasswords)
   }
 
-  private updateNewPassword2 = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ newPassword2: input.value }, this.validatePasswords)
+  private updateNewPassword2 = (val: string) => {
+    this.setState({ newPassword2: val }, this.validatePasswords)
   }
 
   private changePassword = () => {
@@ -192,21 +190,30 @@ class Settings extends React.Component {
             <h2 className="settings__title">
               <Trans i18nKey="Settings.changePassword" />
             </h2>
-            <input 
-              type="password" 
-              placeholder="Old password" 
+            <Input
+              type="password"
+              placeholder="Old password"
               value={oldPassword}
-              onChange={(e) => this.updateOldPassword(e)} />
-            <input 
-              type="password" 
-              placeholder="New password" 
+              onChange={this.updateOldPassword}
+              validation={{minLength: 6, maxLength: 12}}
+              errorMessage="Password must be bewtween 6 and 12 characters."
+            />
+            <Input
+              type="password"
+              placeholder="New password"
               value={newPassword}
-              onChange={(e) => this.updateNewPassword(e)} />
-            <input 
-              type="password" 
-              placeholder="Repeat new password" 
+              onChange={this.updateNewPassword}
+              validation={{minLength: 6, maxLength: 12}}
+              errorMessage="Password must be bewtween 6 and 12 characters."
+            />
+            <Input
+              type="password"
+              placeholder="Repeat new password"
               value={newPassword2}
-              onChange={(e) => this.updateNewPassword2(e)} />
+              onChange={this.updateNewPassword2}
+              validation={{sameAs: newPassword}}
+              errorMessage="Password must be identical."
+            />
             <Button
               isDisabled={!arePasswordsValid}
               clickHandler={this.showChangePasswordDialog}

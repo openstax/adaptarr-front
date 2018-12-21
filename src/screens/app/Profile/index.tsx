@@ -18,6 +18,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 import Avatar from 'src/components/ui/Avatar'
+import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
@@ -81,9 +82,8 @@ class Profile extends React.Component<Props> {
     this.setState({ showDialog: true, updateAction: 'name' })
   }
 
-  private updateNameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ nameInput: input.value })
+  private updateNameInput = (val: string) => {
+    this.setState({ nameInput: val })
   }
 
   private showUpdateBio = () => {
@@ -99,9 +99,8 @@ class Profile extends React.Component<Props> {
     this.setState({ showDialog: true, updateAction: 'email' })
   }
 
-  private updateEmailInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ emailInput: input.value })
+  private updateEmailInput = (val: string) => {
+    this.setState({ emailInput: val })
   }
 
   private showDialogWithAction = () => {
@@ -124,10 +123,12 @@ class Profile extends React.Component<Props> {
       case 'name':
         titlei18nKey = 'Profile.updateName'
         body = (
-          <input
-            type="text"
+          <Input
             value={nameInput}
             onChange={this.updateNameInput}
+            autoFocus
+            validation={{minLength: 3}}
+            errorMessage="Name has to be at least 3 characters long."
           />
         )
         break
@@ -143,10 +144,12 @@ class Profile extends React.Component<Props> {
       case 'email':
         titlei18nKey = 'Profile.updateEmail'
         body = (
-          <input
-            type="text"
+          <Input
             value={emailInput}
             onChange={this.updateEmailInput}
+            autoFocus
+            validation={{email: true}}
+            errorMessage="This is not a valid email address."
           />
         )
         break

@@ -892,8 +892,9 @@ input[type="disabled"] {
   cursor: not-allowed;
 }
 
-.input {
-
+.input input {
+  display: block;
+  width: 100%;
 }
 
 .input.valid input {
@@ -908,8 +909,6 @@ input[type="disabled"] {
 
 .input__error {
   position: relative;
-  top: -5px;
-  margin-bottom: 5px;
   display: inline-block;
   font-size: 0.8rem;
   color: var(--red);
@@ -1019,7 +1018,7 @@ textarea {
   max-width: 400px;
 }
 
-.settings input, .settings__select {
+.settings .input, .settings__select {
   width: 100%;
   margin-bottom: 10px;
 }
@@ -1255,4 +1254,8 @@ textarea {
 .teamList__username {
   color: var(--font-dark);
   margin-left: 20px;
+}
+
+.invitations .input {
+  margin-bottom: 10px;
 }

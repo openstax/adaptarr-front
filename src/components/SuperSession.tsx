@@ -5,6 +5,7 @@ import { Trans } from 'react-i18next'
 
 import Dialog from './ui/Dialog'
 import Button from './ui/Button'
+import Input from './ui/Input'
 
 type Props = {
   onSuccess: (response: any) => any
@@ -16,23 +17,23 @@ type Props = {
 
   state: {
     errorMessage: string
+    passwordInput: string
   } = {
     errorMessage: '',
+    passwordInput: '',
   }
 
   private confirmSuperSession = () => {
-    const input = this.passwordInput.current as HTMLInputElement
-    const password = input ? input.value : null
+    const password = this.state.passwordInput
+
     if (password) {
       return new Promise((resolve, reject) => {
         axiosClean.post('/elevate', `password=${password}`)
           .then(res => {
-            console.log('starting super session')
             this.setState({ errorMessage: '' })
             resolve(this.props.onSuccess(res))
           })
           .catch(e => {
-            console.log(`Couldn't start super session. Details: ${e.message}`)
             this.setState({ errorMessage: e.message })
             reject(this.props.onFailure(e))
           })
@@ -44,8 +45,6 @@ type Props = {
 
     return this.props.onFailure(new Error(errorMessage))
   }
-
-  private passwordInput: React.RefObject<HTMLInputElement> = React.createRef()
 
   public render() {
     const { errorMessage } = this.state
@@ -62,12 +61,12 @@ type Props = {
               <span className="error">{errorMessage}</span>
             : null
           }
-          <input 
+          <Input 
             type="password" 
-            ref={this.passwordInput} 
-            name="password" 
+            onChange={(val) => this.setState({ passwordInput: val })} 
             placeholder="Password"
-            autoFocus />
+            autoFocus
+          />
           <Button clickHandler={this.confirmSuperSession}>
             <Trans i18nKey="Buttons.confirm" />
           </Button>

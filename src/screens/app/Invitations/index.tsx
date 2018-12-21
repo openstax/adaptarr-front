@@ -10,29 +10,29 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
+import Input from 'src/components/ui/Input'
 
 class Invitations extends React.Component {
 
   state: {
-    showSuperSession: boolean,
-    emailValue: string,
+    showSuperSession: boolean
+    emailValue: string
+    isEmailVaild: boolean
   } = {
     showSuperSession: false,
     emailValue: '',
+    isEmailVaild: false,
   }
 
   private sendInvitation = () => {
-    const email = this.state.emailValue
+    const { emailValue, isEmailVaild } = this.state
 
-    if (!validateEmail(email)) {
-      this.setState({ successMessage: '', errorMessage: `${email} is not valid e-mail address.` })
-      return
-    }
+    if (!isEmailVaild) return
 
-    axios.post('users/invite', {email})
+    axios.post('users/invite', {emailValue})
       .then(() => {
         this.setState({ emailValue: '' })
-        store.dispatch(addAlert('success', `Invitation sent to ${email}`))
+        store.dispatch(addAlert('success', `Invitation sent to ${emailValue}`))
       })
       .catch((e) => {
         if (e.request.status === 403) {
@@ -53,10 +53,6 @@ class Invitations extends React.Component {
     store.dispatch(addAlert('error', e.message))
   }
 
-  private updateEmailValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ emailValue: e.target.value })
-  }
-
   public render() {
     const { showSuperSession, emailValue } = this.state
 
@@ -71,19 +67,23 @@ class Invitations extends React.Component {
           : null
         }
         <Section>
-          <Header i18nKey="Invitations.title" />
+          <Header i18nKey="Invitations.title"/>
           <div className="section__content">
-            <form>
-              <input
+            <div className="invitatio">
+              <Input
                 type="email"
                 value={emailValue}
-                onChange={(e) => this.updateEmailValue(e)}
-                placeholder="E-mail address"/>
+                onChange={(val) => this.setState({ emailValue: val })}
+                isValid={(status) => {this.state.isEmailVaild !== status ? this.setState({ isEmailVaild: status}) : null}}
+                placeholder="E-mail address"
+                validation={{email: true}}
+                errorMessage="This is not valid email address."
+              />
               <br/>
               <Button color="green" size="medium" clickHandler={this.sendInvitation}>
-                <Trans i18nKey="Buttons.invite" />
+                <Trans i18nKey="Buttons.invite"/>
               </Button>
-            </form>
+            </div>
           </div>
         </Section>
       </div>

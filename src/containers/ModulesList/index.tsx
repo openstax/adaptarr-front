@@ -11,6 +11,7 @@ import ModuleInfo from 'src/components/ModuleInfo'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
@@ -84,8 +85,8 @@ class ModuleList extends React.Component<Props> {
     this.props.onModuleClick(mod)
   }
 
-  private updateModuleTitleValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ moduleTitleValue: e.target.value })
+  private updateModuleTitleValue = (val: string) => {
+    this.setState({ moduleTitleValue: val })
   }
 
   private addNewModule = () => {
@@ -187,14 +188,14 @@ class ModuleList extends React.Component<Props> {
         <AdminUI>
           <div className="modulesList__new">
             <div className="modulesList__top-bar">
-              <input 
-                type="text" 
+              <Input  
                 placeholder="Title"
                 value={moduleTitleValue}
-                onChange={(e) => this.updateModuleTitleValue(e)}
+                onChange={this.updateModuleTitleValue}
+                validation={{minLength: 3}}
               />
               <Button 
-                isDisabled={moduleTitleValue.length === 0}
+                isDisabled={moduleTitleValue.length < 3}
                 clickHandler={this.addNewModule}
               >
                 <Icon name="plus" />

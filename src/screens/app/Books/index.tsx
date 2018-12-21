@@ -16,6 +16,7 @@ import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
+import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
@@ -96,9 +97,8 @@ class Books extends React.Component<Props> {
     this.setState({ showAddBook: false })
   }
 
-  private updateTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ titleInput: input.value })
+  private updateTitleInput = (val: string) => {
+    this.setState({ titleInput: val })
   }
 
   private onFilesChange = (files: File[]) => {
@@ -115,7 +115,7 @@ class Books extends React.Component<Props> {
   }
 
   private superSessionFailure = (e: Error) => {
-    console.log('failure', e.message)
+    store.dispatch(addAlert('error', e.message))
   }
 
   public render() {
@@ -149,11 +149,11 @@ class Books extends React.Component<Props> {
               onClose={() => this.closeAddBookDialog()}
               i18nKey="Books.addBookDialog"
             >
-              <input 
-                type="text" 
+              <Input 
                 value={this.state.titleInput} 
-                onChange={(e) => this.updateTitleInput(e)} 
-                placeholder="Book title" 
+                onChange={this.updateTitleInput} 
+                placeholder="Book title"
+                validation={{minLength: 3}}
               />
               <FilesUploader 
                 onFilesChange={this.onFilesChange} 

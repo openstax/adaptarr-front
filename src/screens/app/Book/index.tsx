@@ -17,6 +17,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import StackedBar from 'src/components/ui/StackedBar'
 import Dialog from 'src/components/ui/Dialog'
+import Input from 'src/components/ui/Input'
 
 import ModulesList from 'src/containers/ModulesList'
 import UsersList from 'src/containers/UsersList'
@@ -587,13 +588,12 @@ class Book extends React.Component<Props> {
     this.props.addAlert('error', e.message)
   }
 
-  private updateGroupNameValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ groupNameValue: e.target.value })
+  private updateGroupNameValue = (val: string) => {
+    this.setState({ groupNameValue: val })
   }
 
-  private updateTitleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const input = e.target as HTMLInputElement
-    this.setState({ titleInput: input.value })
+  private updateTitleInput = (val: string) => {
+    this.setState({ titleInput: val })
   }
 
   private changeBookTitle = () => {
@@ -655,12 +655,13 @@ class Book extends React.Component<Props> {
           showEditGroup ?
             <Dialog onClose={this.closeEditGroupDialog} i18nKey="Book.editGroupDialog">
               <form>
-                <input 
-                  type="text" 
+                <Input 
                   value={groupNameValue}
                   placeholder="New title"
-                  onChange={(e) => this.updateGroupNameValue(e)}
-                  autoFocus />
+                  onChange={this.updateGroupNameValue}
+                  autoFocus
+                  validation={{minLength: 3}}
+                />
                 <Button 
                   color="green" 
                   clickHandler={this.editGroup}
@@ -682,12 +683,13 @@ class Book extends React.Component<Props> {
           showAddGroup ?
             <Dialog onClose={this.closeAddGroupDialog} i18nKey="Book.addGroupDialog">
               <form>
-                <input 
-                  type="text" 
+                <Input 
                   value={groupNameValue}
                   placeholder="Title"
-                  onChange={(e) => this.updateGroupNameValue(e)}
-                  autoFocus />
+                  onChange={this.updateGroupNameValue}
+                  autoFocus
+                  validation={{minLength: 3}}
+                />
                 <Button 
                   color="green" 
                   clickHandler={this.addGroup}
@@ -774,9 +776,14 @@ class Book extends React.Component<Props> {
         <Section>
           <Header title={book.title}>
             <AdminUI>
-              <input type="text" value={this.state.titleInput} onChange={(e) => this.updateTitleInput(e)} placeholder="Change title" />
+              <Input
+                value={this.state.titleInput}
+                onChange={this.updateTitleInput}
+                placeholder="Change title"
+                validation={{minLength: 3}}
+              />
               <Button 
-                isDisabled={!(titleInput.length > 0)}
+                isDisabled={!(titleInput.length > 2)}
                 clickHandler={this.changeBookTitle}
               >
                 <Icon name="plus"/>
