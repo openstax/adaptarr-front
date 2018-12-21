@@ -22,9 +22,11 @@ class Input extends React.Component<Props> {
   state: {
     touched: boolean
     inputVal: string
+    focused: boolean
   } = {
     touched: false,
     inputVal: '',
+    focused: false,
   }
 
   private changeInputVal = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,8 +39,16 @@ class Input extends React.Component<Props> {
     this.props.onChange(input.value)
   }
 
+  private onFocus = () => {
+    this.setState({ focused: true })
+  }
+
+  private onBlur = () => {
+    this.setState({ focused: false })
+  }
+
   private validateInput = (): {status: boolean, classes: string} => {
-    const { touched, inputVal } = this.state
+    const { touched, inputVal, focused } = this.state
     const validation = this.props.validation
 
     let status = true
@@ -79,6 +89,10 @@ class Input extends React.Component<Props> {
       this.props.isValid(status)
     }
 
+    if (focused) {
+      classes.push('focused')
+    }
+
     return {status, classes: classes.join(' ')}
   }
 
@@ -103,6 +117,8 @@ class Input extends React.Component<Props> {
           value={inputVal}
           autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
           onChange={this.changeInputVal}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
         />
         {
           touched && !this.validateInput().status ?
