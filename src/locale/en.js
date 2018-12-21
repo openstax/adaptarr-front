@@ -51,6 +51,8 @@ export default {
     "Buttons.goToModule": "Go to module",
     "Resources.title": "Resources",
     "Profile.yourTeam": "Your team",
+    "Profile.bio": "Bio:",
+    "Profile.contact": "Contact",
     "Profile.updateAvatar": "Upload file for your avatar.",
     "Profile.updateName": "Update your name.",
     "Profile.updateBio": "Update your bio.",

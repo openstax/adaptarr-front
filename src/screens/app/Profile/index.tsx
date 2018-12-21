@@ -340,6 +340,9 @@ class Profile extends React.Component<Props> {
                     </h2>
                   </div>
                   <div className="user__info">
+                    <h3 className="user__title">
+                      <Trans i18nKey="Profile.bio"/>
+                    </h3>
                     <div className="user__bio">
                       <p>
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio nisi facilis ad facere minus laborum soluta illo maiores illum atque enim aliquid commodi adipisci vel amet, porro delectus at nesciunt.
@@ -353,6 +356,9 @@ class Profile extends React.Component<Props> {
                         </span>
                       </UserUI>
                     </div>
+                    <h3 className="user__title">
+                      <Trans i18nKey="Profile.contact"/>
+                    </h3>
                     <span className="user__email">
                       email: {user.email ? user.email : 'unknow email'}
                       <UserUI userId={user.id}>
