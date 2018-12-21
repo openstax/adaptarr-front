@@ -4,6 +4,7 @@ import validateEmail from 'src/helpers/validateEmail'
 
 type Props = {
   onChange: (value: string) => void
+  isValid?: (status: boolean) => void
   errorMessage?: string
   placeholder?: string
   value?: string
@@ -71,6 +72,10 @@ class Input extends React.Component<Props> {
           classes.push('invalid')
         }
       }
+    }
+
+    if (this.props.isValid) {
+      this.props.isValid(status)
     }
 
     return {status, classes: classes.join(' ')}
