@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
+import { History } from 'history'
 
 import axios from 'src/config/axios'
 import store from 'src/store'
@@ -17,6 +18,7 @@ import { FetchModulesAssignedToMe, fetchModulesAssignedToMe } from 'src/store/ac
 import { State } from 'src/store/reducers/index'
 
 type Props = {
+  history: History
   user: {
     user: types.User
   }
@@ -89,7 +91,7 @@ class Dashboard extends React.Component<Props> {
     axios.post(`modules/${targetDraftId}`)
       .then(() => {
         store.dispatch(addAlert('success', 'Draft was created successfully.'))
-        window.location.pathname = `/drafts/${targetDraftId}`
+        this.props.history.push(`/drafts/${targetDraftId}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
