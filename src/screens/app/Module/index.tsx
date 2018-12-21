@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Trans } from 'react-i18next'
+import { connect } from 'react-redux'
 import { History } from 'history'
 
 import axios from 'src/config/axios'
@@ -11,10 +12,12 @@ import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 import UserUI from 'src/components/UserUI'
 import Button from 'src/components/ui/Button'
+import Avatar from 'src/components/ui/Avatar'
 
 import ModulePreview from 'src/containers/ModulePreview'
 
-import { ModuleShortInfo } from 'src/store/types'
+import { ModuleShortInfo, TeamMap } from 'src/store/types'
+import { State } from 'src/store/reducers'
 
 type Props = {
   match: {
@@ -23,6 +26,15 @@ type Props = {
     }
   }
   history: History
+  team: {
+    teamMap: TeamMap
+  }
+}
+
+const mapStateToProps = ({ team }: State) => {
+  return {
+    team,
+  }
 }
 
 class Module extends React.Component<Props> {
@@ -85,27 +97,38 @@ class Module extends React.Component<Props> {
 
   public render() {
     const { isLoading, mod, isDraftExisting, error } = this.state
+    const teamMap = this.props.team.teamMap
 
     return (
       <Section>
         <Header title={mod ? mod.title : 'Unknow module'}>
           {
             mod ?
-              <UserUI userId={mod.assignee}>
+              <React.Fragment>
                 {
-                  isDraftExisting ?
-                    <Button to={`/drafts/${mod.id}`}>
-                      <Trans i18nKey="Buttons.viewDraft"/>
-                    </Button>
-                  :
-                  <Button
-                    color="green"
-                    clickHandler={() => {this.createDraft(mod.id)}}
-                  >
-                    <Trans i18nKey="Buttons.newDraft"/>
-                  </Button>
+                  mod.assignee ?
+                    <div className="module__assignee">
+                      <span>Assignee:</span>
+                      <Avatar size="small" user={teamMap.get(mod.assignee)}/>
+                    </div>
+                  : null
                 }
-              </UserUI>
+                <UserUI userId={mod.assignee}>
+                  {
+                    isDraftExisting ?
+                      <Button to={`/drafts/${mod.id}`}>
+                        <Trans i18nKey="Buttons.viewDraft"/>
+                      </Button>
+                    :
+                    <Button
+                      color="green"
+                      clickHandler={() => {this.createDraft(mod.id)}}
+                    >
+                      <Trans i18nKey="Buttons.newDraft"/>
+                    </Button>
+                  }
+                </UserUI>
+              </React.Fragment>
             : null
           }
         </Header>
@@ -128,4 +151,4 @@ class Module extends React.Component<Props> {
   }
 }
 
-export default Module
+export default connect(mapStateToProps)(Module)

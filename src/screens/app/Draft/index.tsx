@@ -9,6 +9,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
+import UserUI from 'src/components/UserUI'
 import Button from 'src/components/ui/Button'
 
 import { ModuleShortInfo } from 'src/store/types'
@@ -41,7 +42,7 @@ class Module extends React.Component<Props> {
     axios.post(`drafts/${draftId}/save`)
       .then(() => {
         store.dispatch(addAlert('success', 'Draft saved successfully.'))
-        window.location.href = `/modules/${draftId}`
+        this.props.history.push(`/modules/${draftId}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -91,9 +92,18 @@ class Module extends React.Component<Props> {
     return (
       <Section>
         <Header title={mod ? mod.title : 'Unknow module'}>
-          <Button clickHandler={() => this.saveDraft()}>
-            <Trans i18nKey="Buttons.save"/>
-          </Button>
+          {
+            mod ?
+              <UserUI userId={mod.assignee}>
+                <Button
+                  color="green"
+                  clickHandler={() => this.saveDraft()}
+                >
+                  <Trans i18nKey="Buttons.save"/>
+                </Button>
+              </UserUI>
+            : null
+          }
         </Header>
         <div className="section__content">
           {

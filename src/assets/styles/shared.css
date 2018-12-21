@@ -264,6 +264,16 @@ button[disabled] {
   margin-right: 10px;
 }
 
+.header .module__assignee {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.header .module__assignee > span {
+  margin-right: 5px;
+}
+
 .adminui {
   display: flex;
   align-items: center;
