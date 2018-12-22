@@ -28,6 +28,8 @@ import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 import { setAssigneeInModulesMap } from 'src/store/actions/Modules'
 
+type DialogActions = 'editGroup' | 'addGroup' | 'removeGroup' | 'addModule' | 'removeModule' | 'assignUser' | 'assignUser' | undefined
+
 type Props = {
   match: {
     params: {
@@ -64,16 +66,12 @@ class Book extends React.Component<Props> {
     isLoading: boolean,
     book: types.Book,
     showModuleDetails: types.ModuleShortInfo | undefined,
-    showAddModule: boolean,
-    showEditGroup: boolean,
-    showAddGroup: boolean,
-    showRemoveGroup: boolean,
+    showDialog: boolean,
+    dialogAction: DialogActions
     showSuperSession: boolean,
     groupNameValue: string,
     targetGroup: types.BookPart | null,
     selectedModule: types.ModuleShortInfo | null,
-    showRemoveModule: boolean,
-    showAssignUser: boolean,
     userToAssign: types.User | null,
     assignAction: 'assign' | 'remove',
     targetModule: types.BookPart | null,
@@ -86,16 +84,12 @@ class Book extends React.Component<Props> {
       parts: []
     },
     showModuleDetails: undefined,
-    showAddModule: false,
-    showEditGroup: false,
-    showAddGroup: false,
-    showRemoveGroup: false,
+    showDialog: false,
+    dialogAction: undefined,
     showSuperSession: false,
     groupNameValue: '',
     targetGroup: null,
     selectedModule: null,
-    showRemoveModule: false,
-    showAssignUser: false,
     userToAssign: null,
     assignAction: 'assign',
     targetModule: null,
@@ -123,21 +117,21 @@ class Book extends React.Component<Props> {
         </span>
         <span className="bookpart__info">
           <AdminUI>
-            <Button clickHandler={() => this.showEditGroupDialog(item)}>
+            <Button clickHandler={() => this.showActionsDialog(item, 'editGroup')}>
               <Icon name="pencil" />
               <Trans i18nKey="Buttons.edit" />
             </Button>
-            <Button color="green" clickHandler={() => this.showAddGroupDialog(item)}>
+            <Button color="green" clickHandler={() => this.showActionsDialog(item, 'addGroup')}>
               <Icon name="plus" />
               <Trans i18nKey="Buttons.group" />
             </Button>
-            <Button color="green" clickHandler={() => this.showAddModuleDialog(item)}>
-              <Icon name="plus" />
-              <Trans i18nKey="Buttons.module" />
-            </Button>
-            <Button color="red" clickHandler={() => this.showRemoveGroupDialog(item)}>
+            <Button color="red" clickHandler={() => this.showActionsDialog(item, 'removeGroup')}>
               <Icon name="minus" />
               <Trans i18nKey="Buttons.group" />
+            </Button>
+            <Button color="green" clickHandler={() => this.showActionsDialog(item, 'addModule')}>
+              <Icon name="plus" />
+              <Trans i18nKey="Buttons.module" />
             </Button>
           </AdminUI>
           <span className="bookpart__status">
@@ -186,7 +180,10 @@ class Book extends React.Component<Props> {
         </span>
         <span className="bookpart__info">
           <AdminUI>
-            <Button color="red" clickHandler={() => this.showRemoveModuleDialog(item)}>
+            <Button
+              color="red"
+              clickHandler={() => this.showActionsDialog(item, 'removeModule')}
+            >
               <Icon name="minus" />
               <Trans i18nKey="Buttons.module" />
             </Button>
@@ -200,12 +197,12 @@ class Book extends React.Component<Props> {
                 >
                   <Trans i18nKey="Buttons.unassign" />
                 </Button>
-                <Button clickHandler={() => this.showAssignUserDialog(item)}>
+                <Button clickHandler={() => this.showActionsDialog(item, 'assignUser')}>
                   <Trans i18nKey="Buttons.assignOther" />
                 </Button>
               </React.Fragment>
             :
-              <Button clickHandler={() => this.showAssignUserDialog(item)}>
+              <Button clickHandler={() => this.showActionsDialog(item, 'assignUser')}>
                 <Trans i18nKey="Buttons.assign" />
               </Button>
           }
@@ -304,19 +301,39 @@ class Book extends React.Component<Props> {
       })
   }
 
-  private showEditGroupDialog = (target: types.BookPart) => {
-    this.setState({ showEditGroup: true, targetGroup: target })
-  }
+  private showActionsDialog = (target: types.BookPart, dialogAction: DialogActions) => {
+    let newState: {
+      showDialog: boolean
+      dialogAction: DialogActions
+      targetModule?: types.BookPart
+      targetGroup?: types.BookPart
+      groupNameValue?: string
+    } = {
+      showDialog: true,
+      dialogAction,
+    }
 
-  private closeEditGroupDialog = () => {
-    this.setState({ showEditGroup: false, targetGroup: null, groupNameValue: '' })
+    if (dialogAction === 'addGroup' || dialogAction === 'removeGroup' || dialogAction === 'editGroup') {
+      newState.groupNameValue = target.title,
+      newState.targetGroup = target
+    } else if (dialogAction === 'addModule') {
+      newState.targetGroup = target
+    } else if (dialogAction === 'removeModule') {
+      newState.targetModule = target
+    } else if (dialogAction === 'assignUser') {
+      newState.targetModule = target
+    }
+
+    this.setState({...newState})
   }
 
   private editGroup = () => {
     const { targetGroup, groupNameValue } = this.state
     if (groupNameValue.length === 0) return
 
-    if (!targetGroup) return
+    if (!targetGroup) {
+      return this.props.addAlert('error', `targetGroup: ${targetGroup}`)
+    }
 
     const bookId = this.props.match.params.id
     const payload = {
@@ -326,7 +343,7 @@ class Book extends React.Component<Props> {
     axios.put(`books/${bookId}/parts/${targetGroup.number}`, payload)
       .then(() => {
         this.fetchBook()
-        this.closeEditGroupDialog()
+        this.closeActionsDialog()
         this.props.addAlert('success', `Group title was change from ${targetGroup.title} to ${groupNameValue}.`)
       })
       .catch((e) => {
@@ -335,57 +352,69 @@ class Book extends React.Component<Props> {
           this.props.addAlert('info', 'You have to confirm this action.')
         } else {
           this.props.addAlert('error', e.message)
-          this.closeEditGroupDialog()
+          this.closeActionsDialog()
         }
       })
     
   }
 
-  private showAddGroupDialog = (target: types.BookPart) => {
-    this.setState({ showAddGroup: true, targetGroup: target })
-  }
-
-  private closeAddGroupDialog = () => {
-    this.setState({ showAddGroup: false, groupNameValue: '', targetGroup: null })
-  }
-
   private addGroup = () => {
     const { targetGroup, groupNameValue } = this.state
-    if (groupNameValue.length === 0) return
+    if (!groupNameValue.length) return
 
-    if (targetGroup) {
-      const bookId = this.props.match.params.id
-      const payload = {
-        title: this.state.groupNameValue,
-        parent: targetGroup.number,
-        index: targetGroup.parts ? targetGroup.parts.length : 0,
-        parts: [],
-      }
+    if (!targetGroup) {
+      return this.props.addAlert('error', `targetGroup: ${targetGroup}`)
+    }
 
-      axios.post(`books/${bookId}/parts`, payload)
-        .then(() => {
-          this.closeAddGroupDialog()
-          this.fetchBook()
-          this.props.addAlert('success', `New group was added successfully.`)
-        })
-        .catch((e) => {
-          if (e.request.status === 403) {
-            this.setState({ showSuperSession: true })
-            this.props.addAlert('info', 'You have to confirm this action.')
-          } else {
-            this.props.addAlert('error', e.message)
-            this.closeAddGroupDialog()
-          }
-        })
-      }
+    const bookId = this.props.match.params.id
+    const payload = {
+      title: this.state.groupNameValue,
+      parent: targetGroup.number,
+      index: targetGroup.parts ? targetGroup.parts.length : 0,
+      parts: [],
+    }
+
+    axios.post(`books/${bookId}/parts`, payload)
+      .then(() => {
+        this.closeActionsDialog()
+        this.fetchBook()
+        this.props.addAlert('success', `New group was added successfully.`)
+      })
+      .catch((e) => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
+        } else {
+          this.props.addAlert('error', e.message)
+          this.closeActionsDialog()
+        }
+      })
+    
   }
 
-  private showAddModuleDialog = (target: types.BookPart) => {
-    this.setState({ showAddModule: true, targetGroup: target })
-  }
+  private removeGroup = () => {
+    const bookId = this.props.match.params.id
+    const targetGroup = this.state.targetGroup
 
-  private closeAddModuleDialog = () => {
-    this.setState({ showAddModule: false, targetGroup: null, selectedModule: null })
+    if (!targetGroup) {
+      return this.props.addAlert('error', `targetGroup: ${targetGroup}`)
+    }
+
+    axios.delete(`books/${bookId}/parts/${targetGroup.number}`)
+      .then(() => {
+        this.closeActionsDialog()
+        this.fetchBook()
+        this.props.addAlert('success', `Group ${targetGroup.title} was removed successfully.`)
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          this.props.addAlert('info', 'You have to confirm this action.')
+        } else {
+          this.props.addAlert('error', e.message)
+          this.closeActionsDialog()
+        }
+      })
   }
 
   private handleModuleClick = (mod: types.ModuleShortInfo) => {
@@ -405,7 +434,7 @@ class Book extends React.Component<Props> {
 
       axios.post(`books/${bookId}/parts`, payload)
         .then(() => {
-          this.closeAddModuleDialog()
+          this.closeActionsDialog()
           this.fetchBook()
           this.props.addAlert('success', `${selectedModule.title} was added to the group.`)
         })
@@ -415,60 +444,25 @@ class Book extends React.Component<Props> {
             this.props.addAlert('info', 'You have to confirm this action.')
           } else {
             this.props.addAlert('error', e.message)
-            this.closeAddModuleDialog()
+            this.closeActionsDialog()
           }
         })
+    } else {
+      console.error('targetGroup:', targetGroup, 'selectedModule:', selectedModule)
     }
-  }
-
-  private showRemoveGroupDialog = (target: types.BookPart) => {
-    this.setState({ showRemoveGroup: true, targetGroup: target })
-  }
-
-  private closeRemoveGroupDialog = () => {
-    this.setState({ showRemoveGroup: false, targetGroup: null })
-  }
-
-  private removeGroup = () => {
-    const bookId = this.props.match.params.id
-    const targetGroup = this.state.targetGroup
-
-    if (!targetGroup) return
-
-    axios.delete(`books/${bookId}/parts/${targetGroup.number}`)
-      .then(() => {
-        this.closeRemoveGroupDialog()
-        this.fetchBook()
-        this.props.addAlert('success', `Group ${targetGroup.title} was removed successfully.`)
-      })
-      .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', 'You have to confirm this action.')
-        } else {
-          this.props.addAlert('error', e.message)
-          this.closeRemoveGroupDialog()
-        }
-      })
-  }
-
-  private showRemoveModuleDialog = (target: types.BookPart) => {
-    this.setState({ showRemoveModule: true, targetModule: target })
-  }
-
-  private closeRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: false, targetModule: null })
   }
 
   private removeModule = () => {
     const bookId = this.props.match.params.id
     const targetModule = this.state.targetModule
 
-    if (!targetModule) return
+    if (!targetModule) {
+      return console.error('targetModule:', targetModule)
+    }
 
     axios.delete(`books/${bookId}/parts/${targetModule.number}`)
       .then(() => {
-        this.closeRemoveModuleDialog()
+        this.closeActionsDialog()
         this.fetchBook()
         this.props.addAlert('success', `Module ${targetModule.title} was removed successfully.`)
       })
@@ -478,17 +472,9 @@ class Book extends React.Component<Props> {
           this.props.addAlert('info', 'You have to confirm this action.')
         } else {
           this.props.addAlert('error', e.message)
-          this.closeRemoveModuleDialog()
+          this.closeActionsDialog()
         }
       })
-  }
-
-  private showAssignUserDialog = (target: types.BookPart) => {
-    this.setState({ showAssignUser: true, targetModule: target })
-  }
-
-  private closeAssignUserDialog = () => {
-    this.setState({ showAssignUser: false, targetModule: null, userToAssign: null })
   }
 
   private handleUserClick = (user: types.User, action: 'assign' | 'remove', targetModule?: types.BookPart) => {
@@ -526,7 +512,7 @@ class Book extends React.Component<Props> {
         } else if (assignAction === 'remove') {
           this.props.addAlert('success', `${user.name} was unassigned from ${targetModule.title}.`)
         }     
-        this.closeAssignUserDialog()
+        this.closeActionsDialog()
         if (targetModule.id) {
           this.props.setAssigneeInModulesMap(targetModule.id, payload.assignee)
         }
@@ -537,7 +523,7 @@ class Book extends React.Component<Props> {
           this.props.addAlert('info', 'You have to confirm this action.')
         } else {
           this.props.addAlert('error', e.message)
-          this.closeAssignUserDialog()
+          this.closeActionsDialog()
         }
       })
   }
@@ -567,17 +553,18 @@ class Book extends React.Component<Props> {
   }
 
   private superSessionSuccess = () => {
-    if (this.state.selectedModule && this.state.showAddModule) {
+    const dialogAction = this.state.dialogAction
+    if (this.state.selectedModule && dialogAction === 'addModule') {
       this.addModule()
-    } else if (this.state.groupNameValue && this.state.showAddGroup) {
-      this.addGroup()
-    } else if (this.state.groupNameValue && this.state.showEditGroup) {
-      this.editGroup()
-    } else if (this.state.targetGroup && this.state.showRemoveGroup) {
-      this.removeGroup()
-    } else if (this.state.targetModule && this.state.showRemoveModule) {
+    } else if (this.state.targetModule && dialogAction === 'removeModule') {
       this.removeModule()
-    } else if (this.state.targetModule && this.state.showAssignUser) {
+    } else if (this.state.groupNameValue && dialogAction === 'addGroup') {
+      this.addGroup()
+    } else if (this.state.groupNameValue && dialogAction === 'editGroup') {
+      this.editGroup()
+    } else if (this.state.targetGroup && dialogAction === 'removeGroup') {
+      this.removeGroup()
+    } else if (this.state.targetModule && dialogAction === 'assignUser') {
       this.assignUser()
     }
 
@@ -620,24 +607,156 @@ class Book extends React.Component<Props> {
       })
   }
 
+  private actionsDialog = () => {
+    const { dialogAction, groupNameValue, targetModule } = this.state
+    let titlei18nKey = ''
+    let body
+
+    switch (dialogAction){
+      case 'addGroup':
+        titlei18nKey = 'Book.addGroupDialog'
+        body = (
+          <form>
+            <Input
+              placeholder="Title"
+              onChange={this.updateGroupNameValue}
+              autoFocus
+              validation={{minLength: 3}}
+            />
+            <Button 
+              color="green" 
+              clickHandler={this.addGroup}
+              isDisabled={!(groupNameValue.length > 0)}
+            >
+              <Trans i18nKey="Buttons.confirm" />
+            </Button>
+            <Button 
+              color="red"
+              clickHandler={this.closeActionsDialog}
+            >
+              <Trans i18nKey="Buttons.cancel" />
+            </Button>
+          </form>
+        )
+        break
+      case 'editGroup':
+      titlei18nKey = 'Book.editGroupDialog'
+        body = (
+          <form>
+            <Input 
+              value={groupNameValue}
+              placeholder="New title"
+              onChange={this.updateGroupNameValue}
+              autoFocus
+              validation={{minLength: 3}}
+            />
+            <Button 
+              color="green" 
+              clickHandler={this.editGroup}
+              isDisabled={!(groupNameValue.length > 0)}
+            >
+              <Trans i18nKey="Buttons.confirm" />
+            </Button>
+            <Button 
+              color="red"
+              clickHandler={this.closeActionsDialog}
+            >
+              <Trans i18nKey="Buttons.cancel" />
+            </Button>
+          </form>
+        )
+        break
+      case 'removeGroup':
+        titlei18nKey = 'Book.removeGroupDialog'
+        body = (
+          <React.Fragment>
+            <Button 
+              color="green" 
+              clickHandler={this.removeGroup}
+            >
+              <Trans i18nKey="Buttons.delete" />
+            </Button>
+            <Button 
+              color="red"
+              clickHandler={this.closeActionsDialog}
+            >
+              <Trans i18nKey="Buttons.cancel" />
+            </Button>
+          </React.Fragment>
+        )
+        break
+      case 'addModule':
+        titlei18nKey = 'Book.addModuleDialog'
+        body = (
+          <ModulesList onModuleClick={this.handleModuleClick}/>
+        )
+        break
+      case 'removeModule':
+        titlei18nKey = 'Book.removeModuleDialog'
+        body = (
+          <React.Fragment>
+            <Button 
+              color="green" 
+              clickHandler={this.removeModule}
+            >
+              <Trans i18nKey="Buttons.delete" />
+            </Button>
+            <Button 
+              color="red"
+              clickHandler={this.closeActionsDialog}
+            >
+              <Trans i18nKey="Buttons.cancel" />
+            </Button>
+          </React.Fragment>
+        )
+        break
+      case 'assignUser':
+        titlei18nKey = 'Book.removeModuleDialog'
+        body = (
+          <React.Fragment>
+            <UsersList
+              mod={targetModule}
+              onUserClick={this.handleUserClick}
+            />
+          </React.Fragment>
+        )
+        break
+    }
+
+    return (
+      <Dialog
+        size="medium"
+        onClose={() => this.closeActionsDialog()}
+        i18nKey={titlei18nKey}
+      >
+        {body}
+      </Dialog>
+    )
+  }
+
+  private closeActionsDialog = () => {
+    this.setState({ 
+      showDialog: false,
+      dialogAction: undefined,
+      groupNameValue: '',
+      targetGroup: null,
+      targetModule: null,
+      selctedModule: null,
+      userToAssign: null,
+     })
+  }
+
   componentDidMount () {
     this.fetchBook()
   }
   
   public render() {
     const { 
-      isLoading, 
-      book, 
-      showModuleDetails, 
-      showSuperSession, 
-      showAddModule, 
-      showEditGroup, 
-      showAddGroup, 
-      groupNameValue, 
-      showRemoveGroup, 
-      showRemoveModule,
-      showAssignUser,
-      targetModule,
+      isLoading,
+      book,
+      showModuleDetails,
+      showSuperSession,
+      showDialog,
       titleInput,
     } = this.state
 
@@ -652,125 +771,8 @@ class Book extends React.Component<Props> {
           : null
         }
         {
-          showEditGroup ?
-            <Dialog onClose={this.closeEditGroupDialog} i18nKey="Book.editGroupDialog">
-              <form>
-                <Input 
-                  value={groupNameValue}
-                  placeholder="New title"
-                  onChange={this.updateGroupNameValue}
-                  autoFocus
-                  validation={{minLength: 3}}
-                />
-                <Button 
-                  color="green" 
-                  clickHandler={this.editGroup}
-                  isDisabled={!(groupNameValue.length > 0)}
-                >
-                  <Trans i18nKey="Buttons.confirm" />
-                </Button>
-                <Button 
-                  color="red"
-                  clickHandler={this.closeEditGroupDialog}
-                >
-                  <Trans i18nKey="Buttons.cancel" />
-                </Button>
-              </form>
-            </Dialog>
-          : null
-        }
-        {
-          showAddGroup ?
-            <Dialog onClose={this.closeAddGroupDialog} i18nKey="Book.addGroupDialog">
-              <form>
-                <Input 
-                  value={groupNameValue}
-                  placeholder="Title"
-                  onChange={this.updateGroupNameValue}
-                  autoFocus
-                  validation={{minLength: 3}}
-                />
-                <Button 
-                  color="green" 
-                  clickHandler={this.addGroup}
-                  isDisabled={!(groupNameValue.length > 0)}
-                >
-                  <Trans i18nKey="Buttons.confirm" />
-                </Button>
-                <Button 
-                  color="red"
-                  clickHandler={this.closeAddGroupDialog}
-                >
-                  <Trans i18nKey="Buttons.cancel" />
-                </Button>
-              </form>
-            </Dialog>
-          : null
-        }
-        {
-          showRemoveGroup ?
-            <Dialog 
-              onClose={this.closeRemoveGroupDialog} 
-              i18nKey="Book.removeGroupDialog"
-            >
-              <Button 
-                color="green" 
-                clickHandler={this.removeGroup}
-              >
-                <Trans i18nKey="Buttons.delete" />
-              </Button>
-              <Button 
-                color="red"
-                clickHandler={this.closeRemoveGroupDialog}
-              >
-                <Trans i18nKey="Buttons.cancel" />
-              </Button>
-            </Dialog>
-          : null
-        }
-        {
-          showAddModule ?
-            <Dialog 
-              size="medium"
-              onClose={this.closeAddModuleDialog} 
-              i18nKey="Book.addModuleDialog"
-            >
-              <ModulesList onModuleClick={this.handleModuleClick} />
-            </Dialog>
-          : null
-        }
-        {
-          showAssignUser ?
-            <Dialog 
-              size="medium"
-              onClose={this.closeAssignUserDialog} 
-              i18nKey="Book.assignUserDialog"
-            >
-              <UsersList 
-                mod={targetModule} 
-                onUserClick={this.handleUserClick} />
-            </Dialog>
-          : null
-        }
-        {
-          showRemoveModule ?
-            <Dialog 
-              onClose={this.closeRemoveModuleDialog} 
-              i18nKey="Book.removeModuleDialog"
-            >
-              <Button 
-                color="green" 
-                clickHandler={this.removeModule}
-              >
-                <Trans i18nKey="Buttons.delete" />
-              </Button>
-              <Button 
-                color="red"
-                clickHandler={this.closeRemoveModuleDialog}
-              >
-                <Trans i18nKey="Buttons.cancel" />
-              </Button>
-            </Dialog>
+          showDialog ?
+            this.actionsDialog()
           : null
         }
         <Section>
