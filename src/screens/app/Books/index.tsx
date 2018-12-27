@@ -47,11 +47,13 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
 class Books extends React.Component<Props> {
 
   state: {
+    isLoading: boolean,
     titleInput: string,
     showSuperSession: boolean,
     showAddBook: boolean,
     files: File[],
   } = {
+    isLoading: false,
     titleInput: '',
     showSuperSession: false,
     showAddBook: false,
@@ -72,21 +74,53 @@ class Books extends React.Component<Props> {
   }
 
   private addBook = () => {
-    axios.post('books', {title: this.state.titleInput})
-      .then(() => {
-        this.props.fetchBooksMap()
-        this.setState({ titleInput: '' })
-        store.dispatch(addAlert('success', 'Book was added successfully.'))
-      })
-      .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', 'You have to confirm this action.'))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-        }
-      })
-    this.closeAddBookDialog()
+    const { titleInput: title, files } = this.state
+
+    if (files.length) {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+
+      let data = new FormData()
+      data.append('title', title)
+      data.append('file', files[0])
+
+      this.setState({ isLoading: true })
+
+      axios.post('books', data, config)
+        .then(() => {
+          this.props.fetchBooksMap()
+          this.setState({ titleInput: '' })
+          store.dispatch(addAlert('success', 'Book was added successfully.'))
+          this.setState({ isLoading: false })
+        })
+        .catch((e) => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+            store.dispatch(addAlert('info', 'You have to confirm this action.'))
+          } else {
+            store.dispatch(addAlert('error', e.message))
+          }
+          this.setState({ isLoading: false })
+        })
+
+      this.closeAddBookDialog()
+    } else {
+      axios.post('books', {title})
+        .then(() => {
+          this.props.fetchBooksMap()
+          this.setState({ titleInput: '' })
+          store.dispatch(addAlert('success', 'Book was added successfully.'))
+        })
+        .catch((e) => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+            store.dispatch(addAlert('info', 'You have to confirm this action.'))
+          } else {
+            store.dispatch(addAlert('error', e.message))
+          }
+        })
+
+      this.closeAddBookDialog()
+    }
   }
 
   private showAddBookDialog = ()  => {
@@ -119,8 +153,8 @@ class Books extends React.Component<Props> {
   }
 
   public render() {
-    const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showSuperSession, showAddBook } = this.state
+    const { isLoading: isLoadingBookMap, booksMap } = this.props.booksMap
+    const { isLoading, titleInput, showSuperSession, showAddBook } = this.state
 
     return (
       <Section>
@@ -171,7 +205,7 @@ class Books extends React.Component<Props> {
           : null
         }
         {
-          !isLoading ?
+          !isLoadingBookMap && !isLoading ?
             <div className="section__content">
               {
                 booksMap.size > 0 ?
