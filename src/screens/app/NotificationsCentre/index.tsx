@@ -12,6 +12,8 @@ import NotificationComp from 'src/components/Notification'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
+import Conversation from 'src/containers/Conversation'
+
 import { Notification, TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
@@ -138,7 +140,17 @@ class NotificationsCentre extends React.Component<Props> {
                         { details ? this.notificationDetails(details) : null }
                       </div>
                     </React.Fragment>
-                  : null
+                  :
+                    <React.Fragment>
+                      <Header title="Jason Cook">
+                        <span className="date">
+                          { new Date().toISOString().split('T')[0] }
+                        </span>
+                      </Header>
+                      <div className="section__content">
+                        <Conversation/>
+                      </div>
+                    </React.Fragment>
                 }
               </Section>
             </React.Fragment>
