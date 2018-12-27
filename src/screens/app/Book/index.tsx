@@ -12,6 +12,7 @@ import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
+import EditBook from 'src/components/EditBook'
 import Avatar from 'src/components/ui/Avatar'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -67,6 +68,7 @@ class Book extends React.Component<Props> {
     book: types.Book,
     showModuleDetails: types.ModuleShortInfo | undefined,
     showDialog: boolean,
+    showEditBook: boolean,
     dialogAction: DialogActions
     showSuperSession: boolean,
     groupNameValue: string,
@@ -85,6 +87,7 @@ class Book extends React.Component<Props> {
     },
     showModuleDetails: undefined,
     showDialog: false,
+    showEditBook: false,
     dialogAction: undefined,
     showSuperSession: false,
     groupNameValue: '',
@@ -579,32 +582,8 @@ class Book extends React.Component<Props> {
     this.setState({ groupNameValue: val })
   }
 
-  private updateTitleInput = (val: string) => {
-    this.setState({ titleInput: val })
-  }
-
-  private changeBookTitle = () => {
-    const bookId = this.props.match.params.id
-    const titleInput = this.state.titleInput
-
-    if (!titleInput || titleInput === this.state.book.title) return
-
-    axios.put(`books/${bookId}`, {title: titleInput})
-      .then(() => {
-        this.setState({ 
-          book: {...this.state.book, title: titleInput},
-          titleInput: '',
-        })
-        this.props.addAlert('success', `Book title was changed to ${titleInput}.`)
-      })
-      .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', 'You have to confirm this action.')
-        } else {
-          this.props.addAlert('error', e.message)
-        }
-      })
+  private showEditBook = () => {
+    this.setState({ showEditBook: true })
   }
 
   private actionsDialog = () => {
@@ -758,6 +737,7 @@ class Book extends React.Component<Props> {
       showSuperSession,
       showDialog,
       titleInput,
+      showEditBook,
     } = this.state
 
     return (
@@ -775,20 +755,22 @@ class Book extends React.Component<Props> {
             this.actionsDialog()
           : null
         }
+        {
+          showEditBook ?
+            <EditBook
+            book={book}
+            onClose={() => this.setState({ showEditBook: false })}
+            onSuccess={() => {this.fetchBook(), this.setState({ showEditBook: false })}}
+          />
+        : null
+        }
         <Section>
           <Header title={book.title}>
             <AdminUI>
-              <Input
-                value={this.state.titleInput}
-                onChange={this.updateTitleInput}
-                placeholder="Change title"
-                validation={{minLength: 3}}
-              />
-              <Button 
-                isDisabled={!(titleInput.length > 2)}
-                clickHandler={this.changeBookTitle}
+              <Button
+                clickHandler={this.showEditBook}
               >
-                <Icon name="plus"/>
+                <Icon name="pencil"/>
               </Button>
             </AdminUI>
             <div className="book__status">

@@ -25,6 +25,7 @@ export default {
     "Books.title": "Books",
     "Books.noBooksFound": "No books found.",
     "Books.addBookDialog": "Add new book",
+    "Books.editBookDialog": "Edit book",
     "Books.fileUploader": "Drop files here or click to upload (optional).",
     "Book.editGroupDialog": "Change chapter title.",
     "Book.addGroupDialog": "Provide chapter title.",

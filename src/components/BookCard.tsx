@@ -7,6 +7,7 @@ import axios from 'src/config/axios'
 
 import AdminUI from './AdminUI'
 import SuperSession from './SuperSession'
+import EditBook from './EditBook'
 import Dialog from './ui/Dialog'
 import Button from './ui/Button'
 import Icon from './ui/Icon'
@@ -42,11 +43,13 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
 class BookCard extends React.Component<Props> {
 
   state: {
-    showSuperSession: boolean,
-    showConfirmationDialog: boolean,
+    showSuperSession: boolean
+    showConfirmationDialog: boolean
+    showEditBook: boolean
   } = {
     showSuperSession: false,
     showConfirmationDialog: false,
+    showEditBook: false,
   }
 
   private removeBook = () => {
@@ -69,6 +72,10 @@ class BookCard extends React.Component<Props> {
       })
   }
 
+  private showEditBook = () => {
+    this.setState({ showEditBook: true })
+  }
+
   private superSessionSuccess = () => {
     this.removeBookPermamently()
     this.setState({ showSuperSession: false })
@@ -79,7 +86,7 @@ class BookCard extends React.Component<Props> {
   }
 
   public render() {
-    const { showSuperSession, showConfirmationDialog } = this.state
+    const { showSuperSession, showConfirmationDialog, showEditBook } = this.state
     const { book } = this.props
 
     return (
@@ -96,8 +103,11 @@ class BookCard extends React.Component<Props> {
           <h2 className="card__title">{book.title}</h2>
         </Link>
         <AdminUI>
+          <Button clickHandler={this.showEditBook}>
+            <Icon name="pencil"/>
+          </Button>
           <Button clickHandler={this.removeBook} color="red">
-            <Icon name="minus" />
+            <Icon name="minus"/>
           </Button>
         </AdminUI>
         {
@@ -119,6 +129,15 @@ class BookCard extends React.Component<Props> {
                 <Trans i18nKey="Buttons.cancel" />
               </Button>
             </Dialog>
+          : null
+        }
+        {
+          showEditBook ?
+            <EditBook
+              book={book}
+              onClose={() => this.setState({ showEditBook: false })}
+              onSuccess={() => {this.props.fetchBooksMap(), this.setState({ showEditBook: false })}}
+            />
           : null
         }
       </div>

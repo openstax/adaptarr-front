@@ -25,6 +25,7 @@ export default {
     "Books.title": "Książki",
     "Books.noBooksFound": "Nie znaleziono żadnych książek.",
     "Books.addBookDialog": "Dodaj nową książkę.",
+    "Books.editBookDialog": "Edytuj książkę.",
     "Books.fileUploader": "Upuść pliki lub kliknij, aby dodać (opcjonalnie).",
     "Book.editGroupDialog": "Zmień nazwę rozdziału.",
     "Book.addGroupDialog": "Podaj nazwę rozdziału.",
