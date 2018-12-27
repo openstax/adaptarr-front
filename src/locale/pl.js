@@ -33,6 +33,8 @@ export default {
     "Book.assignUserDialog": "Wybierz użytkownika z listy, aby go przypisać.",
     "Book.removeGroupDialog": "Usunąć tę grupę wraz ze wszystkimi modułami?",
     "Book.removeModuleDialog": "Jesteś pewien, że chcesz usunąć ten moduł?",
+    "Book.draggingLocked": "Przenoszenie modułów jest zablokowane.",
+    "Book.draggingUnlocked": "Teraz możesz przenosić moduły.",
     "Buttons.addNew": "Dodaj nowy",
     "Buttons.delete": "Usuń",
     "Buttons.cancel": "Anuluj",

@@ -2,7 +2,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile',
+  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile' | 'lock' | 'unlock',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -67,6 +67,14 @@ const icon = ({ size, name }: Props) => {
       case 'profile':
         return (
           <svg aria-hidden="true" data-prefix="fas" data-icon="user-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path fill="currentColor" d="M248 8C111 8 0 119 0 256s111 248 248 248 248-111 248-248S385 8 248 8zm0 96c48.6 0 88 39.4 88 88s-39.4 88-88 88-88-39.4-88-88 39.4-88 88-88zm0 344c-58.7 0-111.3-26.6-146.5-68.2 18.8-35.4 55.6-59.8 98.5-59.8 2.4 0 4.8.4 7.1 1.1 13 4.2 26.6 6.9 40.9 6.9 14.3 0 28-2.7 40.9-6.9 2.3-.7 4.7-1.1 7.1-1.1 42.9 0 79.7 24.4 98.5 59.8C359.3 421.4 306.7 448 248 448z"></path></svg>
+        )
+      case 'lock':
+        return (
+          <svg aria-hidden="true" data-prefix="fas" data-icon="lock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z"></path></svg>
+        )
+      case 'unlock':
+        return (
+          <svg aria-hidden="true" data-prefix="fas" data-icon="unlock" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9 40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0 139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48z"></path></svg>
         )
       default:
         return (

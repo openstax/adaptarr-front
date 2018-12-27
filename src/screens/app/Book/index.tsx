@@ -69,6 +69,7 @@ class Book extends React.Component<Props> {
     showModuleDetails: types.ModuleShortInfo | undefined,
     showDialog: boolean,
     showEditBook: boolean,
+    disableDragging: boolean,
     dialogAction: DialogActions
     showSuperSession: boolean,
     groupNameValue: string,
@@ -77,7 +78,6 @@ class Book extends React.Component<Props> {
     userToAssign: types.User | null,
     assignAction: 'assign' | 'remove',
     targetModule: types.BookPart | null,
-    titleInput: string,
   } = {
     isLoading: true,
     book: {
@@ -88,6 +88,7 @@ class Book extends React.Component<Props> {
     showModuleDetails: undefined,
     showDialog: false,
     showEditBook: false,
+    disableDragging: true,
     dialogAction: undefined,
     showSuperSession: false,
     groupNameValue: '',
@@ -96,7 +97,6 @@ class Book extends React.Component<Props> {
     userToAssign: null,
     assignAction: 'assign',
     targetModule: null,
-    titleInput: '',
   }
 
   private showModuleDetails = (item: types.BookPart) => {
@@ -736,7 +736,7 @@ class Book extends React.Component<Props> {
       showModuleDetails,
       showSuperSession,
       showDialog,
-      titleInput,
+      disableDragging,
       showEditBook,
     } = this.state
 
@@ -772,6 +772,28 @@ class Book extends React.Component<Props> {
               >
                 <Icon name="pencil"/>
               </Button>
+              <div className="lock-swiping">
+                {
+                  disableDragging ?
+                    <React.Fragment>
+                      <Trans i18nKey="Book.draggingLocked"/>
+                      <Button
+                        clickHandler={() => this.setState({ disableDragging: !disableDragging })}
+                      >
+                        <Icon name="lock"/>
+                      </Button>
+                    </React.Fragment>
+                  : 
+                    <React.Fragment>
+                      <Trans i18nKey="Book.draggingUnlocked"/>
+                      <Button
+                        clickHandler={() => this.setState({ disableDragging: !disableDragging })}
+                      >
+                        <Icon name="unlock"/>
+                      </Button>
+                    </React.Fragment>
+                }
+              </div>
             </AdminUI>
             <div className="book__status">
               <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
@@ -780,7 +802,7 @@ class Book extends React.Component<Props> {
           {
           !isLoading ?
             <Nestable
-              isDisabled={false}
+              isDisabled={disableDragging}
               items={book.parts}
               className="book-collection"
               childrenProp="parts"
@@ -788,6 +810,7 @@ class Book extends React.Component<Props> {
               renderCollapseIcon={this.renderCollapseIcon}
               onMove={this.handleOnMove}
               onChange={this.handlePositionChange}
+              collapsed
             />
             : <Spinner />
           }

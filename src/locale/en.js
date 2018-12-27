@@ -33,6 +33,8 @@ export default {
     "Book.assignUserDialog": "Select user from a list to assign him.",
     "Book.removeGroupDialog": "Remove this group with all containings?",
     "Book.removeModuleDialog": "Are you sure?",
+    "Book.draggingLocked": "Moving modules is locked.",
+    "Book.draggingUnlocked": "Now you can move modules.",
     "Buttons.addNew": "Add new",
     "Buttons.delete": "Delete",
     "Buttons.cancel": "Cancel",

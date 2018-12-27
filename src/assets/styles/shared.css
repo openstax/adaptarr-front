@@ -274,6 +274,10 @@ button[disabled] {
   margin-right: 5px;
 }
 
+.header .lock-swiping .button {
+  margin-left: 10px;
+}
+
 .adminui {
   display: flex;
   align-items: center;
@@ -565,6 +569,10 @@ main {
   padding: 20px;
 }
 
+.card .adminui .button {
+  margin-left: 10px;
+}
+
 [draggable="true"] {
   cursor: grab;
 }
@@ -640,6 +648,10 @@ main {
   outline: none;
 }
 
+.nestable-has-children .nestable-item-name:hover .bookpart__info {
+  background-color: var(--light-bg);
+}
+
 .nestable-children-collapsed {
   background-color: #fff;
 }
@@ -681,19 +693,28 @@ main {
   font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .bookpart__info {
+  position: absolute;
+  right: 0;
   display: flex;
   align-items: center;
+  background-color: #fff;
 }
 
 .bookpart__info .avatar {
   margin-right: 10px;
 }
 
-.bookpart__info .bookpart__icon {
-  margin-left: 20px;
+.bookpart__icon {
+  cursor: pointer;
+}
+
+.bookpart__icon .icon {
+  padding: 20px;
 }
 
 .bookpart__info .stacked {
