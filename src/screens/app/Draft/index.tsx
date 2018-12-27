@@ -3,8 +3,8 @@ import { History } from 'history'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
-import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+
+import updateImgSrcs from 'src/helpers/updateImgSrcs'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -12,6 +12,8 @@ import Spinner from 'src/components/Spinner'
 import UserUI from 'src/components/UserUI'
 import Button from 'src/components/ui/Button'
 
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 import { ModuleShortInfo } from 'src/store/types'
 
 type Props = {
@@ -112,10 +114,10 @@ class Module extends React.Component<Props> {
             :
               <React.Fragment>
                 {
-                  index ?
+                  index && mod ?
                     <div 
-                      className="draftEditor"
-                      dangerouslySetInnerHTML={{__html: index}}
+                      className="draftEditor cnxml"
+                      dangerouslySetInnerHTML={{__html: updateImgSrcs(index, mod.id)}}
                     >
                     </div>
                   : error

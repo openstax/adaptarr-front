@@ -248,7 +248,6 @@ button[disabled] {
 
 .header__title {
   font-size: 1.5rem;
-  text-transform: uppercase;
   margin-right: 20px;
 }
 
@@ -1131,47 +1130,51 @@ textarea {
   line-height: 1.4;
 }
 
-.modulePreview title {
+.cnxml title {
   display: block;
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.8;
 }
 
-.modulePreview para {
+.cnxml metadata {
+  display: none;
+}
+
+.cnxml para {
   margin: 5px 0;
   display: block;
 }
 
-.modulePreview emphasis {
+.cnxml emphasis {
   font-weight: 700;
 }
 
-.modulePreview emphasis[effect="italics"] {
+.cnxml emphasis[effect="italics"] {
   font-style: italic;
 }
 
-.modulePreview footnote {
+.cnxml footnote {
   display: block;
 }
 
-.modulePreview footnote::before {
+.cnxml footnote::before {
   counter-increment: footnote;
   content: counter(footnote) ". ";
 }
 
-.modulePreview note, .modulePreview example {
+.cnxml note, .cnxml example {
   background-color: var(--light-bg);
   display: block;
   padding: 10px;
   margin-bottom: 10px;
 }
 
-.modulePreview section {
+.cnxml section {
   margin: 10px 0;
 }
 
-.modulePreview exercise {
+.cnxml exercise {
   display: block;
   border-inline-start: 4px solid var(--dark-bg);
   margin-inline-start: 10px;
@@ -1179,31 +1182,31 @@ textarea {
   padding-inline-start: 8px;
 }
 
-.modulePreview exercise::before {
+.cnxml exercise::before {
   display: block;
   color: var(--dark-bg);
 }
 
-.modulePreview exercise * > :first-child {
+.cnxml exercise * > :first-child {
   margin-top: 0;
 }
 
-.modulePreview problem, solution, commentary {
+.cnxml problem, solution, commentary {
   display: block;
   margin: 5px 0;
 }
 
-.modulePreview exercise problem::before {
+.cnxml exercise problem::before {
   content: 'Problem ' counter(exercise) ':';
   font-weight: 700;
 }
 
-.modulePreview exercise solution::before {
+.cnxml exercise solution::before {
   content: 'Solution ' counter(exercise_solution) ':';
   font-weight: 700;
 }
 
-.modulePreview exercise commentary::before {
+.cnxml exercise commentary::before {
   content: 'Commentary: ';
   font-weight: 700;
 }

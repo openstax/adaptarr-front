@@ -3,6 +3,8 @@ import { connect } from 'react-redux'
 
 import axios from 'src/config/axios'
 
+import updateImgSrcs from 'src/helpers/updateImgSrcs'
+
 import { RequestInfoKind } from 'src/store/types'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -58,10 +60,11 @@ class ModulePreview extends React.Component<Props> {
 
   public render() {
     const { index } = this.state
+
     return (
       <div 
-        className="modulePreview" 
-        dangerouslySetInnerHTML={{__html: index}}
+        className="modulePreview cnxml" 
+        dangerouslySetInnerHTML={{__html: updateImgSrcs(index, this.props.moduleId)}}
       >
       </div>
     )
