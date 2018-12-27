@@ -23,7 +23,7 @@ class UserUI extends React.Component<Props> {
     const userId = this.props.userId
     const user = this.props.user.user
 
-    if (userId && user.id !== userId) return null
+    if (userId || user.id !== userId) return null
 
     return (
       <div className="userui">
