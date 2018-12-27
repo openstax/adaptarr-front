@@ -90,20 +90,45 @@ class ModuleList extends React.Component<Props> {
   }
 
   private addNewModule = () => {
-    axios.post('modules', {title: this.state.moduleTitleValue})
-      .then(res => {
-        this.props.onModuleClick(res.data)
-        this.props.addModuleToMap(res.data)
-        this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
-      })
-      .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', 'You have to confirm this action.')
-        } else {
-          this.props.addAlert('error', e.message)
-        }
-      })
+    const { moduleTitleValue: title, files } = this.state
+
+    if (files.length) {
+      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
+
+      let data = new FormData()
+      data.append('title', title)
+      data.append('file', files[0])
+
+      axios.post('modules', data, config)
+        .then(res => {
+          this.props.onModuleClick(res.data)
+          this.props.addModuleToMap(res.data)
+          this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
+        })
+        .catch(e => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+            this.props.addAlert('info', 'You have to confirm this action.')
+          } else {
+            this.props.addAlert('error', e.message)
+          }
+        })
+    } else {
+      axios.post('modules', {title})
+        .then(res => {
+          this.props.onModuleClick(res.data)
+          this.props.addModuleToMap(res.data)
+          this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
+        })
+        .catch(e => {
+          if (e.request.status === 403) {
+            this.setState({ showSuperSession: true })
+            this.props.addAlert('info', 'You have to confirm this action.')
+          } else {
+            this.props.addAlert('error', e.message)
+          }
+        })
+    }
   }
 
   private onFilesChange = (files: File[]) => {
