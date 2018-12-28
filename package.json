@@ -40,6 +40,7 @@
     "react-dom": "^16.6.3",
     "react-files": "^2.4.8",
     "react-i18next": "^8.3.8",
+    "react-input-trigger": "^1.1.2",
     "react-nestable": "https://github.com/PiotrKozlowski/react-nestable.git",
     "react-redux": "^5.1.1",
     "react-router-dom": "^4.3.1",

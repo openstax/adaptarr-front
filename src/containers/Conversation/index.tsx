@@ -1,6 +1,7 @@
 import * as React from 'react'
 
 import Avatar from 'src/components/ui/Avatar'
+import MessageInput from 'src/components/MessageInput';
 
 type Props = {
 
@@ -89,7 +90,7 @@ class Conversation extends React.Component<Props> {
           </div>
         </div>
         <div className="conv__input">
-          message input
+          <MessageInput/>
         </div>
       </div>
     )

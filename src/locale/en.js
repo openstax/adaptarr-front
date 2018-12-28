@@ -41,6 +41,7 @@ export default {
     "Buttons.confirm": "Confirm",
     "Buttons.save": "Save",
     "Buttons.edit": "Edit",
+    "Buttons.send": "Send",
     "Buttons.viewBook": "View book",
     "Buttons.viewDraft": "View draft",
     "Buttons.newDraft": "New draft",
