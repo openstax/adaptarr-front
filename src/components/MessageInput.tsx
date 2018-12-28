@@ -23,6 +23,17 @@ type Props = {
   addMessage: (convId: string, msg: Message) => void
 }
 
+type LocalState = {
+  users: User[]
+  filteredUsers: User[]
+  selectedUser: User | undefined
+  showUsersList: boolean
+  usernameText: string
+  currSelection: number
+  startPosition: number
+  textareaValue: string
+}
+
 const mapStateToProps = ({ user, team }: State) => {
   return {
     user,
@@ -38,15 +49,10 @@ const mapDispatchToProps = (dispatch: any) => {
 
 class MessageInput extends React.Component<Props> {
   
-  state: {
-    users: User[]
-    showUsersList: boolean
-    usernameText: string
-    currSelection: number
-    startPosition: number
-    textareaValue: string
-  } = {
+  state: LocalState = {
     users: [],
+    filteredUsers: [],
+    selectedUser: undefined,
     showUsersList: false,
     usernameText: '',
     currSelection: 0,
@@ -60,6 +66,8 @@ class MessageInput extends React.Component<Props> {
         showUsersList: true,
         startPosition: metaInfo.cursor.selectionStart,
         usernameText: '',
+        selectedUser: this.state.users[0],
+        filteredUsers: [...this.state.users],
       })
     }
   }
@@ -74,25 +82,24 @@ class MessageInput extends React.Component<Props> {
   private resetValues = () => {
     this.setState({
       usernameText: '',
-      currSelection: 0,
+      selectedUser: undefined,
       startPosition: 0,
     })
   }
 
-  private selectUserToMention = (index?: number) => {
-    const { currSelection, users, startPosition, textareaValue, usernameText } = this.state
+  private selectUserToMention = (user?: User) => {
+    const { selectedUser, startPosition, textareaValue, usernameText } = this.state
 
-    const user = users[index ? index : currSelection]
-    const username = user.name ? user.name : undefined
+    const usr = user ? user : (selectedUser ? selectedUser : undefined)
 
-    if (!username) {
+    if (!usr) {
       store.dispatch(addAlert('error', `Something went wrong while selecting user.`))
       return
     }
     
     const newText =
       textareaValue.slice(0, startPosition) +
-      username +
+      usr.name +
       textareaValue.slice(startPosition + usernameText.length, textareaValue.length)      
 
     this.hideUsersList()
@@ -102,27 +109,47 @@ class MessageInput extends React.Component<Props> {
   }
 
   private handleInput = (metaInfo: MetaInfo) => {
-    const t = metaInfo.text ? metaInfo.text.split(' ')[0] : metaInfo.text
-    this.setState({ usernameText: t })
+    const t = metaInfo.text ? metaInfo.text.split(' ')[0] : ''
+    const selectedUser = this.state.selectedUser
+    let filteredUsers = this.state.users
+    
+    // selUsr is always first user so before filtering results he is always inside
+    let isSelUsrInFiltRes = true
+    if (t.length) {
+      isSelUsrInFiltRes = false
+      const reg = new RegExp(`^${t}`, "i")
+      filteredUsers = filteredUsers.filter(user => {
+        if (reg.test(user.name)) {
+          if (selectedUser && selectedUser.id === user.id) {
+            isSelUsrInFiltRes = true
+          }
+          return user
+        }
+        return null
+      })
+    }
+
+    let newState: {
+      usernameText: string
+      filteredUsers: User[]
+      selectedUser?: User
+    } = {
+      usernameText: t ? t : '',
+      filteredUsers,
+    }
+
+    console.log('isSelUsrInFiltRes:', isSelUsrInFiltRes, 'selectedUser:', selectedUser)
+
+    if (!isSelUsrInFiltRes) {
+      newState.selectedUser = filteredUsers[0]
+    }
+
+    this.setState({ ...newState })
   }
 
   private handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { which } = e;
-    const { showUsersList, currSelection, users } = this.state
-    
-    if (which === 40 ) { // down arrow
-      e.preventDefault()
-      
-      this.setState({
-        currSelection: (currSelection + 1) % users.length,
-      })
-    } else if (which === 38 && currSelection > 0) { // up arrow
-      e.preventDefault()
-      
-      this.setState({
-        currSelection: currSelection - 1,
-      })
-    }
+    let { showUsersList, selectedUser, filteredUsers } = this.state
 
     if (which === 13 && !e.shiftKey) { // enter
       e.preventDefault()
@@ -133,6 +160,34 @@ class MessageInput extends React.Component<Props> {
       }
 
       this.selectUserToMention()
+    }
+
+    if (!selectedUser || filteredUsers.length <= 1) return
+
+    let idxOfSelUsr = 0
+    filteredUsers.some((usr, i) => {
+      if (usr.id === (selectedUser as User).id) {
+        idxOfSelUsr = i
+        return true
+      }
+      return false
+    })
+
+    if (which === 40) { // down arrow
+      e.preventDefault()
+
+      const newSelUser = filteredUsers[idxOfSelUsr + 1]
+      if (newSelUser) {
+        this.setState({ selectedUser: newSelUser })
+      }
+
+    } else if (which === 38) { // up arrow
+      e.preventDefault()
+
+      const newSelUser = filteredUsers[idxOfSelUsr - 1]
+      if (newSelUser) {
+        this.setState({ selectedUser: newSelUser })
+      }
     }
   }
 
@@ -148,27 +203,18 @@ class MessageInput extends React.Component<Props> {
   private endHandler = () => {}
 
   private listOfUsers = () => {
-    let { users, usernameText, currSelection } = this.state
+    let { filteredUsers, selectedUser } = this.state
 
-    const reg = new RegExp(`^${usernameText}`, "i")
-
-    users = users.filter(user => {
-      if (reg.test(user.name)) {
-        return user
-      }
-      return null
-    })
-
-    if (users.length) {
+    if (filteredUsers.length) {
       return (
         <ul className="usersList">
           {
-            users.map((user, i) => {
+            filteredUsers.map(user => {
               return (
                 <li
                   key={user.id}
-                  className={`usersList__item ${i === currSelection ? 'selected' : null}`}
-                  onClick={() => this.selectUserToMention(i)}
+                  className={`usersList__item ${selectedUser && user.id === selectedUser.id ? 'selected' : null}`}
+                  onClick={() => this.selectUserToMention(user)}
                 >
                   <UserInfo user={user}/>
                 </li>
@@ -184,9 +230,18 @@ class MessageInput extends React.Component<Props> {
 
   private sendMessage = () => {
     if (this.state.textareaValue.length === 0) return
+    let text = this.state.textareaValue
+
+    this.props.team.teamMap.forEach(usr => {
+      const reg = new RegExp('^@'+usr.name, 'g')
+      if (reg.test(text)) {
+        text = text.replace(reg, `[MENTION ${usr.name} ${usr.id}]`)
+      }
+    })
+
     const msg = {
       user: this.props.user.user,
-      message: this.state.textareaValue,
+      message: text,
       timestamp: new Date().toISOString()
     }
     this.props.addMessage(this.props.convId, msg)
@@ -199,7 +254,7 @@ class MessageInput extends React.Component<Props> {
       this.props.team.teamMap.forEach(user => {
         users.push(user)
       })
-      this.setState({ users })
+      this.setState({ users, filteredUsers: [...users] })
     }
   }
 
@@ -208,7 +263,7 @@ class MessageInput extends React.Component<Props> {
     this.props.team.teamMap.forEach(user => {
       users.push(user)
     })
-    this.setState({ users })
+    this.setState({ users, filteredUsers: [...users] })
   }
 
   public render() {

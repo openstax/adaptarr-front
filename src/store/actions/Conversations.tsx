@@ -49,7 +49,7 @@ export const fetchConversation = (id: string): FetchConversation => {
             id: 2,
             name: 'Test',
           },
-          message: 'Error corrupti @adaptarr dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
+          message: 'Error corrupti [MENTION adaptarr 1] dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
         },
         {
@@ -73,7 +73,7 @@ export const fetchConversation = (id: string): FetchConversation => {
             id: 1,
             name: 'adaptarr',
           },
-          message: 'Error corrupti @Test dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
+          message: 'Error corrupti [MENTION Test 2] dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
         },
         {
@@ -81,7 +81,7 @@ export const fetchConversation = (id: string): FetchConversation => {
             id: 2,
             name: 'Test',
           },
-          message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error corrupti dolor ea nam perspiciatis @Testveniam animi non nobis@adaptarrculpa, dignissimos, veritatis facilis fugiat nemo asperiores odit voluptatibus ratione neque minima.',
+          message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error corrupti dolor ea nam perspiciatis [MENTION Test 2]veniam animi non nobis[MENTION adaptarr 1]culpa, dignissimos, veritatis facilis fugiat nemo asperiores odit voluptatibus ratione neque minima.',
           timestamp: new Date().toISOString(),
         },
       ]

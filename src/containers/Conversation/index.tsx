@@ -70,11 +70,18 @@ class Conversation extends React.Component<Props> {
 
   private parseMessageText = (msg: string): string => {
     msg = msg.replace(/<(?:[^.]|\s)*?>/g, "")
-    this.props.team.teamMap.forEach(usr => {
-      const reg = new RegExp("@"+usr.name, "g")
-      msg = msg.replace(reg, `<a class="mention" href="/users/${usr.id}" target="_blank">@${usr.name}</a>`)
+    let sp = msg.split(/(\[MENTION(?:[^.]|\s)*?])/).map(el => {
+      if (/(\[MENTION(?:[^.]|\s)*?])/.test(el)) {
+        const [type, username, id] = el.replace(/\[|\]/g, '').split(' ')
+        const checkUsr = this.props.team.teamMap.get(Number(id))
+        if (checkUsr && checkUsr.name === username) {
+          return `<a class="mention" href="/users/${id}" target="_blank">@${username}</a>`
+        }
+        return '[Unknow mention]'
+      }
+      return el
     })
-    return msg
+    return sp.join('')
   }
 
   private scrollMessages = () => {
