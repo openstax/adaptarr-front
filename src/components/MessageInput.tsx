@@ -8,18 +8,31 @@ import Button from 'src/components/ui/Button'
 
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { TeamMap, User } from 'src/store/types'
+import { TeamMap, User, Message } from 'src/store/types'
 import { addAlert } from 'src/store/actions/Alerts'
+import { addMessage } from 'src/store/actions/Conversations'
 
 type Props = {
+  convId: string
+  user: {
+    user: User
+  }
   team: {
     teamMap: TeamMap
   }
+  addMessage: (convId: string, msg: Message) => void
 }
 
-const mapStateToProps = ({ team }: State) => {
+const mapStateToProps = ({ user, team }: State) => {
   return {
+    user,
     team
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    addMessage: (id: string, msg: Message) => dispatch(addMessage(id, msg))
   }
 }
 
@@ -170,7 +183,12 @@ class MessageInput extends React.Component<Props> {
 
   private sendMessage = () => {
     if (this.state.textareaValue.length === 0) return
-    console.log('sendMessage:', this.state.textareaValue)
+    const msg = {
+      user: this.props.user.user,
+      message: this.state.textareaValue,
+      timestamp: new Date().toISOString()
+    }
+    this.props.addMessage(this.props.convId, msg)
     this.setState({ textareaValue: '' })
   }
 
@@ -230,4 +248,4 @@ class MessageInput extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(MessageInput)
+export default connect(mapStateToProps, mapDispatchToProps)(MessageInput)

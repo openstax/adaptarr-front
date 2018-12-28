@@ -1,100 +1,113 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
+
+import dateDiff from 'src/helpers/dateDiff'
 
 import Avatar from 'src/components/ui/Avatar'
-import MessageInput from 'src/components/MessageInput';
+import MessageInput from 'src/components/MessageInput'
+
+import * as types from 'src/store/types'
+import { fetchConversation } from 'src/store/actions/Conversations'
+import { State } from 'src/store/reducers'
 
 type Props = {
+  id: string
+  user: {
+    user: types.User
+  }
+  conversation: types.Conversation
+  fetchConversation: (id: string) => void
+}
 
+const mapStateToProps = ({ user, conversation }: State) => {
+  return {
+    user,
+    conversation,
+  }
+}
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchConversation: (id: string) => dispatch(fetchConversation(id))
+  }
 }
 
 class Conversation extends React.Component<Props> {
 
-  state: {
+  private listOfMessages = (messages: types.Message[]) => {
+    const me = this.props.user.user
 
-  } = {
-
-  }
-
-  public render() {
-    return (
-      <div className="conv">
-        <div className="conv__messages">
-          <div className="conv__message conv__message--me">
-            <div className="conv__content">
-              <div className="conv__date">
-                16:01
-              </div>
-              <div className="conv__text">
-                Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.
-              </div>
+    return messages.map((msg, i) => {
+      return (
+        <div
+          key={msg.timestamp + i}
+          className={`conv__message conv__message--${msg.user.id === me.id ? 'me' : 'other'}`}
+        >
+          <div className="conv__content">
+            {
+              msg.user.id !== me.id ?
+                <div className="conv__avatar">
+                  <Avatar size="small" user={msg.user}/>
+                </div>
+              : null
+            }
+            <div className="conv__text">
+              {msg.message}
             </div>
-          </div>
-          <div className="conv__message conv__message--other">
-            <div className="conv__content">
-              <div className="conv__avatar">
-                <Avatar size="small" user={undefined}/>
-              </div>
-              <div className="conv__text">
-                Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.
-              </div>
-              <div className="conv__date">
-                16:09
-              </div>
-            </div>
-          </div> 
-          <div className="conv__message conv__message--me">
-            <div className="conv__content">
-              <div className="conv__date">
-                16:10
-              </div>
-              <div className="conv__text">
-                Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.
-              </div>
-            </div>
-          </div>
-          <div className="conv__message conv__message--other">
-            <div className="conv__content">
-              <div className="conv__avatar">
-                <Avatar size="small" user={undefined}/>
-              </div>
-              <div className="conv__text">
-                Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.
-              </div>
-              <div className="conv__date">
-                16:13
-              </div>
-            </div>
-          </div>
-          <div className="conv__message conv__message--other">
-            <div className="conv__content">
-              <div className="conv__avatar">
-                <Avatar size="small" user={undefined}/>
-              </div>
-              <div className="conv__text">
-                Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.
-              </div>
-              <div className="conv__date">
-                16:14
-              </div>
-            </div>
-          </div>
-          <div className="conv__message conv__message--me">
-            <div className="conv__content">
-              <div className="conv__date">
-                17:32
-              </div>
-              <div className="conv__text">
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis fugiat nemo asperiores odit voluptatibus ratione neque minima.
-              </div>
+            <div className="conv__date">
+              {dateDiff(msg.timestamp)}
             </div>
           </div>
         </div>
+      )
+    })
+  }
+
+  private scrollMessages = () => {
+    const msgs = this.msgsRef.current
+    if (msgs) {
+      msgs.scrollBy(0, msgs.scrollHeight - msgs.offsetHeight)
+    }
+  }
+
+  componentDidUpdate = (prevProps: Props) => {
+    if (this.props.id && prevProps.id !== this.props.id) {
+      this.props.fetchConversation(this.props.id)
+    }
+    if (prevProps.conversation !== this.props.conversation) {
+      this.scrollMessages()
+    }
+  }
+
+  componentDidMount = () => {
+    if (this.props.id) {
+      this.props.fetchConversation(this.props.id)
+    }
+  }
+
+  msgsRef: React.RefObject<HTMLDivElement> = React.createRef()
+
+  public render() {
+    const { messages } = this.props.conversation
+
+    return (
+      <div className="conv">
+        <div
+          ref={this.msgsRef}
+          className="conv__messages"
+        >
+          {
+            messages.length ?
+              this.listOfMessages(messages)
+            : null
+          }
+        </div>
         <div className="conv__input">
-          <MessageInput/>
+          <MessageInput convId={this.props.id}/>
         </div>
       </div>
     )
   }
 }
 
-export default Conversation
+export default connect(mapStateToProps, mapDispatchToProps)(Conversation)

@@ -142,13 +142,16 @@ class NotificationsCentre extends React.Component<Props> {
                     </React.Fragment>
                   :
                     <React.Fragment>
-                      <Header title="Jason Cook">
+                      <Header
+                        fixed
+                        title="Jason Cook"
+                      >
                         <span className="date">
                           { new Date().toISOString().split('T')[0] }
                         </span>
                       </Header>
                       <div className="section__content">
-                        <Conversation/>
+                        <Conversation id="1"/>
                       </div>
                     </React.Fragment>
                 }

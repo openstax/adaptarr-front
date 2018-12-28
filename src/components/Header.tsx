@@ -5,11 +5,12 @@ type Props = {
   i18nKey?: string
   title?: string
   children?: any
+  fixed?: boolean
 }
 
 const header = (props: Props) => {
   return (
-    <div className="header">
+    <div className={`header ${props.fixed ? 'fixed' : ''}`}>
       <h2 className="header__title">
         {
           props.i18nKey ?

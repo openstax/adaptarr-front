@@ -66,3 +66,12 @@ export type Alert = {
   kind: AlertKind
   data: RequestInfo | Notification
 }
+
+
+
+export type ConversationInfo = { title: string, timestamp: string, }
+export type Message = { user: User, message: string, timestamp: string, }
+export type Conversation = {
+  info: ConversationInfo
+  messages: Message[]
+}
