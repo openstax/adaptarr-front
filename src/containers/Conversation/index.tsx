@@ -15,13 +15,17 @@ type Props = {
   user: {
     user: types.User
   }
+  team: {
+    teamMap: types.TeamMap
+  }
   conversation: types.Conversation
   fetchConversation: (id: string) => void
 }
 
-const mapStateToProps = ({ user, conversation }: State) => {
+const mapStateToProps = ({ user, team, conversation }: State) => {
   return {
     user,
+    team,
     conversation,
   }
 }
@@ -51,9 +55,10 @@ class Conversation extends React.Component<Props> {
                 </div>
               : null
             }
-            <div className="conv__text">
-              {msg.message}
-            </div>
+            <div
+              className="conv__text"
+              dangerouslySetInnerHTML={{__html: this.parseMessageText(msg.message)}}
+            ></div>
             <div className="conv__date">
               {dateDiff(msg.timestamp)}
             </div>
@@ -61,6 +66,14 @@ class Conversation extends React.Component<Props> {
         </div>
       )
     })
+  }
+
+  private parseMessageText = (msg: string): string => {
+    this.props.team.teamMap.forEach(usr => {
+      const reg = new RegExp("@"+usr.name, "g")
+      msg = msg.replace(reg, `<a class="mention" href="/users/${usr.id}" target="_blank">@${usr.name}</a>`)
+    })
+    return msg
   }
 
   private scrollMessages = () => {

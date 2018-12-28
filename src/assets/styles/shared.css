@@ -1315,6 +1315,12 @@ textarea {
   margin: 20px 0;
 }
 
+.conv__message .mention {
+  font-weight: 700;
+  color: inherit;
+  outline: none;
+}
+
 .conv__message--me {
   justify-content: flex-end;
 }
