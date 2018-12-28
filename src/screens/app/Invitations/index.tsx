@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
-import validateEmail from 'src/helpers/validateEmail'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -25,14 +24,14 @@ class Invitations extends React.Component {
   }
 
   private sendInvitation = () => {
-    const { emailValue, isEmailVaild } = this.state
+    const { emailValue: email, isEmailVaild } = this.state
 
     if (!isEmailVaild) return
 
-    axios.post('users/invite', {emailValue})
+    axios.post('users/invite', {email})
       .then(() => {
         this.setState({ emailValue: '' })
-        store.dispatch(addAlert('success', `Invitation sent to ${emailValue}`))
+        store.dispatch(addAlert('success', `Invitation sent to ${email}`))
       })
       .catch((e) => {
         if (e.request.status === 403) {
