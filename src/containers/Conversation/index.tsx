@@ -69,6 +69,7 @@ class Conversation extends React.Component<Props> {
   }
 
   private parseMessageText = (msg: string): string => {
+    msg = msg.replace(/<(?:[^.]|\s)*?>/g, "")
     this.props.team.teamMap.forEach(usr => {
       const reg = new RegExp("@"+usr.name, "g")
       msg = msg.replace(reg, `<a class="mention" href="/users/${usr.id}" target="_blank">@${usr.name}</a>`)
