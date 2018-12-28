@@ -26,7 +26,7 @@ type Props = {
 const mapStateToProps = ({ user, team }: State) => {
   return {
     user,
-    team
+    team,
   }
 }
 
@@ -80,7 +80,7 @@ class MessageInput extends React.Component<Props> {
   }
 
   private selectUserToMention = (index?: number) => {
-    const { currSelection, users, startPosition, textareaValue } = this.state
+    const { currSelection, users, startPosition, textareaValue, usernameText } = this.state
 
     const user = users[index ? index : currSelection]
     const username = user.name ? user.name : undefined
@@ -90,10 +90,10 @@ class MessageInput extends React.Component<Props> {
       return
     }
     
-    const newText = 
+    const newText =
       textareaValue.slice(0, startPosition) +
       username +
-      textareaValue.slice(startPosition + username.length, textareaValue.length)      
+      textareaValue.slice(startPosition + usernameText.length, textareaValue.length)      
 
     this.hideUsersList()
     this.setState({ textareaValue: newText })
@@ -102,7 +102,8 @@ class MessageInput extends React.Component<Props> {
   }
 
   private handleInput = (metaInfo: MetaInfo) => {
-    this.setState({ usernameText: metaInfo.text })
+    const t = metaInfo.text ? metaInfo.text.split(' ')[0] : metaInfo.text
+    this.setState({ usernameText: t })
   }
 
   private handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
