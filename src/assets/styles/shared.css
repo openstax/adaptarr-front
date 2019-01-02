@@ -19,9 +19,13 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
   --status-done: #27d768;
 
   --red: #db0037;
+  --dark-red: #c20635;
   --green: #27d768;
+  --dark-green: #1ca04d;
   --orange: #ff9a3e;
+  --dark-orange: #ce721c;
   --blue: #0080db;
+  --dark-blue: #005a9b;
 }
 
 body {
