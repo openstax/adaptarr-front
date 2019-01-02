@@ -9,6 +9,8 @@ import { FilesError } from 'react-files'
 
 import axios from 'src/config/axios'
 import validateEmail from 'src/helpers/validateEmail'
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -257,7 +259,7 @@ class Profile extends React.Component<Props> {
                 <Link to={`/users/${user.id}`} className="teamList__item">
                   <Avatar disableLink size="small" user={user}/>
                   <span className="teamList__username">
-                    {user.name}
+                    {decodeHtmlEntity(user.name)}
                   </span>
                 </Link>
               </li>
@@ -304,7 +306,7 @@ class Profile extends React.Component<Props> {
     if (this.props.match.params.id === 'me') {
       title = 'Your profile'
     } else if (user && user.name) {
-      title = user.name
+      title = decodeHtmlEntity(user.name)
     }
 
     return (
@@ -333,7 +335,7 @@ class Profile extends React.Component<Props> {
                       </UserUI>
                     </div>
                     <h2 className="profile__name">
-                      {user.name}
+                      {decodeHtmlEntity(user.name)}
                       <UserUI userId={user.id}>
                         <span
                           className="profile__update-name"

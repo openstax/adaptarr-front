@@ -4,6 +4,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import dateDiff from 'src/helpers/dateDiff'
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
 import Avatar from 'src/components/ui/Avatar'
 import MessageInput from 'src/components/MessageInput'
@@ -74,10 +75,11 @@ class Conversation extends React.Component<Props> {
     msg = msg.replace(/<(?:[^.]|\s)*?>/g, "")
     let sp = msg.split(/(\[MENTION(?:[^.]|\s)*?])/).map(el => {
       if (/(\[MENTION(?:[^.]|\s)*?])/.test(el)) {
+        // username is stripped from spaces
         const [, username, id] = el.replace(/\[|\]/g, '').split(' ')
         const checkUsr = this.props.team.teamMap.get(Number(id))
-        if (checkUsr && checkUsr.name === username) {
-          return `<a class="mention" href="/users/${id}" target="_blank">@${username}</a>`
+        if (checkUsr && checkUsr.name.replace(' ', '') === username) {
+          return `<a class="mention" href="/users/${id}" target="_blank">@${decodeHtmlEntity(username)}</a>`
         }
         return '[Unknow mention]'
       }

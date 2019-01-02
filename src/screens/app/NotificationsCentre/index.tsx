@@ -6,6 +6,7 @@ import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
 import dateDiff from 'src/helpers/dateDiff'
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -68,7 +69,7 @@ class NotificationsCentre extends React.Component<Props> {
       body = (
         <React.Fragment>
           <Link to={`/users/${who ? who.id : undefined}`}>
-            {who ? who.name : 'Unknow user'}
+            {who ? decodeHtmlEntity(who.name) : 'Unknow user'}
           </Link>{" "}
           <Trans i18nKey="Notifications.assigned"/>{" "}
           <Link to={`/modules/${mod ? mod.id : undefined }`}>
@@ -130,7 +131,7 @@ class NotificationsCentre extends React.Component<Props> {
                 {
                   showDetails ?
                     <React.Fragment>
-                      <Header title={detailsWho && detailsWho.name ? detailsWho.name : 'Unknow user'}>
+                      <Header title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
                         <span className="date">
                           { details ? dateDiff(details.timestamp) : null }
                         </span>

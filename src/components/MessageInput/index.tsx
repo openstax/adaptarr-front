@@ -5,6 +5,8 @@ import InputTrigger, { MetaInfo } from 'react-input-trigger'
 import { Trans } from 'react-i18next'
 import { connect } from 'react-redux'
 
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+
 import UserInfo from 'src/components/UserInfo'
 import Button from 'src/components/ui/Button'
 
@@ -101,7 +103,7 @@ class MessageInput extends React.Component<Props> {
     
     const newText =
       textareaValue.slice(0, startPosition) +
-      usr.name +
+      decodeHtmlEntity(usr.name).replace(' ', '') +
       textareaValue.slice(startPosition + usernameText.length, textareaValue.length)      
 
     this.hideUsersList()
@@ -111,7 +113,13 @@ class MessageInput extends React.Component<Props> {
   }
 
   private handleInput = (metaInfo: MetaInfo) => {
-    const t = metaInfo.text ? metaInfo.text.split(' ')[0] : ''
+    const t = metaInfo.text ? metaInfo.text : ''
+    const regSpaces = new RegExp(/\s/, 'g')
+
+    if (regSpaces.test(t)) {
+      this.endHandler()
+    }
+
     const selectedUser = this.state.selectedUser
     let filteredUsers = this.state.users
     
@@ -121,7 +129,7 @@ class MessageInput extends React.Component<Props> {
       isSelUsrInFiltRes = false
       const reg = new RegExp(`^${t}`, "i")
       filteredUsers = filteredUsers.filter(user => {
-        if (reg.test(user.name)) {
+        if (reg.test(decodeHtmlEntity(user.name))) {
           if (selectedUser && selectedUser.id === user.id) {
             isSelUsrInFiltRes = true
           }
@@ -154,7 +162,7 @@ class MessageInput extends React.Component<Props> {
     if (which === 13 && !e.shiftKey) { // enter
       e.preventDefault()
 
-      if (!showUsersList) {
+      if (!selectedUser) {
         this.sendMessage()
         return
       }
@@ -233,9 +241,9 @@ class MessageInput extends React.Component<Props> {
     let text = this.state.textareaValue
 
     this.props.team.teamMap.forEach(usr => {
-      const reg = new RegExp('^@'+usr.name, 'g')
+      const reg = new RegExp('@'+decodeHtmlEntity(usr.name).replace(' ', ''), 'g')
       if (reg.test(text)) {
-        text = text.replace(reg, `[MENTION ${usr.name} ${usr.id}]`)
+        text = text.replace(reg, `[MENTION ${usr.name.replace(' ', '')} ${usr.id}]`)
       }
     })
 
@@ -244,8 +252,9 @@ class MessageInput extends React.Component<Props> {
       message: text,
       timestamp: new Date().toISOString()
     }
+
     this.props.addMessage(this.props.convId, msg)
-    this.setState({ textareaValue: '' })
+    this.setState({ textareaValue: '', usernameText: '', showUsersList: false })
   }
 
   componentDidUpdate = (prevProps: Props) => {

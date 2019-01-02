@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { Trans } from 'react-i18next'
 
 import dateDiff from 'src/helpers/dateDiff'
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
 import Avatar from 'src/components/ui/Avatar'
 
@@ -112,7 +113,7 @@ class NotificationComp extends React.Component<Props> {
             <div className="notification__action">
               <strong>
                 { 
-                  who ? who.name + " " : null
+                  who ? decodeHtmlEntity(who.name) + " " : null
                 } 
               </strong>
               { this.notificationAction(noti, mod) }

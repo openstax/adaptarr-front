@@ -3,6 +3,8 @@ import './index.css'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+
 import * as types from 'src/store/types'
 
 type Props = {
@@ -20,7 +22,7 @@ const avatar = (props: Props) => {
   if (size) mainClasses.push(`avatar--${size}`)
   if (status) statusClasses.join(`avatar__status--${status}`)
 
-  const title = user && user.name ? user.name : 'Unknow user'
+  const title = user && user.name ? decodeHtmlEntity(user.name) : 'Unknow user'
   const linkToProfile = user ? '/users/' + user.id : '/settings'
 
   let avatarSrc = user && user.avatarSmall ? user.avatarSmall : '/images/unknow-user.png'
