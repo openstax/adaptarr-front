@@ -64,11 +64,15 @@ class ModuleList extends React.Component<Props> {
   }
 
   private listOfModules = (modulesMap: ModulesMap) => {
-    const filterReg = new RegExp('^' + this.state.filterInput.toLowerCase(), 'g')
+    const filterReg = new RegExp('^' + this.state.filterInput, 'i')
     let modules: ModuleShortInfo[] = []
 
     modulesMap.forEach(mod => {
-      if (filterReg.test(mod.title.toLowerCase())) {
+      if (this.state.filterInput) {
+        if (filterReg.test(mod.title)) {
+          modules.push(mod)
+        }
+      } else {
         modules.push(mod)
       }
     })

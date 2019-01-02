@@ -38,12 +38,14 @@ class UsersList extends React.Component<Props> {
   }
 
   private listOfUsers = (teamMap: TeamMap) => {
-    const filterReg = new RegExp('^' + this.state.filterInput.toLowerCase(), 'g')
+    const filterReg = new RegExp('^' + this.state.filterInput, 'i')
     let users: User[] = []
 
     teamMap.forEach(user => {
-      if (filterReg.test(user.name.toLowerCase())) {
-        users.push(user)
+      if (this.state.filterInput) {
+        if (filterReg.test(user.name)) {
+          users.push(user)
+        }
       }
     })
 
