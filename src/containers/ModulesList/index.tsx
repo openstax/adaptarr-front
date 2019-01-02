@@ -4,6 +4,7 @@ import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
 import axios from 'src/config/axios'
+import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
@@ -52,29 +53,36 @@ class ModuleList extends React.Component<Props> {
     moduleToDelete: ModuleShortInfo | null
     showRemoveModule: boolean
     files: File[]
+    filterInput: string
   } = {
     moduleTitleValue: '',
     showSuperSession: false,
     moduleToDelete: null,
     showRemoveModule: false,
     files: [],
+    filterInput: '',
   }
 
   private listOfModules = (modulesMap: ModulesMap) => {
+    const filterReg = new RegExp('^' + this.state.filterInput.toLowerCase(), 'g')
     let modules: ModuleShortInfo[] = []
 
     modulesMap.forEach(mod => {
-      modules.push(mod)
+      if (filterReg.test(mod.title.toLowerCase())) {
+        modules.push(mod)
+      }
     })
+
+    modules.sort(sortArrayByTitle)
 
     return modules.map((mod: ModuleShortInfo) => {
       return (
         <li key={mod.id} className="modulesList__item">
           <span onClick={() => this.handleModuleClick(mod)}>
-            <ModuleInfo mod={mod} />
+            <ModuleInfo mod={mod}/>
           </span>
           <Button color="red" clickHandler={() => this.showRemoveModuleDialog(mod)}>
-            <Icon name="minus" />
+            <Icon name="minus"/>
           </Button>
         </li>
       )
@@ -167,6 +175,12 @@ class ModuleList extends React.Component<Props> {
       })
   }
 
+  private handleFilterInput = (val: string) => {
+    if (val !== this.state.filterInput) {
+      this.setState({ filterInput: val})
+    }
+  }
+
   private superSessionSuccess = () => {
     if (this.state.moduleToDelete && this.state.showRemoveModule) {
       this.removeModule()
@@ -202,10 +216,10 @@ class ModuleList extends React.Component<Props> {
               onClose={this.closeRemoveModuleDialog}
             >
               <Button color="green" clickHandler={this.removeModule}>
-                <Trans i18nKey="Buttons.delete" />
+                <Trans i18nKey="Buttons.delete"/>
               </Button>
               <Button color="red" clickHandler={this.closeRemoveModuleDialog}>
-                <Trans i18nKey="Buttons.cancel" />
+                <Trans i18nKey="Buttons.cancel"/>
               </Button>
             </Dialog>
           : null
@@ -223,8 +237,8 @@ class ModuleList extends React.Component<Props> {
                 isDisabled={moduleTitleValue.length < 3}
                 clickHandler={this.addNewModule}
               >
-                <Icon name="plus" />
-                <Trans i18nKey="Buttons.addNew" />
+                <Icon name="plus"/>
+                <Trans i18nKey="Buttons.addNew"/>
               </Button>
             </div>
             <FilesUploader
@@ -234,6 +248,16 @@ class ModuleList extends React.Component<Props> {
             />
           </div>
         </AdminUI>
+        {
+          modulesMap.size > 6 ?
+            <div className="modulesList__filter">
+              <Input
+                onChange={this.handleFilterInput}
+                placeholder="Search for module"
+              />
+            </div>
+          : null
+        }
         {
           modulesMap.size > 0 ?
             <ul className="modulesList__list">

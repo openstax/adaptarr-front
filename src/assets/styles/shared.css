@@ -976,6 +976,10 @@ textarea {
   margin-right: 10px;
 }
 
+.modulesList__filter {
+  margin-bottom: -10px;
+}
+
 .modulesList__list {
   margin-top: 20px;
   max-height: 300px;
@@ -1006,6 +1010,10 @@ textarea {
 
 .usersList {
   width: 100%;
+}
+
+.usersList__filter {
+  margin-bottom: -10px;
 }
 
 .usersList__list {
