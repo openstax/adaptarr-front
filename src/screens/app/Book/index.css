@@ -1,0 +1,144 @@
+.is-dragging {
+  cursor: grabbing;
+}
+
+.book-collection {
+  width: 100%;
+}
+
+.nestable-list {
+  position: relative;
+  margin-top: 0 !important;
+}
+
+.nestable .nestable-item-0 > .nestable-list {
+  padding-left: 0 !important;
+  margin-left: 20px;
+}
+
+.nestable-item {
+  margin: 0;
+}
+
+.nestable-item-name {
+  padding: 20px;
+}
+
+.nestable-item-name .adminui {
+  display: none;
+}
+
+.nestable-item-name:hover .adminui {
+  display: flex;
+}
+
+.nestable-item-name:hover {
+  background-color: var(--light-bg);
+  outline: 1px solid var(--dark-bg);
+  outline-offset: -1px;
+}
+
+.nestable-item-0.nestable-has-children {
+  background-color: #fff;
+}
+
+.nestable-item-0.nestable-has-children > .nestable-list .nestable-item-name {
+  padding-left: 40px;
+}
+
+.nestable-item-0 .nestable-list:before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: calc(100% - 30px);
+  position: absolute;
+  z-index: 1;
+  background-color: var(--dark-bg);
+}
+
+.nestable-item-0 > .nestable-list {
+  position: relative;
+  margin-left: 20px;
+}
+
+.nestable-has-children .nestable-list .nestable-item-name {
+  padding-left: 60px;
+}
+
+.nestable-has-children .nestable-item-name:hover {
+  background-color: var(--light-bg);
+  outline: none;
+}
+
+.nestable-has-children .nestable-item-name:hover .bookpart__info {
+  background-color: var(--light-bg);
+}
+
+.nestable-children-collapsed {
+  background-color: #fff;
+}
+
+.nestable-collapsed {
+  display: none;
+}
+
+.bookpart__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 22px;
+}
+
+.bookpart__item::before {
+  content: "";
+  display: block;
+  width: 30px;
+  height: 1px;
+  position: absolute;
+  left: 0;
+  background-color: var(--dark-bg);
+}
+
+.nestable-item-0 > .nestable-item-name .bookpart__item::before {
+  display: none;
+}
+
+.bookpart__item button {
+  margin-right: 10px;
+}
+
+.bookpart__item--part .bookpart__title {
+  font-weight: bold;
+}
+
+.bookpart__title {
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.bookpart__info {
+  position: absolute;
+  right: 0;
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+}
+
+.bookpart__info .avatar {
+  margin-right: 10px;
+}
+
+.bookpart__icon {
+  cursor: pointer;
+}
+
+.bookpart__icon .icon {
+  padding: 20px;
+}
+
+.bookpart__info .stacked {
+  width: 170px;
+}

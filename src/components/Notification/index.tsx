@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
@@ -5,7 +7,7 @@ import { Trans } from 'react-i18next'
 
 import dateDiff from 'src/helpers/dateDiff'
 
-import Avatar from './ui/Avatar'
+import Avatar from 'src/components/ui/Avatar'
 
 import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User, NotificationStatus } from 'src/store/types'
 import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'

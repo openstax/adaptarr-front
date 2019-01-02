@@ -1,0 +1,25 @@
+.icon {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon--small svg {
+  width: 15px;
+  height: 15px;
+}
+
+.icon--medium svg {
+  width: 25px;
+  height: 25px;
+}
+
+.icon--big svg {
+  width: 40px;
+  height: 40px;
+}

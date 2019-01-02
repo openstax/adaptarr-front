@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import Nestable from 'react-nestable'
 import { History } from 'history'
@@ -13,6 +15,7 @@ import Spinner from 'src/components/Spinner'
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
 import EditBook from 'src/components/EditBook'
+import ModuleStatus from 'src/components/ModuleStatus'
 import Avatar from 'src/components/ui/Avatar'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -152,24 +155,14 @@ class Book extends React.Component<Props> {
     const { modulesMap } = this.props.modules
     const { teamMap } = this.props.team
     let assignedUser: types.User | undefined
-    let moduleStatus = (
-      <span className="module__status module__status--ready">
-        ready
-      </span>
-    )
+    let modStatus: types.ModuleStatus = 'ready'
 
     if (item.id) {
       const mod = modulesMap.get(item.id)
       const assignee = mod ? mod.assignee : undefined
       assignedUser = assignee ? teamMap.get(assignee) : undefined
       if (mod && mod.status) {
-        moduleStatus = (
-          <span 
-            className={`module__status module__status--${mod.status}`}
-          >
-            {mod.status}
-          </span>
-        )
+        modStatus = mod.status
       }
     }
 
@@ -210,7 +203,7 @@ class Book extends React.Component<Props> {
               </Button>
           }
           <span className="bookpart__status">
-            { moduleStatus }
+            <ModuleStatus status={modStatus}/>
           </span>
         </span>
       </React.Fragment>

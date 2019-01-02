@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -5,12 +7,12 @@ import { Trans } from 'react-i18next'
 
 import axios from 'src/config/axios'
 
-import AdminUI from './AdminUI'
-import SuperSession from './SuperSession'
-import EditBook from './EditBook'
-import Dialog from './ui/Dialog'
-import Button from './ui/Button'
-import Icon from './ui/Icon'
+import AdminUI from 'src/components/AdminUI'
+import SuperSession from 'src/components/SuperSession'
+import EditBook from 'src/components/EditBook'
+import Dialog from 'src/components/ui/Dialog'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import { IsLoading, BooksMap, BookShortInfo, RequestInfoKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'

@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import Files, { FilesError, FilesRef } from 'react-files'
 import { Trans } from 'react-i18next'

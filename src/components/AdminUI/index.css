@@ -1,0 +1,8 @@
+.adminui {
+  display: flex;
+  align-items: center;
+}
+
+.adminui .input {
+  margin-right: 10px;
+}

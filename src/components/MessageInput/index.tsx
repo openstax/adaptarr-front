@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import InputTrigger, { MetaInfo } from 'react-input-trigger'
 import { Trans } from 'react-i18next'
@@ -137,8 +139,6 @@ class MessageInput extends React.Component<Props> {
       usernameText: t ? t : '',
       filteredUsers,
     }
-
-    console.log('isSelUsrInFiltRes:', isSelUsrInFiltRes, 'selectedUser:', selectedUser)
 
     if (!isSelUsrInFiltRes) {
       newState.selectedUser = filteredUsers[0]

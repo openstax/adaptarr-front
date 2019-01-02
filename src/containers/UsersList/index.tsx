@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 
@@ -46,6 +48,8 @@ class UsersList extends React.Component<Props> {
         if (filterReg.test(user.name)) {
           users.push(user)
         }
+      } else {
+        users.push(user)
       }
     })
 

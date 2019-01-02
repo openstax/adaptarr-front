@@ -1,14 +1,16 @@
+import './index.css'
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Trans } from 'react-i18next'
 
-import Header from './Header'
-import NotificationComp from './Notification'
-import Spinner from './Spinner'
-import AdminUI from './AdminUI'
-import Button from './ui/Button'
-import Icon from './ui/Icon'
+import Header from 'src/components/Header'
+import NotificationComp from 'src/components/Notification'
+import Spinner from 'src/components/Spinner'
+import AdminUI from 'src/components/AdminUI'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import { IsLoading, Notification } from 'src/store/types'
 import { State } from 'src/store/reducers'

@@ -1,7 +1,9 @@
+import './index.css'
+
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 
-import Icon from './Icon'
+import Icon from 'src/components/ui/Icon'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'

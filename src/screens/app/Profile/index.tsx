@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { History } from 'history'
 import { Trans } from 'react-i18next'
@@ -157,7 +159,7 @@ class Profile extends React.Component<Props> {
 
     return (
       <Dialog onClose={() => this.closeDialog()} i18nKey={titlei18nKey}>
-        <div className="user__update-dialog">
+        <div className="profile__update-dialog">
           {body}
           <Button clickHandler={() => this.confirmUpdateAction()}>
             <Trans i18nKey="Buttons.confirm"/>
@@ -317,24 +319,24 @@ class Profile extends React.Component<Props> {
           <div className="section__content">
             {
               user ?
-                <div className="user">
-                  <div className="user__top">
-                    <div className="user__avatar">
+                <div className="profile">
+                  <div className="profile__top">
+                    <div className="profile__avatar">
                       <Avatar size="big" disableLink user={user}/>
                       <UserUI userId={user.id}>
                         <span 
-                          className="user__update-avatar"
+                          className="profile__update-avatar"
                           onClick={this.showUpdateAvatar}
                         >
                           <Icon name="pencil"/>
                         </span>
                       </UserUI>
                     </div>
-                    <h2 className="user__name">
+                    <h2 className="profile__name">
                       {user.name}
                       <UserUI userId={user.id}>
                         <span
-                          className="user__update-name"
+                          className="profile__update-name"
                           onClick={this.showUpdateName}
                         >
                           <Icon size="small" name="pencil"/>
@@ -342,11 +344,11 @@ class Profile extends React.Component<Props> {
                       </UserUI>
                     </h2>
                   </div>
-                  <div className="user__info">
-                    <h3 className="user__title">
+                  <div className="profile__info">
+                    <h3 className="profile__title">
                       <Trans i18nKey="Profile.bio"/>
                     </h3>
-                    <div className="user__bio">
+                    <div className="profile__bio">
                       <p>
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio nisi facilis ad facere minus laborum soluta illo maiores illum atque enim aliquid commodi adipisci vel amet, porro delectus at nesciunt.
                       </p>
@@ -354,18 +356,18 @@ class Profile extends React.Component<Props> {
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt fuga aspernatur quos quidem quas explicabo porro, minima quia cupiditate magnam.
                       </p>
                       <UserUI userId={user.id}>
-                        <span className="user__update-bio" onClick={this.showUpdateBio}>
+                        <span className="profile__update-bio" onClick={this.showUpdateBio}>
                           <Icon size="small" name="pencil"/>
                         </span>
                       </UserUI>
                     </div>
-                    <h3 className="user__title">
+                    <h3 className="profile__title">
                       <Trans i18nKey="Profile.contact"/>
                     </h3>
-                    <span className="user__email">
+                    <span className="profile__email">
                       email: {user.email ? user.email : 'unknow email'}
                       <UserUI userId={user.id}>
-                        <span className="user__update-email" onClick={this.showUpdateEmail}>
+                        <span className="profile__update-email" onClick={this.showUpdateEmail}>
                           <Icon size="small" name="pencil"/>
                         </span>
                       </UserUI>

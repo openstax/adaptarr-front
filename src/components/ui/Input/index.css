@@ -1,0 +1,47 @@
+input {
+  padding: 10px;
+  font-size: 0.9rem;
+  outline: none;
+  background-color: #fff;
+  border: 1px solid var(--dark-bg);
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="submit"] {
+  color: var(--font-light);
+  margin-bottom: 0;
+  cursor: pointer;
+  background-color: var(--dark-bg);
+}
+
+input[type="submit"]:hover {
+  background-color: #303d50;
+}
+
+input[type="disabled"] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.input input {
+  display: block;
+  width: 100%;
+}
+
+.input.valid input {
+  color: var(--green);
+  border: 1px solid var(--green);
+}
+
+.input.invalid input {
+  color: var(--red);
+  border: 1px solid var(--red);
+}
+
+.input__error {
+  position: relative;
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--red);
+}

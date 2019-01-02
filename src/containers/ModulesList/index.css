@@ -1,0 +1,54 @@
+.modulesList {
+  width: 100%;
+}
+
+.modulesList__new {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.modulesList__new .files-uploader {
+  margin-top: 0;
+}
+
+.modulesList__top-bar {
+  display: flex;
+  align-items: center;
+}
+
+.modulesList__new input {
+  margin-right: 10px;
+}
+
+.modulesList__filter {
+  margin-bottom: -10px;
+}
+
+.modulesList__list {
+  margin-top: 20px;
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid var(--dark-bg);
+  background-color: #fff;
+}
+
+.modulesList__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.modulesList__item:hover {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.modulesList__info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+}

@@ -1,0 +1,51 @@
+.button {
+  /* reset button styling */
+  display: inline-flex;
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+  text-decoration: none;
+  /* end of reset */
+
+  font-size: 1rem;
+  padding: 5px 10px;
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.button--small {
+  font-size: 0.8rem;
+  padding: 4px 7px;
+}
+
+.button--medium {
+  padding: 5px 10px;
+}
+
+.button--big {
+  font-size: 1.2rem;
+  padding: 10px 15px;
+}
+
+.button--green {
+  background-color: var(--green);
+}
+
+.button--red {
+  background-color: var(--red);
+}

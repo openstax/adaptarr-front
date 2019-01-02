@@ -1,0 +1,128 @@
+.sidebar {
+  width: 250px;
+  border-left: 0;
+}
+
+.sidebar .header__title {
+  margin: 0;
+}
+
+.sidebar__toggle.button {
+  display: inline-flex;
+  background: none;
+  color: var(--font-dark);
+}
+
+.sidebar.small {
+  width: 70px;
+}
+
+.sidebar.small .header {
+  justify-content: center;
+}
+
+.sidebar.small .header__title {
+  font-size: 0;
+}
+
+.sidebar.small .nav__text {
+  font-size: 0;
+}
+
+.sidebar.small .nav__link a {
+  justify-content: center;
+}
+
+.sidebar.small .nav__link a .icon {
+  margin-right: 0;
+}
+
+.sidebar.small .notifications__counter {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 13px;
+  height: 13px;
+  font-size: 0;
+}
+
+.nav__link {
+  position: relative;
+  width: 100%;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.nav__link:hover .nav__hoverbox {
+  display: flex;
+}
+
+.nav__hoverbox {
+  display: none;
+  flex-direction: column;
+  width: 400px;
+  position: absolute;
+  top: 0;
+  left: 100%;
+  z-index: 99;
+  border: 1px solid var(--light-bg);
+  background-color: #fff;
+}
+
+.nav__link .nav__hoverbox a {
+  padding: 0;
+}
+
+.nav__hoverbox a.nav__link {
+  padding: 15px 20px;
+  box-sizing: border-box;
+}
+
+.nav__hoverbox .notification {
+  padding: 15px 20px;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.nav__hoverbox a.show-more {
+  padding: 10px;
+  justify-content: center;
+}
+
+.nav__link a {
+  text-decoration: none;
+  color: var(--font-dark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 15px 20px;
+}
+
+.nav__link a:hover {
+  background-color: var(--light-bg);
+}
+
+.nav__link a.active {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.nav__link a .icon {
+  margin-right: 10px;
+}
+
+.nav__content {
+  display: flex;
+  align-items: center;
+}
+
+nav .notifications__counter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  font-size: 0.9rem;
+  color: var(--font-light);
+  border-radius: 50%;
+  background-color: var(--status-unread);
+}

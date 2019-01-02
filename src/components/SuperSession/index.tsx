@@ -2,10 +2,9 @@ import * as React from 'react'
 import axiosClean from 'axios'
 import { Trans } from 'react-i18next'
 
-
-import Dialog from './ui/Dialog'
-import Button from './ui/Button'
-import Input from './ui/Input'
+import Dialog from 'src/components/ui/Dialog'
+import Button from 'src/components/ui/Button'
+import Input from 'src/components/ui/Input'
 
 type Props = {
   onSuccess: (response: any) => any

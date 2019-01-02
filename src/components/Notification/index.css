@@ -1,0 +1,18 @@
+.notification {
+  width: 100%;
+  color: var(--font-dark);
+}
+
+.notification__content {
+  display: flex;
+  align-items: flex-start;
+}
+
+.notification__who {
+  margin-top: 5px;
+  margin-right: 15px;
+}
+
+.notification__action {
+  margin-bottom: 5px;
+}

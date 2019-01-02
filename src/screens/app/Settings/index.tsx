@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import * as i18n from 'i18next'
 import Select from 'react-select'

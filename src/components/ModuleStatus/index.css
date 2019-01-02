@@ -1,0 +1,15 @@
+.moduleStatus--ready {
+  color: var(--status-ready);
+}
+
+.moduleStatus--translation {
+  color: var(--status-translation);
+}
+
+.moduleStatus--review {
+  color: var(--status-review);
+}
+
+.moduleStatus--done {
+  color: var(--status-done);
+}

@@ -1,0 +1,49 @@
+.header {
+  max-width: 100%;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  background-color: var(--light-bg);
+}
+
+.header.fixed {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.header__title {
+  font-size: 1.5rem;
+  margin-right: 20px;
+}
+
+.header .adminui {
+  margin-right: 20px;
+}
+
+.header .date {
+  margin-right: 20px;
+}
+
+.header .button {
+  margin-right: 10px;
+}
+
+.header .sidebar__toggle {
+  margin-right: 0;
+}
+
+.header .module__assignee {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.header .module__assignee > span {
+  margin-right: 5px;
+}
+
+.header .lock-swiping .button {
+  margin-left: 10px;
+}

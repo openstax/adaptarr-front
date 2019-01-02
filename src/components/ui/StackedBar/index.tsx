@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 
 import { ModuleStatus } from 'src/store/types'

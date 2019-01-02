@@ -1,0 +1,33 @@
+.notificationsList {
+  width: 100%;
+  margin-top: -20px;
+}
+
+.notificationsList__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.notificationsList .notification {
+  cursor: pointer;
+}
+
+.notificationsList .notification__content {
+  align-items: center;
+}
+
+.notificationsList .notification__who {
+  margin-top: 0;
+}
+
+.notificationsList .notification__action {
+  margin-bottom: 0;
+}
+
+.notificationsList .notification__date {
+  display: inline-block;
+  margin-top: 5px;
+}
