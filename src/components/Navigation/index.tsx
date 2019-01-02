@@ -1,6 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
+import Tooltip from 'react-tooltip-lite'
 import { connect } from 'react-redux'
 import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Trans } from 'react-i18next'
@@ -71,32 +72,36 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
         </Header>
         <nav className="nav">
           <ul>
-            <li className="nav__link" title="Dashboard">
-              <NavLink exact to="/" activeClassName="active">
-                <span className="nav__content">
-                  <Icon name="dashboard" />
-                  <span className="nav__text">
-                    <Trans i18nKey="Navigation.dashboardLink"/>
-                  </span>
-                </span>
-              </NavLink>
-            </li>
-            <li className="nav__link" title="Notifications">
-              <NavLink to="/notifications" activeClassName="active">
-                <span className="nav__content">
-                  <Icon name="bell" />
-                  <span className="nav__text">
-                    <Trans i18nKey="Navigation.notificationsLink"/>
-                  </span>
-                </span>
-                {
-                  unreadNotifications.length ?
-                    <span className="notifications__counter">
-                      {unreadNotifications.length}
+            <li className="nav__link">
+              <Tooltip content="Dashboard" direction="right">
+                <NavLink exact to="/" activeClassName="active">
+                  <span className="nav__content">
+                    <Icon name="dashboard" />
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.dashboardLink"/>
                     </span>
-                  : null
-                }
-              </NavLink>
+                  </span>
+                </NavLink>
+              </Tooltip>
+            </li>
+            <li className="nav__link">
+              <Tooltip content="Notifications">
+                <NavLink to="/notifications" activeClassName="active">
+                  <span className="nav__content">
+                    <Icon name="bell" />
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.notificationsLink"/>
+                    </span>
+                  </span>
+                  {
+                    unreadNotifications.length ?
+                      <span className="notifications__counter">
+                        {unreadNotifications.length}
+                      </span>
+                    : null
+                  }
+                </NavLink>
+              </Tooltip>
               {
                 unreadNotifications.length > 0 ?
                   <div className="nav__hoverbox">
@@ -121,43 +126,49 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 : null
               }
             </li>
-            <li className="nav__link" title="Books">
-              <NavLink 
-                to="/books"
-                activeClassName="active"
-                isActive={(match, location) => isActive(location, ['books', 'modules'])}
-              >
-                <span className="nav__content">
-                  <Icon name="book" />
-                  <span className="nav__text">
-                    <Trans i18nKey="Navigation.booksLink"/>
+            <li className="nav__link">
+              <Tooltip content="Books" direction="right">
+                <NavLink 
+                  to="/books"
+                  activeClassName="active"
+                  isActive={(match, location) => isActive(location, ['books', 'modules'])}
+                >
+                  <span className="nav__content">
+                    <Icon name="book" />
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.booksLink"/>
+                    </span>
                   </span>
-                </span>
-              </NavLink>
+                </NavLink>
+              </Tooltip>
             </li>
-            <li className="nav__link" title="Resources">
-              <NavLink to="/resources" activeClassName="active">
-                <span className="nav__content">
-                  <Icon name="info" />
-                  <span className="nav__text">
-                    <Trans i18nKey="Navigation.resourcesLink"/>
+            <li className="nav__link">
+              <Tooltip content="Resources" direction="right">
+                <NavLink to="/resources" activeClassName="active">
+                  <span className="nav__content">
+                    <Icon name="info" />
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.resourcesLink"/>
+                    </span>
                   </span>
-                </span>
-              </NavLink>
+                </NavLink>
+              </Tooltip>
             </li>
-            <li className="nav__link" title="Your profile">
-              <NavLink
-                to="/users/me"
-                activeClassName="active"
-                isActive={(match, location) => isActive(location, ['users', 'settings'])}
-              >
-                <span className="nav__content">
-                  <Icon name="profile"/>
-                  <span className="nav__text">
-                    <Trans i18nKey="Navigation.yourProfileLink"/>
+            <li className="nav__link">
+              <Tooltip content="Your profile">
+                <NavLink
+                  to="/users/me"
+                  activeClassName="active"
+                  isActive={(match, location) => isActive(location, ['users', 'settings'])}
+                >
+                  <span className="nav__content">
+                    <Icon name="profile"/>
+                    <span className="nav__text">
+                      <Trans i18nKey="Navigation.yourProfileLink"/>
+                    </span>
                   </span>
-                </span>
-              </NavLink>
+                </NavLink>
+              </Tooltip>
               <div className="nav__hoverbox">
                 <NavLink to="/users/me" activeClassName="active" className="nav__link">
                   <Trans i18nKey="Navigation.yourProfileLink"/>
@@ -174,15 +185,17 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </div>
             </li>
             <AdminUI>
-              <li className="nav__link" title="Invitations">
-                <NavLink to="/invitations" activeClassName="active">
-                  <span className="nav__content">
-                    <Icon name="users" />
-                    <span className="nav__text">
-                      <Trans i18nKey="Navigation.invitationsLink"/>
+              <li className="nav__link">
+                <Tooltip content="Invitations" direction="right">
+                  <NavLink to="/invitations" activeClassName="active">
+                    <span className="nav__content">
+                      <Icon name="users" />
+                      <span className="nav__text">
+                        <Trans i18nKey="Navigation.invitationsLink"/>
+                      </span>
                     </span>
-                  </span>
-                </NavLink>
+                  </NavLink>
+                </Tooltip>
               </li>
             </AdminUI>
           </ul>

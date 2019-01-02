@@ -3,6 +3,7 @@ html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abb
 :root {
   --light-bg: #dbe1ef;
   --dark-bg: #3e4e64;
+  --darkest-bg: #232d3b;
 
   --font-dark: #3e4e64;
   --font-light: white;
@@ -248,3 +249,13 @@ textarea {
   font-weight: 700;
 }
 
+.react-tooltip-lite {
+  font-size: 0.9rem;
+  color: var(--font-light);
+  background: var(--darkest-bg);
+  border-radius: 3px;
+}
+
+.react-tooltip-lite-arrow {
+  border-color: var(--darkest-bg);
+}

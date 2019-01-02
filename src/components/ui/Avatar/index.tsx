@@ -1,6 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
+import Tooltip from 'react-tooltip-lite'
 import { Link } from 'react-router-dom'
 
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
@@ -30,23 +31,26 @@ const avatar = (props: Props) => {
     avatarSrc = user.avatar
   }
 
+  const body = (
+    <Tooltip content={title}>
+      <div className="avatar__image">
+        <span className={statusClasses.join(' ')}></span>
+        <img src={avatarSrc} alt={title}/>
+      </div>
+    </Tooltip>
+  )
+
   if (disableLink) {
     return (
       <div className={mainClasses.join(' ')}>
-        <div className="avatar__image" title={title}>
-          <span className={statusClasses.join(' ')}></span>
-          <img src={avatarSrc} alt={title}/>
-        </div>
+        {body}
       </div>
     )
   }
 
   return (
     <Link to={linkToProfile} className={mainClasses.join(' ')}>
-      <div className="avatar__image" title={title}>
-        <span className={statusClasses.join(' ')}></span>
-        <img src={avatarSrc} alt={title}/>
-      </div>
+      {body}
     </Link>
   )
 }

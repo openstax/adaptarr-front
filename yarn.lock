@@ -6112,6 +6112,12 @@ react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
+react-minimalist-portal@^2.2.0:
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/react-minimalist-portal/-/react-minimalist-portal-2.3.1.tgz#4853e3f48a74a32c1b8767601887cdf7941eeba3"
+  dependencies:
+    prop-types "^15.6.1"
+
 "react-nestable@https://github.com/PiotrKozlowski/react-nestable.git":
   version "1.1.0"
   resolved "https://github.com/PiotrKozlowski/react-nestable.git#f541715755871789973c42b8517019ffc10b9cb7"
@@ -6169,6 +6175,13 @@ react-select@^2.1.2:
     raf "^3.4.0"
     react-input-autosize "^2.2.1"
     react-transition-group "^2.2.1"
+
+react-tooltip-lite@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/react-tooltip-lite/-/react-tooltip-lite-1.8.0.tgz#128afa09593295cf0b3f717a6e1156d30eadfa62"
+  dependencies:
+    prop-types "^15.5.8"
+    react-minimalist-portal "^2.2.0"
 
 react-transition-group@^2.2.1:
   version "2.5.1"
