@@ -72,7 +72,7 @@ class Conversation extends React.Component<Props> {
     msg = msg.replace(/<(?:[^.]|\s)*?>/g, "")
     let sp = msg.split(/(\[MENTION(?:[^.]|\s)*?])/).map(el => {
       if (/(\[MENTION(?:[^.]|\s)*?])/.test(el)) {
-        const [type, username, id] = el.replace(/\[|\]/g, '').split(' ')
+        const [, username, id] = el.replace(/\[|\]/g, '').split(' ')
         const checkUsr = this.props.team.teamMap.get(Number(id))
         if (checkUsr && checkUsr.name === username) {
           return `<a class="mention" href="/users/${id}" target="_blank">@${username}</a>`
