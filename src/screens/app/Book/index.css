@@ -96,6 +96,7 @@
   height: 1px;
   position: absolute;
   left: 0;
+  top: 31px;
   background-color: var(--dark-bg);
 }
 
