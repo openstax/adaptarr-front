@@ -32,6 +32,7 @@ export default {
     "Books.addBookDialog": "Add new book",
     "Books.editBookDialog": "Edit book",
     "Books.fileUploader": "Drop files here or click to upload (optional).",
+    "Books.bookAddSuccess": "Book was added successfully.",
     "Book.editGroupDialog": "Change chapter title.",
     "Book.addGroupDialog": "Provide chapter title.",
     "Book.addModuleDialog": "Select module or create new one.",
@@ -102,14 +103,22 @@ export default {
     "Invitations.emailPlaceholder": "E-mail address",
     "Invitations.emailInvalid": "This is not valid email address.",
     "Admin.confirmSuperSession": "Confirm for supersession.",
+    "Module.fetchError": "There is no index.cnxml file for this module. Details: {{details}}",
+    "Module.fetchFilesError": "Couldn't fetch files for this module. Details: {{details}}",
     "Module.assignee": "Assignee:",
     "ModulesList.deleteModuleDialog": "Deleting module is permament.",
+    "ModulesList.moduleAddSuccess": "Module {{title}} was added.",
+    "ModulesList.moduleRemoveSuccess": "{{title}} was deleted successfully.",
+    "ModulesList.placeholderTitle": "Title",
+    "ModulesList.placeholderSearch": "Search for module",
+    "UsersList.placeholderSearch": "Search for user",
     "MsgInput.errorSelecUser": "Something went wrong while selecting user.",
     "MsgInput.placeholder": "Type your message...",
     "SuperSession.providePass": "You have to provide password.",
     "SuperSession.placeholderPass": "Password",
-    "Unknow.module": "Unknow module",
-    "Unknow.user": "Unknow user",
-    "Unknow.email": "Unknow email"
+    "Unknown.module": "Unknown module",
+    "Unknown.user": "Unknown user",
+    "Unknown.email": "Unknown email",
+    "Unknown.mention": "[Unknown mention]"
   }
 }

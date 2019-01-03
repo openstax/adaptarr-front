@@ -3,6 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
+import i18n from 'src/i18n'
 import sortArrayByName from 'src/helpers/sortArrayByName'
 
 import UserInfo from 'src/components/UserInfo'
@@ -96,7 +97,7 @@ class UsersList extends React.Component<Props> {
             <div className="usersList">
               <Input
                 onChange={this.handleFilterInput}
-                placeholder="Search for user"
+                placeholder={i18n.t("UsersList.placeholderSearch")}
               />
             </div>
           : null

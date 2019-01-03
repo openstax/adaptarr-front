@@ -32,6 +32,7 @@ export default {
     "Books.addBookDialog": "Dodaj nową książkę.",
     "Books.editBookDialog": "Edytuj książkę.",
     "Books.fileUploader": "Upuść pliki lub kliknij, aby dodać (opcjonalnie).",
+    "Books.bookAddSuccess": "Książka zotała dodana.",
     "Book.editGroupDialog": "Zmień nazwę rozdziału.",
     "Book.addGroupDialog": "Podaj nazwę rozdziału.",
     "Book.addModuleDialog": "Wybierz moduł lub utwórz nowy.",
@@ -102,14 +103,22 @@ export default {
     "Invitations.emailPlaceholder": "Adres e-mail",
     "Invitations.emailInvalid": "To nie jest poprawny adres e-mail.",
     "Admin.confirmSuperSession": "Rozpocznij supersesję.",
+    "Module.fetchError": "Nie znaleziono pliku index.cnxml dla tego modułu. Szczegóły: {{details}}",
+    "Module.fetchFilesError": "Nie znaleziono plików dla tego modułu. Szczegóły: {{details}}",
     "Module.assignee": "Przypisany:",
     "ModulesList.deleteModuleDialog": "Usunięcie moduł← jest nieodwracalne.",
+    "ModulesList.moduleAddSuccess": "Moduł {{title}} został dodany.",
+    "ModulesList.moduleRemoveSuccess": "{{title}} został usunięty.",
+    "ModulesList.placeholderTitle": "Tytuł",
+    "ModulesList.placeholderSearch": "Szukaj modułu",
+    "UsersList.placeholderSearch": "Szukaj użytkownika",
     "MsgInput.errorSelecUser": "Coś poszło nie tak podczas wybierania użytkownika.",
     "MsgInput.placeholder": "Napisz swoją wiadomość...",
     "SuperSession.providePass": "Musisz podać hasło.",
     "SuperSession.placeholderPass": "Hasło",
-    "Unknow.module": "Nieznany moduł",
-    "Unknow.user": "Nieznany użytkownik",
-    "Unknow.email": "Nieznany e-mail"
+    "Unknown.module": "Nieznany moduł",
+    "Unknown.user": "Nieznany użytkownik",
+    "Unknown.email": "Nieznany e-mail",
+    "Unknown.mention": "[Nieznana wzmianka]"
   }
 }

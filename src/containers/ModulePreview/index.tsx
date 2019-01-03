@@ -3,6 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
@@ -37,7 +38,7 @@ class ModulePreview extends React.Component<Props> {
         this.setState({ index: res.data })
       })
       .catch(e => {
-        this.setState({ index: 'There is no index.cnxml file for this module. Details: ' + e.message })
+        this.setState({ index: i18n.t("Module.fetchError", {details: e.message}) })
         this.props.addAlert('error', e.message)
       })
 
@@ -46,7 +47,7 @@ class ModulePreview extends React.Component<Props> {
         this.setState({ files: res.data })
       })
       .catch(e => {
-        this.props.addAlert('error', `Couldn't fetch files for this module. Details: ${e.message}`)
+        this.props.addAlert('error', i18n.t("Module.fetchFilesError", {details: e.message}))
       })
   }
 

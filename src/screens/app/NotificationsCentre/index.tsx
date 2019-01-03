@@ -70,7 +70,7 @@ class NotificationsCentre extends React.Component<Props> {
       body = (
         <React.Fragment>
           <Link to={`/users/${who ? who.id : undefined}`}>
-            {who ? decodeHtmlEntity(who.name) : i18n.t("Unknow.user")}
+            {who ? decodeHtmlEntity(who.name) : i18n.t("Unknown.user")}
           </Link>{" "}
           <Trans i18nKey="Notifications.assigned"/>{" "}
           <Link to={`/modules/${mod ? mod.id : undefined }`}>

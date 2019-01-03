@@ -318,7 +318,7 @@ class Profile extends React.Component<Props> {
           : null
         }
         <Section>
-          <Header title={title ? title : i18n.t("Unknow.user")} />
+          <Header title={title ? title : i18n.t("Unknown.user")} />
           <div className="section__content">
             {
               user ?
@@ -368,7 +368,7 @@ class Profile extends React.Component<Props> {
                       <Trans i18nKey="Profile.contact"/>
                     </h3>
                     <span className="profile__email">
-                      email: {user.email ? user.email : i18n.t("Unknow.email")}
+                      email: {user.email ? user.email : i18n.t("Unknown.email")}
                       <UserUI userId={user.id}>
                         <span className="profile__update-email" onClick={this.showUpdateEmail}>
                           <Icon size="small" name="pencil"/>

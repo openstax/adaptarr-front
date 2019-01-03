@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 
@@ -117,12 +118,12 @@ class ModuleList extends React.Component<Props> {
         .then(res => {
           this.props.onModuleClick(res.data)
           this.props.addModuleToMap(res.data)
-          this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
+          this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
         })
         .catch(e => {
           if (e.request.status === 403) {
             this.setState({ showSuperSession: true })
-            this.props.addAlert('info', 'You have to confirm this action.')
+            this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
           } else {
             this.props.addAlert('error', e.message)
           }
@@ -132,12 +133,12 @@ class ModuleList extends React.Component<Props> {
         .then(res => {
           this.props.onModuleClick(res.data)
           this.props.addModuleToMap(res.data)
-          this.props.addAlert('success', `Module "${this.state.moduleTitleValue}" was added.`)
+          this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
         })
         .catch(e => {
           if (e.request.status === 403) {
             this.setState({ showSuperSession: true })
-            this.props.addAlert('info', 'You have to confirm this action.')
+            this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
           } else {
             this.props.addAlert('error', e.message)
           }
@@ -169,12 +170,12 @@ class ModuleList extends React.Component<Props> {
     axios.delete(`/modules/${mod.id}`)
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
-        this.props.addAlert('success', `${mod.title} was deleted successfully.`)
+        this.props.addAlert('success', i18n.t("ModulesList.moduleRemoveSuccess", {title: mod.title}))
       })
       .catch(e => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
-          this.props.addAlert('info', 'You have to confirm this action.')
+          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
         } else {
           this.props.addAlert('error', e.message)
         }
@@ -234,7 +235,7 @@ class ModuleList extends React.Component<Props> {
           <div className="modulesList__new">
             <div className="modulesList__top-bar">
               <Input  
-                placeholder="Title"
+                placeholder={i18n.t("ModulesList.placeholderTitle")}
                 value={moduleTitleValue}
                 onChange={this.updateModuleTitleValue}
                 validation={{minLength: 3}}
@@ -259,7 +260,7 @@ class ModuleList extends React.Component<Props> {
             <div className="modulesList__filter">
               <Input
                 onChange={this.handleFilterInput}
-                placeholder="Search for module"
+                placeholder={i18n.t("ModulesList.placeholderSearch")}
               />
             </div>
           : null
