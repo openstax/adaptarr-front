@@ -3,6 +3,7 @@ import { Trans } from 'react-i18next'
 import { connect } from 'react-redux'
 import { History } from 'history'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -75,7 +76,7 @@ class Module extends React.Component<Props> {
 
     axios.post(`modules/${moduleId}`)
       .then(() => {
-        store.dispatch(addAlert('success', 'Draft was created successfully.'))
+        store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
         this.props.history.push(`/drafts/${moduleId}`)
       })
       .catch(e => {
@@ -101,14 +102,14 @@ class Module extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={mod ? mod.title : 'Unknow module'}>
+        <Header title={mod ? mod.title : i18n.t("Unknow.module")}>
           {
             mod ?
               <React.Fragment>
                 {
                   mod.assignee ?
                     <div className="module__assignee">
-                      <span>Assignee:</span>
+                      <span>{i18n.t("Module.assignee")}</span>
                       <Avatar size="small" user={teamMap.get(mod.assignee)}/>
                     </div>
                   : null

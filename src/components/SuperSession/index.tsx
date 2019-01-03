@@ -2,6 +2,8 @@ import * as React from 'react'
 import axiosClean from 'axios'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
+
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
@@ -39,7 +41,7 @@ type Props = {
       })
     }
 
-    const errorMessage = 'You have to provide password.'
+    const errorMessage = i18n.t("SuperSession.providePass")
     this.setState({ errorMessage })
 
     return this.props.onFailure(new Error(errorMessage))
@@ -63,11 +65,11 @@ type Props = {
           <Input 
             type="password" 
             onChange={(val) => this.setState({ passwordInput: val })} 
-            placeholder="Password"
+            placeholder={i18n.t("SuperSession.placeholderPass")}
             autoFocus
           />
           <Button clickHandler={this.confirmSuperSession}>
-            <Trans i18nKey="Buttons.confirm" />
+            <Trans i18nKey="Buttons.confirm"/>
           </Button>
         </form>
       </Dialog>

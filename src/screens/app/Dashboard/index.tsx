@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 import { History } from 'history'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -76,7 +77,7 @@ class Dashboard extends React.Component<Props> {
     axios.delete(`drafts/${targetDraftId}`)
       .then(() => {
         this.fetchDrafts()
-        store.dispatch(addAlert('success', 'Draft was deleted successfully.'))
+        store.dispatch(addAlert('success', i18n.t("Draft.deleteDraftSuccess")))
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -90,7 +91,7 @@ class Dashboard extends React.Component<Props> {
 
     axios.post(`modules/${targetDraftId}`)
       .then(() => {
-        store.dispatch(addAlert('success', 'Draft was created successfully.'))
+        store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
         this.props.history.push(`/drafts/${targetDraftId}`)
       })
       .catch(e => {
@@ -182,14 +183,14 @@ class Dashboard extends React.Component<Props> {
         {
           this.state.showDeleteDraftDialog ?
             <Dialog 
-              title={`Are you sure you want to delete this draft?`} 
+              title={i18n.t("Draft.deleteDraftConfirmation")} 
               onClose={() => this.closeDeleteDraftDialog()}
             >
               <Button color="red" clickHandler={() => this.deleteDraft()}>
-                <Trans i18nKey="Buttons.delete" />
+                <Trans i18nKey="Buttons.delete"/>
               </Button>
               <Button clickHandler={() => this.closeDeleteDraftDialog()}>
-                <Trans i18nKey="Buttons.cancel" />
+                <Trans i18nKey="Buttons.cancel"/>
               </Button>
             </Dialog>
           :

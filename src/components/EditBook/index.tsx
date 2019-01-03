@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
+import i18n from 'src/i18n'
 import axios from 'axios'
 
 import SuperSession from 'src/components/SuperSession'
@@ -53,14 +54,14 @@ class EditBook extends React.Component<Props> {
     axios.put(`/api/v1/books/${book.id}`, files.length ? files[0] : payload, config)
       .then(() => {
         this.setState({ titleInput: '' })
-        store.dispatch(addAlert('success', 'Book was updated successfully.'))
+        store.dispatch(addAlert('success', i18n.t("Book.updateSuccess")))
         this.setState({ isLoading: false })
         this.props.onSuccess()
       })
       .catch((e) => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', 'You have to confirm this action.'))
+          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
         } else {
           store.dispatch(addAlert('error', e.message))
           this.setState({ isLoading: false })
@@ -77,11 +78,11 @@ class EditBook extends React.Component<Props> {
     this.setState({ files })
   }
 
-  private onFilesError = (error: FilesError, file: File) => {
+  private onFilesError = (error: FilesError, _: File) => {
     store.dispatch(addAlert('error', error.message))
   }
 
-  private superSessionSuccess = (res: Response) => {
+  private superSessionSuccess = (_: Response) => {
     this.editBook()
     this.setState({ showSuperSession: false })
   }
@@ -117,7 +118,7 @@ class EditBook extends React.Component<Props> {
               <Input
                 value={bookTitle}
                 onChange={this.updateTitleInput}
-                placeholder="Book title"
+                placeholder={i18n.t("Book.bookTitlePlaceholder")}
                 validation={{minLength: 3}}
               />
               <FilesUploader

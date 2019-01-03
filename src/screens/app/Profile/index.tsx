@@ -7,6 +7,7 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { FilesError } from 'react-files'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import validateEmail from 'src/helpers/validateEmail'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
@@ -132,7 +133,7 @@ class Profile extends React.Component<Props> {
             onChange={this.updateNameInput}
             autoFocus
             validation={{minLength: 3}}
-            errorMessage="Name has to be at least 3 characters long."
+            errorMessage={i18n.t("Profile.nameValidation")}
           />
         )
         break
@@ -153,7 +154,7 @@ class Profile extends React.Component<Props> {
             onChange={this.updateEmailInput}
             autoFocus
             validation={{email: true}}
-            errorMessage="This is not a valid email address."
+            errorMessage={i18n.t("Profile.emailValidation")}
           />
         )
         break
@@ -191,12 +192,12 @@ class Profile extends React.Component<Props> {
         const files = this.state.files
         
         if (files.length === 0) {
-          return store.dispatch(addAlert('error', 'You have to provide file.'))
+          return store.dispatch(addAlert('error', i18n.t("Profile.avatarValidation")))
         }
 
         axios.put('users/me', {avatar: files[0]})
           .then(() => {
-            store.dispatch(addAlert('success', 'Successfully update your avatar.'))
+            store.dispatch(addAlert('success', i18n.t("Profile.avatarUpdateSuccess")))
           })
           .catch(e => {
             store.dispatch(addAlert('error', e.message))
@@ -206,12 +207,12 @@ class Profile extends React.Component<Props> {
         const nameInput = this.state.nameInput
 
         if (nameInput.length < 3) {
-          return store.dispatch(addAlert('error', 'Name has to be at least 3 characters long.'))
+          return store.dispatch(addAlert('error', i18n.t("Profile.nameValidation")))
         }
 
         axios.put('users/me', {name: nameInput})
           .then(() => {
-            store.dispatch(addAlert('success', 'Successfully update your name.'))
+            store.dispatch(addAlert('success', i18n.t("Profile.nameUpdateSuccess")))
           })
           .catch(e => {
             store.dispatch(addAlert('error', e.message))
@@ -220,7 +221,7 @@ class Profile extends React.Component<Props> {
       case 'bio':
         axios.put('users/me', {bio: this.state.bioInput})
           .then(() => {
-            store.dispatch(addAlert('success', 'Successfully updated your bio.'))
+            store.dispatch(addAlert('success', i18n.t("Profile.bioUpdateSuccess")))
           })
           .catch(e => {
             store.dispatch(addAlert('error', e.message))
@@ -230,12 +231,12 @@ class Profile extends React.Component<Props> {
         const emailInput = this.state.emailInput
 
         if (!validateEmail(emailInput)) {
-          return store.dispatch(addAlert('error', 'This is not valid email address.'))
+          return store.dispatch(addAlert('error', i18n.t("Profile.emailValidation")))
         }
 
         axios.put('users/me', {email: emailInput})
           .then(() => {
-            store.dispatch(addAlert('success', 'Successfully update your email.'))
+            store.dispatch(addAlert('success', i18n.t("Profile.emailUpdateSuccess")))
           })
           .catch(e => {
             store.dispatch(addAlert('error', e.message))
@@ -317,7 +318,7 @@ class Profile extends React.Component<Props> {
           : null
         }
         <Section>
-          <Header title={title ? title : 'Unknow user'} />
+          <Header title={title ? title : i18n.t("Unknow.user")} />
           <div className="section__content">
             {
               user ?
@@ -367,7 +368,7 @@ class Profile extends React.Component<Props> {
                       <Trans i18nKey="Profile.contact"/>
                     </h3>
                     <span className="profile__email">
-                      email: {user.email ? user.email : 'unknow email'}
+                      email: {user.email ? user.email : i18n.t("Unknow.email")}
                       <UserUI userId={user.id}>
                         <span className="profile__update-email" onClick={this.showUpdateEmail}>
                           <Icon size="small" name="pencil"/>

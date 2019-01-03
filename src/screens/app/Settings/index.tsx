@@ -1,10 +1,11 @@
 import './index.css'
 
 import * as React from 'react'
-import * as i18n from 'i18next'
+import * as i18next from 'i18next'
 import Select from 'react-select'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 
 import Header from 'src/components/Header'
@@ -54,7 +55,7 @@ class Settings extends React.Component {
 
     if (!newSelectedLanguage) return
 
-    i18n.changeLanguage(newSelectedLanguage.value)
+    i18next.changeLanguage(newSelectedLanguage.value)
 
     location.reload()
   }
@@ -194,27 +195,27 @@ class Settings extends React.Component {
             </h2>
             <Input
               type="password"
-              placeholder="Old password"
+              placeholder={i18n.t("Settings.placeholderOldPassword")}
               value={oldPassword}
               onChange={this.updateOldPassword}
               validation={{minLength: 6, maxLength: 12}}
-              errorMessage="Password must be bewtween 6 and 12 characters."
+              errorMessage={i18n.t("Settings.passwordValidation")}
             />
             <Input
               type="password"
-              placeholder="New password"
+              placeholder={i18n.t("Settings.placeholderNewPassword")}
               value={newPassword}
               onChange={this.updateNewPassword}
               validation={{minLength: 6, maxLength: 12}}
-              errorMessage="Password must be bewtween 6 and 12 characters."
+              errorMessage={i18n.t("Settings.passwordValidation")}
             />
             <Input
               type="password"
-              placeholder="Repeat new password"
+              placeholder={i18n.t("Settings.placeholderRepeatPassword")}
               value={newPassword2}
               onChange={this.updateNewPassword2}
               validation={{sameAs: newPassword}}
-              errorMessage="Password must be identical."
+              errorMessage={i18n.t("Settings.passwordRepeatValidation")}
             />
             <Button
               isDisabled={!arePasswordsValid}

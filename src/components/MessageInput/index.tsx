@@ -5,6 +5,7 @@ import InputTrigger, { MetaInfo } from 'react-input-trigger'
 import { Trans } from 'react-i18next'
 import { connect } from 'react-redux'
 
+import i18n from 'src/i18n'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
 import UserInfo from 'src/components/UserInfo'
@@ -97,7 +98,7 @@ class MessageInput extends React.Component<Props> {
     const usr = user ? user : (selectedUser ? selectedUser : undefined)
 
     if (!usr) {
-      store.dispatch(addAlert('error', `Something went wrong while selecting user.`))
+      store.dispatch(addAlert('error', i18n.t("MsgInput.errorSelecUser")))
       return
     }
     
@@ -157,7 +158,7 @@ class MessageInput extends React.Component<Props> {
 
   private handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     const { which } = e;
-    let { showUsersList, selectedUser, filteredUsers } = this.state
+    let { selectedUser, filteredUsers } = this.state
 
     if (which === 13 && !e.shiftKey) { // enter
       e.preventDefault()
@@ -298,7 +299,7 @@ class MessageInput extends React.Component<Props> {
         >
           <textarea
             className="msgInput__text"
-            placeholder="Type your message..."
+            placeholder={i18n.t("MsgInput.placeholder")}
             onChange={this.handleTextareaInput}
             value={this.state.textareaValue}
           ></textarea>

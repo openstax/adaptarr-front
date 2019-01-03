@@ -2,6 +2,7 @@ import * as React from 'react'
 import { History } from 'history'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
@@ -43,7 +44,7 @@ class Module extends React.Component<Props> {
 
     axios.post(`drafts/${draftId}/save`)
       .then(() => {
-        store.dispatch(addAlert('success', 'Draft saved successfully.'))
+        store.dispatch(addAlert('success', i18n.t("Draft.saveSuccess")))
         this.props.history.push(`/modules/${draftId}`)
       })
       .catch(e => {
@@ -93,7 +94,7 @@ class Module extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={mod ? mod.title : 'Unknow module'}>
+        <Header title={mod ? mod.title : i18n.t("Unknow.module")}>
           {
             mod ?
               <UserUI userId={mod.assignee}>

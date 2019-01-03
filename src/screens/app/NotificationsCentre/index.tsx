@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 import { Link } from 'react-router-dom'
 
+import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
@@ -69,11 +70,11 @@ class NotificationsCentre extends React.Component<Props> {
       body = (
         <React.Fragment>
           <Link to={`/users/${who ? who.id : undefined}`}>
-            {who ? decodeHtmlEntity(who.name) : 'Unknow user'}
+            {who ? decodeHtmlEntity(who.name) : i18n.t("Unknow.user")}
           </Link>{" "}
           <Trans i18nKey="Notifications.assigned"/>{" "}
           <Link to={`/modules/${mod ? mod.id : undefined }`}>
-            {mod ? mod.title : 'Unknow module'}
+            {mod ? mod.title : i18n.t("Unknow.module")}
           </Link>
         </React.Fragment>
       )

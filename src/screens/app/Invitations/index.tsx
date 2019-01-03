@@ -3,6 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -33,12 +34,12 @@ class Invitations extends React.Component {
     axios.post('users/invite', {email})
       .then(() => {
         this.setState({ emailValue: '' })
-        store.dispatch(addAlert('success', `Invitation sent to ${email}`))
+        store.dispatch(addAlert('success', i18n.t("Invitations.sentTo", {email: email})))
       })
       .catch((e) => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', 'You have to confirm this action.'))
+          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
         } else {
           store.dispatch(addAlert('error', e.message))
         }
@@ -76,9 +77,9 @@ class Invitations extends React.Component {
                 value={emailValue}
                 onChange={(val) => this.setState({ emailValue: val })}
                 isValid={(status) => {this.state.isEmailVaild !== status ? this.setState({ isEmailVaild: status}) : null}}
-                placeholder="E-mail address"
+                placeholder={i18n.t("Invitations.emailPlaceholder")}
                 validation={{email: true}}
-                errorMessage="This is not valid email address."
+                errorMessage={i18n.t("Invitations.emailInvalid")}
               />
               <br/>
               <Button color="green" size="medium" clickHandler={this.sendInvitation}>

@@ -3,8 +3,8 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
-import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
@@ -51,37 +51,20 @@ const trimMessage = (message: string) => {
 class NotificationComp extends React.Component<Props> {
 
   private notificationAction = (noti: Notification, mod: ModuleShortInfo | undefined) => {
-    if (noti.kind === 'comment') {
-      return (
-        <React.Fragment>
-          <Trans i18nKey="Notifications.commentedAt" />{ " " }
-          {
-            mod ? 
-              mod.title
-            : 
-              <Trans i18nKey="Notifications.undefinedModule" />
-          }
-        </React.Fragment>
-      )
-    } else if (noti.kind === 'assigned') {
-      return (
-        <React.Fragment>
-          <Trans i18nKey="Notifications.assigned" />{ " " }
-          {
-            mod ? 
-              mod.title
-            : 
-              <Trans i18nKey="Notifications.undefinedModule" />
-          }
-        </React.Fragment>
-      )
-    } else if (noti.kind === 'mention') { 
-      return (
-        <Trans i18nKey="Notifications.mentioned" />
-      )
+    switch (noti.kind) {
+      case 'comment':
+        return i18n.t("Notifications.commentedAt", {
+          title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
+        })
+      case 'assigned':
+        return i18n.t("Notifications.assigned", {
+          title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
+        })
+      case 'mention':
+        return i18n.t("Notifications.mentioned")
+      default:
+        return i18n.t("Notifications.unknowAction")
     }
-  
-    return <Trans i18nKey="Notifications.unknowAction" />
   }
 
   private onNotificationClick = () => {

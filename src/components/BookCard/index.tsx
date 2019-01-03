@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 
 import AdminUI from 'src/components/AdminUI'
@@ -62,12 +63,12 @@ class BookCard extends React.Component<Props> {
     axios.delete(`books/${this.props.book.id}`)
       .then(() => {
         this.props.fetchBooksMap()
-        this.props.addAlert('success', 'Book was deleted successfully.')
+        this.props.addAlert('success', i18n.t("Book.deleteSuccess"))
       })
       .catch((e) => {
         if (e.request.status === 403) {
           this.setState({ showSuperSession: true })
-          this.props.addAlert('info', 'You have to confirm this action.')
+          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
         } else {
           this.props.addAlert('error', e.message)
         }
@@ -114,21 +115,21 @@ class BookCard extends React.Component<Props> {
         </AdminUI>
         {
           showConfirmationDialog ?
-            <Dialog 
-              title={`Are you sure you want to delete ${book.title}?`}
+            <Dialog
+              title={i18n.t("Book.confirmDelete", {bookTitle: book.title})}
               onClose={() => this.setState({ showConfirmationDialog: false })}
             >
               <Button 
                 color="green" 
                 clickHandler={this.removeBookPermamently}
               >
-                <Trans i18nKey="Buttons.confirm" />
+                <Trans i18nKey="Buttons.confirm"/>
               </Button>
               <Button 
                 color="red" 
                 clickHandler={() => this.setState({ showConfirmationDialog: false })}
               >
-                <Trans i18nKey="Buttons.cancel" />
+                <Trans i18nKey="Buttons.cancel"/>
               </Button>
             </Dialog>
           : null

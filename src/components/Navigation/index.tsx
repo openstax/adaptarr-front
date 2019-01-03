@@ -6,6 +6,8 @@ import { connect } from 'react-redux'
 import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
 import { Trans } from 'react-i18next'
 
+import i18n from 'src/i18n'
+
 import Header from 'src/components/Header'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
@@ -73,7 +75,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
         <nav className="nav">
           <ul>
             <li className="nav__link">
-              <Tooltip content="Dashboard" direction="right">
+              <Tooltip content={i18n.t("Navigation.dashboardLink")} direction="right">
                 <NavLink exact to="/" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="dashboard" />
@@ -85,7 +87,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content="Notifications">
+              <Tooltip content={i18n.t("Navigation.notificationsLink")}>
                 <NavLink to="/notifications" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="bell" />
@@ -127,11 +129,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               }
             </li>
             <li className="nav__link">
-              <Tooltip content="Books" direction="right">
+              <Tooltip content={i18n.t("Navigation.booksLink")} direction="right">
                 <NavLink 
                   to="/books"
                   activeClassName="active"
-                  isActive={(match, location) => isActive(location, ['books', 'modules'])}
+                  isActive={(_, location) => isActive(location, ['books', 'modules'])}
                 >
                   <span className="nav__content">
                     <Icon name="book" />
@@ -143,7 +145,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content="Resources" direction="right">
+              <Tooltip content={i18n.t("Navigation.resourcesLink")} direction="right">
                 <NavLink to="/resources" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="info" />
@@ -155,11 +157,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content="Your profile">
+              <Tooltip content={i18n.t("Navigation.yourProfileLink")}>
                 <NavLink
                   to="/users/me"
                   activeClassName="active"
-                  isActive={(match, location) => isActive(location, ['users', 'settings'])}
+                  isActive={(_, location) => isActive(location, ['users', 'settings'])}
                 >
                   <span className="nav__content">
                     <Icon name="profile"/>
@@ -186,7 +188,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </li>
             <AdminUI>
               <li className="nav__link">
-                <Tooltip content="Invitations" direction="right">
+                <Tooltip content={i18n.t("Navigation.invitationsLink")} direction="right">
                   <NavLink to="/invitations" activeClassName="active">
                     <span className="nav__content">
                       <Icon name="users" />
