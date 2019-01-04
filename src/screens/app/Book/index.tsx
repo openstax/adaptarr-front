@@ -519,30 +519,45 @@ class Book extends React.Component<Props> {
   private injectMoreInfo = (obj: types.BookPart): types.BookParts => {
     const { modulesMap } = this.props.modules
     const { teamMap } = this.props.team
+    let allModStatuses: types.ModuleStatus[] = []
 
     const injectInfoToBookPart = (bp: types.BookPart): types.BookPart | types.BookPartModule | types.BookPartGroup => {
       if (bp.kind === 'module' && bp.id) {
+
         const mod = modulesMap.get(bp.id)
         const assignee = mod && mod.assignee && teamMap.get(mod.assignee) ? teamMap.get(mod.assignee) : undefined
         const status = mod && mod.status ? mod.status : 'ready'
+
         return {...bp, status, assignee}
+
       } else if (bp.kind === 'group') {
-        // TODO: Provide real info
-        return {...bp, parts: injectInfoToParts(bp.parts ? bp.parts : []), modStatuses: ['ready', 'done', 'done', 'review', 'translation']}
+
+        const {parts, modStatuses} = injectInfoToParts(bp.parts ? bp.parts : [])
+        allModStatuses = allModStatuses.concat(modStatuses)
+        return {...bp, parts, modStatuses}
+
       } else {
         return bp
       }
     }
 
-    const injectInfoToParts = (parts: types.BookPart[]): types.BookParts => {
+    const injectInfoToParts = (parts: types.BookPart[]): {parts: types.BookParts, modStatuses: types.ModuleStatus[]} => {
       let newParts: types.BookParts = []
-      parts.forEach(p => newParts.push(injectInfoToBookPart(p)))
-      return newParts
+      let modStatuses: types.ModuleStatus[] = []
+      parts.forEach(p => {
+        const newPart = injectInfoToBookPart(p)
+        newParts.push(newPart)
+        if ((newPart as types.BookPartModule).status) {
+          modStatuses.push((newPart as types.BookPartModule).status)
+        }
+      })
+      return {parts: newParts, modStatuses }
     }
 
     let res = injectInfoToBookPart(obj)
 
-    return [res]
+    // We are returning this as an array for react-nestable
+    return [{...res, modStatuses: allModStatuses}]
   }
 
   private fetchBook = (id: string = this.props.match.params.id) => {
@@ -809,9 +824,6 @@ class Book extends React.Component<Props> {
                 }
               </div>
             </AdminUI>
-            <div className="book__status">
-              <StackedBar data={['ready', 'ready', 'done', 'translation', 'review', 'review']} />
-            </div>
           </Header>
           {
           !isLoading ?
