@@ -22,6 +22,14 @@ export type BooksMap = Map<string, BookShortInfo>
 
 export type BookPartKind = 'group' | 'module'
 export type BookPart = {id?: string, number: number, kind: BookPartKind, title: string, parts?: BookPart[]}
+export interface BookPartModule extends BookPart {
+  status: ModuleStatus
+  assignee?: User
+}
+export interface BookPartGroup extends BookPart {
+  modStatuses: ModuleStatus[]
+}
+export type BookParts = (BookPart | BookPartGroup | BookPartModule)[]
 export interface Book {
   id: string
   title: string

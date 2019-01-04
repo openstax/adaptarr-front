@@ -114,9 +114,7 @@ class Book extends React.Component<Props> {
     this.setState({ showModuleDetails: undefined })
   }
 
-  private renderGroup = (item: types.BookPart, collapseIcon: any) => {
-    const placeholder: types.ModuleStatus[] = ['ready', 'ready', 'done', 'translation', 'review', 'review']
-
+  private renderGroup = (item: types.BookPartGroup, collapseIcon: any) => {
     return (
       <React.Fragment>
         <span className="bookpart__title">
@@ -142,7 +140,7 @@ class Book extends React.Component<Props> {
             </Button>
           </AdminUI>
           <span className="bookpart__status">
-            <StackedBar data={placeholder}/>
+            <StackedBar data={item.modStatuses}/>
           </span>
           <span className="bookpart__icon">
             {collapseIcon}
@@ -152,21 +150,7 @@ class Book extends React.Component<Props> {
     )
   }
 
-  private renderModule = (item: types.BookPart) => {
-    const { modulesMap } = this.props.modules
-    const { teamMap } = this.props.team
-    let assignedUser: types.User | undefined
-    let modStatus: types.ModuleStatus = 'ready'
-
-    if (item.id) {
-      const mod = modulesMap.get(item.id)
-      const assignee = mod ? mod.assignee : undefined
-      assignedUser = assignee ? teamMap.get(assignee) : undefined
-      if (mod && mod.status) {
-        modStatus = mod.status
-      }
-    }
-
+  private renderModule = (item: types.BookPartModule) => {
     return (
       <React.Fragment>
         <span 
@@ -186,11 +170,11 @@ class Book extends React.Component<Props> {
             </Button>
           </AdminUI>
           {
-            assignedUser ?
+            item.assignee ?
               <React.Fragment>
-                <Avatar size="small" user={assignedUser} />
+                <Avatar size="small" user={item.assignee} />
                 <Button
-                  clickHandler={() => this.handleUserClick((assignedUser as types.User), 'remove', item)}
+                  clickHandler={() => this.handleUserClick((item.assignee as types.User), 'remove', item)}
                 >
                   <Trans i18nKey="Buttons.unassign" />
                 </Button>
@@ -204,20 +188,20 @@ class Book extends React.Component<Props> {
               </Button>
           }
           <span className="bookpart__status">
-            <ModuleStatus status={modStatus}/>
+            <ModuleStatus status={item.status}/>
           </span>
         </span>
       </React.Fragment>
     )
   }
 
-  private renderItem = ({ item, collapseIcon }: { item: types.BookPart, index: number, collapseIcon: any, handler: any }) => {
+  private renderItem = ({ item, collapseIcon }: { item: types.BookPart | types.BookPartModule | types.BookPartGroup, index: number, collapseIcon: any, handler: any }) => {
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
           item.kind === 'group' ?
-            this.renderGroup(item, collapseIcon)
-          : this.renderModule(item)
+            this.renderGroup((item as types.BookPartGroup), collapseIcon)
+          : this.renderModule((item as types.BookPartModule))
         }
       </div>
     )
@@ -504,14 +488,21 @@ class Book extends React.Component<Props> {
 
     axios.put(`modules/${targetModule.id}`, payload)
       .then(() => {
+        this.closeActionsDialog()
+        if (targetModule.id) {
+          // After update of assignee we could fetchBook and modulesMaps
+          // or just update them. Updating is faster so there we go:
+          this.props.setAssigneeInModulesMap(targetModule.id, payload.assignee)
+          const updatedBook = {
+            ...this.state.book,
+            parts: this.injectMoreInfo(this.state.book.parts[0])
+          }
+          this.setState({ book: updatedBook })
+        }
         if (assignAction === 'assign') {
           this.props.addAlert('success', i18n.t("User.assignSuccess", {user: user.name, module: targetModule.title}))
         } else if (assignAction === 'remove') {
           this.props.addAlert('success', i18n.t("User.unassignSuccess", {user: user.name, module: targetModule.title}))
-        }     
-        this.closeActionsDialog()
-        if (targetModule.id) {
-          this.props.setAssigneeInModulesMap(targetModule.id, payload.assignee)
         }
       })
       .catch(e => {
@@ -525,6 +516,35 @@ class Book extends React.Component<Props> {
       })
   }
 
+  private injectMoreInfo = (obj: types.BookPart): types.BookParts => {
+    const { modulesMap } = this.props.modules
+    const { teamMap } = this.props.team
+
+    const injectInfoToBookPart = (bp: types.BookPart): types.BookPart | types.BookPartModule | types.BookPartGroup => {
+      if (bp.kind === 'module' && bp.id) {
+        const mod = modulesMap.get(bp.id)
+        const assignee = mod && mod.assignee && teamMap.get(mod.assignee) ? teamMap.get(mod.assignee) : undefined
+        const status = mod && mod.status ? mod.status : 'ready'
+        return {...bp, status, assignee}
+      } else if (bp.kind === 'group') {
+        // TODO: Provide real info
+        return {...bp, parts: injectInfoToParts(bp.parts ? bp.parts : []), modStatuses: ['ready', 'done', 'done', 'review', 'translation']}
+      } else {
+        return bp
+      }
+    }
+
+    const injectInfoToParts = (parts: types.BookPart[]): types.BookParts => {
+      let newParts: types.BookParts = []
+      parts.forEach(p => newParts.push(injectInfoToBookPart(p)))
+      return newParts
+    }
+
+    let res = injectInfoToBookPart(obj)
+
+    return [res]
+  }
+
   private fetchBook = (id: string = this.props.match.params.id) => {
     axios.get(`books/${id}`)
       .then((res: AxiosResponse) => {
@@ -535,7 +555,7 @@ class Book extends React.Component<Props> {
               isLoading: false,
               book: {
                 ...this.state.book,
-                parts: [res.data]
+                parts: this.injectMoreInfo(res.data)
               }
             })
           })
