@@ -24,11 +24,13 @@ type Props = {
     passwordInput: '',
   }
 
-  private confirmSuperSession = () => {
+  private confirmSuperSession = (ev: React.FormEvent<HTMLFormElement>) => {
+    ev.preventDefault()
+
     const password = this.state.passwordInput
 
     if (password) {
-      return new Promise((resolve, reject) => {
+      new Promise((resolve, reject) => {
         axiosClean.post('/elevate', `password=${password}`)
           .then(res => {
             this.setState({ errorMessage: '' })
@@ -39,12 +41,13 @@ type Props = {
             reject(this.props.onFailure(e))
           })
       })
+      return
     }
 
     const errorMessage = i18n.t("SuperSession.providePass")
     this.setState({ errorMessage })
 
-    return this.props.onFailure(new Error(errorMessage))
+    this.props.onFailure(new Error(errorMessage))
   }
 
   public render() {
@@ -56,7 +59,7 @@ type Props = {
         i18nKey="Admin.confirmSuperSession"
         className="supersession"
       >
-        <form>
+        <form onSubmit={this.confirmSuperSession}>
           {
             errorMessage ?
               <span className="error">{errorMessage}</span>
@@ -68,9 +71,7 @@ type Props = {
             placeholder={i18n.t("SuperSession.placeholderPass")}
             autoFocus
           />
-          <Button clickHandler={this.confirmSuperSession}>
-            <Trans i18nKey="Buttons.confirm"/>
-          </Button>
+          <input type="submit" value={i18n.t("Buttons.confirm")} />
         </form>
       </Dialog>
     )
