@@ -161,10 +161,10 @@ class Profile extends React.Component<Props> {
     }
 
     return (
-      <Dialog onClose={() => this.closeDialog()} i18nKey={titlei18nKey}>
+      <Dialog onClose={this.closeDialog} i18nKey={titlei18nKey}>
         <div className="profile__update-dialog">
           {body}
-          <Button clickHandler={() => this.confirmUpdateAction()}>
+          <Button clickHandler={this.confirmUpdateAction}>
             <Trans i18nKey="Buttons.confirm"/>
           </Button>
         </div>

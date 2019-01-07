@@ -46,6 +46,16 @@ class Invitations extends React.Component {
       })
   }
 
+  private hanleInputChange = (val: string) => {
+    this.setState({ emailValue: val })
+  }
+
+  private handleInputValidation = (status: boolean) => {
+    if (this.state.isEmailVaild !== status) {
+      this.setState({ isEmailVaild: status})
+    }
+  }
+
   private superSessionSuccess = () => {
     this.sendInvitation()
     this.setState({ showSuperSession: false })
@@ -53,6 +63,10 @@ class Invitations extends React.Component {
 
   private superSessionFailure = (e: Error) => {
     store.dispatch(addAlert('error', e.message))
+  }
+
+  private closeSuperSession = () => {
+    this.setState({ showSuperSession: false })
   }
 
   public render() {
@@ -65,7 +79,8 @@ class Invitations extends React.Component {
             <SuperSession 
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}/>
+              onAbort={this.closeSuperSession}
+            />
           : null
         }
         <Section>
@@ -75,8 +90,8 @@ class Invitations extends React.Component {
               <Input
                 type="email"
                 value={emailValue}
-                onChange={(val) => this.setState({ emailValue: val })}
-                isValid={(status) => {this.state.isEmailVaild !== status ? this.setState({ isEmailVaild: status}) : null}}
+                onChange={this.hanleInputChange}
+                isValid={this.handleInputValidation}
                 placeholder={i18n.t("Invitations.emailPlaceholder")}
                 validation={{email: true}}
                 errorMessage={i18n.t("Invitations.emailInvalid")}

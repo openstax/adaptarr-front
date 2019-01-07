@@ -100,7 +100,7 @@ class Module extends React.Component<Props> {
               <UserUI userId={mod.assignee}>
                 <Button
                   color="green"
-                  clickHandler={() => this.saveDraft()}
+                  clickHandler={this.saveDraft}
                 >
                   <Trans i18nKey="Buttons.save"/>
                 </Button>

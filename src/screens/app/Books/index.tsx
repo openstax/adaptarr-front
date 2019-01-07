@@ -133,6 +133,10 @@ class Books extends React.Component<Props> {
     store.dispatch(addAlert('error', e.message))
   }
 
+  private closeSuperSession = () => {
+    this.setState({ showSuperSession: false })
+  }
+
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
     const { titleInput, showSuperSession, showAddBook } = this.state
@@ -154,14 +158,14 @@ class Books extends React.Component<Props> {
             <SuperSession 
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}/>
+              onAbort={this.closeSuperSession}/>
           : null
         }
         {
           showAddBook ?
             <Dialog 
               size="medium"
-              onClose={() => this.closeAddBookDialog()}
+              onClose={this.closeAddBookDialog}
               i18nKey="Books.addBookDialog"
             >
               <Input 
@@ -178,7 +182,7 @@ class Books extends React.Component<Props> {
               <Button 
                 color="green"
                 isDisabled={titleInput.length === 0}
-                clickHandler={() => this.addBook()}
+                clickHandler={this.addBook}
               >
                 <Icon name="plus"/>
               </Button>

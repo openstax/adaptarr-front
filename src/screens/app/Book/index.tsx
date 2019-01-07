@@ -607,6 +607,10 @@ class Book extends React.Component<Props> {
     this.props.addAlert('error', e.message)
   }
 
+  private closeSuperSession = () => {
+    this.setState({ showSuperSession: false })
+  }
+
   private updateGroupNameValue = (val: string) => {
     this.setState({ groupNameValue: val })
   }
@@ -734,12 +738,25 @@ class Book extends React.Component<Props> {
     return (
       <Dialog
         size="medium"
-        onClose={() => this.closeActionsDialog()}
+        onClose={this.closeActionsDialog}
         i18nKey={titlei18nKey}
       >
         {body}
       </Dialog>
     )
+  }
+
+  private toggleDragging = () => {
+    this.setState({ disableDragging: !this.state.disableDragging })
+  }
+
+  private closeEditBook = () => {
+    this.setState({ showEditBook: false })
+  }
+
+  private handleEditBookSuccess = () => {
+    this.setState({ showEditBook: false })
+    this.fetchBook()
   }
 
   private closeActionsDialog = () => {
@@ -776,7 +793,7 @@ class Book extends React.Component<Props> {
             <SuperSession 
               onSuccess={this.superSessionSuccess} 
               onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}/>
+              onAbort={this.closeSuperSession}/>
           : null
         }
         {
@@ -787,11 +804,11 @@ class Book extends React.Component<Props> {
         {
           showEditBook ?
             <EditBook
-            book={book}
-            onClose={() => this.setState({ showEditBook: false })}
-            onSuccess={() => {this.fetchBook(), this.setState({ showEditBook: false })}}
-          />
-        : null
+              book={book}
+              onClose={this.closeEditBook}
+              onSuccess={this.handleEditBookSuccess}
+            />
+          : null
         }
         <Section>
           <Header title={book.title}>
@@ -807,7 +824,7 @@ class Book extends React.Component<Props> {
                     <React.Fragment>
                       <Trans i18nKey="Book.draggingLocked"/>
                       <Button
-                        clickHandler={() => this.setState({ disableDragging: !disableDragging })}
+                        clickHandler={this.toggleDragging}
                       >
                         <Icon name="lock"/>
                       </Button>
@@ -816,7 +833,7 @@ class Book extends React.Component<Props> {
                     <React.Fragment>
                       <Trans i18nKey="Book.draggingUnlocked"/>
                       <Button
-                        clickHandler={() => this.setState({ disableDragging: !disableDragging })}
+                        clickHandler={this.toggleDragging}
                       >
                         <Icon name="unlock"/>
                       </Button>

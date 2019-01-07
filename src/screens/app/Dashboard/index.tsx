@@ -65,11 +65,11 @@ class Dashboard extends React.Component<Props> {
     this.setState({ showDeleteDraftDialog: true, targetDraftId })
   }
 
-  private closeDeleteDraftDialog () {
+  private closeDeleteDraftDialog = () => {
     this.setState({ showDeleteDraftDialog: false, targetDraftId: null })
   }
 
-  private deleteDraft () {
+  private deleteDraft = () => {
     const targetDraftId = this.state.targetDraftId
 
     if (!targetDraftId) return
@@ -86,7 +86,7 @@ class Dashboard extends React.Component<Props> {
     this.closeDeleteDraftDialog()
   }
 
-  private createDraft (targetDraftId: string) {
+  private createDraft = (targetDraftId: string) => {
     if (!targetDraftId) return
 
     axios.post(`modules/${targetDraftId}`)
@@ -99,7 +99,7 @@ class Dashboard extends React.Component<Props> {
       })
   }
 
-  private listOfDrafts (arr: types.DraftShortInfo[]) {   
+  private listOfDrafts = (arr: types.DraftShortInfo[]) => {   
     return arr.map((draft: types.DraftShortInfo) => {
       return (
         <li key={draft.module} className="list__item">
@@ -124,7 +124,7 @@ class Dashboard extends React.Component<Props> {
     })
   }
 
-  private listOfAssigned (mods: types.ModuleShortInfo[]) {
+  private listOfAssigned = (mods: types.ModuleShortInfo[]) => {
     const drafts = this.state.drafts
 
     return mods.map(mod => {
@@ -184,12 +184,12 @@ class Dashboard extends React.Component<Props> {
           this.state.showDeleteDraftDialog ?
             <Dialog 
               title={i18n.t("Draft.deleteDraftConfirmation")} 
-              onClose={() => this.closeDeleteDraftDialog()}
+              onClose={this.closeDeleteDraftDialog}
             >
-              <Button color="red" clickHandler={() => this.deleteDraft()}>
+              <Button color="red" clickHandler={this.deleteDraft}>
                 <Trans i18nKey="Buttons.delete"/>
               </Button>
-              <Button clickHandler={() => this.closeDeleteDraftDialog()}>
+              <Button clickHandler={this.closeDeleteDraftDialog}>
                 <Trans i18nKey="Buttons.cancel"/>
               </Button>
             </Dialog>

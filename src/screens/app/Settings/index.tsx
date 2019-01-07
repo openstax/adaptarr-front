@@ -102,6 +102,14 @@ class Settings extends React.Component {
       }) */
   }
 
+  private closeChangeLanguage = () => {
+    this.setState({ showChangeLanguage: false })
+  }
+
+  private closeChangePassword = () => {
+    this.setState({ showChangePassword: false })
+  }
+
   componentDidMount = () => {
     const currentLang = localStorage.i18nextLng
 
@@ -140,7 +148,7 @@ class Settings extends React.Component {
           showChangeLanguage ?
             <Dialog 
               i18nKey="Settings.changeLanguageDialog"
-              onClose={() => this.setState({ showChangeLanguage: false })}
+              onClose={this.closeChangeLanguage}
             >
               <Button 
                 color="green"
@@ -150,7 +158,7 @@ class Settings extends React.Component {
               </Button>
               <Button 
                 color="red"
-                clickHandler={() => this.setState({ showChangeLanguage: false })}
+                clickHandler={this.closeChangeLanguage}
               >
                 <Trans i18nKey="Buttons.cancel" />
               </Button>
@@ -161,7 +169,7 @@ class Settings extends React.Component {
           showChangePassword ?
             <Dialog 
               i18nKey="Settings.changePasswordDialog"
-              onClose={() => this.setState({ showChangePassword: false })}
+              onClose={this.closeChangePassword}
             >
               <Button 
                 color="green" 
@@ -171,7 +179,7 @@ class Settings extends React.Component {
               </Button>
               <Button 
                 color="red" 
-                clickHandler={() => this.setState({ showChangePassword: false })}
+                clickHandler={this.closeChangePassword}
               >
                 <Trans i18nKey="Buttons.cancel" />
               </Button>
