@@ -6,7 +6,9 @@ import { State, reducer, initialState } from 'src/store/reducers'
 const logger = () => {
   return (next: any) => {
     return (action: any) => {
-      console.log('[Middleware] Dispatching', action)
+      if (process.env.NODE_ENV !== 'production') {
+        console.log('[Middleware] Dispatching', action)
+      }
       next(action)
     }
   }
