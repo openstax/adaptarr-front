@@ -89,7 +89,7 @@ class App extends React.Component<Props> {
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
 
-    const socket = new WebSocket('ws://adaptarr.test/api/v1/events')
+    const socket = new WebSocket('wss://adaptarr.test/api/v1/events')
 
     socket.onopen = function(event) {
       console.log('Connection opened', event)
