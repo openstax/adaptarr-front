@@ -54,7 +54,7 @@ export default {
     "Book.placeholderChangeGroupTitle": "Nowy tytuł",
     "User.assignError": "Błędyn użytkownik lub moduł.",
     "User.assignSuccess": "{{user}} został przypisany do {{module}}.",
-    "User.unassignSuccess": "{{user}} został usunięty z {{module}}",
+    "User.unassignSuccess": "Użytkownik został usunięty z {{module}}",
     "Buttons.addNew": "Dodaj nowy",
     "Buttons.delete": "Usuń",
     "Buttons.cancel": "Anuluj",

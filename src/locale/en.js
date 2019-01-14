@@ -54,7 +54,7 @@ export default {
     "Book.placeholderChangeGroupTitle": "New title",
     "User.assignError": "Target module or user are undefined.",
     "User.assignSuccess": "{{user}} was assigned to {{module}}.",
-    "User.unassignSuccess": "{{user}} was unassigned from {{module}}",
+    "User.unassignSuccess": "User was unassigned from {{module}}",
     "Buttons.addNew": "Add new",
     "Buttons.delete": "Delete",
     "Buttons.cancel": "Cancel",

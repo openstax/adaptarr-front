@@ -86,7 +86,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 22px;
+  height: 20px;
 }
 
 .bookpart__item::before {
