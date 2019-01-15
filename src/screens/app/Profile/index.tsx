@@ -4,6 +4,7 @@ import * as React from 'react'
 import { History } from 'history'
 import { Trans } from 'react-i18next'
 import { connect } from 'react-redux'
+import { match } from 'react-router'
 import { Link } from 'react-router-dom'
 import { FilesError } from 'react-files'
 
@@ -38,24 +39,28 @@ type Props = {
     }
   }
   history: History
-  user: {
-    user: api.User
-  }
   team: {
     teamMap: TeamMap
   }
+  user: api.User
+  currentUser: api.User
 }
 
-const mapStateToProps = ({ user, team }: State) => {
+const mapStateToProps = ({ user: { user }, team }: State) => {
   return {
-    user,
+    currentUser: user,
     team,
   }
 }
 
+async function loader({ match }: { match: match<{ id: string }> }) {
+  const user = await api.User.load(match.params.id)
+
+  return { user }
+}
+
 class Profile extends React.Component<Props> {
   state: {
-    user: api.User | undefined
     showDialog: boolean
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
@@ -63,11 +68,10 @@ class Profile extends React.Component<Props> {
     // bioInput: string
     // emailInput: string
   } = {
-    user: undefined,
     showDialog: false,
     updateAction: null,
     files: [],
-    nameInput: '',
+    nameInput: this.props.user.name,
     // bioInput: '',
     // emailInput: '',
   }
@@ -174,9 +178,9 @@ class Profile extends React.Component<Props> {
   }
 
   private closeDialog = () => {
-    const user = this.state.user
-    this.setState({ 
-      showDialog: false, 
+    const user = this.props.user
+    this.setState({
+      showDialog: false,
       updateAction: null,
       files: [],
       nameInput: user && user.name ? user.name : '',
@@ -192,7 +196,7 @@ class Profile extends React.Component<Props> {
     /*switch (updateAction) {
       case 'avatar':
         const files = this.state.files
-        
+
         if (files.length === 0) {
           return store.dispatch(addAlert('error', i18n.t("Profile.avatarValidation")))
         }
@@ -273,36 +277,9 @@ class Profile extends React.Component<Props> {
     )
   }
 
-  private fetchUserInfo = () => {
-    const userId = this.props.match.params.id
-
-    this.setState({ isLoading: true })
-
-    api.User.load(userId)
-      .then(user => {
-        this.setState({
-          user: user,
-          nameInput: user.name || '',
-        })
-      })
-      .catch(() => {
-        this.props.history.push('/404')
-      })
-  }
-
-  componentDidUpdate = (prevProps: Props) => {
-    if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.fetchUserInfo()
-    }
-  }
-
-  componentDidMount = () => {
-    this.fetchUserInfo()
-  }
-
   public render() {
-    const { user, showDialog } = this.state
-    const { teamMap } = this.props.team
+    const { showDialog } = this.state
+    const { user, team: { teamMap } } = this.props
     let title
     if (this.props.match.params.id === 'me') {
       title = 'Your profile'
@@ -320,65 +297,61 @@ class Profile extends React.Component<Props> {
         <Section>
           <Header title={title ? title : i18n.t("Unknown.user")} />
           <div className="section__content">
-            {
-              user ?
-                <div className="profile">
-                  <div className="profile__top">
-                    <div className="profile__avatar">
-                      <Avatar size="big" disableLink user={user}/>
-                      <UserUI userId={user.id}>
-                        <span 
-                          className="profile__update-avatar"
-                          onClick={this.showUpdateAvatar}
-                        >
-                          <Icon name="pencil"/>
-                        </span>
-                      </UserUI>
-                    </div>
-                    <h2 className="profile__name">
-                      {decodeHtmlEntity(user.name)}
-                      <UserUI userId={user.id}>
-                        <span
-                          className="profile__update-name"
-                          onClick={this.showUpdateName}
-                        >
-                          <Icon size="small" name="pencil"/>
-                        </span>
-                      </UserUI>
-                    </h2>
-                  </div>
-                  <div className="profile__info">
-                    <h3 className="profile__title">
-                      <Trans i18nKey="Profile.bio"/>
-                    </h3>
-                    <div className="profile__bio">
-                      <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio nisi facilis ad facere minus laborum soluta illo maiores illum atque enim aliquid commodi adipisci vel amet, porro delectus at nesciunt.
-                      </p>
-                      <p>
-                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt fuga aspernatur quos quidem quas explicabo porro, minima quia cupiditate magnam.
-                      </p>
-                      <UserUI userId={user.id}>
-                        <span className="profile__update-bio" onClick={this.showUpdateBio}>
-                          <Icon size="small" name="pencil"/>
-                        </span>
-                      </UserUI>
-                    </div>
-                    <h3 className="profile__title">
-                      <Trans i18nKey="Profile.contact"/>
-                    </h3>
-                    <span className="profile__email">
-                      {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}
-                      <UserUI userId={user.id}>
-                        <span className="profile__update-email" onClick={this.showUpdateEmail}>
-                          <Icon size="small" name="pencil"/>
-                        </span>
-                      </UserUI>
+            <div className="profile">
+              <div className="profile__top">
+                <div className="profile__avatar">
+                  <Avatar size="big" disableLink user={user}/>
+                  <UserUI userId={user.id}>
+                    <span
+                      className="profile__update-avatar"
+                      onClick={this.showUpdateAvatar}
+                    >
+                      <Icon name="pencil"/>
                     </span>
-                  </div>
+                  </UserUI>
                 </div>
-              : <Spinner/>
-            }
+                <h2 className="profile__name">
+                  {decodeHtmlEntity(user.name)}
+                  <UserUI userId={user.id}>
+                    <span
+                      className="profile__update-name"
+                      onClick={this.showUpdateName}
+                    >
+                      <Icon size="small" name="pencil"/>
+                    </span>
+                  </UserUI>
+                </h2>
+              </div>
+              <div className="profile__info">
+                <h3 className="profile__title">
+                  <Trans i18nKey="Profile.bio"/>
+                </h3>
+                <div className="profile__bio">
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Optio nisi facilis ad facere minus laborum soluta illo maiores illum atque enim aliquid commodi adipisci vel amet, porro delectus at nesciunt.
+                  </p>
+                  <p>
+                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt fuga aspernatur quos quidem quas explicabo porro, minima quia cupiditate magnam.
+                  </p>
+                  <UserUI userId={user.id}>
+                    <span className="profile__update-bio" onClick={this.showUpdateBio}>
+                      <Icon size="small" name="pencil"/>
+                    </span>
+                  </UserUI>
+                </div>
+                <h3 className="profile__title">
+                  <Trans i18nKey="Profile.contact"/>
+                </h3>
+                <span className="profile__email">
+                  {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}
+                  <UserUI userId={user.id}>
+                    <span className="profile__update-email" onClick={this.showUpdateEmail}>
+                      <Icon size="small" name="pencil"/>
+                    </span>
+                  </UserUI>
+                </span>
+              </div>
+            </div>
           </div>
         </Section>
         <Section>

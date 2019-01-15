@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { History } from 'history'
 import { Trans } from 'react-i18next'
+import { match } from 'react-router'
 
 import i18n from 'src/i18n'
 
@@ -8,8 +9,9 @@ import * as api from 'src/api'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
 
-import Section from 'src/components/Section'
 import Header from 'src/components/Header'
+import Load from 'src/components/Load'
+import Section from 'src/components/Section'
 import Spinner from 'src/components/Spinner'
 import UserUI from 'src/components/UserUI'
 import Button from 'src/components/ui/Button'
@@ -18,30 +20,25 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
 type Props = {
-  match: {
-    params: {
-      id: string
-    }
-  }
   history: History
+  mod: api.Module
+  draft: api.Draft
+  index: string
+}
+
+async function loader({ match }: { match: match<{ id: string }> }) {
+  const [module, draft] = await Promise.all([
+    api.Module.load(match.params.id),
+    api.Draft.load(match.params.id),
+  ])
+  const index = await draft.read('index.cnxml')
+
+  return { mod: module, draft, index }
 }
 
 class Module extends React.Component<Props> {
-  
-  state: {
-    isLoading: boolean
-    mod: api.Module | undefined
-    draft?: api.Draft
-    index: string
-    error?: string
-  } = {
-    isLoading: true,
-    mod: undefined,
-    index: '',
-  }
-
   private saveDraft = () => {
-    const { draft } = this.state
+    const { draft } = this.props
 
     draft!.save()
       .then(() => {
@@ -53,77 +50,30 @@ class Module extends React.Component<Props> {
       })
   }
 
-  private fetchDraftFiles = () => {
-    const draftId = this.props.match.params.id
-
-    api.Draft.load(draftId)
-      .then(draft => Promise.all([
-        draft,
-        draft.files(),
-        draft.read('index.cnxml')
-      ]))
-      .then(([draft, files, index]) => this.setState({ isLoading: false, draft, files, index }))
-      .catch(e => {
-        this.setState({ isLoading: false, error: e.message })
-        store.dispatch(addAlert('error', e.message))
-      })
-  }
-
-  private fetchModuleInfo = () => {
-    api.Module.load(this.props.match.params.id)
-      .then(res => {
-        this.setState({ mod: res })
-      })
-      .catch(() => {
-        this.props.history.push('/404')
-      })
-  }
-
-  componentDidMount = () => {
-    this.fetchModuleInfo()
-    this.fetchDraftFiles()
-  }
-
   public render() {
-    const { isLoading, mod, index, error } = this.state
+    const { mod, index } = this.props
 
     return (
       <Section>
         <Header title={mod ? mod.title : i18n.t("Unknown.module")}>
-          {
-            mod ?
-              <UserUI userId={mod.assignee}>
-                <Button
-                  color="green"
-                  clickHandler={this.saveDraft}
-                >
-                  <Trans i18nKey="Buttons.save"/>
-                </Button>
-              </UserUI>
-            : null
-          }
+          <UserUI userId={mod.assignee}>
+            <Button
+              color="green"
+              clickHandler={this.saveDraft}
+            >
+              <Trans i18nKey="Buttons.save"/>
+            </Button>
+          </UserUI>
         </Header>
         <div className="section__content">
-          {
-            isLoading ?
-              <Spinner/>
-            :
-              <React.Fragment>
-                {
-                  index && mod ?
-                    <div 
-                      className="draftEditor cnxml"
-                      dangerouslySetInnerHTML={{__html: updateImgSrcs(index, mod.id)}}
-                    >
-                    </div>
-                  : error
-                }
-              </React.Fragment>
-          }
+          <div
+            className="draftEditor cnxml"
+            dangerouslySetInnerHTML={{__html: updateImgSrcs(index, mod.id)}}
+            />
         </div>
       </Section>
     )
   }
 }
 
-export default Module
+export default Load(loader)(Module)
