@@ -3,7 +3,8 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { IsLoading, User } from 'src/store/types'
+import { User } from 'src/api'
+import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {

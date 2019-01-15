@@ -5,13 +5,14 @@ import { connect } from 'react-redux'
 
 import i18n from 'src/i18n'
 import sortArrayByName from 'src/helpers/sortArrayByName'
+import { User } from 'src/api'
 
 import UserInfo from 'src/components/UserInfo'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
 
-import { TeamMap, User, ModulesMap, BookPart } from 'src/store/types'
+import { TeamMap, ModulesMap, BookPart } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {

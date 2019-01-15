@@ -3,7 +3,8 @@ import { History } from 'history'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+
+import * as api from 'src/api'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
 
@@ -15,7 +16,6 @@ import Button from 'src/components/ui/Button'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { ModuleShortInfo } from 'src/store/types'
 
 type Props = {
   match: {
@@ -30,7 +30,8 @@ class Module extends React.Component<Props> {
   
   state: {
     isLoading: boolean
-    mod: ModuleShortInfo | undefined
+    mod: api.Module | undefined
+    draft?: api.Draft
     index: string
     error?: string
   } = {
@@ -40,12 +41,12 @@ class Module extends React.Component<Props> {
   }
 
   private saveDraft = () => {
-    const draftId = this.props.match.params.id
+    const { draft } = this.state
 
-    axios.post(`drafts/${draftId}/save`)
+    draft!.save()
       .then(() => {
         store.dispatch(addAlert('success', i18n.t("Draft.saveSuccess")))
-        this.props.history.push(`/modules/${draftId}`)
+        this.props.history.push(`/modules/${draft!.module}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -55,29 +56,23 @@ class Module extends React.Component<Props> {
   private fetchDraftFiles = () => {
     const draftId = this.props.match.params.id
 
-    axios.get(`drafts/${draftId}/files`)
-      .then(res => {
-        this.setState({ files: res.data })
-      })
+    api.Draft.load(draftId)
+      .then(draft => Promise.all([
+        draft,
+        draft.files(),
+        draft.read('index.cnxml')
+      ]))
+      .then(([draft, files, index]) => this.setState({ isLoading: false, draft, files, index }))
       .catch(e => {
-        this.setState({ files: undefined })
-        store.dispatch(addAlert('error', e.message))
-      })
-
-    axios.get(`drafts/${draftId}/files/index.cnxml`)
-      .then(res => {
-        this.setState({ isLoading: false, index: res.data, error: '' })
-      })
-      .catch(e => {
-        this.setState({ isLoading: false, index: undefined, error: e.message })
+        this.setState({ isLoading: false, error: e.message })
         store.dispatch(addAlert('error', e.message))
       })
   }
 
   private fetchModuleInfo = () => {
-    axios.get(`modules/${this.props.match.params.id}`)
+    api.Module.load(this.props.match.params.id)
       .then(res => {
-        this.setState({ mod: res.data })
+        this.setState({ mod: res })
       })
       .catch(() => {
         this.props.history.push('/404')

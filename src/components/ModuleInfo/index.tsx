@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-import { ModuleShortInfo } from 'src/store/types'
+import { Module } from 'src/api'
 
 type Props = {
-  mod: ModuleShortInfo
+  mod: Module
 }
 
 class ModuleInfo extends React.Component<Props> {

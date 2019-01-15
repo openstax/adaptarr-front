@@ -1,6 +1,8 @@
+import { User } from 'src/api'
+
 import { UserDataAction } from 'src/store/actions/User'
-import { IsLoading, User } from 'src/store/types'
-import { 
+import { IsLoading } from 'src/store/types'
+import {
   FETCH_USER_BEGIN,
   FETCH_USER_SUCCESS,
   FETCH_USER_FAILURE,
@@ -15,10 +17,10 @@ export interface State {
 
 export const initialState = {
   isLoading: true,
-  user: {
+  user: new User({
     id: 0,
     name: 'Loading...'
-  }
+  })
 }
 
 export function reducer (state: State = initialState, action: UserDataAction) {

@@ -8,9 +8,10 @@ import { Link } from 'react-router-dom'
 import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import validateEmail from 'src/helpers/validateEmail'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+
+import * as api from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -27,7 +28,7 @@ import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
-import { User, TeamMap } from 'src/store/types'
+import { TeamMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
@@ -38,7 +39,7 @@ type Props = {
   }
   history: History
   user: {
-    user: User
+    user: api.User
   }
   team: {
     teamMap: TeamMap
@@ -54,21 +55,21 @@ const mapStateToProps = ({ user, team }: State) => {
 
 class Profile extends React.Component<Props> {
   state: {
-    user: User | undefined
+    user: api.User | undefined
     showDialog: boolean
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
     nameInput: string
-    bioInput: string
-    emailInput: string
+    // bioInput: string
+    // emailInput: string
   } = {
     user: undefined,
     showDialog: false,
     updateAction: null,
     files: [],
     nameInput: '',
-    bioInput: '',
-    emailInput: '',
+    // bioInput: '',
+    // emailInput: '',
   }
 
   private showUpdateAvatar = () => {
@@ -109,7 +110,7 @@ class Profile extends React.Component<Props> {
   }
 
   private showDialogWithAction = () => {
-    const { updateAction, nameInput, bioInput, emailInput } = this.state
+    const { updateAction, nameInput/*, bioInput, emailInput*/ } = this.state
     let titlei18nKey = ''
     let body
 
@@ -137,7 +138,7 @@ class Profile extends React.Component<Props> {
           />
         )
         break
-      case 'bio':
+      /*case 'bio':
         titlei18nKey = 'Profile.updateBio'
         body = (
           <textarea
@@ -157,7 +158,7 @@ class Profile extends React.Component<Props> {
             errorMessage={i18n.t("Profile.emailValidation")}
           />
         )
-        break
+        break*/
     }
 
     return (
@@ -179,15 +180,16 @@ class Profile extends React.Component<Props> {
       updateAction: null,
       files: [],
       nameInput: user && user.name ? user.name : '',
-      bioInput: user && user.bio ? user.bio : '',
-      emailInput: user && user.email ? user.email : '',
+      // bioInput: user && user.bio ? user.bio : '',
+      // emailInput: user && user.email ? user.email : '',
     })
   }
 
   private confirmUpdateAction = () => {
     const updateAction = this.state.updateAction
 
-    switch (updateAction) {
+    // TODO: not yet implemented on the server
+    /*switch (updateAction) {
       case 'avatar':
         const files = this.state.files
         
@@ -242,13 +244,13 @@ class Profile extends React.Component<Props> {
             store.dispatch(addAlert('error', e.message))
           })
         break
-    }
+    }*/
 
     this.closeDialog()
   }
 
   private listOfTeamMembers = (teamMap: TeamMap) => {
-    let team: User[] = []
+    let team: api.User[] = []
     teamMap.forEach(user => team.push(user))
 
     return (
@@ -276,13 +278,11 @@ class Profile extends React.Component<Props> {
 
     this.setState({ isLoading: true })
 
-    axios.get(`users/${userId}`)
-      .then(res => {
-        this.setState({ 
-          user: res.data,
-          nameInput: res.data.name || '',
-          bioInput: res.data.bio || '',
-          emailInput: res.data.email || '',
+    api.User.load(userId)
+      .then(user => {
+        this.setState({
+          user: user,
+          nameInput: user.name || '',
         })
       })
       .catch(() => {
@@ -368,7 +368,7 @@ class Profile extends React.Component<Props> {
                       <Trans i18nKey="Profile.contact"/>
                     </h3>
                     <span className="profile__email">
-                      email: {user.email ? user.email : i18n.t("Unknown.email")}
+                      {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}
                       <UserUI userId={user.id}>
                         <span className="profile__update-email" onClick={this.showUpdateEmail}>
                           <Icon size="small" name="pencil"/>

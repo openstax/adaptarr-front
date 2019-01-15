@@ -4,11 +4,11 @@ import * as React from 'react'
 import Nestable from 'react-nestable'
 import { History } from 'history'
 import { connect } from 'react-redux'
-import { AxiosResponse } from 'axios'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+
+import * as api from 'src/api'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -58,23 +58,20 @@ const mapDispatchToProps = (dispatch: any) => {
 class Book extends React.Component<Props> {
   state: {
     isLoading: boolean
-    book: types.Book
-    showModuleDetails: types.ModuleShortInfo | undefined
+    book?: api.Book
+    parts: api.BookPart[]
+    showModuleDetails: api.Module | undefined
     showEditBook: boolean
     disableDragging: boolean
   } = {
     isLoading: true,
-    book: {
-      id: 'loading',
-      title: '...',
-      parts: []
-    },
+    parts: [],
     showModuleDetails: undefined,
     showEditBook: false,
     disableDragging: true,
   }
 
-  private showModuleDetails = (item: types.BookPartModule) => {
+  private showModuleDetails = (item: api.BookPart) => {
     if (item.kind === 'module' && item.id) {
       const details = this.props.modules.modulesMap.get(item.id)
       this.setState({ showModuleDetails: details })
@@ -85,37 +82,26 @@ class Book extends React.Component<Props> {
     this.setState({ showModuleDetails: undefined })
   }
 
-  private renderItem = ({ item, collapseIcon }: { item: types.BookPart | types.BookPartModule | types.BookPartGroup, index: number, collapseIcon: any, handler: any }) => {
+  private renderItem = ({ item, collapseIcon }: { item: api.BookPart, index: number, collapseIcon: any, handler: any }) => {
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
           item.kind === 'group' ?
             <BookPartGroup
-              item={(item as types.BookPartGroup)}
-              bookId={this.props.match.params.id}
+              item={item}
+              book={this.state.book!}
               collapseIcon={collapseIcon}
               afterAction={this.fetchBook}
             />
           : <BookPartModule
-              item={(item as types.BookPartModule)}
+              item={item}
               bookId={this.props.match.params.id}
               onModuleClick={this.showModuleDetails}
               onModuleRemove={this.fetchBook}
-              onAssignUser={this.onAssignUser}
             />
         }
       </div>
     )
-  }
-
-  private onAssignUser = () => {
-    // After update of assignee we could fetchBook and modulesMaps
-    // or just update them. Updating is faster so there we go:
-    const updatedBook = {
-      ...this.state.book,
-      parts: this.injectMoreInfo(this.state.book.parts[0])
-    }
-    this.setState({ book: updatedBook })
   }
 
   private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
@@ -126,14 +112,14 @@ class Book extends React.Component<Props> {
     return <Icon name="arrow-down" />
   }
 
-  private findParentWithinItems = (items: types.BookPart[], path: number[]) => {
+  private findParentWithinItems = (items: api.BookPart[], path: number[]) => {
     let pathToParent = [...path]
     pathToParent.pop() // remove last index because it's pointing to changedItem
 
-    let parent: types.BookPart
+    let parent: api.BookPart
 
     if (pathToParent.length === 0) {
-      parent = this.state.book.parts[0]
+      parent = this.state.parts[0]
     } else {
       parent = items[pathToParent[0]]
       pathToParent.shift()
@@ -153,15 +139,15 @@ class Book extends React.Component<Props> {
     return parent
   }
 
-  private handleOnMove = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
+  private handleOnMove = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
     // Do not move bookparts into modules
     // TODO: Create new part when user move module into module
-    const parent: types.BookPart | types.Book = this.findParentWithinItems(newItems, realPathTo)
+    const parent: api.BookPart | api.Book = this.findParentWithinItems(newItems, realPathTo)
 
-    if (typeof (parent as types.BookPart).number !== 'number') {
+    if (typeof (parent as api.BookPart).number !== 'number') {
       console.log('You can not move items outside book.')
       return false
-    } else if ((parent as types.BookPart).kind === 'module') {
+    } else if ((parent as api.BookPart).kind === 'module') {
       console.log('You can not move modules into modules.')
       return false
     }
@@ -169,15 +155,15 @@ class Book extends React.Component<Props> {
     return true
   }
 
-  private handlePositionChange = (newItems: types.BookPart[], changedItem: types.BookPart, realPathTo: number[]) => {
-  
+  private handlePositionChange = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
+
     const bookId = this.props.match.params.id
     const targetParent = this.findParentWithinItems(newItems, realPathTo)
     const targetPosition = {
       parent: targetParent.number,
       index: realPathTo[realPathTo.length - 1]
     }
-    axios.put(`/books/${bookId}/parts/${changedItem.number}`, targetPosition)
+    changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
         this.props.addAlert('success', i18n.t("Book.positionChangeSuccess", {item: changedItem.title, target: targetParent.title}))
@@ -193,67 +179,17 @@ class Book extends React.Component<Props> {
       })
   }
 
-  private injectMoreInfo = (obj: types.BookPart): types.BookParts => {
-    const { modulesMap } = this.props.modules
-    const { teamMap } = this.props.team
-    let allModStatuses: types.ModuleStatus[] = []
-
-    const injectInfoToBookPart = (bp: types.BookPart): types.BookPart | types.BookPartModule | types.BookPartGroup => {
-      if (bp.kind === 'module' && bp.id) {
-
-        const mod = modulesMap.get(bp.id)
-        const assignee = mod && mod.assignee && teamMap.get(mod.assignee) ? teamMap.get(mod.assignee) : undefined
-        const status = mod && mod.status ? mod.status : 'ready'
-
-        return {...bp, status, assignee}
-
-      } else if (bp.kind === 'group') {
-
-        const {parts, modStatuses} = injectInfoToParts(bp.parts ? bp.parts : [])
-        allModStatuses = allModStatuses.concat(modStatuses)
-        return {...bp, parts, modStatuses}
-
-      } else {
-        return bp
-      }
-    }
-
-    const injectInfoToParts = (parts: types.BookPart[]): {parts: types.BookParts, modStatuses: types.ModuleStatus[]} => {
-      let newParts: types.BookParts = []
-      let modStatuses: types.ModuleStatus[] = []
-      parts.forEach(p => {
-        const newPart = injectInfoToBookPart(p)
-        newParts.push(newPart)
-        if ((newPart as types.BookPartModule).status) {
-          modStatuses.push((newPart as types.BookPartModule).status)
-        }
-      })
-      return {parts: newParts, modStatuses }
-    }
-
-    let res = injectInfoToBookPart(obj)
-
-    // We are returning this as an array for react-nestable
-    return [{...res, modStatuses: allModStatuses}]
-  }
-
   private fetchBook = (id: string = this.props.match.params.id) => {
-    axios.get(`books/${id}`)
-      .then((res: AxiosResponse) => {
-        this.setState({ book: res.data })
-        axios.get(`books/${id}/parts`)
-          .then((res: AxiosResponse) => {
-            this.setState({
-              isLoading: false,
-              book: {
-                ...this.state.book,
-                parts: this.injectMoreInfo(res.data)
-              }
-            })
+    api.Book.load(id)
+      .then(book => {
+        this.setState({ book })
+        return book.parts()
+          .then(parts => {
+            this.setState({ isLoading: false, parts: [parts] })
           })
-          .catch((e: Error) => {
+          .catch(e => {
             this.setState({ isLoading: false })
-            this.props.addAlert('error', i18n.t("Book.fetchError", {title: res.data.title, details: e.message}))
+            this.props.addAlert('error', i18n.t("Book.fetchError", {title: book.title, details: e.message}))
           })
       })
       .catch(() => {
@@ -286,6 +222,7 @@ class Book extends React.Component<Props> {
     const { 
       isLoading,
       book,
+      parts,
       showModuleDetails,
       disableDragging,
       showEditBook,
@@ -296,14 +233,14 @@ class Book extends React.Component<Props> {
         {
           showEditBook ?
             <EditBook
-              book={book}
+              book={book!}
               onClose={this.closeEditBook}
               onSuccess={this.handleEditBookSuccess}
             />
           : null
         }
         <Section>
-          <Header title={book.title}>
+          <Header title={book ? book.title : 'Loading'}>
             <AdminUI>
               <Button
                 clickHandler={this.showEditBook}
@@ -338,7 +275,7 @@ class Book extends React.Component<Props> {
           !isLoading ?
             <Nestable
               isDisabled={disableDragging}
-              items={book.parts}
+              items={parts}
               className="book-collection"
               childrenProp="parts"
               renderItem={this.renderItem}

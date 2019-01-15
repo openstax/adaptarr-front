@@ -3,7 +3,7 @@ import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
-import axios from 'axios'
+import * as api from 'src/api'
 
 import SuperSession from 'src/components/SuperSession'
 import Spinner from 'src/components/Spinner'
@@ -15,10 +15,9 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { BookShortInfo } from 'src/store/types'
 
 type Props = {
-  book: BookShortInfo
+  book: api.Book
   onClose: () => any
   onSuccess: () => any
 }
@@ -41,17 +40,13 @@ class EditBook extends React.Component<Props> {
     this.setState({ isLoading: true })
 
     const { titleInput: title, files } = this.state
-    const book = this.props.book
-
-    const config = files.length ?
-    { headers: { 'Content-Type': 'multipart/form-data' } }
-    : { headers: { 'Content-Type': 'application/json' } }
+    const { book } = this.props
 
     let payload = {
       title
     }
 
-    axios.put(`/api/v1/books/${book.id}`, files.length ? files[0] : payload, config)
+    ;(files.length ? book.replaceContent(files[0]) : book.update(payload))
       .then(() => {
         this.setState({ titleInput: '' })
         store.dispatch(addAlert('success', i18n.t("Book.updateSuccess")))

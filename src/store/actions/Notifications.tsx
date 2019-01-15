@@ -1,7 +1,7 @@
-import axios from 'src/config/axios'
+import { Notification } from 'src/api'
 
 import * as constants from 'src/store/constants'
-import { Notification, NotificationStatus } from 'src/store/types'
+import { NotificationStatus } from 'src/store/types'
 import { addAlert } from './Alerts'
 
 export interface FetchNotifications {
@@ -65,12 +65,12 @@ const fetchNotificationsFailure = (error: string): FetchNotificationsFailure => 
 
 export const fetchNotifications = (): FetchNotifications => {
   return dispatch => {
-    
+
     dispatch(fetchNotificationsBegin())
 
-    axios.get('notifications')
+    Notification.unread()
       .then(res => {
-        dispatch(fetchNotificationsSuccess(res.data))
+        dispatch(fetchNotificationsSuccess(res))
       })
       .catch(e => {
         dispatch(fetchNotificationsFailure(e.message))
@@ -89,7 +89,7 @@ export const changeNotificationStatus = (noti: Notification, status: Notificatio
   return dispatch => {
     switch (status) {
       case 'read':
-        axios.put(`notifications/${noti.id}`, {unread: false})
+        noti.markRead()
           .then(() => {
             dispatch(markNotificationAsRead(noti))
           })

@@ -1,7 +1,7 @@
-import axios from 'src/config/axios'
+import { Module } from 'src/api'
 
 import * as constants from 'src/store/constants'
-import { ModulesMap, ModuleShortInfo } from 'src/store/types'
+import { ModulesMap } from 'src/store/types'
 
 export interface FetchModulesMap {
   (dispatch: any): void
@@ -14,7 +14,7 @@ export interface SetModulesMap {
 
 export interface AddModuleToMap {
   type: constants.ADD_MODULE_TO_MAP,
-  data: ModuleShortInfo,
+  data: Module,
 }
 
 export interface RemoveModuleFromMap {
@@ -29,7 +29,7 @@ export interface SetAssigneeInModulesMap {
 
 export interface SetAssignedToMe {
   type: constants.SET_ASSIGNED_TO_ME,
-  data: ModuleShortInfo[],
+  data: Module[],
 }
 
 export interface FetchModulesAssignedToMe {
@@ -47,9 +47,9 @@ const setModulesMap = (payload: ModulesMap): SetModulesMap => {
 
 export const fetchModulesMap = (): FetchModulesMap => {
   return (dispatch: React.Dispatch<ModulesAction>) => {
-    axios.get('modules')
-      .then(res => {
-        dispatch(setModulesMap(new Map(res.data.map((book: ModuleShortInfo) => [book.id, book]))))
+    Module.all()
+      .then(modules => {
+        dispatch(setModulesMap(new Map(modules.map((mod: Module): [string, Module] => [mod.id, mod]))))
       })
       .catch(e => {
         console.log('fetchModulesMap():', e.message)
@@ -58,7 +58,7 @@ export const fetchModulesMap = (): FetchModulesMap => {
   }
 }
 
-export const addModuleToMap = (payload: ModuleShortInfo): AddModuleToMap => {
+export const addModuleToMap = (payload: Module): AddModuleToMap => {
   return {
     type: constants.ADD_MODULE_TO_MAP,
     data: payload,
@@ -82,7 +82,7 @@ export const setAssigneeInModulesMap = (moduleId: string, assignee: number | nul
   }
 }
 
-const setAssignedToMe = (modules: ModuleShortInfo[]): SetAssignedToMe => {
+const setAssignedToMe = (modules: Module[]): SetAssignedToMe => {
   return {
     type: constants.SET_ASSIGNED_TO_ME,
     data: modules,
@@ -91,9 +91,9 @@ const setAssignedToMe = (modules: ModuleShortInfo[]): SetAssignedToMe => {
 
 export const fetchModulesAssignedToMe = (): FetchModulesAssignedToMe => {
   return (dispatch: React.Dispatch<ModulesAction>) => {
-    axios.get('modules/assigned/to/me')
-      .then(res => {
-        dispatch(setAssignedToMe(res.data))
+    Module.assignedTo('me')
+      .then(modules => {
+        dispatch(setAssignedToMe(modules))
       })
       .catch(e => {
         console.error('fetchModulesAssignedToMe():', e.message)

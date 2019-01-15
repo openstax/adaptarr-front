@@ -7,13 +7,14 @@ import { connect } from 'react-redux'
 
 import i18n from 'src/i18n'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { User } from 'src/api'
 
 import UserInfo from 'src/components/UserInfo'
 import Button from 'src/components/ui/Button'
 
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { TeamMap, User, Message } from 'src/store/types'
+import { TeamMap, Message } from 'src/store/types'
 import { addAlert } from 'src/store/actions/Alerts'
 import { addMessage } from 'src/store/actions/Conversations'
 

@@ -2,8 +2,8 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
+import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import AdminUI from 'src/components/AdminUI'
@@ -15,11 +15,9 @@ import Input from 'src/components/ui/Input'
 
 import ModulesList from 'src/containers/ModulesList'
 
-import { BookPartGroup, ModuleShortInfo } from 'src/store/types'
-
 type Props = {
-  item: BookPartGroup
-  bookId: string
+  book: api.Book
+  item: api.BookPart
   collapseIcon: any
   afterAction: () => any
 }
@@ -50,14 +48,12 @@ class Group extends React.Component<Props> {
 
   private handleEditBook = () => {
     const groupNameInput = this.state.groupNameInput
-    const groupNumber = this.props.item.number
-    const bookId = this.props.bookId
 
-    if (!groupNameInput.length || !groupNumber) {
+    if (!groupNameInput.length) {
       throw new Error("groupNameInput or groupNumber is undefined")
     }
 
-    axios.put(`books/${bookId}/parts/${groupNumber}`, {title: groupNameInput})
+    this.props.item.update({ title: groupNameInput })
       .then(() => {
         this.updateBook()
         this.closeEditGroupDialog()
@@ -84,8 +80,7 @@ class Group extends React.Component<Props> {
 
   private handleAddGroup = () => {
     const groupNameInput = this.state.groupNameInput
-    const group = this.props.item
-    const bookId = this.props.bookId
+    const { book, item: group } = this.props
 
     if (!groupNameInput.length) {
       throw new Error("groupNameInput is undefined")
@@ -98,7 +93,7 @@ class Group extends React.Component<Props> {
       parts: [],
     }
 
-    axios.post(`books/${bookId}/parts`, payload)
+    book.createPart(payload)
       .then(() => {
         this.updateBook()
         this.closeAddGroupDialog()
@@ -124,14 +119,12 @@ class Group extends React.Component<Props> {
   }
 
   private handleRemoveGroup = () => {
-    const group = this.props.item
-    const bookId = this.props.bookId
-
-    axios.delete(`books/${bookId}/parts/${group.number}`)
+    const { item } = this.props
+    item.delete()
       .then(() => {
         this.updateBook()
         this.closeRemoveGroupDialog()
-        store.dispatch(addAlert('success', i18n.t("Book.groupRemoveSuccess", {title: group.title})))
+        store.dispatch(addAlert('success', i18n.t("Book.groupRemoveSuccess", {title: item.title})))
       })
       .catch(e => {
         if (e.request.status === 403) {
@@ -152,21 +145,20 @@ class Group extends React.Component<Props> {
     this.setState({ showRemoveGroup: false })
   }
 
-  private handleAddModule = (selectedModule: ModuleShortInfo) => {
-    const targetGroup = this.props.item
-    const bookId = this.props.bookId
+  private handleAddModule = (selectedModule: api.Module) => {
+    const { book, item: targetGroup} = this.props
 
     if (!targetGroup || !selectedModule) {
       throw new Error("targetGroup or selectedModule is undefined")
     }
-      
+
     const payload = {
       module: selectedModule.id,
       parent: targetGroup.number,
       index: targetGroup.parts ? targetGroup.parts.length : 0,
     }
 
-    axios.post(`books/${bookId}/parts`, payload)
+    book.createPart(payload)
       .then(() => {
         this.updateBook()
         this.closeAddModuleDialog()
@@ -183,7 +175,7 @@ class Group extends React.Component<Props> {
       })
   }
 
-  private handleModuleClick = (mod: ModuleShortInfo) => {
+  private handleModuleClick = (mod: api.Module) => {
     this.handleAddModule(mod)
   }
 
@@ -325,7 +317,7 @@ class Group extends React.Component<Props> {
             </Button>
           </AdminUI>
           <span className="bookpart__status">
-            <StackedBar data={this.props.item.modStatuses}/>
+            <StackedBar data={[]/*this.props.item.modStatuses*/}/>
           </span>
           <span className="bookpart__icon">
             {this.props.collapseIcon}

@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { History } from 'history'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
+import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
@@ -17,7 +17,7 @@ import Avatar from 'src/components/ui/Avatar'
 
 import ModulePreview from 'src/containers/ModulePreview'
 
-import { ModuleShortInfo, TeamMap } from 'src/store/types'
+import { TeamMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
@@ -42,7 +42,7 @@ class Module extends React.Component<Props> {
   
   state: {
     isLoading: boolean
-    mod: ModuleShortInfo | undefined
+    mod: api.Module | undefined
     isDraftExisting: boolean
     error?: string
   } = {
@@ -52,9 +52,9 @@ class Module extends React.Component<Props> {
   }
 
   private fetchModuleInfo = () => {
-    axios.get(`modules/${this.props.match.params.id}`)
-      .then(res => {
-        this.setState({ isLoading: false, mod: res.data, error: '' })
+    api.Module.load(this.props.match.params.id)
+      .then(mod => {
+        this.setState({ isLoading: false, mod, error: '' })
       })
       .catch(() => {
         this.props.history.push('/404')
@@ -62,7 +62,7 @@ class Module extends React.Component<Props> {
   }
 
   private isDraftExisting = () => {
-    axios.get(`drafts/${this.props.match.params.id}`)
+    api.Draft.load(this.props.match.params.id)
       .then(() => {
         this.setState({ isDraftExisting: true })
       })
@@ -71,13 +71,15 @@ class Module extends React.Component<Props> {
       })
   }
 
-  private createDraft (moduleId: string) {
-    if (!moduleId) return
+  private createDraft = () => {
+    const { mod } = this.state
 
-    axios.post(`modules/${moduleId}`)
-      .then(() => {
+    if (!mod) return
+
+    mod.createDraft()
+      .then(draft => {
         store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
-        this.props.history.push(`/drafts/${moduleId}`)
+        this.props.history.push(`/drafts/${draft.module}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -123,7 +125,7 @@ class Module extends React.Component<Props> {
                     :
                     <Button
                       color="green"
-                      clickHandler={() => {this.createDraft(mod.id)}}
+                      clickHandler={this.createDraft}
                     >
                       <Trans i18nKey="Buttons.newDraft"/>
                     </Button>

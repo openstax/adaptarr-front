@@ -1,4 +1,6 @@
-import { ModulesMap, ModuleShortInfo } from 'src/store/types'
+import { Module } from 'src/api'
+
+import { ModulesMap } from 'src/store/types'
 import { ModulesAction } from 'src/store/actions/Modules'
 import {
   SET_MODULES_MAP,
@@ -10,7 +12,7 @@ import {
 
 export interface State {
   modulesMap: ModulesMap
-  assignedToMe: ModuleShortInfo[]
+  assignedToMe: Module[]
 }
 
 // Define our initialState
@@ -42,8 +44,11 @@ export function reducer (state: State = initialState, action: ModulesAction) {
       }
     case SET_ASSIGNE_IN_MODULES_MAP:
       const { moduleId, assignee } = action.data
-      let modMapAfter = state.modulesMap
-      modMapAfter.set(moduleId, {...(modMapAfter.get(moduleId) as ModuleShortInfo), assignee})
+      let modMapAfter = new Map(state.modulesMap)
+      modMapAfter.set(moduleId, new Module({
+        ...modMapAfter.get(moduleId)!,
+        assignee: assignee || undefined,
+      }))
       return {
         ...state,
         modulesMap: modMapAfter,

@@ -5,6 +5,7 @@ import { Trans } from 'react-i18next'
 import i18n from 'src/i18n'
 import axios from 'src/config/axios'
 import store from 'src/store'
+import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import AdminUI from 'src/components/AdminUI'
@@ -16,19 +17,24 @@ import Avatar from 'src/components/ui/Avatar'
 
 import UsersList from 'src/containers/UsersList'
 
-import { BookPartModule, User } from 'src/store/types'
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
 import { setAssigneeInModulesMap } from 'src/store/actions/Modules'
 
 type Props = {
-  item: BookPartModule
+  item: api.BookPart
+  modulesMap: types.ModulesMap
   bookId: string
-  onModuleClick: (item: BookPartModule) => any
+  onModuleClick: (item: api.BookPart) => any
   onModuleRemove: () => any
-  onAssignUser: () => any
   setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => void
 }
 
 type AssignActions = 'assign' | 'remove'
+
+const mapStateToProps = ({ modules: { modulesMap } }: State) => ({
+  modulesMap,
+})
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
@@ -42,13 +48,15 @@ class Module extends React.Component<Props> {
     showSuperSession: boolean
     showAssignUser: boolean
     showRemoveModule: boolean
-    userToAssign?: User
+    userToAssign?: api.User
     assignAction?: AssignActions
   } = {
     showSuperSession: false,
     showAssignUser: false,
     showRemoveModule: false,
   }
+
+  module: api.Module = this.props.modulesMap.get(this.props.item.id!)!
 
   private showRemoveModuleDialog = () => {
     this.setState({ showRemoveModule: true })
@@ -59,17 +67,17 @@ class Module extends React.Component<Props> {
   }
 
   private removeModule = () => {
-    const { bookId, item: targetModule} = this.props
+    const { bookId, item: targetModule } = this.props
 
     if (!targetModule) {
       return console.error('targetModule:', targetModule)
     }
 
-    axios.delete(`books/${bookId}/parts/${targetModule.number}`)
+    targetModule.delete()
       .then(() => {
         this.closeRemoveModuleDialog()
         this.props.onModuleRemove()
-        store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", {title: targetModule.title})))
+        store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", { title: targetModule.title })))
       })
       .catch(e => {
         if (e.request.status === 403) {
@@ -90,11 +98,11 @@ class Module extends React.Component<Props> {
     this.setState({ showAssignUser: false })
   }
 
-  private handleUserClick = (user: User) => {
+  private handleUserClick = (user: api.User) => {
     this.assignUser(user)
   }
 
-  private assignUser = (user: User | null) => {
+  private assignUser = (user: api.User | null) => {
     const targetModule = this.props.item
     const assignee = user ? user.id : null
 
@@ -102,15 +110,14 @@ class Module extends React.Component<Props> {
       return store.dispatch(addAlert('error', i18n.t("User.assignError")))
     }
 
-    axios.put(`modules/${targetModule.id}`, { assignee })
+    this.module.assign(user)
       .then(() => {
         this.closeAssignUserDialog()
         this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
-        this.props.onAssignUser()
         if (user) {
-          store.dispatch(addAlert('success', i18n.t("User.assignSuccess", {user: user.name, module: targetModule.title})))
+          store.dispatch(addAlert('success', i18n.t("User.assignSuccess", { user: user.name, module: targetModule.title })))
         } else {
-          store.dispatch(addAlert('success', i18n.t("User.unassignSuccess", {module: targetModule.title})))
+          store.dispatch(addAlert('success', i18n.t("User.unassignSuccess", { module: targetModule.title })))
         }
       })
       .catch(e => {
@@ -126,6 +133,12 @@ class Module extends React.Component<Props> {
 
   private unassignUser = () => {
     this.assignUser(null)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.props.item !== prevProps.item) {
+      this.module = this.props.modulesMap.get(this.props.item.id!)!
+    }
   }
 
   public render() {
@@ -187,9 +200,9 @@ class Module extends React.Component<Props> {
             </Button>
           </AdminUI>
           {
-            item.assignee ?
+            this.module.assignee ?
               <React.Fragment>
-                <Avatar size="small" user={item.assignee} />
+                <Avatar size="small" user={this.module.assignee} />
                 <Button
                   clickHandler={this.unassignUser}
                 >
@@ -199,13 +212,13 @@ class Module extends React.Component<Props> {
                   <Trans i18nKey="Buttons.assignOther" />
                 </Button>
               </React.Fragment>
-            :
+              :
               <Button clickHandler={this.showAssignUserDialog}>
                 <Trans i18nKey="Buttons.assign" />
               </Button>
           }
           <span className="bookpart__status">
-            <ModuleStatus status={item.status}/>
+            <ModuleStatus status={/*item.status*/'ready'} />
           </span>
         </span>
       </React.Fragment>
@@ -213,4 +226,4 @@ class Module extends React.Component<Props> {
   }
 }
 
-export default connect(null, mapDispatchToProps)(Module)
+export default connect(mapStateToProps, mapDispatchToProps)(Module)
