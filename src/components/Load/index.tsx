@@ -28,7 +28,7 @@ type Handler = React.ComponentType<{ error: Error }>;
  */
 export default <Args extends {}, Value extends {}> (
   loader: Loader<Args, Value>,
-  propsToCompare?: string[],
+  propsToCompare: string[] = [],
   Handler: Handler = DefaultHandler,
   Progress: React.ComponentType = Spinner,
 ) => <Props extends {}> (
@@ -41,7 +41,7 @@ export default <Args extends {}, Value extends {}> (
     error?: Error
   } = {}
 
-  async updateState() {
+  async fetchData() {
     try {
       const value = await loader(this.props)
       this.setState({ value })
@@ -51,22 +51,20 @@ export default <Args extends {}, Value extends {}> (
   }
 
   componentDidUpdate(prevProps: { [key: string]: any }) {
-    if (propsToCompare) {
-      const update = propsToCompare.some(name => {
-        if (prevProps[name] !== this.props[name]) {
-          return true
-        }
-        return false
-      })
-
-      if (update) {
-        this.updateState()
+    const update = propsToCompare.some(name => {
+      if (prevProps[name] !== this.props[name]) {
+        return true
       }
+      return false
+    })
+
+    if (update) {
+      this.fetchData()
     }
   }
 
   componentDidMount() {
-    this.updateState()
+    this.fetchData()
   }
 
   render() {
