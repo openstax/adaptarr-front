@@ -24,9 +24,8 @@ import { setAssigneeInModulesMap } from 'src/store/actions/Modules'
 type Props = {
   item: api.BookPart
   modulesMap: types.ModulesMap
-  bookId: string
   onModuleClick: (item: api.BookPart) => any
-  onModuleRemove: () => any
+  afterAction: () => any
   setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => void
 }
 
@@ -67,7 +66,7 @@ class Module extends React.Component<Props> {
   }
 
   private removeModule = () => {
-    const { bookId, item: targetModule } = this.props
+    const { item: targetModule } = this.props
 
     if (!targetModule) {
       return console.error('targetModule:', targetModule)
@@ -76,7 +75,7 @@ class Module extends React.Component<Props> {
     targetModule.delete()
       .then(() => {
         this.closeRemoveModuleDialog()
-        this.props.onModuleRemove()
+        this.props.afterAction()
         store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", { title: targetModule.title })))
       })
       .catch(e => {
@@ -114,6 +113,7 @@ class Module extends React.Component<Props> {
       .then(() => {
         this.closeAssignUserDialog()
         this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
+        this.props.afterAction()
         if (user) {
           store.dispatch(addAlert('success', i18n.t("User.assignSuccess", { user: user.name, module: targetModule.title })))
         } else {

@@ -9,6 +9,7 @@ import { Trans } from 'react-i18next'
 import i18n from 'src/i18n'
 
 import * as api from 'src/api'
+import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -82,22 +83,21 @@ class Book extends React.Component<Props> {
     this.setState({ showModuleDetails: undefined })
   }
 
-  private renderItem = ({ item, collapseIcon }: { item: api.BookPart, index: number, collapseIcon: any, handler: any }) => {
+  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
           item.kind === 'group' ?
             <BookPartGroup
-              item={item}
+              item={new api.BookPart((item as GroupData), this.state.book!)}
               book={this.state.book!}
               collapseIcon={collapseIcon}
               afterAction={this.fetchBook}
             />
           : <BookPartModule
-              item={item}
-              bookId={this.props.match.params.id}
+              item={new api.BookPart((item as ModuleData), this.state.book!)}
               onModuleClick={this.showModuleDetails}
-              onModuleRemove={this.fetchBook}
+              afterAction={this.fetchBook}
             />
         }
       </div>
@@ -157,7 +157,6 @@ class Book extends React.Component<Props> {
 
   private handlePositionChange = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
 
-    const bookId = this.props.match.params.id
     const targetParent = this.findParentWithinItems(newItems, realPathTo)
     const targetPosition = {
       parent: targetParent.number,
@@ -272,18 +271,18 @@ class Book extends React.Component<Props> {
             </AdminUI>
           </Header>
           {
-          !isLoading ?
-            <Nestable
-              isDisabled={disableDragging}
-              items={parts}
-              className="book-collection"
-              childrenProp="parts"
-              renderItem={this.renderItem}
-              renderCollapseIcon={this.renderCollapseIcon}
-              onMove={this.handleOnMove}
-              onChange={this.handlePositionChange}
-              collapsed
-            />
+            !isLoading ?
+              <Nestable
+                isDisabled={disableDragging}
+                items={parts}
+                className="book-collection"
+                childrenProp="parts"
+                renderItem={this.renderItem}
+                renderCollapseIcon={this.renderCollapseIcon}
+                onMove={this.handleOnMove}
+                onChange={this.handlePositionChange}
+                collapsed
+              />
             : <Spinner />
           }
         </Section>

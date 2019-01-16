@@ -15,6 +15,8 @@ import Input from 'src/components/ui/Input'
 
 import ModulesList from 'src/containers/ModulesList'
 
+import { ModuleStatus } from 'src/store/types'
+
 type Props = {
   book: api.Book
   item: api.BookPart
@@ -36,6 +38,21 @@ class Group extends React.Component<Props> {
     showRemoveGroup: false,
     showAddModule: false,
     groupNameInput: '',
+  }
+
+  private getModStatuses = (group: api.BookPart = this.props.item): ModuleStatus[] => {
+    let modStatuses: ModuleStatus[] = []
+
+    group.parts!.forEach(part => {
+      // TODO: push real module status
+      if (part.kind === 'module') {
+        modStatuses.push('ready')
+      } else if (part.kind === 'group') {
+        modStatuses = modStatuses.concat(this.getModStatuses(part))
+      }
+    })
+
+    return modStatuses
   }
 
   private updateGroupNameInput = (val: string) => {
@@ -120,6 +137,7 @@ class Group extends React.Component<Props> {
 
   private handleRemoveGroup = () => {
     const { item } = this.props
+    
     item.delete()
       .then(() => {
         this.updateBook()
@@ -195,6 +213,8 @@ class Group extends React.Component<Props> {
       showAddModule,
       groupNameInput,
     } = this.state
+
+    const modStatuses = this.getModStatuses()
 
     return (
       <React.Fragment>
@@ -316,9 +336,13 @@ class Group extends React.Component<Props> {
               <Trans i18nKey="Buttons.module"/>
             </Button>
           </AdminUI>
-          <span className="bookpart__status">
-            <StackedBar data={[]/*this.props.item.modStatuses*/}/>
-          </span>
+          {
+            modStatuses.length ?
+              <span className="bookpart__status">
+                <StackedBar data={modStatuses}/>
+              </span>
+            : null
+          }
           <span className="bookpart__icon">
             {this.props.collapseIcon}
           </span>
