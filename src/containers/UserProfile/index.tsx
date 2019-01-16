@@ -242,7 +242,7 @@ class UserProfile extends React.Component<Props> {
 
   public render() {
     const showDialog = this.state.showDialog
-    const { user, currentUser } = this.props
+    const user = this.props.user
     let title
     if (this.props.userId === 'me') {
       title = 'Your profile'
@@ -264,7 +264,7 @@ class UserProfile extends React.Component<Props> {
               <div className="profile__top">
                 <div className="profile__avatar">
                   <Avatar size="big" disableLink user={user}/>
-                  <UserUI userId={currentUser.id}>
+                  <UserUI userId={user.id}>
                     <span
                       className="profile__update-avatar"
                       onClick={this.showUpdateAvatar}
@@ -275,7 +275,7 @@ class UserProfile extends React.Component<Props> {
                 </div>
                 <h2 className="profile__name">
                   {decodeHtmlEntity(user.name)}
-                  <UserUI userId={currentUser.id}>
+                  <UserUI userId={user.id}>
                     <span
                       className="profile__update-name"
                       onClick={this.showUpdateName}
@@ -296,7 +296,7 @@ class UserProfile extends React.Component<Props> {
                   <p>
                     Lorem, ipsum dolor sit amet consectetur adipisicing elit. Incidunt fuga aspernatur quos quidem quas explicabo porro, minima quia cupiditate magnam.
                   </p>
-                  <UserUI userId={currentUser.id}>
+                  <UserUI userId={user.id}>
                     <span className="profile__update-bio" onClick={this.showUpdateBio}>
                       <Icon size="small" name="pencil"/>
                     </span>
@@ -307,7 +307,7 @@ class UserProfile extends React.Component<Props> {
                 </h3>
                 <span className="profile__email">
                   {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}
-                  <UserUI userId={currentUser.id}>
+                  <UserUI userId={user.id}>
                     <span className="profile__update-email" onClick={this.showUpdateEmail}>
                       <Icon size="small" name="pencil"/>
                     </span>
