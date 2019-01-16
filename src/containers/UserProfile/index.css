@@ -1,0 +1,50 @@
+.profile .userui {
+  display: inline-block;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.profile__avatar {
+  position: relative;
+}
+
+.profile__avatar .userui {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-left: 0;
+}
+
+.profile__top {
+  display: flex;
+  align-items: center;
+}
+
+.profile__name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-left: 30px;
+}
+
+.profile__title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+.profile__info {
+  margin-top: 30px;
+}
+
+.profile__bio {
+  margin-bottom: 30px;
+}
+
+.profile__bio p {
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.profile__update-dialog button {
+  margin-top: 10px;
+}
