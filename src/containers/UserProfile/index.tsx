@@ -29,7 +29,6 @@ import FilesUploader from 'src/containers/FilesUploader'
 import { State } from 'src/store/reducers'
 
 type Props = {
-  userId: string
   user: api.User
   currentUser: api.User
 }
@@ -244,7 +243,7 @@ class UserProfile extends React.Component<Props> {
     const showDialog = this.state.showDialog
     const user = this.props.user
     let title
-    if (this.props.userId === 'me') {
+    if (this.props.user.apiId === 'me') {
       title = 'Your profile'
     } else if (user && user.name) {
       title = decodeHtmlEntity(user.name)
