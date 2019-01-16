@@ -2,6 +2,7 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import BookPart from './bookpart'
+import { elevated } from './utils'
 
 export type BookData = {
   id: string,
@@ -64,12 +65,14 @@ export default class Book extends Base<BookData> {
   /**
    * Create a new book.
    *
+   * This function requires elevated permissions.
+   *
    * @param title   title of the book
    * @param content file containing initial contents of the book, in format
    * compatible with Connexion's ZIP export
    */
   static async create(title: string, content?: File): Promise<Book> {
-    let data
+    let data: FormData | { title: string }
 
     if (content) {
       data = new FormData()
@@ -79,7 +82,7 @@ export default class Book extends Base<BookData> {
       data = { title }
     }
 
-    let res = await axios.post('books', data)
+    let res = await elevated(() => axios.post('books', data))
     return new Book(res.data)
   }
 
@@ -103,30 +106,38 @@ export default class Book extends Base<BookData> {
 
   /**
    * Replace contents of this book with a ZIPped collection.
+   *
+   * This method requires elevated permissions.
    */
   async replaceContent(file: File): Promise<void> {
-    await axios.put(`books/${this.id}`, file)
+    await elevated(() => axios.put(`books/${this.id}`, file))
   }
 
   /**
    * Update this book.
+   *
+   * This method requires elevated permissions.
    */
   async update(diff: Diff): Promise<void> {
-    await axios.put(`books/${this.id}`, diff)
+    await elevated(() => axios.put(`books/${this.id}`, diff))
   }
 
   /**
    * Create a new book part.
+   *
+   * This method requires elevated permissions.
    */
   async createPart(data: NewPart): Promise<NewPartData> {
-    const rsp = await axios.post(`books/${this.id}/parts`, data)
+    const rsp = await elevated(() => axios.post(`books/${this.id}/parts`, data))
     return rsp.data
   }
 
   /**
    * Delete this book.
+   *
+   * This method requires elevated permissions.
    */
   async delete(): Promise<void> {
-    await axios.delete(`books/${this.id}`)
+    await elevated(() => axios.delete(`books/${this.id}`))
   }
 }

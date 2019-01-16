@@ -3,6 +3,7 @@ import axios from 'src/config/axios'
 import Base from './base'
 import Book from './book'
 import Module from './module'
+import { elevated } from './utils'
 
 export type Kind = 'module' | 'group'
 
@@ -85,9 +86,11 @@ export default class BookPart extends Base<PartData> {
 
   /**
    * Update this part.
+   *
+   * This method requires elevated permissions.
    */
   async update(diff: Update): Promise<void> {
-    await axios.put(`/books/${this.book}/parts/${this.number}`, diff)
+    await elevated(() => axios.put(`/books/${this.book}/parts/${this.number}`, diff))
   }
 
   /**
@@ -95,8 +98,10 @@ export default class BookPart extends Base<PartData> {
    *
    * If this book part is a group this will remove all its child book parts. If
    * this book part is a module, the module it references will not be deleted.
+   *
+   * This method requires elevated permissions.
    */
   async delete(): Promise<void> {
-    await axios.delete(`books/${this.book}/parts/${this.number}`)
+    await elevated(() => axios.delete(`books/${this.book}/parts/${this.number}`))
   }
 }

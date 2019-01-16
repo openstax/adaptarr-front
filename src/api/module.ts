@@ -3,6 +3,7 @@ import axios from 'src/config/axios'
 import Base from './base'
 import User from './user'
 import Draft from './draft'
+import { elevated } from './utils'
 
 /**
  * Module data as returned by the API.
@@ -41,21 +42,25 @@ export default class Module extends Base<Data> {
 
   /**
    * Create a new module.
+   *
+   * This function requires elevated permissions.
    */
   static async create(title: string): Promise<Module> {
-    const rsp = await axios.post('modules', { title })
+    const rsp = await elevated(() => axios.post('modules', { title }))
     return new Module(rsp.data)
   }
 
   /**
    * Create a new module, initializing it with contents of a ZIPped module
    * export.
+   *
+   * This function requires elevated permissions.
    */
   static async createFromZip(title: string, file: File): Promise<Module> {
     const data = new FormData()
     data.append('title', title)
     data.append('file', file)
-    const rsp = await axios.post('modules', data)
+    const rsp = await elevated(() => axios.post('modules', data))
     return new Module(rsp.data)
   }
 
@@ -90,10 +95,12 @@ export default class Module extends Base<Data> {
 
   /**
    * Assign a user to this module.
+   *
+   * This method requires elevated permissions.
    */
   async assign(user: User | null): Promise<void> {
     const userId = user instanceof User ? user.id : user
-    await axios.put(`modules/${this.id}`, { assignee: userId })
+    await elevated(() => axios.put(`modules/${this.id}`, { assignee: userId }))
   }
 
   /**
@@ -109,6 +116,8 @@ export default class Module extends Base<Data> {
 
   /**
    * Create a new draft of this module.
+   *
+   * This method will fail if current user is not assigned to this module.
    */
   async createDraft(): Promise<Draft> {
     let data = await axios.post(`modules/${this.id}`)
@@ -117,8 +126,10 @@ export default class Module extends Base<Data> {
 
   /**
    * Delete this module.
+   *
+   * This method requires elevated permissions.
    */
   async delete(): Promise<void> {
-    await axios.delete(`modules/${this.id}`)
+    await elevated(() => axios.delete(`modules/${this.id}`))
   }
 }
