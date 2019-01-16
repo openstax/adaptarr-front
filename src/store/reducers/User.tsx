@@ -1,4 +1,4 @@
-import { User } from 'src/api'
+import User from 'src/api/user'
 
 import { UserDataAction } from 'src/store/actions/User'
 import { IsLoading } from 'src/store/types'
