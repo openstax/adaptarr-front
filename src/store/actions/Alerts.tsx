@@ -1,5 +1,7 @@
+import { Notification } from 'src/api'
+
 import { PUSH_ALERT, REMOVE_ALERT } from 'src/store/constants'
-import { Alert, Notification, RequestInfoKind } from 'src/store/types'
+import { Alert, RequestInfoKind } from 'src/store/types'
 import { pushNotificationToStore, PushNotificationToStore } from './Notifications'
 
 export interface AddAlert {

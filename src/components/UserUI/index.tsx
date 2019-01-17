@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { User } from 'src/store/types'
+import { User } from 'src/api'
 import { State } from 'src/store/reducers'
 
 type Props = {

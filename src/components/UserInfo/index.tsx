@@ -1,10 +1,9 @@
 import * as React from 'react'
 
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { User } from 'src/api'
 
 import Avatar from 'src/components/ui/Avatar'
-
-import { User } from 'src/store/types'
 
 type Props = {
   user: User

@@ -7,10 +7,11 @@ import { Link } from 'react-router-dom'
 import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { Notification, User, Module } from 'src/api'
 
 import Avatar from 'src/components/ui/Avatar'
 
-import { Notification, TeamMap, ModulesMap, ModuleShortInfo, User, NotificationStatus } from 'src/store/types'
+import { TeamMap, ModulesMap, NotificationStatus } from 'src/store/types'
 import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
 import { State } from 'src/store/reducers'
 
@@ -50,18 +51,18 @@ const trimMessage = (message: string) => {
 
 class NotificationComp extends React.Component<Props> {
 
-  private notificationAction = (noti: Notification, mod: ModuleShortInfo | undefined) => {
+  private notificationAction = (noti: Notification, mod: Module | undefined) => {
     switch (noti.kind) {
-      case 'comment':
+      /*case 'comment':
         return i18n.t("Notifications.commentedAt", {
           title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
-        })
+        })*/
       case 'assigned':
         return i18n.t("Notifications.assigned", {
           title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
         })
-      case 'mention':
-        return i18n.t("Notifications.mentioned")
+      /*case 'mention':
+        return i18n.t("Notifications.mentioned")*/
       default:
         return i18n.t("Notifications.unknowAction")
     }
@@ -76,14 +77,14 @@ class NotificationComp extends React.Component<Props> {
     const { teamMap } = this.props.team
     const { modulesMap } = this.props.modules
     const noti = this.props.notification
-    const who: User | undefined = teamMap.get(noti.who)
+    const who: User | undefined = teamMap.get(noti.who!)
     const mod = noti.module ? modulesMap.get(noti.module) : undefined
     let linkToNotification: string
-    if (noti.conversation) {
-      linkToNotification = '/conversations/' + noti.conversation
-    } else {
+    // if (noti.conversation) {
+    //   linkToNotification = '/conversations/' + noti.conversation
+    // } else {
       linkToNotification = '/modules/' + noti.module
-    }
+    // }
     const avatarSize = this.props.avatarSize ? this.props.avatarSize : 'small'
 
     const body = (
@@ -101,12 +102,12 @@ class NotificationComp extends React.Component<Props> {
               </strong>
               { this.notificationAction(noti, mod) }
             </div>
-            { 
-              noti.message ? 
+            {
+              /*noti.message ?
                 <span className="notification__message">
                   {trimMessage(noti.message)}
-                </span> 
-              : null
+                </span>
+              : null*/
              }
             <span className="notification__date">
               { dateDiff(noti.timestamp) }

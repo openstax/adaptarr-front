@@ -1,7 +1,7 @@
-import axios from 'src/config/axios'
+import { Book } from 'src/api'
 
 import * as constants from 'src/store/constants'
-import { BooksMap, BookShortInfo } from 'src/store/types'
+import { BooksMap } from 'src/store/types'
 
 export interface FetchBooksMap {
   (dispatch: any): void
@@ -47,9 +47,9 @@ export const fetchBooksMap = (): FetchBooksMap => {
   return (dispatch: React.Dispatch<BooksAction>) => {
     dispatch(fetchBooksMapBegin())
 
-    axios.get('books')
-      .then(res => {
-        dispatch(fetchBooksMapSuccess(new Map(res.data.map((book: BookShortInfo) => [book.id, book]))))
+    Book.all()
+      .then(books => {
+        dispatch(fetchBooksMapSuccess(new Map(books.map((book: Book): [string, Book] => [book.id, book]))))
       })
       .catch(e => {
         dispatch(fetchBooksMapFailure(e.message))

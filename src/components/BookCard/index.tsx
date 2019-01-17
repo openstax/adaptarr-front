@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
@@ -15,13 +15,13 @@ import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import { IsLoading, BooksMap, BookShortInfo, RequestInfoKind } from 'src/store/types'
+import { IsLoading, BooksMap, RequestInfoKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
-  book: BookShortInfo
+  book: api.Book
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
@@ -60,7 +60,7 @@ class BookCard extends React.Component<Props> {
   }
 
   private removeBookPermamently = () => {
-    axios.delete(`books/${this.props.book.id}`)
+    this.props.book.delete()
       .then(() => {
         this.props.fetchBooksMap()
         this.props.addAlert('success', i18n.t("Book.deleteSuccess"))

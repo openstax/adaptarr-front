@@ -6,8 +6,8 @@ import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
+import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
 import SuperSession from 'src/components/SuperSession'
@@ -20,7 +20,7 @@ import Input from 'src/components/ui/Input'
 import FilesUploader from 'src/containers/FilesUploader'
 
 import * as modulesActions from 'src/store/actions/Modules'
-import { ModulesMap, ModuleShortInfo, RequestInfoKind } from 'src/store/types'
+import { ModulesMap, RequestInfoKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -28,8 +28,8 @@ type Props = {
   modules: {
     modulesMap: ModulesMap
   }
-  onModuleClick: (mod: ModuleShortInfo) => any
-  addModuleToMap: (mod: ModuleShortInfo) => any
+  onModuleClick: (mod: api.Module) => any
+  addModuleToMap: (mod: api.Module) => any
   removeModuleFromMap: (id: string) => any
   addAlert: (kind: RequestInfoKind, message: string) => void
 }
@@ -42,7 +42,7 @@ const mapStateToProps = ({ modules }: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addModuleToMap: (mod: ModuleShortInfo) => dispatch(modulesActions.addModuleToMap(mod)),
+    addModuleToMap: (mod: api.Module) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
     addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
   }
@@ -53,7 +53,7 @@ class ModuleList extends React.Component<Props> {
   state: {
     moduleTitleValue: string
     showSuperSession: boolean
-    moduleToDelete: ModuleShortInfo | null
+    moduleToDelete: api.Module | null
     showRemoveModule: boolean
     files: File[]
     filterInput: string
@@ -68,7 +68,7 @@ class ModuleList extends React.Component<Props> {
 
   private listOfModules = (modulesMap: ModulesMap) => {
     const filterReg = new RegExp('^' + this.state.filterInput, 'i')
-    let modules: ModuleShortInfo[] = []
+    let modules: api.Module[] = []
 
     modulesMap.forEach(mod => {
       if (this.state.filterInput) {
@@ -82,7 +82,7 @@ class ModuleList extends React.Component<Props> {
 
     modules.sort(sortArrayByTitle)
 
-    return modules.map((mod: ModuleShortInfo) => {
+    return modules.map((mod: api.Module) => {
       return (
         <li key={mod.id} className="modulesList__item">
           <span onClick={() => this.handleModuleClick(mod)}>
@@ -96,7 +96,7 @@ class ModuleList extends React.Component<Props> {
     })
   }
 
-  private handleModuleClick = (mod: ModuleShortInfo) => {
+  private handleModuleClick = (mod: api.Module) => {
     this.props.onModuleClick(mod)
   }
 
@@ -107,43 +107,20 @@ class ModuleList extends React.Component<Props> {
   private addNewModule = () => {
     const { moduleTitleValue: title, files } = this.state
 
-    if (files.length) {
-      const config = { headers: { 'Content-Type': 'multipart/form-data' } }
-
-      let data = new FormData()
-      data.append('title', title)
-      data.append('file', files[0])
-
-      axios.post('modules', data, config)
-        .then(res => {
-          this.props.onModuleClick(res.data)
-          this.props.addModuleToMap(res.data)
-          this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
-        })
-        .catch(e => {
-          if (e.request.status === 403) {
-            this.setState({ showSuperSession: true })
-            this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-          } else {
-            this.props.addAlert('error', e.message)
-          }
-        })
-    } else {
-      axios.post('modules', {title})
-        .then(res => {
-          this.props.onModuleClick(res.data)
-          this.props.addModuleToMap(res.data)
-          this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
-        })
-        .catch(e => {
-          if (e.request.status === 403) {
-            this.setState({ showSuperSession: true })
-            this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-          } else {
-            this.props.addAlert('error', e.message)
-          }
-        })
-    }
+    ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title))
+      .then(mod => {
+        this.props.onModuleClick(mod)
+        this.props.addModuleToMap(mod)
+        this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
+      })
+      .catch(e => {
+        if (e.request.status === 403) {
+          this.setState({ showSuperSession: true })
+          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
+        } else {
+          this.props.addAlert('error', e.message)
+        }
+      })
   }
 
   private onFilesChange = (files: File[]) => {
@@ -154,7 +131,7 @@ class ModuleList extends React.Component<Props> {
     this.props.addAlert('error', error.message)
   }
 
-  private showRemoveModuleDialog = (mod: ModuleShortInfo) => {
+  private showRemoveModuleDialog = (mod: api.Module) => {
     this.setState({ showRemoveModule: true, moduleToDelete: mod })
   }
 
@@ -167,7 +144,7 @@ class ModuleList extends React.Component<Props> {
 
     if (!mod) return
 
-    axios.delete(`/modules/${mod.id}`)
+    mod.delete()
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
         this.props.addAlert('success', i18n.t("ModulesList.moduleRemoveSuccess", {title: mod.title}))

@@ -1,7 +1,6 @@
-import axios from 'src/config/axios'
+import { User } from 'src/api'
 
 import * as constants from 'src/store/constants'
-import { User } from 'src/store/types'
 
 export interface FetchUser {
   (dispatch: any): void
@@ -49,17 +48,20 @@ const fetchUserFailure = (error: string): FetchUserFailure => {
 
 export const fetchUser = () => {
   return (dispatch: React.Dispatch<UserDataAction>) => {
-    
+
     dispatch(fetchUserBegin())
 
-    axios.get('users/me')
-      .then(res => {
-        dispatch(fetchUserSuccess(res.data))
+    User.me()
+      .then(user => {
+        if (user === null) {
+          window.location.href = `/login?next=${window.location.pathname}`
+        } else {
+          dispatch(fetchUserSuccess(user))
+        }
       })
       .catch(e => {
         dispatch(fetchUserFailure(e.message))
         dispatch(clearUserData())
-        window.location.href = `/login?next=${window.location.pathname}`
       })
   }
 }

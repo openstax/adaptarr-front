@@ -7,6 +7,7 @@ import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
+import { Notification } from 'src/api'
 
 import Header from 'src/components/Header'
 import NotificationComp from 'src/components/Notification'
@@ -15,7 +16,7 @@ import AdminUI from 'src/components/AdminUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import { IsLoading, Notification } from 'src/store/types'
+import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {

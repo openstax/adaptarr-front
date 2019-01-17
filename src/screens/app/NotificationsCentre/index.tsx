@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import * as api from 'src/api'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -18,13 +19,13 @@ import Icon from 'src/components/ui/Icon'
 
 import Conversation from 'src/containers/Conversation'
 
-import { Notification, TeamMap, ModulesMap } from 'src/store/types'
+import { TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
   notifications: {
     isLoading: boolean
-    unreadNotifications: Notification[]
+    unreadNotifications: api.Notification[]
   }
   team: {
     teamMap: TeamMap
@@ -45,13 +46,13 @@ const mapStateToProps = ({ notifications, team, modules }: State) => {
 class NotificationsCentre extends React.Component<Props> {
   state: {
     showDetails: boolean
-    details: Notification | null
+    details: api.Notification | null
   } = {
     showDetails: false,
     details: null,
   }
 
-  private showDetails = (details: Notification) => {
+  private showDetails = (details: api.Notification) => {
     this.setState({ showDetails: true, details })
   }
 
@@ -59,7 +60,7 @@ class NotificationsCentre extends React.Component<Props> {
     this.setState({ showDetails: false, details: null })
   }
 
-  private notificationDetails = (details: Notification) => {
+  private notificationDetails = (details: api.Notification) => {
     const modulesMap = this.props.modules.modulesMap
     const teamMap = this.props.team.teamMap
     const mod = details.module ? modulesMap.get(details.module) : undefined
@@ -92,7 +93,7 @@ class NotificationsCentre extends React.Component<Props> {
     const isLoading = this.props.notifications.isLoading
     const unreadNotifications = [...this.props.notifications.unreadNotifications].reverse()
     const teamMap = this.props.team.teamMap
-    let detailsWho = details ? teamMap.get(details.who) : undefined
+    let detailsWho = details && details.who ? teamMap.get(details.who) : undefined
 
     return (
       <div className="container container--splitted">
@@ -106,7 +107,7 @@ class NotificationsCentre extends React.Component<Props> {
                     unreadNotifications.length > 0 ?
                       <ul className="notificationsList">
                         {
-                          unreadNotifications.map((noti: Notification) => {
+                          unreadNotifications.map((noti: api.Notification) => {
                             return (
                               <li 
                                 key={noti.id} 

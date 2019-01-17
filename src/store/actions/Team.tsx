@@ -1,7 +1,7 @@
-import axios from 'src/config/axios'
+import { User } from 'src/api'
 
 import * as constants from 'src/store/constants'
-import { User, TeamMap } from 'src/store/types'
+import { TeamMap } from 'src/store/types'
 
 export interface FetchTeamMap {
   (dispatch: any): void
@@ -23,9 +23,9 @@ export const setTeamMap = (payload: TeamMap): SetTeamMap => {
 
 export const fetchTeamMap = (): FetchTeamMap => {
   return (dispatch: React.Dispatch<TeamAction>) => {
-    axios.get('users')
-      .then(res => {
-        dispatch(setTeamMap(new Map(res.data.map((user: User) => [user.id, user]))))
+    User.all()
+      .then(users => {
+        dispatch(setTeamMap(new Map(users.map((user: User): [number, User] => [user.id, user]))))
       })
       .catch(e => {
         console.log('fetchTeamMap():', e.message)

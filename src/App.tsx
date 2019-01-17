@@ -2,6 +2,8 @@ import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { connect } from 'react-redux'
 
+import * as api from 'src/api'
+
 import Navigation from 'src/components/Navigation'
 import Spinner from 'src/components/Spinner'
 import Notification from 'src/components/Notification'
@@ -33,7 +35,7 @@ import 'src/assets/styles/shared.css'
 type Props = {
   user: {
     isLoading: types.IsLoading
-    user: types.User
+    user: api.User
   }
   team: {
     teamMap: types.TeamMap
@@ -53,7 +55,6 @@ type Props = {
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
-  addNotification: (data: types.Notification) => void
   removeAlert: (alert: types.Alert) => void
 }
 
@@ -75,7 +76,6 @@ export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificatio
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
-    addNotification: (data: types.Notification) => dispatch(alertsActions.addNotification(data)),
     removeAlert: (alert: types.Alert) => dispatch(alertsActions.removeAlert(alert))
   }
 }
@@ -89,34 +89,7 @@ class App extends React.Component<Props> {
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
 
-    const socket = new WebSocket(`wss://${location.hostname}/api/v1/events`)
-
-    socket.onopen = function(event) {
-      console.log('Connection opened', event)
-    }
-
-    socket.onclose = function(event) {
-      console.log('Connection closed', event)
-    }
-
-    socket.onerror = function(event) {
-      console.error('Connection error', event)
-    }
-
-    socket.onmessage = event => {
-      if (event.data instanceof Blob) {
-        const reader = new FileReader()
-        reader.onload = () => {
-          if (typeof reader.result === 'string') {
-            console.log(reader.result)
-            this.props.addNotification(JSON.parse(reader.result))
-          }
-        }
-        reader.readAsText(event.data)
-      } else {
-        console.error('Unhandled instanceof event.data', event)
-      }
-    }
+    const events = api.Events.create()
   }
 
   public render() {
@@ -172,7 +145,7 @@ class App extends React.Component<Props> {
                                     <Icon name="close"/>
                                   </span>
                                   <Notification
-                                    notification={(alert.data as types.Notification)}/>
+                                    notification={(alert.data as api.Notification)}/>
                                 </li>
                               )
                           }

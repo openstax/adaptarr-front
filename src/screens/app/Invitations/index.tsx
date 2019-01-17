@@ -4,8 +4,8 @@ import * as React from 'react'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
+import { Invitation } from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
@@ -31,7 +31,7 @@ class Invitations extends React.Component {
 
     if (!isEmailVaild) return
 
-    axios.post('users/invite', {email})
+    Invitation.create(email)
       .then(() => {
         this.setState({ emailValue: '' })
         store.dispatch(addAlert('success', i18n.t("Invitations.sentTo", {email: email})))

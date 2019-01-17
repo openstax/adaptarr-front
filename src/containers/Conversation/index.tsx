@@ -6,6 +6,7 @@ import { connect } from 'react-redux'
 import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import * as api from 'src/api'
 
 import Avatar from 'src/components/ui/Avatar'
 import MessageInput from 'src/components/MessageInput'
@@ -17,7 +18,7 @@ import { State } from 'src/store/reducers'
 type Props = {
   id: string
   user: {
-    user: types.User
+    user: api.User
   }
   team: {
     teamMap: types.TeamMap

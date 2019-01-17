@@ -4,8 +4,8 @@ import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
+import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
@@ -21,7 +21,7 @@ import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
-import { IsLoading, BooksMap, BookShortInfo } from 'src/store/types'
+import { IsLoading, BooksMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { State } from 'src/store/reducers/index'
 
@@ -60,14 +60,14 @@ class Books extends React.Component<Props> {
   }
 
   private listOfBookCards = (booksMap: BooksMap) => {
-    let books: BookShortInfo[] = []
+    let books: api.Book[] = []
 
     // Create new array because we can't render list
     booksMap.forEach(book => {
       books.push(book)
     })
 
-    return books.map((book: BookShortInfo) => {
+    return books.map((book: api.Book) => {
       return <BookCard key={book.id} book={book}/>
     })
   }
@@ -75,19 +75,7 @@ class Books extends React.Component<Props> {
   private addBook = () => {
     const { titleInput: title, files } = this.state
 
-    const config = files.length ? { headers: { 'Content-Type': 'multipart/form-data' } } : {}
-
-    const paylaod = {
-      title
-    }
-
-    let data = new FormData()
-    data.append('title', title)
-    if (files.length) {
-      data.append('file', files[0])
-    }
-
-    axios.post('books', files.length ? data : paylaod, config)
+    api.Book.create(title, files[0])
       .then(() => {
         this.props.fetchBooksMap()
         this.setState({ titleInput: '' })

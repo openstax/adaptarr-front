@@ -4,7 +4,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+import * as api from 'src/api'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
 
@@ -33,21 +33,15 @@ class ModulePreview extends React.Component<Props> {
   }
 
   private fetchModuleFiles = () => {
-    axios.get(`modules/${this.props.moduleId}/files/index.cnxml`)
-      .then(res => {
-        this.setState({ index: res.data })
-      })
+    api.Module.load(this.props.moduleId)
+      .then(module => Promise.all([
+        module.files(),
+        module.read('index.cnxml'),
+      ]))
+      .then(([files, index]) => this.setState({ index, files }))
       .catch(e => {
         this.setState({ index: i18n.t("Module.fetchError", {details: e.message}) })
         this.props.addAlert('error', e.message)
-      })
-
-    axios.get(`modules/${this.props.moduleId}/files`)
-      .then(res => {
-        this.setState({ files: res.data })
-      })
-      .catch(e => {
-        this.props.addAlert('error', i18n.t("Module.fetchFilesError", {details: e.message}))
       })
   }
 

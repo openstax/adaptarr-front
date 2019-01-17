@@ -4,8 +4,8 @@ import { Trans } from 'react-i18next'
 import { History } from 'history'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
+import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
@@ -21,14 +21,14 @@ import { State } from 'src/store/reducers/index'
 type Props = {
   history: History
   user: {
-    user: types.User
+    user: api.User
   }
   booksMap: {
     booksMap: types.BooksMap
   }
   modules: {
     modulesMap: types.ModulesMap
-    assignedToMe: types.ModuleShortInfo[]
+    assignedToMe: api.Module[]
   }
   fetchModulesAssignedToMe: () => void
 }
@@ -51,18 +51,18 @@ class Dashboard extends React.Component<Props> {
 
   public state: {
     isLoading: boolean,
-    drafts: types.DraftShortInfo[],
+    drafts: api.Draft[],
     showDeleteDraftDialog: boolean,
-    targetDraftId: string | null,
+    targetDraft: api.Draft | null,
   } = {
     isLoading: true,
     drafts: [],
     showDeleteDraftDialog: false,
-    targetDraftId: null,
+    targetDraft: null,
   }
 
-  private showDeleteDraftDialog = (targetDraftId: string) => {
-    this.setState({ showDeleteDraftDialog: true, targetDraftId })
+  private showDeleteDraftDialog = (targetDraft: api.Draft) => {
+    this.setState({ showDeleteDraftDialog: true, targetDraft })
   }
 
   private closeDeleteDraftDialog = () => {
@@ -70,11 +70,11 @@ class Dashboard extends React.Component<Props> {
   }
 
   private deleteDraft = () => {
-    const targetDraftId = this.state.targetDraftId
+    const { targetDraft } = this.state
 
-    if (!targetDraftId) return
+    if (!targetDraft) return
 
-    axios.delete(`drafts/${targetDraftId}`)
+    targetDraft.delete()
       .then(() => {
         this.fetchDrafts()
         store.dispatch(addAlert('success', i18n.t("Draft.deleteDraftSuccess")))
@@ -86,21 +86,21 @@ class Dashboard extends React.Component<Props> {
     this.closeDeleteDraftDialog()
   }
 
-  private createDraft = (targetDraftId: string) => {
-    if (!targetDraftId) return
+  private createDraft = (of: api.Module) => {
+    if (!of) return
 
-    axios.post(`modules/${targetDraftId}`)
+    of.createDraft()
       .then(() => {
         store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
-        this.props.history.push(`/drafts/${targetDraftId}`)
+        this.props.history.push(`/drafts/${of.id}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
   }
 
-  private listOfDrafts = (arr: types.DraftShortInfo[]) => {   
-    return arr.map((draft: types.DraftShortInfo) => {
+  private listOfDrafts = (arr: api.Draft[]) => {
+    return arr.map((draft: api.Draft) => {
       return (
         <li key={draft.module} className="list__item">
           <span className="list__title">
@@ -112,9 +112,9 @@ class Dashboard extends React.Component<Props> {
             >
               <Trans i18nKey="Buttons.viewDraft" />
             </Button>
-            <Button 
-              color="red" 
-              clickHandler={() => this.showDeleteDraftDialog(draft.module)}
+            <Button
+              color="red"
+              clickHandler={() => this.showDeleteDraftDialog(draft)}
             >
               <Trans i18nKey="Buttons.delete" />
             </Button>
@@ -124,7 +124,7 @@ class Dashboard extends React.Component<Props> {
     })
   }
 
-  private listOfAssigned = (mods: types.ModuleShortInfo[]) => {
+  private listOfAssigned = (mods: api.Module[]) => {
     const drafts = this.state.drafts
 
     return mods.map(mod => {
@@ -144,9 +144,9 @@ class Dashboard extends React.Component<Props> {
                   <Trans i18nKey="Buttons.viewDraft" />
                 </Button>
               :
-                <Button 
-                  color="green" 
-                  clickHandler={() => this.createDraft(mod.id)}
+                <Button
+                  color="green"
+                  clickHandler={() => this.createDraft(mod)}
                 >
                   <Trans i18nKey="Buttons.newDraft" />
                 </Button>
@@ -158,9 +158,9 @@ class Dashboard extends React.Component<Props> {
   }
 
   private fetchDrafts = () => {
-    axios.get('drafts')
-      .then(res => {
-        this.setState({ isLoading: false, drafts: res.data })
+    api.Draft.all()
+      .then(drafts => {
+        this.setState({ isLoading: false, drafts })
       })
       .catch(e => {
         this.setState({ isLoading: false })
