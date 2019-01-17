@@ -1,42 +1,43 @@
 import * as React from 'react'
-import { History } from 'history'
-import { Trans } from 'react-i18next'
+import Editor, { PersistDB, DocumentDB } from 'cnx-designer'
 import { match } from 'react-router'
-
-import i18n from 'src/i18n'
+import { Value } from 'slate'
 
 import * as api from 'src/api'
 
-import updateImgSrcs from 'src/helpers/updateImgSrcs'
-
-import Header from 'src/components/Header'
 import Load from 'src/components/Load'
-import Section from 'src/components/Section'
-import Spinner from 'src/components/Spinner'
-import UserUI from 'src/components/UserUI'
-import Button from 'src/components/ui/Button'
 
-import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import './index.css'
+import UIPlugin from './plugins/UI'
 
 type Props = {
-  history: History
-  mod: api.Module
-  draft: api.Draft
-  index: string
+  documentDb: DocumentDB
+  storage: api.Storage
+  value: Value
 }
 
-async function loader({ match }: { match: match<{ id: string }> }) {
-  const [module, draft] = await Promise.all([
-    api.Module.load(match.params.id),
-    api.Draft.load(match.params.id),
+async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
+  const [documentDb, storage] = await Promise.all([
+    PersistDB.load(id),
+    api.Storage.load(id),
   ])
-  const index = await draft.read('index.cnxml')
 
-  return { mod: module, draft, index }
+  let value
+
+  if (documentDb.dirty) {
+    value = await documentDb.restore()
+  } else {
+    value = await storage.read()
+    // TODO: get version from API
+    await documentDb.save(value, Date.now().toString())
+  }
+
+  return { documentDb, storage, value }
 }
 
 class Module extends React.Component<Props> {
+  postPlugins = [UIPlugin]
+
   private saveDraft = () => {
     const { draft } = this.props
 
@@ -51,27 +52,17 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const { mod, index } = this.props
+    const { documentDb, storage, value } = this.props
 
     return (
-      <Section>
-        <Header title={mod ? mod.title : i18n.t("Unknown.module")}>
-          <UserUI userId={mod.assignee}>
-            <Button
-              color="green"
-              clickHandler={this.saveDraft}
-            >
-              <Trans i18nKey="Buttons.save"/>
-            </Button>
-          </UserUI>
-        </Header>
-        <div className="section__content">
-          <div
-            className="draftEditor cnxml"
-            dangerouslySetInnerHTML={{__html: updateImgSrcs(index, mod.id)}}
-            />
-        </div>
-      </Section>
+      <div className="draft">
+        <Editor
+          documentDb={documentDb}
+          storage={storage}
+          value={value}
+          postPlugins={this.postPlugins}
+          />
+      </div>
     )
   }
 }
