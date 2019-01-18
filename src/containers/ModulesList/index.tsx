@@ -10,7 +10,6 @@ import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
-import SuperSession from 'src/components/SuperSession'
 import ModuleInfo from 'src/components/ModuleInfo'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
@@ -52,14 +51,12 @@ class ModuleList extends React.Component<Props> {
 
   state: {
     moduleTitleValue: string
-    showSuperSession: boolean
     moduleToDelete: api.Module | null
     showRemoveModule: boolean
     files: File[]
     filterInput: string
   } = {
     moduleTitleValue: '',
-    showSuperSession: false,
     moduleToDelete: null,
     showRemoveModule: false,
     files: [],
@@ -114,12 +111,7 @@ class ModuleList extends React.Component<Props> {
         this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-        } else {
-          this.props.addAlert('error', e.message)
-        }
+        this.props.addAlert('error', e.message)
       })
   }
 
@@ -150,12 +142,7 @@ class ModuleList extends React.Component<Props> {
         this.props.addAlert('success', i18n.t("ModulesList.moduleRemoveSuccess", {title: mod.title}))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-        } else {
-          this.props.addAlert('error', e.message)
-        }
+        this.props.addAlert('error', e.message)
       })
   }
 
@@ -165,34 +152,12 @@ class ModuleList extends React.Component<Props> {
     }
   }
 
-  private superSessionSuccess = () => {
-    if (this.state.moduleToDelete && this.state.showRemoveModule) {
-      this.removeModule()
-    } else if (this.state.moduleTitleValue.length > 0) {
-      this.addNewModule()
-    }
-
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    this.props.addAlert('error', e.message)
-  }
-
   public render() {
-    const { moduleTitleValue, showSuperSession, showRemoveModule } = this.state
+    const { moduleTitleValue, showRemoveModule } = this.state
     const modulesMap = this.props.modules.modulesMap
 
     return (
       <div className="modulesList">
-        {
-          showSuperSession ?
-            <SuperSession
-              onSuccess={this.superSessionSuccess} 
-              onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}/>
-          : null
-        }
         {
           showRemoveModule ?
             <Dialog

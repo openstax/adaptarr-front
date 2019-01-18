@@ -44,13 +44,11 @@ const mapDispatchToProps = (dispatch: any) => {
 class Module extends React.Component<Props> {
 
   state: {
-    showSuperSession: boolean
     showAssignUser: boolean
     showRemoveModule: boolean
     userToAssign?: api.User
     assignAction?: AssignActions
   } = {
-    showSuperSession: false,
     showAssignUser: false,
     showRemoveModule: false,
   }
@@ -74,19 +72,13 @@ class Module extends React.Component<Props> {
 
     targetModule.delete()
       .then(() => {
-        this.closeRemoveModuleDialog()
         this.props.afterAction()
         store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", { title: targetModule.title })))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeRemoveModuleDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeRemoveModuleDialog()
   }
 
   private showAssignUserDialog = () => {
@@ -111,7 +103,6 @@ class Module extends React.Component<Props> {
 
     this.module.assign(user)
       .then(() => {
-        this.closeAssignUserDialog()
         this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
         this.props.afterAction()
         if (user) {
@@ -121,14 +112,9 @@ class Module extends React.Component<Props> {
         }
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAssignUserDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAssignUserDialog()
   }
 
   private unassignUser = () => {

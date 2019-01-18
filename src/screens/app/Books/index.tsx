@@ -13,7 +13,6 @@ import Header from 'src/components/Header'
 import AdminUI from 'src/components/AdminUI'
 import BookCard from 'src/components/BookCard'
 import Spinner from 'src/components/Spinner'
-import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -49,12 +48,10 @@ class Books extends React.Component<Props> {
 
   state: {
     titleInput: string,
-    showSuperSession: boolean,
     showAddBook: boolean,
     files: File[],
   } = {
     titleInput: '',
-    showSuperSession: false,
     showAddBook: false,
     files: [],
   }
@@ -79,15 +76,10 @@ class Books extends React.Component<Props> {
       .then(() => {
         this.props.fetchBooksMap()
         this.setState({ titleInput: '' })
-        store.dispatch(addAlert('success', i18n.t("Book.bookAddSuccess")))
+        store.dispatch(addAlert('success', i18n.t("Books.bookAddSuccess")))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-        }
+        store.dispatch(addAlert('error', e.message))
       })
     this.closeAddBookDialog()
   }
@@ -112,22 +104,9 @@ class Books extends React.Component<Props> {
     store.dispatch(addAlert('error', error.message))
   }
 
-  private superSessionSuccess = (res: Response) => {
-    this.addBook()
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    store.dispatch(addAlert('error', e.message))
-  }
-
-  private closeSuperSession = () => {
-    this.setState({ showSuperSession: false })
-  }
-
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showSuperSession, showAddBook } = this.state
+    const { titleInput, showAddBook } = this.state
 
     return (
       <Section>
@@ -141,14 +120,6 @@ class Books extends React.Component<Props> {
             </Button>
           </AdminUI>
         </Header>
-        {
-          showSuperSession ?
-            <SuperSession 
-              onSuccess={this.superSessionSuccess} 
-              onFailure={this.superSessionFailure}
-              onAbort={this.closeSuperSession}/>
-          : null
-        }
         {
           showAddBook ?
             <Dialog 

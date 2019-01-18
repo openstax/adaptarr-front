@@ -168,12 +168,7 @@ class Book extends React.Component<Props> {
         this.props.addAlert('success', i18n.t("Book.positionChangeSuccess", {item: changedItem.title, target: targetParent.title}))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-        } else {
-          this.props.addAlert('error', e.message)
-        }
+        this.props.addAlert('error', e.message)
         this.fetchBook()
       })
   }

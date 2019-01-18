@@ -73,18 +73,12 @@ class Group extends React.Component<Props> {
     this.props.item.update({ title: groupNameInput })
       .then(() => {
         this.updateBook()
-        this.closeEditGroupDialog()
         store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess")))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeEditGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeEditGroupDialog()
   }
 
   private showEditBookDialog = () => {
@@ -113,18 +107,12 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        this.closeAddGroupDialog()
         store.dispatch(addAlert('success', i18n.t("Book.groupAddSuccess")))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAddGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAddGroupDialog()
   }
 
   private showAddGroupDialog = () => {
@@ -141,18 +129,12 @@ class Group extends React.Component<Props> {
     item.delete()
       .then(() => {
         this.updateBook()
-        this.closeRemoveGroupDialog()
         store.dispatch(addAlert('success', i18n.t("Book.groupRemoveSuccess", {title: item.title})))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeRemoveGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeRemoveGroupDialog()
   }
 
   private showRemoveGroupDialog = () => {
@@ -179,18 +161,12 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        this.closeAddModuleDialog()
         store.dispatch(addAlert('success', i18n.t("Book.moduleAddSuccess", {title: selectedModule.title})))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAddModuleDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAddModuleDialog()
   }
 
   private handleModuleClick = (mod: api.Module) => {
