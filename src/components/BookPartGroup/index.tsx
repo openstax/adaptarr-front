@@ -73,7 +73,7 @@ class Group extends React.Component<Props> {
     this.props.item.update({ title: groupNameInput })
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess")))
+        store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess", {from: this.props.item.title, to: groupNameInput})))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
