@@ -11,6 +11,8 @@ import { addAlert } from 'src/store/actions/Alerts'
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
+import DraftsList from 'src/components/DraftsList'
+import AssignedToMe from 'src/components/AssignedToMe'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
@@ -86,75 +88,17 @@ class Dashboard extends React.Component<Props> {
     this.closeDeleteDraftDialog()
   }
 
-  private createDraft = (of: api.Module) => {
-    if (!of) return
+  private createDraft = (mod: api.Module) => {
+    if (!mod) return
 
-    of.createDraft()
+    mod.createDraft()
       .then(() => {
         store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
-        this.props.history.push(`/drafts/${of.id}`)
+        this.props.history.push(`/drafts/${mod.id}`)
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
-  }
-
-  private listOfDrafts = (arr: api.Draft[]) => {
-    return arr.map((draft: api.Draft) => {
-      return (
-        <li key={draft.module} className="list__item">
-          <span className="list__title">
-            {draft.title}
-          </span>
-          <span className="list__buttons">
-            <Button 
-              to={`/drafts/${draft.module}`}
-            >
-              <Trans i18nKey="Buttons.viewDraft" />
-            </Button>
-            <Button
-              color="red"
-              clickHandler={() => this.showDeleteDraftDialog(draft)}
-            >
-              <Trans i18nKey="Buttons.delete" />
-            </Button>
-          </span>
-        </li>
-      )
-    })
-  }
-
-  private listOfAssigned = (mods: api.Module[]) => {
-    const drafts = this.state.drafts
-
-    return mods.map(mod => {
-      const isDraftCreated = drafts.some(draft => draft.module === mod.id)
-
-      return (
-        <li key={mod.id} className="list__item">
-          <span className="list__title">
-            {mod.title}
-          </span>
-          <span className="list__buttons">
-            {
-              isDraftCreated ?
-                <Button 
-                  to={`/modules/${mod.id}`}
-                >
-                  <Trans i18nKey="Buttons.viewDraft" />
-                </Button>
-              :
-                <Button
-                  color="green"
-                  clickHandler={() => this.createDraft(mod)}
-                >
-                  <Trans i18nKey="Buttons.newDraft" />
-                </Button>
-            }
-          </span>
-        </li>
-      )
-    })
   }
 
   private fetchDrafts = () => {
@@ -175,7 +119,6 @@ class Dashboard extends React.Component<Props> {
 
   public render() {
     const { drafts, isLoading } = this.state
-    const { assignedToMe } = this.props.modules
 
     return (
       <Section>
@@ -205,31 +148,19 @@ class Dashboard extends React.Component<Props> {
               <h3 className="section__heading">
                 <Trans i18nKey="Dashboard.yourDrafts" />
               </h3>
-              {
-                drafts.length > 0 ?
-                  <ul className="list">
-                    {
-                      this.listOfDrafts(drafts)
-                    }
-                  </ul>
-                :
-                  <Trans i18nKey="Dashboard.noDraftsFound" />
-              }
+              <DraftsList
+                drafts={drafts}
+                onDraftDeleteClick={this.showDeleteDraftDialog}
+              />
             </div>
             <div className="section__half">
               <h3 className="section__heading">
                 <Trans i18nKey="Dashboard.assignedToYou" />
               </h3>
-              {
-                assignedToMe.length > 0 ?
-                  <ul className="list">
-                    {
-                      this.listOfAssigned(assignedToMe)
-                    }
-                  </ul>
-                :
-                  <Trans i18nKey="Dashboard.noAssigned" />
-              }
+              <AssignedToMe
+                drafts={drafts}
+                onCreateDraft={this.createDraft}
+              />
             </div>
           </div>
         }
