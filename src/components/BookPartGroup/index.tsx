@@ -13,7 +13,7 @@ import StackedBar from 'src/components/ui/StackedBar'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
-import ModulesList from 'src/containers/ModulesList'
+import ModulesPicker from 'src/containers/ModulesPicker'
 
 import { ModuleStatus } from 'src/store/types'
 
@@ -286,7 +286,7 @@ class Group extends React.Component<Props> {
               onClose={this.closeAddModuleDialog}
               i18nKey="Book.addModuleDialog"
             >
-              <ModulesList onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker onModuleClick={this.handleModuleClick}/>
             </Dialog>
           : null
         }

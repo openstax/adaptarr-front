@@ -92,9 +92,12 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   padding: 10px 0;
   border-bottom: 1px solid var(--light-bg);
+}
+
+.list__title {
+  flex: 1;
 }
 
 .list__buttons button {
