@@ -10,7 +10,7 @@ import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
-import SuperSession from 'src/components/SuperSession'
+import ModulesList from 'src/components/ModulesList'
 import ModuleInfo from 'src/components/ModuleInfo'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
@@ -20,14 +20,11 @@ import Input from 'src/components/ui/Input'
 import FilesUploader from 'src/containers/FilesUploader'
 
 import * as modulesActions from 'src/store/actions/Modules'
-import { ModulesMap, RequestInfoKind } from 'src/store/types'
+import { RequestInfoKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
 type Props = {
-  modules: {
-    modulesMap: ModulesMap
-  }
   onModuleClick: (mod: api.Module) => any
   addModuleToMap: (mod: api.Module) => any
   removeModuleFromMap: (id: string) => any
@@ -52,48 +49,16 @@ class ModuleList extends React.Component<Props> {
 
   state: {
     moduleTitleValue: string
-    showSuperSession: boolean
     moduleToDelete: api.Module | null
     showRemoveModule: boolean
     files: File[]
     filterInput: string
   } = {
     moduleTitleValue: '',
-    showSuperSession: false,
     moduleToDelete: null,
     showRemoveModule: false,
     files: [],
     filterInput: '',
-  }
-
-  private listOfModules = (modulesMap: ModulesMap) => {
-    const filterReg = new RegExp('^' + this.state.filterInput, 'i')
-    let modules: api.Module[] = []
-
-    modulesMap.forEach(mod => {
-      if (this.state.filterInput) {
-        if (filterReg.test(mod.title)) {
-          modules.push(mod)
-        }
-      } else {
-        modules.push(mod)
-      }
-    })
-
-    modules.sort(sortArrayByTitle)
-
-    return modules.map((mod: api.Module) => {
-      return (
-        <li key={mod.id} className="modulesList__item">
-          <span onClick={() => this.handleModuleClick(mod)}>
-            <ModuleInfo mod={mod}/>
-          </span>
-          <Button color="red" clickHandler={() => this.showRemoveModuleDialog(mod)}>
-            <Icon name="minus"/>
-          </Button>
-        </li>
-      )
-    })
   }
 
   private handleModuleClick = (mod: api.Module) => {
@@ -114,12 +79,7 @@ class ModuleList extends React.Component<Props> {
         this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-        } else {
-          this.props.addAlert('error', e.message)
-        }
+        this.props.addAlert('error', e.message)
       })
   }
 
@@ -150,13 +110,9 @@ class ModuleList extends React.Component<Props> {
         this.props.addAlert('success', i18n.t("ModulesList.moduleRemoveSuccess", {title: mod.title}))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          this.props.addAlert('info', i18n.t("Admin.confirmSuperSession"))
-        } else {
-          this.props.addAlert('error', e.message)
-        }
+        this.props.addAlert('error', e.message)
       })
+    this.closeRemoveModuleDialog()
   }
 
   private handleFilterInput = (val: string) => {
@@ -165,34 +121,11 @@ class ModuleList extends React.Component<Props> {
     }
   }
 
-  private superSessionSuccess = () => {
-    if (this.state.moduleToDelete && this.state.showRemoveModule) {
-      this.removeModule()
-    } else if (this.state.moduleTitleValue.length > 0) {
-      this.addNewModule()
-    }
-
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    this.props.addAlert('error', e.message)
-  }
-
   public render() {
-    const { moduleTitleValue, showSuperSession, showRemoveModule } = this.state
-    const modulesMap = this.props.modules.modulesMap
+    const { moduleTitleValue, showRemoveModule } = this.state
 
     return (
       <div className="modulesList">
-        {
-          showSuperSession ?
-            <SuperSession
-              onSuccess={this.superSessionSuccess} 
-              onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}/>
-          : null
-        }
         {
           showRemoveModule ?
             <Dialog
@@ -211,7 +144,7 @@ class ModuleList extends React.Component<Props> {
         <AdminUI>
           <div className="modulesList__new">
             <div className="modulesList__top-bar">
-              <Input  
+              <Input
                 placeholder={i18n.t("ModulesList.placeholderTitle")}
                 value={moduleTitleValue}
                 onChange={this.updateModuleTitleValue}
@@ -232,23 +165,17 @@ class ModuleList extends React.Component<Props> {
             />
           </div>
         </AdminUI>
-        {
-          modulesMap.size > 6 ?
-            <div className="modulesList__filter">
-              <Input
-                onChange={this.handleFilterInput}
-                placeholder={i18n.t("ModulesList.placeholderSearch")}
-              />
-            </div>
-          : null
-        }
-        {
-          modulesMap.size > 0 ?
-            <ul className="modulesList__list">
-              {this.listOfModules(modulesMap)}
-            </ul>
-          : null
-        }
+        <div className="modulesList__filter">
+          <Input
+            onChange={this.handleFilterInput}
+            placeholder={i18n.t("ModulesList.placeholderSearch")}
+          />
+        </div>
+        <ModulesList
+          filter={this.state.filterInput}
+          onModuleClick={this.handleModuleClick}
+          onModuleRemoveClick={this.showRemoveModuleDialog}
+        />
       </div>
     )
   }

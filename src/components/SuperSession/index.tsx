@@ -1,11 +1,9 @@
 import * as React from 'react'
 import axiosClean from 'axios'
-import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
 
 import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 type Props = {

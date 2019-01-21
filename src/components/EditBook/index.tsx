@@ -5,7 +5,6 @@ import { FilesError } from 'react-files'
 import i18n from 'src/i18n'
 import * as api from 'src/api'
 
-import SuperSession from 'src/components/SuperSession'
 import Spinner from 'src/components/Spinner'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
@@ -28,12 +27,10 @@ class EditBook extends React.Component<Props> {
     isLoading: boolean
     titleInput: string
     files: File[]
-    showSuperSession: boolean
   } = {
     isLoading: false,
     titleInput: '',
     files: [],
-    showSuperSession: false,
   }
 
   private editBook = () => {
@@ -48,20 +45,14 @@ class EditBook extends React.Component<Props> {
 
     ;(files.length ? book.replaceContent(files[0]) : book.update(payload))
       .then(() => {
-        this.setState({ titleInput: '' })
         store.dispatch(addAlert('success', i18n.t("Book.updateSuccess")))
-        this.setState({ isLoading: false })
+        this.setState({ titleInput: '', isLoading: false })
         this.props.onSuccess()
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.setState({ isLoading: false })
-          this.props.onClose()
-        }
+        store.dispatch(addAlert('error', e.message))
+        this.setState({ isLoading: false })
+        this.props.onClose()
       })
   }
 
@@ -77,31 +68,12 @@ class EditBook extends React.Component<Props> {
     store.dispatch(addAlert('error', error.message))
   }
 
-  private superSessionSuccess = (_: Response) => {
-    this.editBook()
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    store.dispatch(addAlert('error', e.message))
-    this.props.onClose()
-  }
-
   public render() {
-    const { isLoading, titleInput, showSuperSession, files } = this.state
+    const { isLoading, titleInput, files } = this.state
     const bookTitle = this.props.book.title
 
     return (
       <React.Fragment>
-        {
-          showSuperSession ?
-            <SuperSession
-              onSuccess={this.superSessionSuccess}
-              onFailure={this.superSessionFailure}
-              onAbort={() => this.setState({ showSuperSession: false })}
-            />
-          : null
-        }
         <Dialog
           i18nKey="Books.editBookDialog"
           size="medium"
