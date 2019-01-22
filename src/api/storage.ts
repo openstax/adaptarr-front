@@ -1,16 +1,13 @@
-import { AxiosResponse } from 'axios'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
-
-import axios from 'src/config/axios'
 
 /**
  * Exception thrown by methods of {@link Storage} on API errors.
  */
 export class APIError extends BaseError {
-  response: AxiosResponse
+  response: Response
 
-  constructor(response: AxiosResponse) {
+  constructor(response: Response) {
     super(`${response.status} ${response.statusText}`)
     this.response = response
 
@@ -34,12 +31,19 @@ export class APIError extends BaseError {
   }
 }
 
+/**
+ * A file, as understood by {@link Storage}.
+ */
+export type FileDescription = {
+  name: string,
+  mime: string,
+}
 
 export default class Storage extends StorageBase {
   id: string
   url: string
   title: string
-  files: File[]
+  files: FileDescription[]
   tag: string | null = null
   value: Value | null = null
 
@@ -81,13 +85,63 @@ export default class Storage extends StorageBase {
     return this.value
   }
 
+  /**
+   * Write the document
+   */
+  async write(value: Value) {
+    const text = CNXML.serialize(value, this.title)
+
+    const req = await fetch(this.url + '/files/index.cnxml', {
+      method: 'PUT',
+      credentials: 'same-origin',
+      body: text,
+    })
+
+    if (!req.ok) {
+      throw new APIError(req)
+    }
+
+    this.value = value
+  }
+
+  /**
+   * Write a file.
+   */
+  async writeFile(file: File) {
+    const req = await fetch(this.url + '/files/' + file.name, {
+      method: 'PUT',
+      credentials: 'same-origin',
+      body: file,
+    })
+
+    if (!req.ok) {
+      throw new APIError(req)
+    }
+
+    this.files.push({ name: file.name, mime: file.type })
+  }
+
+  /**
+   * Check if a {@link Value} is current.
+   */
+  current(value: Value) {
+    return this.value !== null && this.value.document.equals(value.document)
+  }
+
+  /**
+   * Return an URL for a given media file.
+   */
+  mediaUrl(name: string) {
+    return this.url + '/files/' + name
+  }
+
   async _request(path: string, data?: string) {
     const req = await fetch(this.url + path, {
       credentials: 'same-origin',
     })
 
     if (!req.ok) {
-      throw new APIError(req as unknown as AxiosResponse)
+      throw new APIError(req)
     }
 
     return data ? req[data]() : req
