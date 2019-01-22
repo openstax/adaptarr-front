@@ -6,6 +6,7 @@ import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import InsertTools from '../InsertTools'
+import ListTools from '../ListTools'
 import SaveButton from '../SaveButton'
 
 import './index.css'
@@ -39,6 +40,7 @@ export default function Toolbox({ editor, value }: Props) {
       <AdmonitionTools editor={editor} value={value} />
       <ExerciseTools editor={editor} value={value} />
       <FigureTools editor={editor} value={value} />
+      <ListTools editor={editor} value={value} />
     </div>
   )
 }

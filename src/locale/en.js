@@ -147,6 +147,11 @@ export default {
     "Editor.insert.figure": "Figure",
     "Editor.insert.groupTitle": "Insert",
     "Editor.insert.reference": "Reference",
+    "Editor.list.decreaseLevel": "Decrease item level",
+    "Editor.list.groupTitle": "List",
+    "Editor.list.increaseLevel": "Increase item level",
+    "Editor.list.style.ol_list": "Arabic numerals",
+    "Editor.list.style.ul_list": "Bullet",
     "Editor.save.action": "Save"
   }
 }
