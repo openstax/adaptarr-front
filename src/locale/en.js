@@ -120,6 +120,15 @@ export default {
     "Unknown.user": "Unknown user",
     "Unknown.email": "Unknown email",
     "Unknown.mention": "[Unknown mention]",
+    "Editor.format.clear": "Clear formatting",
+    "Editor.format.emphasis": "Emphasis",
+    "Editor.format.list": "List",
+    "Editor.format.strong": "Strong",
+    "Editor.format.subscript": "Subscript",
+    "Editor.format.superscript": "Superscript",
+    "Editor.format.textType.header": "Header",
+    "Editor.format.textType.paragraph": "Paragraph",
+    "Editor.format.underline": "Underline",
     "Editor.save.action": "Save"
   }
 }

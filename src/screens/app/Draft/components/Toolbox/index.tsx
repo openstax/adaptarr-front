@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Editor, Value } from 'slate'
 
+import FormatTools from '../FormatTools'
 import SaveButton from '../SaveButton'
 
 import './index.css'
@@ -28,6 +29,7 @@ export default function Toolbox({ editor, value }: Props) {
   return (
     <div className="toolbox">
       <SaveButton value={value} />
+      <FormatTools editor={editor} value={value} />
     </div>
   )
 }
