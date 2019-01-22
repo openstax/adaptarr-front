@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Editor, Value } from 'slate'
 
+import SaveButton from '../SaveButton'
+
 import './index.css'
 
 export type Props = {
@@ -25,6 +27,7 @@ export default function Toolbox({ editor, value }: Props) {
 
   return (
     <div className="toolbox">
+      <SaveButton value={value} />
     </div>
   )
 }

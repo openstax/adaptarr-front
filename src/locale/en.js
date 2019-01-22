@@ -119,6 +119,7 @@ export default {
     "Unknown.module": "Unknown module",
     "Unknown.user": "Unknown user",
     "Unknown.email": "Unknown email",
-    "Unknown.mention": "[Unknown mention]"
+    "Unknown.mention": "[Unknown mention]",
+    "Editor.save.action": "Save"
   }
 }

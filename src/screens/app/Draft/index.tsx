@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
 import Editor, { PersistDB, DocumentDB } from 'cnx-designer'
 import { match } from 'react-router'
 import { Value } from 'slate'
@@ -38,17 +39,14 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 class Module extends React.Component<Props> {
   postPlugins = [UIPlugin]
 
-  private saveDraft = () => {
-    const { draft } = this.props
+  static childContextTypes = {
+    documentDb: PropTypes.instanceOf(DocumentDB),
+  }
 
-    draft!.save()
-      .then(() => {
-        store.dispatch(addAlert('success', i18n.t("Draft.saveSuccess")))
-        this.props.history.push(`/modules/${draft!.module}`)
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
+  getChildContext() {
+    return {
+      documentDb: this.props.documentDb,
+    }
   }
 
   public render() {
