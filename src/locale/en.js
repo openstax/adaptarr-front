@@ -130,6 +130,11 @@ export default {
     "Editor.format.textType.header": "Header",
     "Editor.format.textType.paragraph": "Paragraph",
     "Editor.format.underline": "Underline",
+    "Editor.insert.admonition": "Admonition",
+    "Editor.insert.exercise": "Exercise",
+    "Editor.insert.figure": "Figure",
+    "Editor.insert.groupTitle": "Insert",
+    "Editor.insert.reference": "Reference",
     "Editor.save.action": "Save"
   }
 }
