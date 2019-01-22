@@ -1,0 +1,6 @@
+div.asset-list {
+  display: flex;
+  flex-wrap: wrap;
+
+  overflow-y: auto;
+}

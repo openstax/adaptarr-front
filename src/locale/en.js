@@ -120,6 +120,7 @@ export default {
     "Unknown.user": "Unknown user",
     "Unknown.email": "Unknown email",
     "Unknown.mention": "[Unknown mention]",
+    "AssetList.addMedia": "Add media",
     "Editor.format.clear": "Clear formatting",
     "Editor.format.emphasis": "Emphasis",
     "Editor.format.list": "List",
