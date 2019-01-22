@@ -10,7 +10,7 @@ type Props = {
   className?: string
   isDisabled?: boolean
   children: React.ReactNode
-  clickHandler?: any
+  clickHandler?: (event: React.MouseEvent<HTMLButtonElement>) => any
   to?: LocationDescriptor
 }
 
