@@ -3,6 +3,7 @@ import { Editor, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
 import ExerciseTools from '../ExerciseTools'
+import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import InsertTools from '../InsertTools'
 import SaveButton from '../SaveButton'
@@ -37,6 +38,7 @@ export default function Toolbox({ editor, value }: Props) {
 
       <AdmonitionTools editor={editor} value={value} />
       <ExerciseTools editor={editor} value={value} />
+      <FigureTools editor={editor} value={value} />
     </div>
   )
 }
