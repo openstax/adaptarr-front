@@ -1,5 +1,5 @@
 declare module 'cnx-designer' {
-  import { Value, Operation } from 'slate'
+  import { Data, Value, Operation, Editor as SlateEditor } from 'slate'
   import { Plugin } from 'slate-react'
 
   type EditorProps = {
@@ -15,7 +15,7 @@ declare module 'cnx-designer' {
 
   export const CNXML: {
     deserialize(html: string, options?: {}): Value
-    serialize(value: Value): string
+    serialize(value: Value, title: string): string
   }
 
   export class APIError extends Error {
@@ -48,5 +48,33 @@ declare module 'cnx-designer' {
     mark(op: Operation): Promise<void>
     restore(): Promise<Value>
     discard(): Promise<void>
+  }
+
+  export type AdmonitionKind = 'note' | 'warning' | 'tip' | 'important'
+
+  export type MediaDescription = {
+    mime: string,
+    name: string,
+    alt: string,
+  }
+
+  export interface EditorAug extends SlateEditor {
+    insertAdmonition(kind: AdmonitionKind): EditorAug
+    insertExercise(): EditorAug
+    insertSolution(): EditorAug
+    insertCommentary(): EditorAug
+    insertFigure(media: MediaDescription): EditorAug
+    insertSubfigure(media: MediaDescription): EditorAug
+    insertCaption(): EditorAug
+    changeListType(type: string): EditorAug
+    insertXref(target: string): EditorAug
+    removeMarks(): EditorAug
+
+    // From slate-edit-list
+    decreaseItemDepth(): EditorAug
+    increaseItemDepth(): EditorAug
+    splitListItem(): EditorAug
+    unwrapList(): EditorAug
+    wrapInList(type?: string, data?: Object | Data): EditorAug
   }
 }
