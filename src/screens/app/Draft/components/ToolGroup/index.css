@@ -1,0 +1,20 @@
+.toolgroup {
+  margin-top: 12px;
+}
+
+.toolgroup--header {
+  height: 24px;
+  cursor: pointer;
+}
+
+.toolgroup--header > .icon {
+  margin: 4px;
+}
+
+.toolgroup--content {
+  display: none;
+}
+
+.toolgroup.open > .toolgroup--content {
+  display: block;
+}
