@@ -98,6 +98,12 @@ class Input extends React.Component<Props> {
     return {status, classes: classes.join(' ')}
   }
 
+  componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.value !== this.props.value) {
+      this.setState({ inputVal: this.props.value })
+    }
+  }
+
   componentDidMount = () => {
     const value = this.props.value
     if (value) {
