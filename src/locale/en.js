@@ -93,6 +93,8 @@ export default {
     "Settings.changeLanguageDialog": "Are you sure you want to change language?",
     "Settings.changePassword": "Change password",
     "Settings.changePasswordDialog": "Are you sure you want to change password?",
+    "Settings.changePasswordSuccess": "Password has beed changed.",
+    "Settings.changePasswordError": "Password has not been changed.",
     "Settings.passwordValidation": "Password must be bewtween 6 and 12 characters.",
     "Settings.passwordRepeatValidation": "Passwords must be identical.",
     "Settings.placeholderOldPassword": "Old password",

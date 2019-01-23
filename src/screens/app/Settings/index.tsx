@@ -6,7 +6,9 @@ import Select from 'react-select'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+import User from 'src/api/user'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
@@ -87,19 +89,27 @@ class Settings extends React.Component {
   }
 
   private changePassword = () => {
-    /* axios.put('users/me')
+    const { oldPassword, newPassword, newPassword2 } = this.state
+
+    User.changePassword(oldPassword, newPassword, newPassword2)
       .then(() => {
-        this.setState({
-          showChangePassword: false,
-          oldPassword: '',
-          newPassword: '',
-          newPassword2: '',
-        })
+        this.closeChangePassword()
+        this.clearPasswordForm()
+        store.dispatch(addAlert('success', i18n.t('Settings.changePasswordSuccess')))
       })
       .catch(e => {
-        console.error(e.message)
-        this.setState({ showChangePassword: false })
-      }) */
+        store.dispatch(addAlert('error', i18n.t('Settings.changePasswordError')))
+        console.log(e)
+      })
+  }
+
+  private clearPasswordForm = () => {
+    this.setState({
+      arePasswordsValid: false,
+      oldPassword: '',
+      newPassword: '',
+      newPassword2: '',
+    })
   }
 
   private closeChangeLanguage = () => {
