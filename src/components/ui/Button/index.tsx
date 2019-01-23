@@ -12,9 +12,10 @@ type Props = {
   children: React.ReactNode
   clickHandler?: (event: React.MouseEvent<HTMLButtonElement>) => any
   to?: LocationDescriptor
+  dataId?: string
 }
 
-const button = ({ color, size, className, isDisabled, children, clickHandler, to }: Props) => {
+const button = ({ color, size, className, isDisabled, children, clickHandler, to, dataId }: Props) => {
   const classes: string[] = ['button']
 
   if (color) classes.push(`button--${color}`)
@@ -25,13 +26,20 @@ const button = ({ color, size, className, isDisabled, children, clickHandler, to
     <React.Fragment>
       {
         to ?
-          <Link to={to} className={classes.join(' ')}>{children}</Link>
+          <Link
+            to={to}
+            className={classes.join(' ')}
+            data-id={dataId ? dataId : null}
+          >
+            {children}
+          </Link>
         :
           <button 
             className={classes.join(' ')} 
             onClick={clickHandler} 
             disabled={isDisabled}
             type="button"
+            data-id={dataId ? dataId : null}
           >
             {children}
           </button>
