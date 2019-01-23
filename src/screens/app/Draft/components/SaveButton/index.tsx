@@ -7,6 +7,7 @@ import { DocumentDB } from 'cnx-designer'
 import Storage from 'src/api/storage'
 
 import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 import Spinner from 'src/components/Spinner'
 
 import './index.css'
@@ -37,7 +38,9 @@ export default class SaveButton extends React.Component<Props> {
         className="save-button"
         clickHandler={this.onClick}
         isDisabled={saving || storage.current(value)}
-        >
+        size="medium"
+      >
+        <Icon name="save" />
         <Trans i18nKey="Editor.save.action" />
         {saving && <Spinner />}
       </Button>

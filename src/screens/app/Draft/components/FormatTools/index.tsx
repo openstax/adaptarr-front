@@ -1,18 +1,26 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import Select from 'react-select'
 import { Editor, Value } from 'slate'
 import { EditorAug } from 'cnx-designer'
 
 import i18n from 'src/i18n'
 
 import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 export type Props = {
   editor: Editor,
   value: Value,
 }
 
-const FORMATS = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript'
+type BlockType = { value: string, label: string }
+
+const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+const BLOCK_TYPES: BlockType[] = [
+  { value: 'paragraph', label: i18n.t('Editor.format.textType.paragraph') },
+  { value: 'header', label: i18n.t('Editor.format.textType.header') },
+]
 
 export default class FormatTools extends React.Component<Props> {
   render() {
@@ -24,39 +32,56 @@ export default class FormatTools extends React.Component<Props> {
 
     const list = editor.query('getCurrentList', value)
 
-    return <div className="toolbox-format">
-      <select onChange={this.changeTextType} value={value.startBlock.type}>
-        <option value="paragraph">
-          {i18n.t("Editor.format.textType.paragraph")}
-        </option>
-        <option value="header">
-          {i18n.t("Editor.format.textType.header")}
-        </option>
-      </select>
-      {FORMATS.map(format => (
-        <Button key={format} clickHandler={this.applyFormat(format)}>
-          <Trans i18nKey={"Editor.format." + format} />
+    return (
+      <div className="toolbox-format">
+        <Select
+          className="toolbox__select"
+          value={{ value: value.startBlock.type, label: i18n.t(`Editor.format.textType.${value.startBlock.type}`) }}
+          onChange={this.changeTextType}
+          options={BLOCK_TYPES}
+        />
+        {FORMATS.map(format => (
+          <Button
+            key={format}
+            className="toolbox__button--only-icon"
+            dataId={format}
+            clickHandler={this.applyFormat}
+            title={i18n.t(`Editor.format.${format}`)}
+          >
+            <Icon name={format} />
+          </Button>
+        ))}
+        <Button
+          className="toolbox__button--only-icon"
+          isDisabled={list !== null}
+          clickHandler={this.formatList}
+          title={i18n.t('Editor.format.list')}
+        >
+          <Icon name="list-ul" />
         </Button>
-      ))}
-      <Button isDisabled={value.activeMarks.isEmpty()} clickHandler={this.clear}>
-        <Trans i18nKey="Editor.format.clear" />
-      </Button>
-      <Button isDisabled={list !== null} clickHandler={this.formatList}>
-        <Trans i18nKey="Editor.format.list" />
-      </Button>
-    </div>
+        <Button
+          className="toolbox__button--only-icon"
+          isDisabled={value.activeMarks.isEmpty()}
+          clickHandler={this.clear}
+          title={i18n.t('Editor.format.clear')}
+        >
+          <Icon name="close" />
+        </Button>
+      </div>
+    )
   }
 
-  private changeTextType = (ev: React.ChangeEvent<HTMLSelectElement>) => {
+  private changeTextType = (blockType: BlockType) => {
     const { editor, value } = this.props
-    editor.setNodeByKey(value.startBlock.key, { type: ev.target.value })
+    editor.setNodeByKey(value.startBlock.key, { type: blockType.value })
   }
 
-  // TODO: This should be a single callback, and take format from
-  // ev.target.dataset. It is not because it's currently impossible to set data-
-  // attributes on <Button>.
-  private applyFormat = (format: string) => (ev: React.MouseEvent<HTMLButtonElement>) => {
+  private applyFormat = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault()
+
+    const format = (ev.target as HTMLButtonElement).getAttribute('data-id') || null
+    if (!format) return
+
     this.props.editor.addMark(format)
   }
 

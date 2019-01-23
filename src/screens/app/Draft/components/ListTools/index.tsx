@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Select from 'react-select'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value } from 'slate'
 import { EditorAug } from 'cnx-designer'
@@ -6,10 +7,16 @@ import { EditorAug } from 'cnx-designer'
 import i18n from 'src/i18n'
 
 import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
 
-const STYLES = ['ol_list', 'ul_list']
+type ListStyle = { value: string, label: string }
+
+const LIST_STYLES: ListStyle[] = [
+  { value: 'ol_list', label: i18n.t('Editor.list.style.ol_list') },
+  { value: 'ul_list', label: i18n.t('Editor.list.style.ul_list') },
+]
 
 export type Props = {
   editor: Editor,
@@ -25,24 +32,31 @@ export default class ListTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="Editor.list.groupTitle">
-        <select onChange={this.changeListStyle} value={list.type}>
-          {STYLES.map(style => (
-            <option key={style} value={style}>
-              {i18n.t("Editor.list.style." + style)}
-            </option>
-          ))}
-        </select>
-        <Button clickHandler={() => (editor as EditorAug).decreaseItemDepth()}>
+        <Select
+          className="toolbox__select"
+          value={{ value: list.type, label: i18n.t(`Editor.list.style.${list.type}`) }}
+          onChange={this.changeListStyle}
+          options={LIST_STYLES}
+        />
+        <Button
+          clickHandler={() => (editor as EditorAug).decreaseItemDepth()}
+          className="toolbox__button--insert"
+        >
+          <Icon name="outdent" />
           <Trans i18nKey="Editor.list.decreaseLevel" />
         </Button>
-        <Button clickHandler={() => (editor as EditorAug).increaseItemDepth()}>
+        <Button
+          clickHandler={() => (editor as EditorAug).increaseItemDepth()}
+          className="toolbox__button--insert"
+        >
+          <Icon name="indent" />
           <Trans i18nKey="Editor.list.increaseLevel" />
         </Button>
       </ToolGroup>
     )
   }
 
-  private changeListStyle = (ev: React.ChangeEvent<HTMLSelectElement>) => {
-    ;(this.props.editor as EditorAug).changeListType(ev.target.value)
+  private changeListStyle = ({ value }: ListStyle) => {
+    ;(this.props.editor as EditorAug).changeListType(value)
   }
 }

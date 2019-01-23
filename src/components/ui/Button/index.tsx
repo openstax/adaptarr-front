@@ -13,9 +13,10 @@ type Props = {
   clickHandler?: (event: React.MouseEvent<HTMLButtonElement>) => any
   to?: LocationDescriptor
   dataId?: string
+  title?: string
 }
 
-const button = ({ color, size, className, isDisabled, children, clickHandler, to, dataId }: Props) => {
+const button = ({ color, size, className, isDisabled, children, clickHandler, to, dataId, title }: Props) => {
   const classes: string[] = ['button']
 
   if (color) classes.push(`button--${color}`)
@@ -40,6 +41,7 @@ const button = ({ color, size, className, isDisabled, children, clickHandler, to
             disabled={isDisabled}
             type="button"
             data-id={dataId ? dataId : null}
+            title={title ? title : ''}
           >
             {children}
           </button>

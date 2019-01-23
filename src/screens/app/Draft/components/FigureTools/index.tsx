@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value, BlockProperties } from 'slate'
@@ -5,10 +7,11 @@ import { EditorAug, MediaDescription } from 'cnx-designer'
 
 import { FileDescription } from 'src/api/storage'
 
-import AssetPreview from 'src/components/AssetPreview'
 import Modal from 'src/components/Modal'
-import Button from 'src/components/ui/Button'
+import AssetPreview from 'src/components/AssetPreview'
 import AssetList from 'src/containers/AssetList'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
 
@@ -33,28 +36,31 @@ export default class FigureTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="Editor.figure.groupTitle">
-        <div className="subfigure">
+        <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}
             onClick={this.changeSubfigure}
-            />
-          {figure !== subfigure && <Button clickHandler={this.removeSubfigure}>
+          />
+          {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
             <Trans i18nKey="Editor.figure.removeSubfigure" />
           </Button>}
         </div>
-        <Button clickHandler={this.insertSubfigure}>
+        <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
+          <Icon name="image" />
           <Trans i18nKey="Editor.figure.insert.subfigure" />
         </Button>
         <Button
           clickHandler={this.insertCaption}
           isDisabled={(figure.nodes.last() as Block).type === 'figure_caption'}
-          >
+          className="toolbox__button--insert"
+        >
+          <Icon name="comment" />
           <Trans i18nKey="Editor.figure.insert.caption" />
         </Button>
         <Modal
           ref={this.setModal}
           content={this.renderModal}
-          />
+        />
       </ToolGroup>
     )
   }
@@ -65,7 +71,7 @@ export default class FigureTools extends React.Component<Props> {
     <AssetList
       filter="image/*"
       onSelect={this.onAssetSelected}
-      />
+    />
   )
 
   private insertSubfigure = () => {

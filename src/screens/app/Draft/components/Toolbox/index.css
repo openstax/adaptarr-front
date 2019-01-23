@@ -1,5 +1,47 @@
-div.toolbox {
-  max-width: 260px;
-  border-left: 1px solid gray;
+.toolbox {
+  width: 260px;
+  border-left: 1px solid var(--dark-bg);
   padding: 8px;
+  overflow: auto;
+}
+
+.toolbox__select {
+  width: 100%;
+  margin: 10px 0;
+  font-size: 0.9rem;
+}
+
+.toolbox__button--insert {
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 45%;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  color: var(--font-dark);
+  background: transparent;
+}
+
+.toolbox__button--insert .icon {
+  margin-bottom: 10px;
+}
+
+.toolbox__button--insert:hover {
+  border-color: var(--dark-bg);
+}
+
+.toolbox__button--only-icon {
+  padding: 5px;
+  color: var(--font-dark);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.toolbox__button--only-icon:hover {
+  border-color: var(--dark-bg);
 }

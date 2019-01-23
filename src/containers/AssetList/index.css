@@ -1,6 +1,31 @@
-div.asset-list {
+.assetList {
   display: flex;
   flex-wrap: wrap;
-
   overflow-y: auto;
+}
+
+.assetList__list {
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto;
+}
+
+.assetList__item .button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 250px;
+  height: 120px;
+  margin: 8px;
+  font-size: 0.9rem;
+}
+
+.assetList__item .button .icon {
+  margin-bottom: 10px;
+}
+
+.assetList__item .asset__image {
+  width: 250px;
+  height: 150px;
 }
