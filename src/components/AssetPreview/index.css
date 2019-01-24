@@ -36,6 +36,8 @@
   width: 90%;
   overflow: hidden;
   padding: 8px 12px;
+  font-size: 0.9rem;
   text-overflow: ellipsis;
+  white-space: pre;
   background-color: rgba(255, 255, 255, 0.8);  
 }
