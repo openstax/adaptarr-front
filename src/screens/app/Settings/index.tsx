@@ -30,7 +30,6 @@ class Settings extends React.Component {
     selectedLanguage: LanguageOption | null
     newSelectedLanguage: LanguageOption | null
     showChangeLanguage: boolean
-    showChangePassword: boolean
     arePasswordsValid: boolean
     oldPassword: string
     newPassword: string
@@ -39,7 +38,6 @@ class Settings extends React.Component {
     selectedLanguage: null,
     newSelectedLanguage: null,
     showChangeLanguage: false,
-    showChangePassword: false,
     arePasswordsValid: false,
     oldPassword: '',
     newPassword: '',
@@ -60,10 +58,6 @@ class Settings extends React.Component {
     i18next.changeLanguage(newSelectedLanguage.value)
 
     location.reload()
-  }
-
-  private showChangePasswordDialog = () => {
-    this.setState({ showChangePassword: true })
   }
 
   private validatePasswords = () => {
@@ -93,7 +87,6 @@ class Settings extends React.Component {
 
     User.changePassword(oldPassword, newPassword, newPassword2)
       .then(() => {
-        this.closeChangePassword()
         this.clearPasswordForm()
         store.dispatch(addAlert('success', i18n.t('Settings.changePasswordSuccess')))
       })
@@ -114,10 +107,6 @@ class Settings extends React.Component {
 
   private closeChangeLanguage = () => {
     this.setState({ showChangeLanguage: false })
-  }
-
-  private closeChangePassword = () => {
-    this.setState({ showChangePassword: false })
   }
 
   componentDidMount = () => {
@@ -146,7 +135,6 @@ class Settings extends React.Component {
       selectedLanguage, 
       arePasswordsValid, 
       showChangeLanguage, 
-      showChangePassword,
       oldPassword,
       newPassword,
       newPassword2,
@@ -169,27 +157,6 @@ class Settings extends React.Component {
               <Button 
                 color="red"
                 clickHandler={this.closeChangeLanguage}
-              >
-                <Trans i18nKey="Buttons.cancel" />
-              </Button>
-            </Dialog>
-          : null
-        }
-        {
-          showChangePassword ?
-            <Dialog 
-              i18nKey="Settings.changePasswordDialog"
-              onClose={this.closeChangePassword}
-            >
-              <Button 
-                color="green" 
-                clickHandler={this.changePassword}
-              >
-                <Trans i18nKey="Buttons.confirm" />
-              </Button>
-              <Button 
-                color="red" 
-                clickHandler={this.closeChangePassword}
               >
                 <Trans i18nKey="Buttons.cancel" />
               </Button>
@@ -235,7 +202,7 @@ class Settings extends React.Component {
             />
             <Button
               isDisabled={!arePasswordsValid}
-              clickHandler={this.showChangePasswordDialog}
+              clickHandler={this.changePassword}
             >
               <Trans i18nKey="Buttons.confirm" />
             </Button>
