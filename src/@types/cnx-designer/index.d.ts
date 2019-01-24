@@ -1,6 +1,15 @@
 declare module 'cnx-designer' {
-  import { Data, Value, Operation, Editor as SlateEditor } from 'slate'
+  import {
+    Block,
+    Data,
+    Editor as SlateEditor,
+    Node,
+    Operation,
+    Range,
+    Value,
+  } from 'slate'
   import { Plugin } from 'slate-react'
+  import { List } from 'immutable'
 
   type EditorProps = {
     documentDb: DocumentDB,
@@ -59,6 +68,7 @@ declare module 'cnx-designer' {
   }
 
   export interface EditorAug extends SlateEditor {
+    // Commands
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug
     insertSolution(): EditorAug
@@ -70,11 +80,27 @@ declare module 'cnx-designer' {
     insertXref(target: string): EditorAug
     removeMarks(): EditorAug
 
+    // Queries
+    getActiveAdmonition(value: Value): Block | null
+    getActiveExercise(value: Value): Block | null
+    getActiveFigure(value: Value): Block | null
+    getActiveSubfigure(value: Value): Block | null
+
+    // From slate-core, but not included in @types/slate for some reason
+    isVoid(node: Node): boolean
+
     // From slate-edit-list
     decreaseItemDepth(): EditorAug
     increaseItemDepth(): EditorAug
     splitListItem(): EditorAug
     unwrapList(): EditorAug
     wrapInList(type?: string, data?: Object | Data): EditorAug
+    getCurrentItem(value: Value, block?: Block): Block | null
+    getCurrentList(value: Value, block?: Block): Block | null
+    getItemDepth(value: Value, block?: Block): number
+    getItemsAtRange(value: Value, range?: Range): List<Block>
+    getListForItem(value: Value, item: Block): Block | null
+    getPreviousItem(value: Value, block?: Block): Block | null
+    isSelectionInList(value: Value): boolean
   }
 }

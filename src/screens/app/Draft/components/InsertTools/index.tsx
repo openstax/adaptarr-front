@@ -32,7 +32,7 @@ export default class InsertTools extends React.Component<Props> {
         </Button>
         <Button
           clickHandler={this.insertExercise}
-          isDisabled={editor.query('getActiveExercise', value) !== null}
+          isDisabled={(editor as EditorAug).getActiveExercise(value) != null}
           >
           <Trans i18nKey="Editor.insert.exercise" />
         </Button>

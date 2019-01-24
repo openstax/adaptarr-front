@@ -19,7 +19,7 @@ export type Props = {
 export default class ListTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
-    const list = editor.query('getCurrentList', value) as unknown as Block | null
+    const list = (editor as EditorAug).getCurrentList(value)
 
     if (list === null) return null
 

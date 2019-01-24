@@ -15,7 +15,7 @@ export type Props = {
 export default class ExerciseTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
-    const exercise = editor.query('getActiveExercise', value) as unknown as Block | null
+    const exercise = (editor as EditorAug).getActiveExercise(value)
 
     return exercise && (
       <ToolGroup title="Editor.exercise.groupTitle">
