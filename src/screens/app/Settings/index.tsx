@@ -216,7 +216,6 @@ class Settings extends React.Component {
               placeholder={i18n.t("Settings.placeholderOldPassword")}
               value={oldPassword}
               onChange={this.updateOldPassword}
-              validation={{minLength: 6, maxLength: 12}}
               errorMessage={i18n.t("Settings.passwordValidation")}
             />
             <Input
@@ -224,7 +223,6 @@ class Settings extends React.Component {
               placeholder={i18n.t("Settings.placeholderNewPassword")}
               value={newPassword}
               onChange={this.updateNewPassword}
-              validation={{minLength: 6, maxLength: 12}}
               errorMessage={i18n.t("Settings.passwordValidation")}
             />
             <Input
