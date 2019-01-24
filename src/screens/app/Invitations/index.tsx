@@ -23,7 +23,9 @@ class Invitations extends React.Component {
     isEmailVaild: false,
   }
 
-  private sendInvitation = () => {
+  private sendInvitation = (e: React.FormEvent) => {
+    e.preventDefault()
+
     const { emailValue: email, isEmailVaild } = this.state
 
     if (!isEmailVaild) return
@@ -49,27 +51,26 @@ class Invitations extends React.Component {
   }
 
   public render() {
-    const { emailValue } = this.state
+    const { emailValue, isEmailVaild } = this.state
 
     return (
       <div className="container">
         <Section>
           <Header i18nKey="Invitations.title"/>
           <div className="section__content">
-            <div className="invitatio">
-              <Input
-                type="email"
-                value={emailValue}
-                onChange={this.hanleInputChange}
-                isValid={this.handleInputValidation}
-                placeholder={i18n.t("Invitations.emailPlaceholder")}
-                validation={{email: true}}
-                errorMessage={i18n.t("Invitations.emailInvalid")}
-              />
-              <br/>
-              <Button color="green" size="medium" clickHandler={this.sendInvitation}>
-                <Trans i18nKey="Buttons.invite"/>
-              </Button>
+            <div className="invitations">
+              <form onSubmit={this.sendInvitation}>
+                <Input
+                  type="email"
+                  value={emailValue}
+                  onChange={this.hanleInputChange}
+                  isValid={this.handleInputValidation}
+                  placeholder={i18n.t("Invitations.emailPlaceholder")}
+                  validation={{email: true}}
+                  errorMessage={i18n.t("Invitations.emailInvalid")}
+                />
+                <input type="submit" value={i18n.t('Buttons.invite')} disabled={!isEmailVaild || !emailValue} />
+              </form>
             </div>
           </div>
         </Section>

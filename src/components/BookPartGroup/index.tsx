@@ -63,7 +63,9 @@ class Group extends React.Component<Props> {
     this.props.afterAction()
   }
 
-  private handleEditBook = () => {
+  private handleEditBook = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     const groupNameInput = this.state.groupNameInput
 
     if (!groupNameInput.length) {
@@ -89,7 +91,9 @@ class Group extends React.Component<Props> {
     this.setState({ showEditGroup: false })
   }
 
-  private handleAddGroup = () => {
+  private handleAddGroup = (e: React.FormEvent) => {
+    e.preventDefault()
+
     const groupNameInput = this.state.groupNameInput
     const { book, item: group } = this.props
 
@@ -201,7 +205,7 @@ class Group extends React.Component<Props> {
               onClose={this.closeEditGroupDialog}
               i18nKey="Book.editGroupDialog"
             >
-              <form>
+              <form onSubmit={this.handleEditBook}>
                 <Input 
                   value={this.props.item.title}
                   placeholder={i18n.t("Book.placeholderChangeGroupTitle")}
@@ -209,13 +213,11 @@ class Group extends React.Component<Props> {
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <Button 
-                  color="green" 
-                  clickHandler={this.handleEditBook}
-                  isDisabled={groupNameInput.length <= 2}
-                >
-                  <Trans i18nKey="Buttons.confirm"/>
-                </Button>
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.confirm')}
+                  disabled={groupNameInput.length <= 2}
+                />
                 <Button 
                   color="red"
                   clickHandler={this.closeEditGroupDialog}
@@ -233,20 +235,18 @@ class Group extends React.Component<Props> {
               onClose={this.closeAddGroupDialog}
               i18nKey="Book.addGroupDialog"
             >
-              <form>
+              <form onSubmit={this.handleAddGroup}>
                 <Input
                   placeholder="Title"
                   onChange={this.updateGroupNameInput}
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <Button 
-                  color="green" 
-                  clickHandler={this.handleAddGroup}
-                  isDisabled={groupNameInput.length <= 2}
-                >
-                  <Trans i18nKey="Buttons.confirm"/>
-                </Button>
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.confirm')}
+                  disabled={groupNameInput.length <= 2}
+                />
                 <Button 
                   color="red"
                   clickHandler={this.closeAddGroupDialog}

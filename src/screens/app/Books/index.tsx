@@ -69,7 +69,9 @@ class Books extends React.Component<Props> {
     })
   }
 
-  private addBook = () => {
+  private addBook = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     const { titleInput: title, files } = this.state
 
     api.Book.create(title, files[0])
@@ -127,24 +129,20 @@ class Books extends React.Component<Props> {
               onClose={this.closeAddBookDialog}
               i18nKey="Books.addBookDialog"
             >
-              <Input 
-                value={this.state.titleInput} 
-                onChange={this.updateTitleInput} 
-                placeholder="Book title"
-                validation={{minLength: 3}}
-              />
-              <FilesUploader 
-                onFilesChange={this.onFilesChange} 
-                onFilesError={this.onFilesError}
-                accepts={['.zip', '.rar']}
-              />
-              <Button 
-                color="green"
-                isDisabled={titleInput.length === 0}
-                clickHandler={this.addBook}
-              >
-                <Icon name="plus"/>
-              </Button>
+              <form onSubmit={this.addBook}>
+                <Input 
+                  value={this.state.titleInput} 
+                  onChange={this.updateTitleInput} 
+                  placeholder="Book title"
+                  validation={{minLength: 3}}
+                />
+                <FilesUploader 
+                  onFilesChange={this.onFilesChange} 
+                  onFilesError={this.onFilesError}
+                  accepts={['.zip', '.rar']}
+                />
+                <input type="submit" value={i18n.t('Buttons.confirm')} disabled={titleInput.length === 0} />
+              </form>
             </Dialog>
           : null
         }

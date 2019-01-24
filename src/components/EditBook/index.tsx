@@ -33,7 +33,9 @@ class EditBook extends React.Component<Props> {
     files: [],
   }
 
-  private editBook = () => {
+  private editBook = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     this.setState({ isLoading: true })
 
     const { titleInput: title, files } = this.state
@@ -81,26 +83,24 @@ class EditBook extends React.Component<Props> {
         >
           {
             !isLoading ?
-            <React.Fragment>
-              <Input
-                value={bookTitle}
-                onChange={this.updateTitleInput}
-                placeholder={i18n.t("Book.bookTitlePlaceholder")}
-                validation={{minLength: 3}}
-              />
-              <FilesUploader
-                onFilesChange={this.onFilesChange}
-                onFilesError={this.onFilesError}
-                accepts={['.zip', '.rar']}
-              />
-              <Button
-                color="green"
-                isDisabled={titleInput.length === 0 && files.length === 0}
-                clickHandler={this.editBook}
-              >
-                <Trans i18nKey="Buttons.confirm"/>
-              </Button>
-            </React.Fragment>
+              <form onSubmit={this.editBook}>
+                <Input
+                  value={bookTitle}
+                  onChange={this.updateTitleInput}
+                  placeholder={i18n.t("Book.bookTitlePlaceholder")}
+                  validation={{minLength: 3}}
+                />
+                <FilesUploader
+                  onFilesChange={this.onFilesChange}
+                  onFilesError={this.onFilesError}
+                  accepts={['.zip', '.rar']}
+                />
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.confirm')}
+                  disabled={titleInput.length === 0 && files.length === 0}
+                />
+              </form>
             : <Spinner/>
           }
         </Dialog>

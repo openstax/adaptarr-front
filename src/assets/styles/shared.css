@@ -116,8 +116,21 @@ main {
   margin-bottom: 20px;
 }
 
-form input {
-  margin-bottom: 20px;
+input[type="submit"] {
+  display: inline-flex;
+  border: none;
+  font: inherit;
+  line-height: normal;
+  padding: 5px 10px;
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+input[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 textarea {

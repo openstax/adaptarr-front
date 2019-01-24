@@ -82,7 +82,9 @@ class Settings extends React.Component {
     this.setState({ newPassword2: val }, this.validatePasswords)
   }
 
-  private changePassword = () => {
+  private changePassword = (e: React.FormEvent) => {
+    e.preventDefault()
+
     const { oldPassword, newPassword, newPassword2 } = this.state
 
     User.changePassword(oldPassword, newPassword, newPassword2)
@@ -178,34 +180,31 @@ class Settings extends React.Component {
             <h2 className="settings__title">
               <Trans i18nKey="Settings.changePassword" />
             </h2>
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderOldPassword")}
-              value={oldPassword}
-              onChange={this.updateOldPassword}
-              errorMessage={i18n.t("Settings.passwordValidation")}
-            />
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderNewPassword")}
-              value={newPassword}
-              onChange={this.updateNewPassword}
-              errorMessage={i18n.t("Settings.passwordValidation")}
-            />
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderRepeatPassword")}
-              value={newPassword2}
-              onChange={this.updateNewPassword2}
-              validation={{sameAs: newPassword}}
-              errorMessage={i18n.t("Settings.passwordRepeatValidation")}
-            />
-            <Button
-              isDisabled={!arePasswordsValid}
-              clickHandler={this.changePassword}
-            >
-              <Trans i18nKey="Buttons.confirm" />
-            </Button>
+            <form onSubmit={this.changePassword}>
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderOldPassword")}
+                value={oldPassword}
+                onChange={this.updateOldPassword}
+                errorMessage={i18n.t("Settings.passwordValidation")}
+              />
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderNewPassword")}
+                value={newPassword}
+                onChange={this.updateNewPassword}
+                errorMessage={i18n.t("Settings.passwordValidation")}
+              />
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderRepeatPassword")}
+                value={newPassword2}
+                onChange={this.updateNewPassword2}
+                validation={{sameAs: newPassword}}
+                errorMessage={i18n.t("Settings.passwordRepeatValidation")}
+              />
+              <input type="submit" value={i18n.t('Buttons.confirm')} disabled={!arePasswordsValid} />
+            </form>
           </div>
         </div>
       </section>

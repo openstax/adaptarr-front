@@ -6,15 +6,12 @@ import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
-import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
 import ModulesList from 'src/components/ModulesList'
-import ModuleInfo from 'src/components/ModuleInfo'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
@@ -69,7 +66,9 @@ class ModuleList extends React.Component<Props> {
     this.setState({ moduleTitleValue: val })
   }
 
-  private addNewModule = () => {
+  private addNewModule = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     const { moduleTitleValue: title, files } = this.state
 
     ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title))
@@ -143,26 +142,26 @@ class ModuleList extends React.Component<Props> {
         }
         <AdminUI>
           <div className="modulesList__new">
-            <div className="modulesList__top-bar">
-              <Input
-                placeholder={i18n.t("ModulesList.placeholderTitle")}
-                value={moduleTitleValue}
-                onChange={this.updateModuleTitleValue}
-                validation={{minLength: 3}}
+            <form onSubmit={this.addNewModule}>
+              <div className="modulesList__top-bar">
+                <Input
+                  placeholder={i18n.t("ModulesList.placeholderTitle")}
+                  value={moduleTitleValue}
+                  onChange={this.updateModuleTitleValue}
+                  validation={{minLength: 3}}
+                />
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.addNew')}
+                  disabled={moduleTitleValue.length < 3}
+                />
+              </div>
+              <FilesUploader
+                onFilesChange={this.onFilesChange}
+                onFilesError={this.onFilesError}
+                accepts={['.zip', '.rar', '.cnxml']}
               />
-              <Button 
-                isDisabled={moduleTitleValue.length < 3}
-                clickHandler={this.addNewModule}
-              >
-                <Icon name="plus"/>
-                <Trans i18nKey="Buttons.addNew"/>
-              </Button>
-            </div>
-            <FilesUploader
-              onFilesChange={this.onFilesChange}
-              onFilesError={this.onFilesError}
-              accepts={['.zip', '.rar', '.cnxml']}
-            />
+            </form>
           </div>
         </AdminUI>
         <div className="modulesList__filter">
