@@ -43,7 +43,7 @@ export default class FormatTools extends React.Component<Props> {
         {FORMATS.map(format => (
           <Button
             key={format}
-            className="toolbox__button--only-icon"
+            className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
             dataId={format}
             clickHandler={this.applyFormat}
             title={i18n.t(`Editor.format.${format}`)}
@@ -69,6 +69,10 @@ export default class FormatTools extends React.Component<Props> {
         </Button>
       </div>
     )
+  }
+
+  private isActive = (format: Format) => {
+    return this.props.value.marks.some(mark => mark ? mark.type === format : false)
   }
 
   private changeTextType = (blockType: BlockType) => {
