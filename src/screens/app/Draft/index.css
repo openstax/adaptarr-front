@@ -8,16 +8,16 @@
 
 .document {
   flex: 1;
+  overflow-y: scroll;
   background-color: #f8f5f5;
 }
 
 .editor {
-  overflow: auto;
   width: 100%;
   max-width: 900px;
-  height: 100%;
-  margin: 0 auto;
-  padding: 0 20px;
+  min-height: 100%;
+  margin: 20px auto;
+  padding: 20px;
   font-size: 15px;
   text-align: justify;
   background-color: #fff;
