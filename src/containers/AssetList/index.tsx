@@ -37,28 +37,26 @@ export default class AssetList extends React.Component<Props> {
     const pattern = mimeToRegExp(this.props.filter || '*/*')
 
     return (
-      <div className="assetList">
-        <ul className="assetList__list">
-          <li className="assetList__item">
-            <Button clickHandler={this.onAddMedia}>
-              <Icon name="plus" />
-              <Trans i18nKey="AssetList.addMedia" />
-            </Button>
-          </li>
-          {storage.files
-            .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
-            .map((file: FileDescription) => (
-              <li className="assetList__item">
-                <AssetPreview
-                  key={file.name}
-                  asset={file}
-                  onClick={this.onClickAsset}
-                />
-              </li>
-            ))
-          }
-        </ul>
-      </div>
+      <ul className="assetList">
+        <li className="assetList__item">
+          <Button clickHandler={this.onAddMedia}>
+            <Icon name="plus" />
+            <Trans i18nKey="AssetList.addMedia" />
+          </Button>
+        </li>
+        {storage.files
+          .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
+          .map((file: FileDescription) => (
+            <li className="assetList__item">
+              <AssetPreview
+                key={file.name}
+                asset={file}
+                onClick={this.onClickAsset}
+              />
+            </li>
+          ))
+        }
+      </ul>
     )
   }
 

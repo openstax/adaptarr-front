@@ -1,12 +1,7 @@
 .assetList {
   display: flex;
   flex-wrap: wrap;
-  overflow-y: auto;
-}
-
-.assetList__list {
-  display: flex;
-  flex-wrap: wrap;
+  align-items: flex-start;
   overflow-y: auto;
 }
 
