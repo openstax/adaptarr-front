@@ -125,23 +125,23 @@
   padding-inline-start: 8px;
 }
 
-.editor > .exercise ::before {
+.editor .exercise ::before {
   display: block;
   color: gray;
 }
 
-.editor > .exercise * > :first-child {
+.editor .exercise * > :first-child {
   margin-top: 0;
 }
 
-.editor > .exercise .exercise-problem::before {
+.editor .exercise .exercise-problem::before {
   content: 'Problem ' counter(exercise) ':';
 }
 
-.editor > .exercise .exercise-solution::before {
+.editor .exercise .exercise-solution::before {
   content: 'Solution ' counter(exercise_solution) ':';
 }
 
-.editor > .exercise .exercise-commentary::before {
+.editor .exercise .exercise-commentary::before {
   content: 'Commentary: ';
 }
