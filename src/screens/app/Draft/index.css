@@ -1,21 +1,23 @@
 @import '~cnx-designer/dist/index.css';
 
 .draft {
+  padding: 0;
+}
+
+.draft__editor {
+  position: relative;
   display: flex;
-  overflow: hidden;
-  height: 100%;
+  width: 100%;
 }
 
 .document {
   flex: 1;
-  overflow-y: scroll;
   background-color: #f8f5f5;
 }
 
 .editor {
   width: 90%;
   max-width: 900px;
-  min-height: 100%;
   margin: 20px auto;
   padding: 20px;
   font-size: 15px;
