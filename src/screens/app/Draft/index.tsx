@@ -3,9 +3,9 @@ import * as PropTypes from 'prop-types'
 import Editor, { PersistDB, DocumentDB } from 'cnx-designer'
 import { match } from 'react-router'
 import { Value } from 'slate'
-import { connect } from 'react-redux'
 
 import * as api from 'src/api'
+import i18n from 'src/i18n'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
@@ -13,22 +13,10 @@ import Section from 'src/components/Section'
 import './index.css'
 import UIPlugin from './plugins/UI'
 
-import { State } from 'src/store/reducers'
-import { ModulesMap } from 'src/store/types'
-
 type Props = {
   documentDb: DocumentDB
   storage: api.Storage
   value: Value
-  modules: {
-    modulesMap: ModulesMap
-  }
-}
-
-const mapStateToProps = ({ modules }: State) => {
-  return {
-    modules,
-  }
 }
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
@@ -64,7 +52,7 @@ class Draft extends React.Component<Props> {
   }
 
   public render() {
-    const { documentDb, storage, value, modules } = this.props
+    const { documentDb, storage, value } = this.props
 
     return (
       <Section>
@@ -73,9 +61,7 @@ class Draft extends React.Component<Props> {
             <div className="document">
               <h2 className="draft__title">
                 {
-                  modules.modulesMap.get(storage.id) ?
-                    modules.modulesMap.get(storage.id)!.title
-                  : 'Unknow Title'
+                  storage.title ? storage.title : i18n.t('Unknown.title')
                 }
               </h2>
               <Editor
@@ -92,4 +78,4 @@ class Draft extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Load(loader)(Draft))
+export default Load(loader)(Draft)

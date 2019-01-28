@@ -67,7 +67,7 @@ export default class Storage extends StorageBase {
       self._request('/files', 'json'),
     ])
 
-    self.title = data.name
+    self.title = data.title
     self.files = files
 
     return self

@@ -117,6 +117,7 @@ export default {
     "SuperSession.providePass": "Musisz podać hasło.",
     "SuperSession.placeholderPass": "Hasło",
     "Unknown.module": "Nieznany moduł",
+    "Unknown.title": "Nieznany tytuł",
     "Unknown.user": "Nieznany użytkownik",
     "Unknown.email": "Nieznany e-mail",
     "Unknown.mention": "[Nieznana wzmianka]",
