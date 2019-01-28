@@ -26,11 +26,11 @@ export default class FigureTools extends React.Component<Props> {
 
   render() {
     const { editor, value } = this.props
-    const figure = editor.query('getActiveFigure', value) as unknown as Block | null
+    const figure = (editor as EditorAug).getActiveFigure(value)
 
     if (figure === null) return null
 
-    const subfigure = editor.query('getActiveSubfigure', value) as unknown as Block | null
+    const subfigure = (editor as EditorAug).getActiveSubfigure(value)
     const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
     const src = image.data.get('src')
 
@@ -83,7 +83,7 @@ export default class FigureTools extends React.Component<Props> {
     const { editor, value } = this.props
 
     this.action = (asset: MediaDescription) => {
-      const subfigure = editor.query('getActiveSubfigure', value) as unknown as Block | null
+      const subfigure = (editor as EditorAug).getActiveSubfigure(value)
       const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
 
       editor.setNodeByKey(image.key, {
@@ -95,7 +95,7 @@ export default class FigureTools extends React.Component<Props> {
 
   private removeSubfigure = () => {
     const { editor, value } = this.props
-    const subfigure = editor.query('getActiveSubfigure', value) as unknown as Block
+    const subfigure = (editor as EditorAug).getActiveSubfigure(value)!
     editor.removeNodeByKey(subfigure.key)
   }
 

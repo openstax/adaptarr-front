@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Block, BlockProperties, Editor, Value } from 'slate'
+import { EditorAug } from 'cnx-designer'
 
 import i18n from 'src/i18n'
 
@@ -21,7 +22,7 @@ export type Props = {
 }
 
 export default function AdmonitionTools({ editor, value }: Props) {
-  const admonition = editor.query('getActiveAdmonition', value) as unknown as Block | null
+  const admonition = (editor as EditorAug).getActiveAdmonition(value)
 
   if (admonition === null) return null
 

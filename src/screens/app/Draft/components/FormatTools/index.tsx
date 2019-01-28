@@ -26,11 +26,11 @@ export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
 
-    if (value.startText === null) {
+    if ((editor as EditorAug).isVoid(value.startBlock)) {
       return null
     }
 
-    const list = editor.query('getCurrentList', value)
+    const list = (editor as EditorAug).getCurrentList(value)
 
     return (
       <div className="toolbox-format">
