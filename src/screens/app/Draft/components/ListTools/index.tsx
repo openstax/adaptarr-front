@@ -39,14 +39,14 @@ export default class ListTools extends React.Component<Props> {
           options={LIST_STYLES}
         />
         <Button
-          clickHandler={() => (editor as EditorAug).decreaseItemDepth()}
+          clickHandler={this.decreaseItemDepth}
           className="toolbox__button--insert"
         >
           <Icon name="outdent" />
           <Trans i18nKey="Editor.list.decreaseLevel" />
         </Button>
         <Button
-          clickHandler={() => (editor as EditorAug).increaseItemDepth()}
+          clickHandler={this.increaseItemDepth}
           className="toolbox__button--insert"
         >
           <Icon name="indent" />
@@ -58,5 +58,15 @@ export default class ListTools extends React.Component<Props> {
 
   private changeListStyle = ({ value }: ListStyle) => {
     ;(this.props.editor as EditorAug).changeListType(value)
+  }
+
+  private decreaseItemDepth = () => {
+    ;(this.props.editor as EditorAug).decreaseItemDepth()
+    this.props.editor.focus()
+  }
+
+  private increaseItemDepth = () => {
+    ;(this.props.editor as EditorAug).increaseItemDepth()
+    this.props.editor.focus()
   }
 }
