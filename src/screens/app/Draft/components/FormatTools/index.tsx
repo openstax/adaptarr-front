@@ -86,7 +86,7 @@ export default class FormatTools extends React.Component<Props> {
     const format = (ev.target as HTMLButtonElement).dataset.id
     if (!format) return
 
-    this.props.editor.addMark(format)
+    this.props.editor.toggleMark(format)
   }
 
   private clear = (ev: React.MouseEvent<HTMLButtonElement>) => {
