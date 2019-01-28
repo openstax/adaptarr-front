@@ -1,12 +1,13 @@
 .toolbox {
-  position: sticky;
+  position: fixed;
   top: 0;
   right: 0;
-  height: 100vh; /* calc(100vh - 60px); */ /* 100vh - Header height */
+  height: calc(100vh - 8px); /* 100vh - padding-bottom value */
   width: 260px;
   padding: 8px;
   border-left: 1px solid var(--dark-bg);
   border-bottom: 1px solid var(--dark-bg);
+  background-color: #fff;
   overflow: auto;
 }
 

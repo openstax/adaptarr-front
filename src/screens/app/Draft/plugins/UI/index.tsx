@@ -7,9 +7,7 @@ const UIPlugin: Plugin = {
   renderEditor({ value }, editor, next) {
     return (
       <React.Fragment>
-        <div className="document">
-          {next()}
-        </div>
+        {next()}
         <Toolbox editor={editor} value={value} />
       </React.Fragment>
     )

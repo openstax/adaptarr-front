@@ -9,7 +9,6 @@ import * as api from 'src/api'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
-import Header from 'src/components/Header'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
@@ -24,7 +23,6 @@ type Props = {
   modules: {
     modulesMap: ModulesMap
   }
-  id: string
 }
 
 const mapStateToProps = ({ modules }: State) => {
@@ -49,7 +47,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     await documentDb.save(value, Date.now().toString())
   }
 
-  return { documentDb, storage, value, id }
+  return { documentDb, storage, value }
 }
 
 class Draft extends React.Component<Props> {
@@ -66,19 +64,27 @@ class Draft extends React.Component<Props> {
   }
 
   public render() {
-    const { documentDb, storage, value, modules, id } = this.props
+    const { documentDb, storage, value, modules } = this.props
 
     return (
       <Section>
-        <Header title={modules.modulesMap.get(id) ? modules.modulesMap.get(id)!.title : 'Unknow Title'} />
         <div className="section__content draft">
           <div className="draft__editor">
-            <Editor
-              documentDb={documentDb}
-              storage={storage}
-              value={value}
-              postPlugins={this.postPlugins}
-            />
+            <div className="document">
+              <h2 className="draft__title">
+                {
+                  modules.modulesMap.get(storage.id) ?
+                    modules.modulesMap.get(storage.id)!.title
+                  : 'Unknow Title'
+                }
+              </h2>
+              <Editor
+                documentDb={documentDb}
+                storage={storage}
+                value={value}
+                postPlugins={this.postPlugins}
+              />
+            </div>
           </div>
         </div>
       </Section>

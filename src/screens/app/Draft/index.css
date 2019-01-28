@@ -1,7 +1,16 @@
 @import '~cnx-designer/dist/index.css';
 
 .draft {
+  min-height: 100%;
   padding: 0;
+  background-color: #f8f5f5;
+}
+
+.draft__title {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  font-size: 1.5rem;
 }
 
 .draft__editor {
@@ -12,7 +21,7 @@
 
 .document {
   flex: 1;
-  background-color: #f8f5f5;
+  margin-right: 260px; /* width of toolbox */
 }
 
 .editor {
