@@ -1,0 +1,16 @@
+.remote-reference-target-source {
+  padding: 8px;
+  background: white;
+  border-radius: 2px;
+  display: flex;
+}
+
+.remote-reference-target-source:hover {
+  cursor: pointer;
+  background: #efefef;
+}
+
+.remote-reference-target-source > .title {
+  flex: 1;
+  line-height: 15px;
+}

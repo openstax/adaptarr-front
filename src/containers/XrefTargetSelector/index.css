@@ -1,0 +1,36 @@
+.reference-targets {
+  display: flex;
+  flex-direction: column;
+  background-color: #efefef;
+}
+
+.reference-targets > .tabs {
+  display: flex;
+  flex-direction: row;
+  height: 24px;
+  line-height: 24px;
+  text-align: center;
+}
+
+.reference-targets > .tabs > * {
+  flex: 1;
+  white-space: nowrap;
+  padding: 0px 8px;
+}
+
+.reference-targets > .tabs > :not(.selected) {
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.reference-targets > .tabs > :hover {
+  cursor: pointer;
+}
+
+.reference-targets > :not(:first-child) {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.reference-targets > .hidden {
+  display: none;
+}
