@@ -1,6 +1,6 @@
 import { Module } from 'src/api'
 
-import { ModulesMap } from 'src/store/types'
+import { ModulesMap, ReferenceTargets } from 'src/store/types'
 import { ModulesAction } from 'src/store/actions/Modules'
 import {
   SET_MODULES_MAP,
@@ -8,20 +8,23 @@ import {
   REMOVE_MODULE_FROM_MAP,
   SET_ASSIGNED_TO_ME,
   SET_ASSIGNE_IN_MODULES_MAP,
+  SET_REFERENCE_TARGETS,
 } from 'src/store/constants'
 
 export interface State {
   modulesMap: ModulesMap
+  referenceTargets: ReferenceTargets,
   assignedToMe: Module[]
 }
 
 // Define our initialState
 export const initialState: State = {
   modulesMap: new Map(),
+  referenceTargets: new Map(),
   assignedToMe: [],
 }
 
-export function reducer (state: State = initialState, action: ModulesAction) {
+export function reducer (state: State = initialState, action: ModulesAction): State {
   switch (action.type) {
     case SET_MODULES_MAP:
       return {
@@ -57,6 +60,14 @@ export function reducer (state: State = initialState, action: ModulesAction) {
       return {
         ...state,
         assignedToMe: action.data,
+      }
+
+    case SET_REFERENCE_TARGETS:
+      const targets = new Map(state.referenceTargets)
+      targets.set(action.data.moduleId, action.data.targets)
+      return {
+        ...state,
+        referenceTargets: targets,
       }
   }
   return state
