@@ -5,8 +5,10 @@ import { match } from 'react-router'
 import { Value } from 'slate'
 
 import * as api from 'src/api'
+import i18n from 'src/i18n'
 
 import Load from 'src/components/Load'
+import Section from 'src/components/Section'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
@@ -36,7 +38,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   return { documentDb, storage, value }
 }
 
-class Module extends React.Component<Props> {
+class Draft extends React.Component<Props> {
   postPlugins = [UIPlugin]
 
   static childContextTypes = {
@@ -53,16 +55,27 @@ class Module extends React.Component<Props> {
     const { documentDb, storage, value } = this.props
 
     return (
-      <div className="draft">
-        <Editor
-          documentDb={documentDb}
-          storage={storage}
-          value={value}
-          postPlugins={this.postPlugins}
-          />
-      </div>
+      <Section>
+        <div className="section__content draft">
+          <div className="draft__editor">
+            <div className="document">
+              <h2 className="draft__title">
+                {
+                  storage.title ? storage.title : i18n.t('Unknown.title')
+                }
+              </h2>
+              <Editor
+                documentDb={documentDb}
+                storage={storage}
+                value={value}
+                postPlugins={this.postPlugins}
+              />
+            </div>
+          </div>
+        </div>
+      </Section>
     )
   }
 }
 
-export default Load(loader)(Module)
+export default Load(loader)(Draft)

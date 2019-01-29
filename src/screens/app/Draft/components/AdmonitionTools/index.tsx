@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Select from 'react-select'
 import { Block, BlockProperties, Editor, Value } from 'slate'
 import { EditorAug } from 'cnx-designer'
 
@@ -6,7 +7,14 @@ import i18n from 'src/i18n'
 
 import ToolGroup from '../ToolGroup'
 
-const TYPES = ["note", "warning", "tip", "important"]
+type AdmonitionType = { value: string, label: string}
+
+const ADMONITIONS_TYPES: AdmonitionType[] = [
+  { value: 'note', label: i18n.t('Editor.admonition.type.note') },
+  { value: 'warning', label: i18n.t('Editor.admonition.type.warning') },
+  { value: 'tip', label: i18n.t('Editor.admonition.type.tip') },
+  { value: 'important', label: i18n.t('Editor.admonition.type.important') },
+]
 
 export type Props = {
   editor: Editor,
@@ -18,21 +26,20 @@ export default function AdmonitionTools({ editor, value }: Props) {
 
   if (admonition === null) return null
 
-  function onChange(ev: React.ChangeEvent<HTMLSelectElement>) {
+  function onChange({ value }: AdmonitionType) {
     editor.setNodeByKey(admonition!.key, {
-      data: { type: ev.target.value },
+      data: { type: value },
     } as unknown as BlockProperties)
   }
 
   return (
     <ToolGroup title="Editor.admonition.groupTitle">
-      <select onChange={onChange} value={admonition.data.get('type')}>
-        {TYPES.map(type => (
-          <option key={type} value={type}>
-            {i18n.t("Editor.admonition.type." + type)}
-          </option>
-        ))}
-      </select>
+      <Select
+        className="toolbox__select"
+        value={{ value: admonition.data.get('type'), label: i18n.t(`Editor.admonition.type.${admonition.data.get('type')}`) }}
+        onChange={onChange}
+        options={ADMONITIONS_TYPES}
+      />
     </ToolGroup>
   )
 }

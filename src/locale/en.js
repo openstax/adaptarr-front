@@ -117,6 +117,7 @@ export default {
     "SuperSession.providePass": "You have to provide password.",
     "SuperSession.placeholderPass": "Password",
     "Unknown.module": "Unknown module",
+    "Unknown.title": "Unknown title",
     "Unknown.user": "Unknown user",
     "Unknown.email": "Unknown email",
     "Unknown.mention": "[Unknown mention]",
@@ -152,6 +153,11 @@ export default {
     "Editor.list.increaseLevel": "Increase item level",
     "Editor.list.style.ol_list": "Arabic numerals",
     "Editor.list.style.ul_list": "Bullet",
-    "Editor.save.action": "Save"
+    "Editor.save.action": "Save",
+    "Editor.save.error": "Draft couldn't be saved.",
+    "Editor.save.success": "Draft has been saved successfully.",
+    "Editor.merge.action": "Merge",
+    "Editor.merge.error": "Draft couldn't be merged.",
+    "Editor.merge.success": "Draft has been merged successfully."
   }
 }

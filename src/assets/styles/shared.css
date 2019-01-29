@@ -99,6 +99,10 @@ main {
   border-bottom: 1px solid var(--light-bg);
 }
 
+.list__title {
+  flex: 1;
+}
+
 .list__buttons button {
   margin-left: 5px;
 }
@@ -188,6 +192,15 @@ textarea {
 .cnxml para {
   margin: 5px 0;
   display: block;
+}
+
+.cnxml list {
+  display: block;
+  padding-left: 20px;
+}
+
+.cnxml item {
+  display: list-item;
 }
 
 .cnxml emphasis {

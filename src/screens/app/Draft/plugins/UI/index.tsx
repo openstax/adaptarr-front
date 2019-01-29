@@ -5,12 +5,12 @@ import Toolbox from '../../components/Toolbox'
 
 const UIPlugin: Plugin = {
   renderEditor({ value }, editor, next) {
-    return <>
-      <div className="document">
+    return (
+      <React.Fragment>
         {next()}
-      </div>
-      <Toolbox editor={editor} value={value} />
-    </>
+        <Toolbox editor={editor} value={value} />
+      </React.Fragment>
+    )
   }
 }
 

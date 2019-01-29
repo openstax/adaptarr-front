@@ -6,6 +6,7 @@ import Storage, { FileDescription } from 'src/api/storage'
 
 import AssetPreview from 'src/components/AssetPreview'
 import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import mimeToRegExp from 'src/helpers/mimeToRegExp'
 
@@ -35,21 +36,28 @@ export default class AssetList extends React.Component<Props> {
     const { storage } = this.context
     const pattern = mimeToRegExp(this.props.filter || '*/*')
 
-    return <div className="asset-list">
-      <Button clickHandler={this.onAddMedia}>
-        <Trans i18nKey="AssetList.addMedia" />
-      </Button>
-      {storage.files
-        .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
-        .map((file: FileDescription) => (
-          <AssetPreview
-            key={file.name}
-            asset={file}
-            onClick={this.onClickAsset}
-            />
-        ))
-      }
-    </div>
+    return (
+      <ul className="assetList">
+        <li className="assetList__item">
+          <Button clickHandler={this.onAddMedia}>
+            <Icon name="plus" />
+            <Trans i18nKey="AssetList.addMedia" />
+          </Button>
+        </li>
+        {storage.files
+          .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
+          .map((file: FileDescription) => (
+            <li className="assetList__item">
+              <AssetPreview
+                key={file.name}
+                asset={file}
+                onClick={this.onClickAsset}
+              />
+            </li>
+          ))
+        }
+      </ul>
+    )
   }
 
   private onAddMedia = () => {

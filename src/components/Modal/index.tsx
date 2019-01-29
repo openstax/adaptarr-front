@@ -3,6 +3,9 @@ import { Portal } from 'react-portal'
 
 import './index.css'
 
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
+
 export type Props = {
   target?: string,
   content?: () => React.ReactNode,
@@ -38,17 +41,27 @@ export default class Modal extends React.Component<Props> {
     const { content, children, target } = this.props
     const c = content ? content() : children
 
-    return <Portal node={document.getElementById(target || 'modal-root')}>
-      <div
-        className="modal"
-        tabIndex={0}
-        onClick={this.onClick}
-        onKeyDown={this.onKeyDown}
-        ref={el => el && (this.back = el)}
+    return (
+      <Portal node={document.getElementById(target || 'modal-root')}>
+        <div
+          className="modal"
+          tabIndex={0}
+          onClick={this.onClick}
+          onKeyDown={this.onKeyDown}
+          ref={el => el && (this.back = el)}
         >
-        {c}
-      </div>
-    </Portal>
+          <Button
+            className="modal__close"
+            clickHandler={this.onClose}
+          >
+            <Icon name="close" />
+          </Button>
+          <div className="modal__content">
+            {c}
+          </div>
+        </div>
+      </Portal>
+    )
   }
 
   onClick = (ev: React.MouseEvent) => {
@@ -63,7 +76,7 @@ export default class Modal extends React.Component<Props> {
     }
   }
 
-  private onClose() {
+  private onClose = () => {
     this.close()
 
     const { onClose } = this.props

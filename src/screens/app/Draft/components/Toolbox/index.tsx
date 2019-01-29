@@ -8,6 +8,7 @@ import FormatTools from '../FormatTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
 import SaveButton from '../SaveButton'
+import MergeButton from '../MergeButton'
 
 import './index.css'
 
@@ -20,20 +21,27 @@ export default function Toolbox({ editor, value }: Props) {
   const { selection } = value
 
   if (!selection.isSet) {
-    return <div className="toolbox">
-      No selection
-    </div>
+    return (
+      <div className="toolbox">
+        No selection
+      </div>
+    )
   }
 
   if (selection.start.key !== selection.end.key) {
-    return <div className="toolbox">
-      Selection across elements is not yet supported.
-    </div>
+    return (
+      <div className="toolbox">
+        Selection across elements is not yet supported.
+      </div>
+    )
   }
 
   return (
     <div className="toolbox">
-      <SaveButton value={value} />
+      <div className="toolbox__group">
+        <SaveButton value={value} />
+        <MergeButton value={value} />
+      </div>
       <FormatTools editor={editor} value={value} />
       <InsertTools editor={editor} value={value} />
 
