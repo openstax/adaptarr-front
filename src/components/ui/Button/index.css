@@ -49,3 +49,15 @@ button[disabled] {
 .button--red {
   background-color: var(--red);
 }
+
+.button > .spinner-holder {
+  padding-left: 8px;
+}
+
+.button > .spinner-holder .spinner {
+  width: 10px;
+  height: 10px;
+  border: 5px solid transparent;
+  border-top: 5px solid var(--main-decoration);
+  border-bottom: 5px solid var(--secondary-decoration);
+}

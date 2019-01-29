@@ -11,6 +11,12 @@
   overflow: auto;
 }
 
+.toolbox__group {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .toolbox__select {
   width: 100%;
   margin: 10px 0;

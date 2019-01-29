@@ -194,6 +194,15 @@ textarea {
   display: block;
 }
 
+.cnxml list {
+  display: block;
+  padding-left: 20px;
+}
+
+.cnxml item {
+  display: list-item;
+}
+
 .cnxml emphasis {
   font-weight: 700;
 }
