@@ -37,7 +37,7 @@ export default function Toolbox({ editor, value }: Props) {
   }
 
   return (
-    <div className="toolbox">
+    <div className="toolbox" onMouseDown={ev => ev.preventDefault()}>
       <div className="toolbox__group">
         <SaveButton value={value} />
         <MergeButton value={value} />
