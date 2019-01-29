@@ -94,6 +94,7 @@
   margin-bottom: 1rem;
   /* Don't use bold for titles. */
   font-weight: normal;
+  font-size: 1.3rem;
 }
 
 .editor .admonition {

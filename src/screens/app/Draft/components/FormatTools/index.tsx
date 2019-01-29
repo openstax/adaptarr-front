@@ -19,7 +19,7 @@ type BlockType = { value: string, label: string }
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
 const BLOCK_TYPES: BlockType[] = [
   { value: 'paragraph', label: i18n.t('Editor.format.textType.paragraph') },
-  { value: 'header', label: i18n.t('Editor.format.textType.header') },
+  { value: 'title', label: i18n.t('Editor.format.textType.title') },
 ]
 
 export default class FormatTools extends React.Component<Props> {

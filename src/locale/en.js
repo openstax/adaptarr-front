@@ -140,7 +140,7 @@ export default {
     "Editor.format.strong": "Strong",
     "Editor.format.subscript": "Subscript",
     "Editor.format.superscript": "Superscript",
-    "Editor.format.textType.header": "Header",
+    "Editor.format.textType.title": "Title",
     "Editor.format.textType.paragraph": "Paragraph",
     "Editor.format.underline": "Underline",
     "Editor.insert.admonition": "Admonition",
