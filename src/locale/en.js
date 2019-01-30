@@ -173,6 +173,9 @@ export default {
     "Editor.list.increaseLevel": "Increase item level",
     "Editor.list.style.ol_list": "Arabic numerals",
     "Editor.list.style.ul_list": "Bullet",
+    "Editor.reference.loading": "(loading reference data)",
+    "Editor.reference.missing": "(reference target missing)",
+    "Editor.reference.tooltip": "Control-click to go to destination",
     "Editor.save.action": "Save"
   }
 }
