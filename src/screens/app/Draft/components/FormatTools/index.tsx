@@ -17,6 +17,15 @@ type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript'
 type BlockType = { value: string, label: string }
 
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+
+/**
+ * Types of paragraph-like block that user can switch between.
+ *
+ * When selected node is not on this list, block type switching will
+ * be disabled.
+ */
+const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
+
 const BLOCK_TYPES: BlockType[] = [
   { value: 'paragraph', label: i18n.t('Editor.format.textType.paragraph') },
   { value: 'title', label: i18n.t('Editor.format.textType.title') },
@@ -25,8 +34,9 @@ const BLOCK_TYPES: BlockType[] = [
 export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
+    const { startBlock } = value
 
-    if ((editor as EditorAug).isVoid(value.startBlock)) {
+    if ((editor as EditorAug).isVoid(startBlock)) {
       return null
     }
 
@@ -36,9 +46,10 @@ export default class FormatTools extends React.Component<Props> {
       <div className="toolbox-format">
         <Select
           className="toolbox__select"
-          value={{ value: value.startBlock.type, label: i18n.t(`Editor.format.textType.${value.startBlock.type}`) }}
+          value={{ value: startBlock.type, label: i18n.t(`Editor.format.textType.${startBlock.type}`) }}
           onChange={this.changeTextType}
           options={BLOCK_TYPES}
+          isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
         />
         {FORMATS.map(format => (
           <Button
