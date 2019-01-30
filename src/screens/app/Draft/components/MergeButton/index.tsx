@@ -6,8 +6,8 @@ import { History } from 'history'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import Storage from 'src/api/storage'
+import Draft from 'src/api/draft'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -59,15 +59,15 @@ class MergeButton extends React.Component<Props & RouteComponentProps> {
     this.setState({ saving: true })
 
     try {
-      await axios.post(`drafts/${storage.id}/save`)
+      const draft = await Draft.load(storage.id)
+      draft.save()
       store.dispatch(addAlert('success', i18n.t('Editor.merge.success')))
       this.props.history.push(`/modules/${storage.id}`)
     } catch (ex) {
       store.dispatch(addAlert('error', i18n.t('Editor.merge.error')))
       console.error(ex)
+      this.setState({ saving: false })
     }
-
-    this.setState({ saving: false })
   }
 }
 
