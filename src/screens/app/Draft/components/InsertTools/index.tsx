@@ -3,13 +3,17 @@ import { Trans } from 'react-i18next'
 import { Editor, Value } from 'slate'
 import { EditorAug, MediaDescription } from 'cnx-designer'
 
+import * as api from 'src/api'
 import { FileDescription } from 'src/api/storage'
 
 import Modal from 'src/components/Modal'
 import Button from 'src/components/ui/Button'
 import AssetList from 'src/containers/AssetList'
+import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 import ToolGroup from '../ToolGroup'
+
+import { ReferenceTarget } from 'src/store/types'
 
 export type Props = {
   editor: Editor,
@@ -17,14 +21,15 @@ export type Props = {
 }
 
 export default class InsertTools extends React.Component<Props> {
-  modal: Modal | null = null
+  figureModal: Modal | null = null
+  xrefModal: Modal | null = null
 
   render() {
     const { editor, value } = this.props
 
     return (
       <ToolGroup title="Editor.insert.groupTitle">
-        <Button>
+        <Button clickHandler={this.openXrefModal}>
           <Trans i18nKey="Editor.insert.reference" />
         </Button>
         <Button clickHandler={this.insertAdmonition}>
@@ -36,27 +41,42 @@ export default class InsertTools extends React.Component<Props> {
           >
           <Trans i18nKey="Editor.insert.exercise" />
         </Button>
-        <Button clickHandler={this.openModal}>
+        <Button clickHandler={this.openFigureModal}>
           <Trans i18nKey="Editor.insert.figure" />
         </Button>
         <Modal
-          ref={this.setModal}
-          content={this.renderModal}
+          ref={this.setFigureModal}
+          content={this.renderFigureModal}
+          />
+        <Modal
+          ref={this.setXrefModal}
+          content={this.renderXrefModal}
           />
       </ToolGroup>
     )
   }
 
-  private renderModal = () => (
+  private renderFigureModal = () => (
     <AssetList
       filter="image/*"
       onSelect={this.insertFigure}
       />
   )
 
-  private setModal = (el: Modal | null) => el && (this.modal = el)
+  private renderXrefModal = () => (
+    <XrefTargetSelector
+      editor={this.props.editor}
+      onSelect={this.insertReference}
+      />
+  )
 
-  private openModal = () => this.modal!.open()
+  private setFigureModal = (el: Modal | null) => el && (this.figureModal = el)
+
+  private setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
+
+  private openFigureModal = () => this.figureModal!.open()
+
+  private openXrefModal = () => this.xrefModal!.open()
 
   private insertAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
@@ -69,10 +89,15 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private insertFigure = (asset: FileDescription) => {
-    this.modal!.close()
+    this.figureModal!.close()
     // XXX: We cast FileDescription as MediaDescription, as currently there
     // is no way to add alt-texts, server doesn't store it yet, and it is not
     // used anywhere.
     ;(this.props.editor as EditorAug).insertFigure(asset as MediaDescription)
+  }
+
+  private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
+    this.xrefModal!.close()
+    ;(this.props.editor as EditorAug).insertXref(target.id, source ? source.id : undefined)
   }
 }

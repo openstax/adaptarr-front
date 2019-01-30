@@ -77,7 +77,7 @@ declare module 'cnx-designer' {
     insertSubfigure(media: MediaDescription): EditorAug
     insertCaption(): EditorAug
     changeListType(type: string): EditorAug
-    insertXref(target: string): EditorAug
+    insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
 
     // Queries
