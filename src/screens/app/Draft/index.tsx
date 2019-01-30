@@ -7,8 +7,12 @@ import { Value } from 'slate'
 import * as api from 'src/api'
 import i18n from 'src/i18n'
 
+import { addAlert } from 'src/store/actions/Alerts'
+import store from 'src/store'
+
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
+import Input from 'src/components/ui/Input'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
@@ -39,6 +43,12 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 }
 
 class Draft extends React.Component<Props> {
+  state: {
+    titleInput: string
+  } = {
+    titleInput: '',
+  }
+
   postPlugins = [UIPlugin]
 
   static childContextTypes = {
@@ -51,19 +61,51 @@ class Draft extends React.Component<Props> {
     }
   }
 
+  private updateTitleInput = (val: string) => {
+    this.setState({ titleInput: val })
+  }
+
+  private changeTitle = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    try {
+      const draft = await api.Draft.load(this.props.storage.id)
+      await draft.updateTitle(this.state.titleInput)
+      store.dispatch(addAlert('success', i18n.t('Draft.title.save.success')))
+    } catch (e) {
+      store.dispatch(addAlert('error', i18n.t('Draft.title.save.error')))
+      console.error(e)
+    }
+  }
+
+  componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.storage.title !== this.props.storage.title) {
+      this.setState({ titleInput: this.props.storage.title })
+    }
+  }
+
+  componentDidMount = () => {
+    this.setState({ titleInput: this.props.storage.title })
+  }
+
   public render() {
     const { documentDb, storage, value } = this.props
+    const { titleInput } = this.state
 
     return (
       <Section>
         <div className="section__content draft">
           <div className="draft__editor">
             <div className="document">
-              <h2 className="draft__title">
-                {
-                  storage.title ? storage.title : i18n.t('Unknown.title')
-                }
-              </h2>
+              <form onSubmit={this.changeTitle}>
+                <span className="draft__title">
+                  <Input
+                    value={titleInput}
+                    placeholder={i18n.t('Draft.title.placeholder')}
+                    onChange={this.updateTitleInput}
+                  />
+                </span>
+              </form>
               <Editor
                 documentDb={documentDb}
                 storage={storage}
