@@ -2,7 +2,6 @@ import * as React from 'react'
 import Select from 'react-select'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value } from 'slate'
-import { EditorAug } from 'cnx-designer'
 
 import i18n from 'src/i18n'
 
@@ -26,7 +25,7 @@ export type Props = {
 export default class ListTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
-    const list = (editor as EditorAug).getCurrentList(value)
+    const list = editor.getCurrentList(value)
 
     if (list === null) return null
 
@@ -57,16 +56,16 @@ export default class ListTools extends React.Component<Props> {
   }
 
   private changeListStyle = ({ value }: ListStyle) => {
-    ;(this.props.editor as EditorAug).changeListType(value)
+    this.props.editor.changeListType(value)
   }
 
   private decreaseItemDepth = () => {
-    ;(this.props.editor as EditorAug).decreaseItemDepth()
+    this.props.editor.decreaseItemDepth()
     this.props.editor.focus()
   }
 
   private increaseItemDepth = () => {
-    ;(this.props.editor as EditorAug).increaseItemDepth()
+    this.props.editor.increaseItemDepth()
     this.props.editor.focus()
   }
 }

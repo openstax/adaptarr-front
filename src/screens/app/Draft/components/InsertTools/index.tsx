@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { Editor, Value } from 'slate'
-import { EditorAug, MediaDescription } from 'cnx-designer'
+import { MediaDescription } from 'cnx-designer'
 
 import { FileDescription } from 'src/api/storage'
 
@@ -35,7 +35,7 @@ export default class InsertTools extends React.Component<Props> {
         </Button>
         <Button
           clickHandler={this.insertExercise}
-          isDisabled={(editor as EditorAug).getActiveExercise(value) != null}
+          isDisabled={editor.getActiveExercise(value) != null}
           className="toolbox__button--insert"
         >
           <Icon name="flask" />
@@ -67,11 +67,11 @@ export default class InsertTools extends React.Component<Props> {
   private insertAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
     // choose which kind of admonition to insert.
-    ;(this.props.editor as EditorAug).insertAdmonition('note')
+    this.props.editor.insertAdmonition('note')
   }
 
   private insertExercise = () => {
-    ;(this.props.editor as EditorAug).insertExercise()
+    this.props.editor.insertExercise()
   }
 
   private insertFigure = (asset: FileDescription) => {
@@ -79,6 +79,6 @@ export default class InsertTools extends React.Component<Props> {
     // XXX: We cast FileDescription as MediaDescription, as currently there
     // is no way to add alt-texts, server doesn't store it yet, and it is not
     // used anywhere.
-    ;(this.props.editor as EditorAug).insertFigure(asset as MediaDescription)
+    this.props.editor.insertFigure(asset as MediaDescription)
   }
 }

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Editor, Value } from 'slate'
-import { EditorAug } from 'cnx-designer'
 
 import i18n from 'src/i18n'
 
@@ -36,11 +35,11 @@ export default class FormatTools extends React.Component<Props> {
     const { editor, value } = this.props
     const { startBlock } = value
 
-    if ((editor as EditorAug).isVoid(startBlock)) {
+    if (editor.isVoid(startBlock)) {
       return null
     }
 
-    const list = (editor as EditorAug).getCurrentList(value)
+    const list = editor.getCurrentList(value)
 
     return (
       <div className="toolbox-format">
@@ -102,10 +101,10 @@ export default class FormatTools extends React.Component<Props> {
 
   private clear = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault()
-    ;(this.props.editor as EditorAug).removeMarks()
+    this.props.editor.removeMarks()
   }
 
   private formatList = () => {
-    ;(this.props.editor as EditorAug).wrapInList('ul_list')
+    this.props.editor.wrapInList('ul_list')
   }
 }

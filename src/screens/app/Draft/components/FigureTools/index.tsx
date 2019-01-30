@@ -3,7 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value, BlockProperties } from 'slate'
-import { EditorAug, MediaDescription } from 'cnx-designer'
+import { MediaDescription } from 'cnx-designer'
 
 import { FileDescription } from 'src/api/storage'
 
@@ -26,11 +26,11 @@ export default class FigureTools extends React.Component<Props> {
 
   render() {
     const { editor, value } = this.props
-    const figure = (editor as EditorAug).getActiveFigure(value)
+    const figure = editor.getActiveFigure(value)
 
     if (figure === null) return null
 
-    const subfigure = (editor as EditorAug).getActiveSubfigure(value)
+    const subfigure = editor.getActiveSubfigure(value)
     const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
     const src = image.data.get('src')
 
@@ -76,7 +76,7 @@ export default class FigureTools extends React.Component<Props> {
   )
 
   private insertSubfigure = () => {
-    this.action = (this.props.editor as EditorAug).insertSubfigure
+    this.action = this.props.editor.insertSubfigure
     this.modal!.open()
   }
 
@@ -84,7 +84,7 @@ export default class FigureTools extends React.Component<Props> {
     const { editor, value } = this.props
 
     this.action = (asset: MediaDescription) => {
-      const subfigure = (editor as EditorAug).getActiveSubfigure(value)
+      const subfigure = editor.getActiveSubfigure(value)
       const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
 
       editor.setNodeByKey(image.key, {
@@ -96,11 +96,11 @@ export default class FigureTools extends React.Component<Props> {
 
   private removeSubfigure = () => {
     const { editor, value } = this.props
-    const subfigure = (editor as EditorAug).getActiveSubfigure(value)!
+    const subfigure = editor.getActiveSubfigure(value)!
     editor.removeNodeByKey(subfigure.key)
   }
 
-  private insertCaption = () => (this.props.editor as EditorAug).insertCaption()
+  private insertCaption = () => this.props.editor.insertCaption()
 
   private onAssetSelected = (asset: FileDescription) => {
     this.modal!.close()

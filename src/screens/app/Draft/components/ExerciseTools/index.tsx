@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value } from 'slate'
-import { EditorAug } from 'cnx-designer'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -16,7 +15,7 @@ export type Props = {
 export default class ExerciseTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
-    const exercise = (editor as EditorAug).getActiveExercise(value)
+    const exercise = editor.getActiveExercise(value)
 
     return exercise && (
       <ToolGroup title="Editor.exercise.groupTitle">
@@ -36,6 +35,6 @@ export default class ExerciseTools extends React.Component<Props> {
     )
   }
 
-  private insertSolution = () => (this.props.editor as EditorAug).insertSolution()
-  private insertCommentary = () => (this.props.editor as EditorAug).insertCommentary()
+  private insertSolution = () => this.props.editor.insertSolution()
+  private insertCommentary = () => this.props.editor.insertCommentary()
 }
