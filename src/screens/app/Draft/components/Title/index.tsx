@@ -35,6 +35,16 @@ class Title extends React.Component<Props> {
     }
   }
 
+  componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.draft.title !== this.props.draft.title) {
+      this.setState({ titleInput: this.props.draft.title })
+    }
+  }
+
+  componentDidMount = () => {
+    this.setState({ titleInput: this.props.draft.title })
+  }
+
   public render() {
     const { titleInput } = this.state
 
