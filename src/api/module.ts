@@ -12,6 +12,7 @@ export type Data = {
   assignee?: number,
   id: string,
   title: string,
+  language: string,
 }
 
 export type RefTargetType
@@ -113,6 +114,11 @@ export default class Module extends Base<Data> {
    * Title of this module.
    */
   title: string
+
+  /**
+   * Language of this document.
+   */
+  language: string
 
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
