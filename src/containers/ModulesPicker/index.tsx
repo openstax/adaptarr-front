@@ -1,6 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
+import Select from 'react-select'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 import { FilesError } from 'react-files'
@@ -28,6 +29,14 @@ type Props = {
   addAlert: (kind: RequestInfoKind, message: string) => void
 }
 
+type SelectOption = { value: string, label: string }
+
+// value is an ISO tag for given language
+const LANGUAGES: SelectOption[] = [
+  { value: 'en', label: 'English' },
+  { value: 'pl', label: 'Polski' },
+]
+
 const mapStateToProps = ({ modules }: State) => {
   return {
     modules,
@@ -46,12 +55,14 @@ class ModuleList extends React.Component<Props> {
 
   state: {
     moduleTitleValue: string
+    moduleLanguage: SelectOption
     moduleToDelete: api.Module | null
     showRemoveModule: boolean
     files: File[]
     filterInput: string
   } = {
     moduleTitleValue: '',
+    moduleLanguage: LANGUAGES[0],
     moduleToDelete: null,
     showRemoveModule: false,
     files: [],
@@ -66,12 +77,16 @@ class ModuleList extends React.Component<Props> {
     this.setState({ moduleTitleValue: val })
   }
 
+  private updateModuleLanguage = (lang: SelectOption) => {
+    this.setState({ moduleLanguage: lang })
+  }
+
   private addNewModule = (e: React.FormEvent) => {
     e.preventDefault()
     
-    const { moduleTitleValue: title, files } = this.state
+    const { moduleTitleValue: title, files, moduleLanguage: lang } = this.state
 
-    ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title))
+    ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title, lang.value))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
@@ -121,7 +136,7 @@ class ModuleList extends React.Component<Props> {
   }
 
   public render() {
-    const { moduleTitleValue, showRemoveModule } = this.state
+    const { moduleTitleValue, moduleLanguage, showRemoveModule } = this.state
 
     return (
       <div className="modulesList">
@@ -150,10 +165,16 @@ class ModuleList extends React.Component<Props> {
                   onChange={this.updateModuleTitleValue}
                   validation={{minLength: 3}}
                 />
+                <Select
+                  className="select"
+                  value={moduleLanguage}
+                  options={LANGUAGES}
+                  onChange={this.updateModuleLanguage}
+                />
                 <input
                   type="submit"
                   value={i18n.t('Buttons.addNew')}
-                  disabled={moduleTitleValue.length < 3}
+                  disabled={moduleTitleValue.length < 3 || !moduleLanguage}
                 />
               </div>
               <FilesUploader
