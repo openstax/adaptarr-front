@@ -68,4 +68,11 @@ export default class Draft extends Base<DraftData> {
   async delete() {
     await axios.delete(`drafts/${this.module}`)
   }
+
+  /**
+   * Update title of this draft. 
+   */
+  async updateTitle(title: string) {
+    await axios.put(`drafts/${this.module}`, { title })
+  }
 }

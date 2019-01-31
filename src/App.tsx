@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
@@ -103,17 +103,19 @@ class App extends React.Component<Props> {
             <div className="container container--main">
               <Navigation />
               <main>
-                <Route exact path="/" component={Dashboard}/>
-                <Route path="/notifications" component={NotificationsCentre}/>
-                <Route exact path="/books" component={Books}/>
-                <Route path="/books/:id" component={Book}/>
-                <Route path="/modules/:id" component={Module}/>
-                <Route path="/drafts/:id" component={Draft}/>
-                <Route path="/resources" component={Resources}/>
-                <Route path="/users/:id" component={Profile}/>
-                <Route path="/settings" component={Settings}/>
-                <Route path="/invitations" component={Invitations}/>
-                <Route path="*" component={Error404}/>
+                <Switch>
+                  <Route exact path="/" component={Dashboard}/>
+                  <Route path="/notifications" component={NotificationsCentre}/>
+                  <Route exact path="/books" component={Books}/>
+                  <Route path="/books/:id" component={Book}/>
+                  <Route path="/modules/:id" component={Module}/>
+                  <Route path="/drafts/:id" component={Draft}/>
+                  <Route path="/resources" component={Resources}/>
+                  <Route path="/users/:id" component={Profile}/>
+                  <Route path="/settings" component={Settings}/>
+                  <Route path="/invitations" component={Invitations}/>
+                  <Route component={Error404}/>
+                </Switch>
               </main>
               <div className="alerts">
                 {

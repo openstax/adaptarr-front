@@ -1,0 +1,166 @@
+@import '~cnx-designer/dist/index.css';
+
+.draft {
+  min-height: 100%;
+  padding: 0;
+  background-color: #f8f5f5;
+}
+
+.draft__title {
+  display: block;
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  font-size: 1.5rem;
+}
+
+.draft__title .input input {
+  font-size: 1.5rem;
+  color: var(--font-dark);
+  padding: 0;
+  background: transparent;
+  border: transparent;
+}
+
+.draft__editor {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+
+.document {
+  flex: 1;
+  margin-right: 260px; /* width of toolbox */
+}
+
+.editor {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 20px;
+  font-size: 15px;
+  text-align: justify;
+  background-color: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.editor p {
+  margin-top: 0.6em;
+  margin-bottom: 0.6em;
+}
+
+.editor ul {
+  padding-left: 30px;
+  list-style-type: disc;
+}
+
+.editor ol {
+  padding-left: 30px;
+  list-style-type: upper-roman;
+}
+
+.editor sub, .editor sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+.editor sup {
+  top: -0.5em;
+}
+
+.editor sub {
+  bottom: -0.25em;
+}
+
+.editor em {
+  font-style: italic;
+}
+
+.editor figure {
+  margin: 0;
+  padding-left: 48q;
+  padding-right: 48q;
+}
+
+.editor img {
+  /* By changing padding from 2px to 0 when rendering selection we ensure
+   * the total width doesn't change, avoiding layout ‘jumping’ when user
+   * selects an image.
+   */
+  padding: 2px;
+}
+
+.editor img[data-selected=true] {
+  border: 2px solid blue;
+  padding: 0;
+}
+
+.editor h2.title {
+  /* Use same margins for titles as for paragraphs. */
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  /* Don't use bold for titles. */
+  font-weight: normal;
+  font-size: 1.3rem;
+}
+
+.editor .admonition {
+  border-inline-start: 4px solid var(--color);
+  margin-inline-start: calc(var(--margin-inline-start) - 12px);
+  padding-inline-start: 8px;
+}
+
+.editor .admonition > :first-child:not(.title)::before {
+  content: var(--title) ': ';
+  display: block;
+  color: gray;
+}
+
+.editor .admonition[data-type="note"] {
+  --title: "Note";
+  --color: gray;
+}
+
+.editor .admonition[data-type="warning"] {
+  --title: "Warning";
+  --color: yellow;
+}
+
+.editor .admonition[data-type="tip"] {
+  --title: "Tip";
+  --color: gray;
+}
+
+.editor .admonition[data-type="important"] {
+  --title: "Important";
+  --color: red;
+}
+
+.editor .exercise {
+  border-inline-start: 4px solid gray;
+  margin-inline-start: calc(var(--margin-inline-start) - 12px);
+  padding-inline-start: 8px;
+}
+
+.editor .exercise ::before {
+  display: block;
+  color: gray;
+}
+
+.editor .exercise * > :first-child {
+  margin-top: 0;
+}
+
+.editor .exercise .exercise-problem::before {
+  content: 'Problem ' counter(exercise) ':';
+}
+
+.editor .exercise .exercise-solution::before {
+  content: 'Solution ' counter(exercise_solution) ':';
+}
+
+.editor .exercise .exercise-commentary::before {
+  content: 'Commentary: ';
+}

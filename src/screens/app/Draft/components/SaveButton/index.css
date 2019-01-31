@@ -1,0 +1,8 @@
+.save-button {
+  position: relative;
+  padding: 8px 12px;
+}
+
+.save-button .icon {
+  margin-right: 8px;
+}
