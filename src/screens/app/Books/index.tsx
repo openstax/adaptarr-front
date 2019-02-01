@@ -47,26 +47,15 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
 class Books extends React.Component<Props> {
 
   state: {
-    titleInput: string,
-    showAddBook: boolean,
-    files: File[],
+    titleInput: string
+    showAddBook: boolean
+    files: File[]
+    uploading: boolean
   } = {
     titleInput: '',
     showAddBook: false,
     files: [],
-  }
-
-  private listOfBookCards = (booksMap: BooksMap) => {
-    let books: api.Book[] = []
-
-    // Create new array because we can't render list
-    booksMap.forEach(book => {
-      books.push(book)
-    })
-
-    return books.map((book: api.Book) => {
-      return <BookCard key={book.id} book={book}/>
-    })
+    uploading: false,
   }
 
   private addBook = (e: React.FormEvent) => {
@@ -74,20 +63,23 @@ class Books extends React.Component<Props> {
     
     const { titleInput: title, files } = this.state
 
+    this.setState({ uploading: true })
+
     api.Book.create(title, files[0])
       .then(() => {
         this.props.fetchBooksMap()
         this.setState({ titleInput: '' })
         store.dispatch(addAlert('success', i18n.t("Books.bookAddSuccess")))
+        this.closeAddBookDialog()
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
+        this.closeAddBookDialog()
       })
-    this.closeAddBookDialog()
   }
 
   private showAddBookDialog = ()  => {
-    this.setState({ showAddBook: true })
+    this.setState({ showAddBook: true, uploading: false })
   }
 
   private closeAddBookDialog = () => {
@@ -108,7 +100,7 @@ class Books extends React.Component<Props> {
 
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showAddBook } = this.state
+    const { titleInput, showAddBook, uploading } = this.state
 
     return (
       <Section>
@@ -129,20 +121,25 @@ class Books extends React.Component<Props> {
               onClose={this.closeAddBookDialog}
               i18nKey="Books.addBookDialog"
             >
-              <form onSubmit={this.addBook}>
-                <Input 
-                  value={this.state.titleInput} 
-                  onChange={this.updateTitleInput} 
-                  placeholder="Book title"
-                  validation={{minLength: 3}}
-                />
-                <FilesUploader 
-                  onFilesChange={this.onFilesChange} 
-                  onFilesError={this.onFilesError}
-                  accepts={['.zip', '.rar']}
-                />
-                <input type="submit" value={i18n.t('Buttons.confirm')} disabled={titleInput.length === 0} />
-              </form>
+              { 
+                uploading ?
+                  <Spinner />
+                :
+                  <form onSubmit={this.addBook}>
+                    <Input 
+                      value={this.state.titleInput} 
+                      onChange={this.updateTitleInput} 
+                      placeholder="Book title"
+                      validation={{minLength: 3}}
+                    />
+                    <FilesUploader 
+                      onFilesChange={this.onFilesChange} 
+                      onFilesError={this.onFilesError}
+                      accepts={['.zip', '.rar']}
+                    />
+                    <input type="submit" value={i18n.t('Buttons.confirm')} disabled={titleInput.length === 0} />
+                  </form>
+              }
             </Dialog>
           : null
         }
@@ -151,7 +148,9 @@ class Books extends React.Component<Props> {
             <div className="section__content">
               {
                 booksMap.size > 0 ?
-                  this.listOfBookCards(booksMap)
+                  Array.from(booksMap.values()).map((book: api.Book) => (
+                    <BookCard key={book.id} book={book}/>
+                  ))
                 : <Trans i18nKey="Books.noBooksFound" />
               }
             </div>
