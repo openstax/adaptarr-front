@@ -22,6 +22,7 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import { IsLoading, BooksMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { fetchModulesMap } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
@@ -30,6 +31,7 @@ type Props = {
     booksMap: BooksMap
   }
   fetchBooksMap: () => void
+  fetchModulesMap: () => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -41,6 +43,7 @@ export const mapStateToProps = ({ booksMap }: State) => {
 export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
   return {
     fetchBooksMap: () => dispatch(fetchBooksMap()),
+    fetchModulesMap: () => dispatch(fetchModulesMap()),
   }
 }
 
@@ -68,6 +71,7 @@ class Books extends React.Component<Props> {
     api.Book.create(title, files[0])
       .then(() => {
         this.props.fetchBooksMap()
+        this.props.fetchModulesMap()
         this.setState({ titleInput: '' })
         store.dispatch(addAlert('success', i18n.t("Books.bookAddSuccess")))
         this.closeAddBookDialog()
