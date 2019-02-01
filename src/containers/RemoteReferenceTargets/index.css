@@ -1,16 +1,15 @@
-.remote-reference-target-source {
-  padding: 8px;
-  background: white;
-  border-radius: 2px;
-  display: flex;
+.remote-reference-targets > .button {
+  margin: 10px 0px 0 10px;
 }
 
-.remote-reference-target-source:hover {
-  cursor: pointer;
-  background: #efefef;
+.remote-reference-targets > .button .icon {
+  margin-left: -8px;
 }
 
-.remote-reference-target-source > .title {
-  flex: 1;
-  line-height: 15px;
+.remote-reference-targets ul li {
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.remote-reference-targets ul li:last-child {
+  border: none;
 }

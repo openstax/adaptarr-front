@@ -56,19 +56,24 @@ export default class ReferenceTarget extends React.PureComponent<Props> {
           )
 
     return (
-      <div className="reference-target" onClick={this.onClick}>
-        <span className="description">
+      <div className="target" onClick={this.onClick}>
+        <span className="target__description">
           {description}
         </span>
-        {target.children.map(child => (
-          <ReferenceTarget
-            key={child.id}
-            module={module}
-            target={child}
-            context={target}
-            onSelect={onSelect}
-            />
-        ))}
+        {target.children.length ?
+          <ul className="target__nestedList">
+            {target.children.map(child => (
+              <li key={child.id} className="target__nestedItem">
+                <ReferenceTarget
+                  module={module}
+                  target={child}
+                  context={target}
+                  onSelect={onSelect}
+                />
+              </li>
+            ))}
+          </ul>
+        : null}
       </div>
     )
   }

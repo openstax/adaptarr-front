@@ -37,15 +37,15 @@ export default class XrefTargetSelector extends React.Component<Props> {
       <div className="reference-targets">
         <div className="tabs">
           <span
-            className={tab === 'local' ? 'selected' : ''}
+            className={`tabs__tab ${tab === 'local' ? 'selected' : ''}`}
             onClick={this.selectTabLocal}
-            >
+          >
             <Trans i18nKey="XrefTargetSelector.tabName.local" />
           </span>
           <span
-            className={tab === 'remote' ? 'selected' : ''}
+            className={`tabs__tab ${tab === 'remote' ? 'selected' : ''}`}
             onClick={this.selectTabRemote}
-            >
+          >
             <Trans i18nKey="XrefTargetSelector.tabName.remote" />
           </span>
         </div>

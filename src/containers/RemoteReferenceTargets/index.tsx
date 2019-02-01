@@ -7,6 +7,8 @@ import * as api from 'src/api'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Spinner from 'src/components/Spinner'
+import RemoteSource from './components/RemoteSource'
+
 import RefTargets from 'src/containers/ReferenceTargets'
 
 import { ModulesMap, ReferenceTarget, ReferenceTargets } from 'src/store/types'
@@ -51,13 +53,14 @@ class RemoteReferenceTargets extends React.Component<Props> {
       return (
         <div className="remote-reference-targets">
           <Button clickHandler={this.unselectRefSource}>
+            <Icon name="arrow-left" size="small" />
             <Trans i18nKey="RemoteReferenceTargets.back" />
           </Button>
           <RefTargets
             module={selected}
             targets={targets}
             onSelect={onSelect}
-            />
+          />
         </div>
       )
     }
@@ -72,13 +75,16 @@ class RemoteReferenceTargets extends React.Component<Props> {
 
     return (
       <div className="remote-reference-targets">
-        {Array.from(modules.values(), module => (
-          <RemoteSource
-            key={module.id}
-            module={module}
-            onClick={this.selectRefSource}
-            />
-        ))}
+        <ul>
+          {Array.from(modules.values(), module => (
+            <li key={module.id}>
+              <RemoteSource
+                module={module}
+                onClick={this.selectRefSource}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
     )
   }
@@ -106,21 +112,3 @@ class RemoteReferenceTargets extends React.Component<Props> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
-
-type RemoteSourceProps = {
-  module: api.Module,
-  onClick: (ev: React.MouseEvent) => void,
-}
-
-function RemoteSource({ module, onClick }: RemoteSourceProps) {
-  return (
-    <div
-      className="remote-reference-target-source"
-      data-id={module.id}
-      onClick={onClick}
-      >
-      <span className="title">{module.title}</span>
-      <Icon name='arrow-right' size='small' />
-    </div>
-  )
-}

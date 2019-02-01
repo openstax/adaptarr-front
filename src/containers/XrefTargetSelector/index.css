@@ -1,36 +1,37 @@
 .reference-targets {
   display: flex;
   flex-direction: column;
-  background-color: #efefef;
+  width: 500px;
+  background-color: #fff;
 }
 
-.reference-targets > .tabs {
+.reference-targets .hidden {
+  display: none;
+}
+
+.tabs {
   display: flex;
-  flex-direction: row;
-  height: 24px;
-  line-height: 24px;
   text-align: center;
 }
 
-.reference-targets > .tabs > * {
+.tabs__tab {
   flex: 1;
-  white-space: nowrap;
-  padding: 0px 8px;
+  padding: 10px;
 }
 
-.reference-targets > .tabs > :not(.selected) {
-  background-color: rgba(0, 0, 0, 0.12);
-}
-
-.reference-targets > .tabs > :hover {
+.tabs__tab:hover {
   cursor: pointer;
 }
 
-.reference-targets > :not(:first-child) {
-  flex: 1;
-  overflow-y: auto;
+.tabs__tab:first-child {
+  border-top-left-radius: 3px;
 }
 
-.reference-targets > .hidden {
-  display: none;
+.tabs__tab:last-child {
+  border-top-right-radius: 3px;
+}
+
+.tabs__tab:not(.selected) {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
 }

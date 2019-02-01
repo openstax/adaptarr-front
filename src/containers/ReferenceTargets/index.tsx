@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 
@@ -37,20 +39,22 @@ export default function ReferenceTargets({ module, targets, onSelect }: Props) {
   }
 
   return (
-    <div className="reference-targets">
+    <ul className="targets">
       {Array.from(sorted.entries(), ([type, targets]) => (
-        <div key={type}>
-          <Trans i18nKey={"ReferenceTargets.category." + type} />
+        <li key={type} className="targets__category">
+          <span className="targets__title">
+            <Trans i18nKey={"ReferenceTargets.category." + type} />
+          </span>
           {targets.map(target => (
             <RefTarget
               key={target.id}
               module={module}
               target={target}
               onSelect={onSelect}
-              />
+            />
           ))}
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   )
 }
