@@ -8,6 +8,7 @@ import { FilesError } from 'react-files'
 
 import i18n from 'src/i18n'
 import * as api from 'src/api'
+import getCurrentLng from 'src/helpers/getCurrentLng'
 
 import AdminUI from 'src/components/AdminUI'
 import ModulesList from 'src/components/ModulesList'
@@ -62,7 +63,7 @@ class ModuleList extends React.Component<Props> {
     filterInput: string
   } = {
     moduleTitleValue: '',
-    moduleLanguage: LANGUAGES[0],
+    moduleLanguage: LANGUAGES.find(lng => lng.value === getCurrentLng('iso')) || LANGUAGES[0],
     moduleToDelete: null,
     showRemoveModule: false,
     files: [],
