@@ -6,11 +6,15 @@ import { Block, Inline, Value } from 'slate'
 import { Plugin, RenderNodeProps } from 'slate-react'
 
 import i18n from 'src/i18n'
+import { Module } from 'src/api'
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
 
+import Modal from 'src/components/Modal'
+import XrefTargetSelector from 'src/containers/XrefTargetSelector'
+
 const XrefPlugin: Plugin = {
-  renderNode(props, editor, next) {
+  renderNode(props, _, next) {
     if (props.node.type === 'xref') {
       return <Xref {...props} />
     }
@@ -40,6 +44,8 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     counters: PropTypes.instanceOf(Map as any),
   }
 
+  xrefModal: Modal | null = null
+
   render() {
     const { node, attributes } = this.props
 
@@ -49,15 +55,21 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       ? this.renderRemote()
       : this.renderLocal()
 
-     return (
-      <a
-        href={href}
-        title={i18n.t('Editor.reference.tooltip')}
-        onClick={this.onClick}
-        {...attributes}
+    return (
+      <React.Fragment>
+        <a
+          href={href}
+          title={i18n.t('Editor.reference.tooltip')}
+          onClick={this.onClick}
+          {...attributes}
         >
-        {text}
-      </a>
+          {text}
+        </a>
+        <Modal
+          ref={this.setXrefModal}
+          content={this.renderXrefModal}
+        />
+      </React.Fragment>
     )
   }
 
@@ -108,7 +120,25 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
   onClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {
     if (!ev.ctrlKey) {
       ev.preventDefault()
+      this.openXrefModal()
     }
+  }
+
+  setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
+
+  openXrefModal = () => this.xrefModal!.open()
+
+  renderXrefModal = () => (
+    <XrefTargetSelector
+      editor={this.props.editor}
+      onSelect={this.changeReference}
+    />
+  )
+
+  changeReference = (target: ReferenceTarget, source: Module | null) => {
+    this.xrefModal!.close()
+    const newRef = {type: 'xref', data: { target: target.id, document: source ? source.id : undefined }}
+    this.props.editor.setNodeByKey(this.props.node.key, newRef)
   }
 })
 
