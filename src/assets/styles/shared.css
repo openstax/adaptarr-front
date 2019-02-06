@@ -256,6 +256,10 @@ textarea {
   border: none;
 }
 
+.cnxml newline {
+  display: block;
+}
+
 .cnxml section {
   margin: 10px 0;
 }
