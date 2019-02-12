@@ -1,4 +1,5 @@
 import { Module } from 'src/api'
+import sortRefTargets from 'src/helpers/sortRefTargets'
 
 import { ModulesMap, ReferenceTargets } from 'src/store/types'
 import { ModulesAction } from 'src/store/actions/Modules'
@@ -64,7 +65,7 @@ export function reducer (state: State = initialState, action: ModulesAction): St
 
     case SET_REFERENCE_TARGETS:
       const targets = new Map(state.referenceTargets)
-      targets.set(action.data.moduleId, action.data.targets)
+      targets.set(action.data.moduleId, action.data.targets.sort(sortRefTargets))
       return {
         ...state,
         referenceTargets: targets,
