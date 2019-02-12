@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
@@ -149,7 +151,7 @@ class Books extends React.Component<Props> {
         }
         {
           !isLoading ?
-            <div className="section__content">
+            <div className="section__content books">
               {
                 booksMap.size > 0 ?
                   Array.from(booksMap.values()).map((book: api.Book) => (
