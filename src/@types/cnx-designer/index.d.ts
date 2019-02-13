@@ -1,5 +1,6 @@
 declare module 'cnx-designer' {
   import {
+    Inline,
     Block,
     Data,
     Editor as SlateEditor,
@@ -85,6 +86,8 @@ declare module 'cnx-designer' {
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
+    getActiveXref(value: Value): Inline | null
+    getActiveLink(value: Value): Inline | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean

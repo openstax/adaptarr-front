@@ -5,13 +5,11 @@ import { Map } from 'immutable'
 import { Block, Inline, Value } from 'slate'
 import { Plugin, RenderNodeProps } from 'slate-react'
 
+import capitalize from 'src/helpers/capitalize'
+
 import i18n from 'src/i18n'
-import { Module } from 'src/api'
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
-
-import Modal from 'src/components/Modal'
-import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 const XrefPlugin: Plugin = {
   renderNode(props, _, next) {
@@ -24,6 +22,64 @@ const XrefPlugin: Plugin = {
 }
 
 export default XrefPlugin
+
+type Declensions = {
+  nominative: string
+  genitive: string
+  dative: string
+  accusative: string
+  instrumental: string
+  locative: string
+  vocative: string
+}
+
+const DECLENSIONS: Map<string, Declensions> = Map({
+  exercise: {
+    nominative: "Ćwiczenie",
+    genitive: "Ćwiczenia",
+    dative: "Ćwiczeniu",
+    accusative: "Ćwiczenie",
+    instrumental: "Ćwiczeniem",
+    locative: "Ćwiczeniu",
+    vocative: "Ćwiczenie",
+  },
+  table: {
+    nominative: "Tabela",
+    genitive: "Tabeli",
+    dative: "Tabeli",
+    accusative: "Tabelę",
+    instrumental: "Tabelą",
+    locative: "Tabeli",
+    vocative: "Tabelo",
+  },
+  example: {
+    nominative: "Przykład",
+    genitive: "Przykładu",
+    dative: "Przykładowi",
+    accusative: "Przykład",
+    instrumental: "Przykładem",
+    locative: "Przykładzie",
+    vocative: "Przykładzie",
+  },
+  equation: {
+    nominative: "Równanie",
+    genitive: "Równania",
+    dative: "Równaniu",
+    accusative: "Równanie",
+    instrumental: "Równaniem",
+    locative: "Równaniu",
+    vocative: "Równanie",
+  },
+  figure: {
+    nominative: "Rysunek",
+    genitive: "Rysunku",
+    dative: "Rysunkowi",
+    accusative: "Rysunek",
+    instrumental: "Rysunkiem",
+    locative: "Rysunku",
+    vocative: "Rysunku",
+  }
+})
 
 type XrefProps = RenderNodeProps & {
   referenceTargets?: ReferenceTarget[],
@@ -44,8 +100,6 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     counters: PropTypes.instanceOf(Map as any),
   }
 
-  xrefModal: Modal | null = null
-
   render() {
     const { node, attributes } = this.props
 
@@ -56,27 +110,31 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       : this.renderLocal()
 
     return (
-      <React.Fragment>
-        <a
-          href={href}
-          title={i18n.t('Editor.reference.tooltip')}
-          onClick={this.onClick}
-          {...attributes}
-        >
-          {text}
-        </a>
-        <Modal
-          ref={this.setXrefModal}
-          content={this.renderXrefModal}
-        />
-      </React.Fragment>
+      <a
+        href={href}
+        title={i18n.t('Editor.reference.tooltip')}
+        onClick={this.onClick}
+        {...attributes}
+      >
+        {text}
+      </a>
     )
+  }
+
+  getDeclension (type: string, declension: string) {
+    const dec = DECLENSIONS.get(type) ? DECLENSIONS.get(type)[declension] : null
+
+    if (!dec) {
+      console.warn(`Couldn't find translation for target type: ${type} with declension: ${declension}.`)
+      return capitalize(type)
+    }
+
+    return dec
   }
 
   renderLocal() {
     const { node, editor } = this.props
     const { counters } = this.context
-
     const targetKey = node.data.get('target')
     const target = editor.value.document.getNode(targetKey) as Block | Inline
 
@@ -84,7 +142,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
     if (target) {
       const cnts = counters.get(targetKey) || Map()
-      text = editor.run('renderXRef', target, cnts) || `(${target.type})`
+      text = this.getDeclension(target.type, node.data.get('declension')) + ' ' + cnts.get(target.type)
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey}`)
       text = i18n.t('Editor.reference.missing')
@@ -106,7 +164,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     if (!referenceTargets) {
       text = i18n.t('Editor.reference.loading')
     } else if (target) {
-      text = editor.run('renderXRef', target, Map({ [target.type]: target.counter }))
+      text = this.getDeclension(target.type, node.data.get('declension')) + ' ' + target.counter
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey} from document ${targetDocument}`)
       text = i18n.t('Editor.reference.missing')
@@ -120,25 +178,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
   onClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {
     if (!ev.ctrlKey) {
       ev.preventDefault()
-      this.openXrefModal()
     }
-  }
-
-  setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
-
-  openXrefModal = () => this.xrefModal!.open()
-
-  renderXrefModal = () => (
-    <XrefTargetSelector
-      editor={this.props.editor}
-      onSelect={this.changeReference}
-    />
-  )
-
-  changeReference = (target: ReferenceTarget, source: Module | null) => {
-    this.xrefModal!.close()
-    const newRef = {type: 'xref', data: { target: target.id, document: source ? source.id : undefined }}
-    this.props.editor.setNodeByKey(this.props.node.key, newRef)
   }
 })
 

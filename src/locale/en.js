@@ -176,6 +176,20 @@ export default {
     "Editor.reference.loading": "(loading reference data)",
     "Editor.reference.missing": "(reference target missing)",
     "Editor.reference.tooltip": "Control-click to go to destination",
-    "Editor.save.action": "Save"
+    "Editor.xref.groupTitle": "Xref",
+    "Editor.xref.action.change": "Change xref",
+    "Editor.xref.declensions.none": "None",
+    "Editor.xref.declensions.genitive": "Genitive",
+    "Editor.xref.declensions.dative": "Dative",
+    "Editor.xref.declensions.accusative": "Accusative",
+    "Editor.xref.declensions.instrumental": "Instrumental",
+    "Editor.xref.declensions.locative": "Locative",
+    "Editor.xref.declensions.vocative": "Vocative",
+    "Editor.save.action": "Save",
+    "Editor.save.error": "Draft couldn't be saved.",
+    "Editor.save.success": "Draft has been saved successfully.",
+    "Editor.merge.action": "Merge",
+    "Editor.merge.error": "Draft couldn't be merged.",
+    "Editor.merge.success": "Draft has been merged successfully."
   }
 }
