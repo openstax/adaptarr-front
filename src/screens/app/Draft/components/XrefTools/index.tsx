@@ -35,10 +35,9 @@ export default class XrefTools extends React.Component<Props> {
   xrefModal: Modal | null = null
 
   public render() {
-    const { editor, value } = this.props
-    const xref = editor.getActiveXref(value)
+    const xref = this.getActiveXref()
 
-    if (xref === null) return null
+    if (!xref) return null
 
     return (
       <ToolGroup title="Editor.xref.groupTitle">
@@ -60,15 +59,23 @@ export default class XrefTools extends React.Component<Props> {
     )
   }
 
+  private getActiveXref = () => {
+    const xref = this.props.value.startInline
+
+    if (!xref) return null
+
+    return xref.type === 'xref' ? xref : null
+  }
+
   private changeDeclension = ({ value }: SelectOption) => {
-    const xref = this.props.editor.getActiveXref(this.props.value)
+    const xref = this.getActiveXref()
     if (!xref) return
 
     let newRef = {
       type: 'xref',
       data: {
         target: xref.data.get('target'),
-        declension: value !== 'none' ? value : null,
+        case: value !== 'none' ? value : null,
       }
     }
 
@@ -93,7 +100,7 @@ export default class XrefTools extends React.Component<Props> {
   private changeReference = (target: ReferenceTarget, source: Module | null) => {
     this.xrefModal!.close()
     const newRef = {type: 'xref', data: { target: target.id, document: source ? source.id : undefined }}
-    const xref = this.props.editor.getActiveXref(this.props.value)
+    const xref = this.getActiveXref()
     if (!xref) return
     this.props.editor.setNodeByKey(xref.key, newRef)
   }
