@@ -13,7 +13,7 @@ import StackedBar from 'src/components/ui/StackedBar'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
-import ModulesList from 'src/containers/ModulesList'
+import ModulesPicker from 'src/containers/ModulesPicker'
 
 import { ModuleStatus } from 'src/store/types'
 
@@ -63,7 +63,9 @@ class Group extends React.Component<Props> {
     this.props.afterAction()
   }
 
-  private handleEditBook = () => {
+  private handleEditBook = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     const groupNameInput = this.state.groupNameInput
 
     if (!groupNameInput.length) {
@@ -73,18 +75,12 @@ class Group extends React.Component<Props> {
     this.props.item.update({ title: groupNameInput })
       .then(() => {
         this.updateBook()
-        this.closeEditGroupDialog()
-        store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess")))
+        store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess", {from: this.props.item.title, to: groupNameInput})))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeEditGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeEditGroupDialog()
   }
 
   private showEditBookDialog = () => {
@@ -95,7 +91,9 @@ class Group extends React.Component<Props> {
     this.setState({ showEditGroup: false })
   }
 
-  private handleAddGroup = () => {
+  private handleAddGroup = (e: React.FormEvent) => {
+    e.preventDefault()
+
     const groupNameInput = this.state.groupNameInput
     const { book, item: group } = this.props
 
@@ -113,18 +111,12 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        this.closeAddGroupDialog()
         store.dispatch(addAlert('success', i18n.t("Book.groupAddSuccess")))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAddGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAddGroupDialog()
   }
 
   private showAddGroupDialog = () => {
@@ -141,18 +133,12 @@ class Group extends React.Component<Props> {
     item.delete()
       .then(() => {
         this.updateBook()
-        this.closeRemoveGroupDialog()
         store.dispatch(addAlert('success', i18n.t("Book.groupRemoveSuccess", {title: item.title})))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeRemoveGroupDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeRemoveGroupDialog()
   }
 
   private showRemoveGroupDialog = () => {
@@ -179,18 +165,12 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        this.closeAddModuleDialog()
         store.dispatch(addAlert('success', i18n.t("Book.moduleAddSuccess", {title: selectedModule.title})))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAddModuleDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAddModuleDialog()
   }
 
   private handleModuleClick = (mod: api.Module) => {
@@ -225,7 +205,7 @@ class Group extends React.Component<Props> {
               onClose={this.closeEditGroupDialog}
               i18nKey="Book.editGroupDialog"
             >
-              <form>
+              <form onSubmit={this.handleEditBook}>
                 <Input 
                   value={this.props.item.title}
                   placeholder={i18n.t("Book.placeholderChangeGroupTitle")}
@@ -233,13 +213,11 @@ class Group extends React.Component<Props> {
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <Button 
-                  color="green" 
-                  clickHandler={this.handleEditBook}
-                  isDisabled={groupNameInput.length <= 2}
-                >
-                  <Trans i18nKey="Buttons.confirm"/>
-                </Button>
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.confirm')}
+                  disabled={groupNameInput.length <= 2}
+                />
                 <Button 
                   color="red"
                   clickHandler={this.closeEditGroupDialog}
@@ -257,20 +235,18 @@ class Group extends React.Component<Props> {
               onClose={this.closeAddGroupDialog}
               i18nKey="Book.addGroupDialog"
             >
-              <form>
+              <form onSubmit={this.handleAddGroup}>
                 <Input
                   placeholder="Title"
                   onChange={this.updateGroupNameInput}
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <Button 
-                  color="green" 
-                  clickHandler={this.handleAddGroup}
-                  isDisabled={groupNameInput.length <= 2}
-                >
-                  <Trans i18nKey="Buttons.confirm"/>
-                </Button>
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.confirm')}
+                  disabled={groupNameInput.length <= 2}
+                />
                 <Button 
                   color="red"
                   clickHandler={this.closeAddGroupDialog}
@@ -310,7 +286,7 @@ class Group extends React.Component<Props> {
               onClose={this.closeAddModuleDialog}
               i18nKey="Book.addModuleDialog"
             >
-              <ModulesList onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker onModuleClick={this.handleModuleClick}/>
             </Dialog>
           : null
         }

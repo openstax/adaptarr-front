@@ -45,7 +45,7 @@ export default class XrefTools extends React.Component<Props> {
           className="toolbox__select"
           onChange={this.changeDeclension}
           options={DECLENSIONS}
-          value={DECLENSIONS.find(el => el.value === xref.data.get('declension')) || DECLENSIONS[0]}
+          value={DECLENSIONS.find(el => el.value === xref.data.get('case')) || DECLENSIONS[0]}
         />
         <Button clickHandler={this.openXrefModal} className="toolbox__button--insert">
           <Icon name="pencil" />

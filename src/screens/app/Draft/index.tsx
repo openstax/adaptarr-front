@@ -9,6 +9,8 @@ import * as api from 'src/api'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
 
 import Load from 'src/components/Load'
+import Section from 'src/components/Section'
+import Title from './components/Title'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
@@ -18,12 +20,14 @@ type Props = {
   documentDb: DocumentDB
   storage: api.Storage
   value: Value
+  draft: api.Draft
 }
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
-  const [documentDb, storage] = await Promise.all([
+  const [documentDb, storage, draft] = await Promise.all([
     PersistDB.load(id),
     api.Storage.load(id),
+    api.Draft.load(id),
   ])
 
   let value
@@ -48,10 +52,10 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     store.dispatch(fetchReferenceTargets(module))
   }
 
-  return { documentDb, storage, value }
+  return { documentDb, storage, value, draft }
 }
 
-class Module extends React.Component<Props> {
+class Draft extends React.Component<Props> {
   prePlugins = [XrefPlugin]
   postPlugins = [UIPlugin]
 
@@ -66,20 +70,27 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const { documentDb, storage, value } = this.props
+    const { documentDb, storage, value, draft } = this.props
 
     return (
-      <div className="draft">
-        <Editor
-          documentDb={documentDb}
-          storage={storage}
-          value={value}
-          prePlugins={this.prePlugins}
-          postPlugins={this.postPlugins}
-          />
-      </div>
+      <Section>
+        <div className="section__content draft">
+          <div className="draft__editor">
+            <div className="document">
+              <Title draft={draft}/>
+              <Editor
+                documentDb={documentDb}
+                storage={storage}
+                value={value}
+                prePlugins={this.prePlugins}
+                postPlugins={this.postPlugins}
+              />
+            </div>
+          </div>
+        </div>
+      </Section>
     )
   }
 }
 
-export default Load(loader)(Module)
+export default Load(loader)(Draft)

@@ -1,0 +1,7 @@
+.draftsList .list__item {
+  flex-wrap: wrap;
+}
+
+.list__item.draftsList__book {
+  border-bottom: none;
+}

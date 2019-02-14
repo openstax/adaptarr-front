@@ -3,7 +3,6 @@ import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -44,18 +43,16 @@ const mapDispatchToProps = (dispatch: any) => {
 class Module extends React.Component<Props> {
 
   state: {
-    showSuperSession: boolean
     showAssignUser: boolean
     showRemoveModule: boolean
     userToAssign?: api.User
     assignAction?: AssignActions
   } = {
-    showSuperSession: false,
     showAssignUser: false,
     showRemoveModule: false,
   }
 
-  module: api.Module = this.props.modulesMap.get(this.props.item.id!)!
+  module: api.Module | undefined = this.props.modulesMap.get(this.props.item.id!)
 
   private showRemoveModuleDialog = () => {
     this.setState({ showRemoveModule: true })
@@ -74,19 +71,13 @@ class Module extends React.Component<Props> {
 
     targetModule.delete()
       .then(() => {
-        this.closeRemoveModuleDialog()
         this.props.afterAction()
         store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", { title: targetModule.title })))
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeRemoveModuleDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeRemoveModuleDialog()
   }
 
   private showAssignUserDialog = () => {
@@ -105,13 +96,12 @@ class Module extends React.Component<Props> {
     const targetModule = this.props.item
     const assignee = user ? user.id : null
 
-    if (!targetModule) {
+    if (!targetModule || !this.module) {
       return store.dispatch(addAlert('error', i18n.t("User.assignError")))
     }
 
     this.module.assign(user)
       .then(() => {
-        this.closeAssignUserDialog()
         this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
         this.props.afterAction()
         if (user) {
@@ -121,14 +111,9 @@ class Module extends React.Component<Props> {
         }
       })
       .catch(e => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-          this.closeAssignUserDialog()
-        }
+        store.dispatch(addAlert('error', e.message))
       })
+    this.closeAssignUserDialog()
   }
 
   private unassignUser = () => {
@@ -137,7 +122,7 @@ class Module extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
-      this.module = this.props.modulesMap.get(this.props.item.id!)!
+      this.module = this.props.modulesMap.get(this.props.item.id!)
     }
   }
 
@@ -200,7 +185,7 @@ class Module extends React.Component<Props> {
             </Button>
           </AdminUI>
           {
-            this.module.assignee ?
+            this.module && this.module.assignee ?
               <React.Fragment>
                 <Avatar size="small" user={this.module.assignee} />
                 <Button

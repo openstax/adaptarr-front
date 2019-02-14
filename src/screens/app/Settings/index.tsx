@@ -6,7 +6,9 @@ import Select from 'react-select'
 import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
-import axios from 'src/config/axios'
+import User from 'src/api/user'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
@@ -28,7 +30,6 @@ class Settings extends React.Component {
     selectedLanguage: LanguageOption | null
     newSelectedLanguage: LanguageOption | null
     showChangeLanguage: boolean
-    showChangePassword: boolean
     arePasswordsValid: boolean
     oldPassword: string
     newPassword: string
@@ -37,7 +38,6 @@ class Settings extends React.Component {
     selectedLanguage: null,
     newSelectedLanguage: null,
     showChangeLanguage: false,
-    showChangePassword: false,
     arePasswordsValid: false,
     oldPassword: '',
     newPassword: '',
@@ -58,10 +58,6 @@ class Settings extends React.Component {
     i18next.changeLanguage(newSelectedLanguage.value)
 
     location.reload()
-  }
-
-  private showChangePasswordDialog = () => {
-    this.setState({ showChangePassword: true })
   }
 
   private validatePasswords = () => {
@@ -86,28 +82,33 @@ class Settings extends React.Component {
     this.setState({ newPassword2: val }, this.validatePasswords)
   }
 
-  private changePassword = () => {
-    /* axios.put('users/me')
+  private changePassword = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const { oldPassword, newPassword, newPassword2 } = this.state
+
+    User.changePassword(oldPassword, newPassword, newPassword2)
       .then(() => {
-        this.setState({
-          showChangePassword: false,
-          oldPassword: '',
-          newPassword: '',
-          newPassword2: '',
-        })
+        this.clearPasswordForm()
+        store.dispatch(addAlert('success', i18n.t('Settings.changePasswordSuccess')))
       })
       .catch(e => {
-        console.error(e.message)
-        this.setState({ showChangePassword: false })
-      }) */
+        store.dispatch(addAlert('error', i18n.t('Settings.changePasswordError')))
+        console.log(e)
+      })
+  }
+
+  private clearPasswordForm = () => {
+    this.setState({
+      arePasswordsValid: false,
+      oldPassword: '',
+      newPassword: '',
+      newPassword2: '',
+    })
   }
 
   private closeChangeLanguage = () => {
     this.setState({ showChangeLanguage: false })
-  }
-
-  private closeChangePassword = () => {
-    this.setState({ showChangePassword: false })
   }
 
   componentDidMount = () => {
@@ -136,7 +137,6 @@ class Settings extends React.Component {
       selectedLanguage, 
       arePasswordsValid, 
       showChangeLanguage, 
-      showChangePassword,
       oldPassword,
       newPassword,
       newPassword2,
@@ -165,27 +165,6 @@ class Settings extends React.Component {
             </Dialog>
           : null
         }
-        {
-          showChangePassword ?
-            <Dialog 
-              i18nKey="Settings.changePasswordDialog"
-              onClose={this.closeChangePassword}
-            >
-              <Button 
-                color="green" 
-                clickHandler={this.changePassword}
-              >
-                <Trans i18nKey="Buttons.confirm" />
-              </Button>
-              <Button 
-                color="red" 
-                clickHandler={this.closeChangePassword}
-              >
-                <Trans i18nKey="Buttons.cancel" />
-              </Button>
-            </Dialog>
-          : null
-        }
         <Header i18nKey="Settings.title" />
         <div className="section__content">
           <div className="settings">
@@ -201,36 +180,31 @@ class Settings extends React.Component {
             <h2 className="settings__title">
               <Trans i18nKey="Settings.changePassword" />
             </h2>
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderOldPassword")}
-              value={oldPassword}
-              onChange={this.updateOldPassword}
-              validation={{minLength: 6, maxLength: 12}}
-              errorMessage={i18n.t("Settings.passwordValidation")}
-            />
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderNewPassword")}
-              value={newPassword}
-              onChange={this.updateNewPassword}
-              validation={{minLength: 6, maxLength: 12}}
-              errorMessage={i18n.t("Settings.passwordValidation")}
-            />
-            <Input
-              type="password"
-              placeholder={i18n.t("Settings.placeholderRepeatPassword")}
-              value={newPassword2}
-              onChange={this.updateNewPassword2}
-              validation={{sameAs: newPassword}}
-              errorMessage={i18n.t("Settings.passwordRepeatValidation")}
-            />
-            <Button
-              isDisabled={!arePasswordsValid}
-              clickHandler={this.showChangePasswordDialog}
-            >
-              <Trans i18nKey="Buttons.confirm" />
-            </Button>
+            <form onSubmit={this.changePassword}>
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderOldPassword")}
+                value={oldPassword}
+                onChange={this.updateOldPassword}
+                errorMessage={i18n.t("Settings.passwordValidation")}
+              />
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderNewPassword")}
+                value={newPassword}
+                onChange={this.updateNewPassword}
+                errorMessage={i18n.t("Settings.passwordValidation")}
+              />
+              <Input
+                type="password"
+                placeholder={i18n.t("Settings.placeholderRepeatPassword")}
+                value={newPassword2}
+                onChange={this.updateNewPassword2}
+                validation={{sameAs: newPassword}}
+                errorMessage={i18n.t("Settings.passwordRepeatValidation")}
+              />
+              <input type="submit" value={i18n.t('Buttons.confirm')} disabled={!arePasswordsValid} />
+            </form>
           </div>
         </div>
       </section>

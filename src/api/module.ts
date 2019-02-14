@@ -77,6 +77,14 @@ export default class Module extends Base<Data> {
   }
 
   /**
+   * Fetch all books ids in which this module occurs.
+   */
+  async books(): Promise<string[]> {
+    const books = await axios.get(`modules/${this.id}/books`)
+    return books.data
+  }
+
+  /**
    * Create a new module.
    *
    * This function requires elevated permissions.

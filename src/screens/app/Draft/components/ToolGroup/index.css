@@ -3,7 +3,9 @@
 }
 
 .toolgroup--header {
-  height: 24px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
   cursor: pointer;
 }
 
@@ -16,5 +18,7 @@
 }
 
 .toolgroup.open > .toolgroup--content {
-  display: block;
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
 }

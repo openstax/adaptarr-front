@@ -1,14 +1,17 @@
+import './index.css'
+
 import * as React from 'react'
 import { Trans } from 'react-i18next'
 import { Block, Editor, Value, BlockProperties } from 'slate'
-import { EditorAug, MediaDescription } from 'cnx-designer'
+import { MediaDescription } from 'cnx-designer'
 
 import { FileDescription } from 'src/api/storage'
 
-import AssetPreview from 'src/components/AssetPreview'
 import Modal from 'src/components/Modal'
-import Button from 'src/components/ui/Button'
+import AssetPreview from 'src/components/AssetPreview'
 import AssetList from 'src/containers/AssetList'
+import Button from 'src/components/ui/Button'
+import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
 
@@ -23,38 +26,42 @@ export default class FigureTools extends React.Component<Props> {
 
   render() {
     const { editor, value } = this.props
-    const figure = (editor as EditorAug).getActiveFigure(value)
+    const figure = editor.getActiveFigure(value)
 
     if (figure === null) return null
 
-    const subfigure = (editor as EditorAug).getActiveSubfigure(value)
+    const subfigure = editor.getActiveSubfigure(value)
     const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
     const src = image.data.get('src')
 
     return (
       <ToolGroup title="Editor.figure.groupTitle">
-        <div className="subfigure">
+        <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}
             onClick={this.changeSubfigure}
-            />
-          {figure !== subfigure && <Button clickHandler={this.removeSubfigure}>
+          />
+          {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
+            <Icon name="close" />
             <Trans i18nKey="Editor.figure.removeSubfigure" />
           </Button>}
         </div>
-        <Button clickHandler={this.insertSubfigure}>
+        <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
+          <Icon name="image" />
           <Trans i18nKey="Editor.figure.insert.subfigure" />
         </Button>
         <Button
           clickHandler={this.insertCaption}
           isDisabled={(figure.nodes.last() as Block).type === 'figure_caption'}
-          >
+          className="toolbox__button--insert"
+        >
+          <Icon name="comment" />
           <Trans i18nKey="Editor.figure.insert.caption" />
         </Button>
         <Modal
           ref={this.setModal}
           content={this.renderModal}
-          />
+        />
       </ToolGroup>
     )
   }
@@ -65,11 +72,11 @@ export default class FigureTools extends React.Component<Props> {
     <AssetList
       filter="image/*"
       onSelect={this.onAssetSelected}
-      />
+    />
   )
 
   private insertSubfigure = () => {
-    this.action = (this.props.editor as EditorAug).insertSubfigure
+    this.action = this.props.editor.insertSubfigure
     this.modal!.open()
   }
 
@@ -77,7 +84,7 @@ export default class FigureTools extends React.Component<Props> {
     const { editor, value } = this.props
 
     this.action = (asset: MediaDescription) => {
-      const subfigure = (editor as EditorAug).getActiveSubfigure(value)
+      const subfigure = editor.getActiveSubfigure(value)
       const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
 
       editor.setNodeByKey(image.key, {
@@ -89,11 +96,11 @@ export default class FigureTools extends React.Component<Props> {
 
   private removeSubfigure = () => {
     const { editor, value } = this.props
-    const subfigure = (editor as EditorAug).getActiveSubfigure(value)!
+    const subfigure = editor.getActiveSubfigure(value)!
     editor.removeNodeByKey(subfigure.key)
   }
 
-  private insertCaption = () => (this.props.editor as EditorAug).insertCaption()
+  private insertCaption = () => this.props.editor.insertCaption()
 
   private onAssetSelected = (asset: FileDescription) => {
     this.modal!.close()

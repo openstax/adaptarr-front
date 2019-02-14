@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Trans } from 'react-i18next'
@@ -13,7 +15,6 @@ import Header from 'src/components/Header'
 import AdminUI from 'src/components/AdminUI'
 import BookCard from 'src/components/BookCard'
 import Spinner from 'src/components/Spinner'
-import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -23,6 +24,7 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import { IsLoading, BooksMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { fetchModulesMap } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
@@ -31,6 +33,7 @@ type Props = {
     booksMap: BooksMap
   }
   fetchBooksMap: () => void
+  fetchModulesMap: () => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -42,58 +45,47 @@ export const mapStateToProps = ({ booksMap }: State) => {
 export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
   return {
     fetchBooksMap: () => dispatch(fetchBooksMap()),
+    fetchModulesMap: () => dispatch(fetchModulesMap()),
   }
 }
 
 class Books extends React.Component<Props> {
 
   state: {
-    titleInput: string,
-    showSuperSession: boolean,
-    showAddBook: boolean,
-    files: File[],
+    titleInput: string
+    showAddBook: boolean
+    files: File[]
+    uploading: boolean
   } = {
     titleInput: '',
-    showSuperSession: false,
     showAddBook: false,
     files: [],
+    uploading: false,
   }
 
-  private listOfBookCards = (booksMap: BooksMap) => {
-    let books: api.Book[] = []
-
-    // Create new array because we can't render list
-    booksMap.forEach(book => {
-      books.push(book)
-    })
-
-    return books.map((book: api.Book) => {
-      return <BookCard key={book.id} book={book}/>
-    })
-  }
-
-  private addBook = () => {
+  private addBook = (e: React.FormEvent) => {
+    e.preventDefault()
+    
     const { titleInput: title, files } = this.state
+
+    this.setState({ uploading: true })
 
     api.Book.create(title, files[0])
       .then(() => {
         this.props.fetchBooksMap()
+        this.props.fetchModulesMap()
         this.setState({ titleInput: '' })
-        store.dispatch(addAlert('success', i18n.t("Book.bookAddSuccess")))
+        store.dispatch(addAlert('success', i18n.t("Books.bookAddSuccess")))
+        this.closeAddBookDialog()
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-        }
+        store.dispatch(addAlert('error', e.message))
+        this.closeAddBookDialog()
       })
-    this.closeAddBookDialog()
   }
 
   private showAddBookDialog = ()  => {
-    this.setState({ showAddBook: true })
+    this.setState({ showAddBook: true, uploading: false })
   }
 
   private closeAddBookDialog = () => {
@@ -112,22 +104,9 @@ class Books extends React.Component<Props> {
     store.dispatch(addAlert('error', error.message))
   }
 
-  private superSessionSuccess = (res: Response) => {
-    this.addBook()
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    store.dispatch(addAlert('error', e.message))
-  }
-
-  private closeSuperSession = () => {
-    this.setState({ showSuperSession: false })
-  }
-
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showSuperSession, showAddBook } = this.state
+    const { titleInput, showAddBook, uploading } = this.state
 
     return (
       <Section>
@@ -142,47 +121,42 @@ class Books extends React.Component<Props> {
           </AdminUI>
         </Header>
         {
-          showSuperSession ?
-            <SuperSession 
-              onSuccess={this.superSessionSuccess} 
-              onFailure={this.superSessionFailure}
-              onAbort={this.closeSuperSession}/>
-          : null
-        }
-        {
           showAddBook ?
             <Dialog 
               size="medium"
               onClose={this.closeAddBookDialog}
               i18nKey="Books.addBookDialog"
             >
-              <Input 
-                value={this.state.titleInput} 
-                onChange={this.updateTitleInput} 
-                placeholder="Book title"
-                validation={{minLength: 3}}
-              />
-              <FilesUploader 
-                onFilesChange={this.onFilesChange} 
-                onFilesError={this.onFilesError}
-                accepts={['.zip', '.rar']}
-              />
-              <Button 
-                color="green"
-                isDisabled={titleInput.length === 0}
-                clickHandler={this.addBook}
-              >
-                <Icon name="plus"/>
-              </Button>
+              { 
+                uploading ?
+                  <Spinner />
+                :
+                  <form onSubmit={this.addBook}>
+                    <Input 
+                      value={this.state.titleInput} 
+                      onChange={this.updateTitleInput} 
+                      placeholder="Book title"
+                      validation={{minLength: 3}}
+                    />
+                    <FilesUploader 
+                      onFilesChange={this.onFilesChange} 
+                      onFilesError={this.onFilesError}
+                      accepts={['.zip', '.rar']}
+                    />
+                    <input type="submit" value={i18n.t('Buttons.confirm')} disabled={titleInput.length === 0} />
+                  </form>
+              }
             </Dialog>
           : null
         }
         {
           !isLoading ?
-            <div className="section__content">
+            <div className="section__content books">
               {
                 booksMap.size > 0 ?
-                  this.listOfBookCards(booksMap)
+                  Array.from(booksMap.values()).map((book: api.Book) => (
+                    <BookCard key={book.id} book={book}/>
+                  ))
                 : <Trans i18nKey="Books.noBooksFound" />
               }
             </div>

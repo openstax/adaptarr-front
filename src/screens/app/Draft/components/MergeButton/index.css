@@ -1,8 +1,8 @@
-.save-button {
+.merge-button {
   position: relative;
   padding: 8px 12px;
 }
 
-.save-button .icon {
+.merge-button .icon {
   margin-right: 8px;
 }

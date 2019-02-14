@@ -102,19 +102,21 @@ class App extends React.Component<Props> {
           !isLoading && user.id ?
             <div className="container container--main">
               <Navigation />
-              <Switch>
-                <Route exact path="/" component={Dashboard}/>
-                <Route path="/notifications" component={NotificationsCentre}/>
-                <Route exact path="/books" component={Books}/>
-                <Route path="/books/:id" component={Book}/>
-                <Route path="/modules/:id" component={Module}/>
-                <Route path="/drafts/:id" component={Draft}/>
-                <Route path="/resources" component={Resources}/>
-                <Route path="/users/:id" component={Profile}/>
-                <Route path="/settings" component={Settings}/>
-                <Route path="/invitations" component={Invitations}/>
-                <Route component={Error404}/>
-              </Switch>
+              <main>
+                <Switch>
+                  <Route exact path="/" component={Dashboard}/>
+                  <Route path="/notifications" component={NotificationsCentre}/>
+                  <Route exact path="/books" component={Books}/>
+                  <Route path="/books/:id" component={Book}/>
+                  <Route path="/modules/:id" component={Module}/>
+                  <Route path="/drafts/:id" component={Draft}/>
+                  <Route path="/resources" component={Resources}/>
+                  <Route path="/users/:id" component={Profile}/>
+                  <Route path="/settings" component={Settings}/>
+                  <Route path="/invitations" component={Invitations}/>
+                  <Route component={Error404}/>
+                </Switch>
+              </main>
               <div className="alerts">
                 {
                   alerts.length > 0 ?

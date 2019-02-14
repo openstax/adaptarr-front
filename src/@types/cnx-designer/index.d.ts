@@ -68,7 +68,7 @@ declare module 'cnx-designer' {
     alt: string,
   }
 
-  export interface EditorAug extends SlateEditor {
+  export interface EditorAug {
     // Commands
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug

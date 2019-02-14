@@ -87,6 +87,9 @@ export const pushNotificationToStore = (noti: Notification): PushNotificationToS
 
 export const changeNotificationStatus = (noti: Notification, status: NotificationStatus): ChangeNotificationStatus => {
   return dispatch => {
+    if (!noti.markRead) {
+      noti = new Notification({...noti})
+    }
     switch (status) {
       case 'read':
         noti.markRead()

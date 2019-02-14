@@ -36,6 +36,13 @@ body {
   color: var(--font-dark);
 }
 
+body * {
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
 html, body, #root, .container {
   height: 100%;
 }
@@ -94,9 +101,12 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   padding: 10px 0;
   border-bottom: 1px solid var(--light-bg);
+}
+
+.list__title {
+  flex: 1;
 }
 
 .list__buttons button {
@@ -115,8 +125,21 @@ main {
   margin-bottom: 20px;
 }
 
-form input {
-  margin-bottom: 20px;
+input[type="submit"] {
+  display: inline-flex;
+  border: none;
+  font: inherit;
+  line-height: normal;
+  padding: 5px 10px;
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+input[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 textarea {
@@ -129,6 +152,14 @@ textarea {
   border: 1px solid var(--dark-bg);
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+form .input {
+  margin-bottom: 10px;
+}
+
+form input[type="submit"] {
+  margin-right: 10px;
 }
 
 .alerts {
@@ -190,6 +221,15 @@ textarea {
   display: block;
 }
 
+.cnxml list {
+  display: block;
+  padding-left: 20px;
+}
+
+.cnxml item {
+  display: list-item;
+}
+
 .cnxml emphasis {
   font-weight: 700;
 }
@@ -212,6 +252,27 @@ textarea {
   display: block;
   padding: 10px;
   margin-bottom: 10px;
+}
+
+.cnxml row {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid var(--dark-bg);
+}
+
+.cnxml entry {
+  display: flex;
+  flex: 1;
+  padding: 5px;
+  border-right: 1px solid var(--dark-bg);
+}
+
+.cnxml row entry:last-child {
+  border: none;
+}
+
+.cnxml newline {
+  display: block;
 }
 
 .cnxml section {

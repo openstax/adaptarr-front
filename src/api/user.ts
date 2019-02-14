@@ -48,6 +48,19 @@ export default class User extends Base<UserData> {
   }
 
   /**
+   * Change password
+   */
+  static async changePassword(current: string, newPass: string, newPass2: string) {
+    const payload = {
+      current,
+      new: newPass,
+      new2: newPass2,
+    }
+    
+    return await axios.put('users/me/password', payload)
+  }
+
+  /**
    * User's identificator.
    */
   id: number

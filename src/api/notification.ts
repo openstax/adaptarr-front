@@ -10,8 +10,8 @@ export type AssignedData = {
   kind: 'assigned',
   id: number,
   timestamp: string,
-  module: string,
-  who: number,
+  module?: string,
+  who?: number,
 }
 
 export default class Notification extends Base<NotificationData> {

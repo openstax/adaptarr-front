@@ -10,23 +10,22 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import SuperSession from 'src/components/SuperSession'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 class Invitations extends React.Component {
 
   state: {
-    showSuperSession: boolean
     emailValue: string
     isEmailVaild: boolean
   } = {
-    showSuperSession: false,
     emailValue: '',
     isEmailVaild: false,
   }
 
-  private sendInvitation = () => {
+  private sendInvitation = (e: React.FormEvent) => {
+    e.preventDefault()
+
     const { emailValue: email, isEmailVaild } = this.state
 
     if (!isEmailVaild) return
@@ -37,12 +36,7 @@ class Invitations extends React.Component {
         store.dispatch(addAlert('success', i18n.t("Invitations.sentTo", {email: email})))
       })
       .catch((e) => {
-        if (e.request.status === 403) {
-          this.setState({ showSuperSession: true })
-          store.dispatch(addAlert('info', i18n.t("Admin.confirmSuperSession")))
-        } else {
-          store.dispatch(addAlert('error', e.message))
-        }
+        store.dispatch(addAlert('error', e.message))
       })
   }
 
@@ -56,50 +50,27 @@ class Invitations extends React.Component {
     }
   }
 
-  private superSessionSuccess = () => {
-    this.sendInvitation()
-    this.setState({ showSuperSession: false })
-  }
-
-  private superSessionFailure = (e: Error) => {
-    store.dispatch(addAlert('error', e.message))
-  }
-
-  private closeSuperSession = () => {
-    this.setState({ showSuperSession: false })
-  }
-
   public render() {
-    const { showSuperSession, emailValue } = this.state
+    const { emailValue, isEmailVaild } = this.state
 
     return (
       <div className="container">
-        {
-          showSuperSession ?
-            <SuperSession 
-              onSuccess={this.superSessionSuccess} 
-              onFailure={this.superSessionFailure}
-              onAbort={this.closeSuperSession}
-            />
-          : null
-        }
         <Section>
           <Header i18nKey="Invitations.title"/>
           <div className="section__content">
-            <div className="invitatio">
-              <Input
-                type="email"
-                value={emailValue}
-                onChange={this.hanleInputChange}
-                isValid={this.handleInputValidation}
-                placeholder={i18n.t("Invitations.emailPlaceholder")}
-                validation={{email: true}}
-                errorMessage={i18n.t("Invitations.emailInvalid")}
-              />
-              <br/>
-              <Button color="green" size="medium" clickHandler={this.sendInvitation}>
-                <Trans i18nKey="Buttons.invite"/>
-              </Button>
+            <div className="invitations">
+              <form onSubmit={this.sendInvitation}>
+                <Input
+                  type="email"
+                  value={emailValue}
+                  onChange={this.hanleInputChange}
+                  isValid={this.handleInputValidation}
+                  placeholder={i18n.t("Invitations.emailPlaceholder")}
+                  validation={{email: true}}
+                  errorMessage={i18n.t("Invitations.emailInvalid")}
+                />
+                <input type="submit" value={i18n.t('Buttons.invite')} disabled={!isEmailVaild || !emailValue} />
+              </form>
             </div>
           </div>
         </Section>

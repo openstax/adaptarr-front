@@ -1,4 +1,4 @@
-div.asset {
+.asset {
   margin: 8px;
   min-width: 180px;
   max-width: 360px;
@@ -6,35 +6,38 @@ div.asset {
   flex: 1;
 }
 
-div.asset:hover {
+.asset:hover {
   cursor: pointer;
   box-shadow: 0 2px 4px 2px rgba(51, 51, 51, 0.4);
 }
 
-div.asset span.name {
+.asset__name {
   display: block;
 }
 
-div.asset.image {
+.asset.image {
   position: relative;
 }
 
-div.asset.image img {
+.asset__image {
   display: block;
-  max-width: 100%;
-  min-width: 100%;
-  max-height: 100%;
-  min-height: 100%;
-  height: stretch;
+  width: 100%;
+  height: auto;
+  max-height: 120px;
   object-fit: cover;
 }
 
-div.asset.image span {
+.asset.image .asset__name {
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
-
-  padding: 8px 16px;
-  background-color: rgba(255, 255, 255, 0.8);
+  display: inline-block;
+  width: 90%;
+  overflow: hidden;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  text-overflow: ellipsis;
+  white-space: pre;
+  background-color: rgba(255, 255, 255, 0.8);  
 }
