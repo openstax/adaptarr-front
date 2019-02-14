@@ -87,7 +87,7 @@ class EditBook extends React.Component<Props> {
                 <Input
                   value={bookTitle}
                   onChange={this.updateTitleInput}
-                  placeholder={i18n.t("Book.bookTitlePlaceholder")}
+                  placeholder={i18n.t("Book.bookTitlePlaceholder") as string}
                   validation={{minLength: 3}}
                 />
                 <FilesUploader
@@ -97,7 +97,7 @@ class EditBook extends React.Component<Props> {
                 />
                 <input
                   type="submit"
-                  value={i18n.t('Buttons.confirm')}
+                  value={i18n.t('Buttons.confirm') as string}
                   disabled={titleInput.length === 0 && files.length === 0}
                 />
               </form>

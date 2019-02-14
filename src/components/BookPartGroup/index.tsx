@@ -208,14 +208,14 @@ class Group extends React.Component<Props> {
               <form onSubmit={this.handleEditBook}>
                 <Input 
                   value={this.props.item.title}
-                  placeholder={i18n.t("Book.placeholderChangeGroupTitle")}
+                  placeholder={i18n.t("Book.placeholderChangeGroupTitle") as string}
                   onChange={this.updateGroupNameInput}
                   autoFocus
                   validation={{minLength: 3}}
                 />
                 <input
                   type="submit"
-                  value={i18n.t('Buttons.confirm')}
+                  value={i18n.t('Buttons.confirm') as string}
                   disabled={groupNameInput.length <= 2}
                 />
                 <Button 
@@ -244,7 +244,7 @@ class Group extends React.Component<Props> {
                 />
                 <input
                   type="submit"
-                  value={i18n.t('Buttons.confirm')}
+                  value={i18n.t('Buttons.confirm') as string}
                   disabled={groupNameInput.length <= 2}
                 />
                 <Button 

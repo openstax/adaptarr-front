@@ -125,8 +125,8 @@ class Dashboard extends React.Component<Props> {
         <Header i18nKey="Dashboard.title" />
         {
           this.state.showDeleteDraftDialog ?
-            <Dialog 
-              title={i18n.t("Draft.deleteDraftConfirmation")} 
+            <Dialog
+              title={i18n.t("Draft.deleteDraftConfirmation") as string}
               onClose={this.closeDeleteDraftDialog}
             >
               <Button color="red" clickHandler={this.deleteDraft}>

@@ -300,7 +300,7 @@ class MessageInput extends React.Component<Props> {
         >
           <textarea
             className="msgInput__text"
-            placeholder={i18n.t("MsgInput.placeholder")}
+            placeholder={i18n.t("MsgInput.placeholder") as string}
             onChange={this.handleTextareaInput}
             value={this.state.textareaValue}
           ></textarea>

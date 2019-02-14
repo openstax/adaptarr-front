@@ -42,10 +42,10 @@ type Props = {
       return
     }
 
-    const errorMessage = i18n.t("SuperSession.providePass")
+    const errorMessage = i18n.t("SuperSession.providePass") as string
     this.setState({ errorMessage })
 
-    this.props.onFailure(new Error(errorMessage))
+    this.props.onFailure(new Error(errorMessage as string))
   }
 
   public render() {
@@ -63,13 +63,13 @@ type Props = {
               <span className="error">{errorMessage}</span>
             : null
           }
-          <Input 
-            type="password" 
-            onChange={(val) => this.setState({ passwordInput: val })} 
-            placeholder={i18n.t("SuperSession.placeholderPass")}
+          <Input
+            type="password"
+            onChange={(val) => this.setState({ passwordInput: val })}
+            placeholder={i18n.t("SuperSession.placeholderPass") as string}
             autoFocus
           />
-          <input type="submit" value={i18n.t("Buttons.confirm")} />
+          <input type="submit" value={i18n.t("Buttons.confirm") as string} />
         </form>
       </Dialog>
     )

@@ -45,7 +45,7 @@ export default class FormatTools extends React.Component<Props> {
       <div className="toolbox-format">
         <Select
           className="toolbox__select"
-          value={{ value: startBlock.type, label: i18n.t(`Editor.format.textType.${startBlock.type}`) }}
+          value={{ value: startBlock.type, label: i18n.t(`Editor.format.textType.${startBlock.type}`) as string }}
           onChange={this.changeTextType}
           options={BLOCK_TYPES}
           isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
@@ -56,7 +56,7 @@ export default class FormatTools extends React.Component<Props> {
             className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
             dataId={format}
             clickHandler={this.applyFormat}
-            title={i18n.t(`Editor.format.${format}`)}
+            title={i18n.t(`Editor.format.${format}`) as string}
           >
             <Icon name={format} />
           </Button>
@@ -65,7 +65,7 @@ export default class FormatTools extends React.Component<Props> {
           className="toolbox__button--only-icon"
           isDisabled={list !== null}
           clickHandler={this.formatList}
-          title={i18n.t('Editor.format.list')}
+          title={i18n.t('Editor.format.list') as string}
         >
           <Icon name="list-ul" />
         </Button>
@@ -73,7 +73,7 @@ export default class FormatTools extends React.Component<Props> {
           className="toolbox__button--only-icon"
           isDisabled={value.activeMarks.isEmpty()}
           clickHandler={this.clear}
-          title={i18n.t('Editor.format.clear')}
+          title={i18n.t('Editor.format.clear') as string}
         >
           <Icon name="close" />
         </Button>

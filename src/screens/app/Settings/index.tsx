@@ -1,7 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
-import * as i18next from 'i18next'
+import i18next from 'i18next'
 import Select from 'react-select'
 import { Trans } from 'react-i18next'
 
@@ -183,27 +183,27 @@ class Settings extends React.Component {
             <form onSubmit={this.changePassword}>
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderOldPassword")}
+                placeholder={i18n.t("Settings.placeholderOldPassword") as string}
                 value={oldPassword}
                 onChange={this.updateOldPassword}
-                errorMessage={i18n.t("Settings.passwordValidation")}
+                errorMessage={i18n.t("Settings.passwordValidation") as string}
               />
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderNewPassword")}
+                placeholder={i18n.t("Settings.placeholderNewPassword") as string}
                 value={newPassword}
                 onChange={this.updateNewPassword}
-                errorMessage={i18n.t("Settings.passwordValidation")}
+                errorMessage={i18n.t("Settings.passwordValidation") as string}
               />
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderRepeatPassword")}
+                placeholder={i18n.t("Settings.placeholderRepeatPassword") as string}
                 value={newPassword2}
                 onChange={this.updateNewPassword2}
                 validation={{sameAs: newPassword}}
-                errorMessage={i18n.t("Settings.passwordRepeatValidation")}
+                errorMessage={i18n.t("Settings.passwordRepeatValidation") as string}
               />
-              <input type="submit" value={i18n.t('Buttons.confirm')} disabled={!arePasswordsValid} />
+              <input type="submit" value={i18n.t('Buttons.confirm') as string} disabled={!arePasswordsValid} />
             </form>
           </div>
         </div>

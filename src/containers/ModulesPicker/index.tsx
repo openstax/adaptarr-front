@@ -145,14 +145,14 @@ class ModuleList extends React.Component<Props> {
             <form onSubmit={this.addNewModule}>
               <div className="modulesList__top-bar">
                 <Input
-                  placeholder={i18n.t("ModulesList.placeholderTitle")}
+                  placeholder={i18n.t("ModulesList.placeholderTitle") as string}
                   value={moduleTitleValue}
                   onChange={this.updateModuleTitleValue}
                   validation={{minLength: 3}}
                 />
                 <input
                   type="submit"
-                  value={i18n.t('Buttons.addNew')}
+                  value={i18n.t('Buttons.addNew') as string}
                   disabled={moduleTitleValue.length < 3}
                 />
               </div>
@@ -167,7 +167,7 @@ class ModuleList extends React.Component<Props> {
         <div className="modulesList__filter">
           <Input
             onChange={this.handleFilterInput}
-            placeholder={i18n.t("ModulesList.placeholderSearch")}
+            placeholder={i18n.t("ModulesList.placeholderSearch") as string}
           />
         </div>
         <ModulesList
