@@ -32,6 +32,14 @@ export default class Draft extends Base<DraftData> {
   }
 
   /**
+   * Fetch all books ids in which this draft occurs.
+   */
+  async books(): Promise<string[]> {
+    const books = await axios.get(`drafts/${this.module}/books`)
+    return books.data
+  }
+
+  /**
    * ID of the module of which this is a draft.
    */
   module: string

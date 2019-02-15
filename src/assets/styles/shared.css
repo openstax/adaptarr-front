@@ -36,6 +36,13 @@ body {
   color: var(--font-dark);
 }
 
+body * {
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
+}
+
 html, body, #root, .container {
   height: 100%;
 }
@@ -145,6 +152,14 @@ textarea {
   border: 1px solid var(--dark-bg);
   border-radius: 4px;
   box-sizing: border-box;
+}
+
+form .input {
+  margin-bottom: 10px;
+}
+
+form input[type="submit"] {
+  margin-right: 10px;
 }
 
 .alerts {
