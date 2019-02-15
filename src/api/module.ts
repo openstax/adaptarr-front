@@ -86,11 +86,13 @@ export default class Module extends Base<Data> {
 
   /**
    * Create a new module.
-   *
    * This function requires elevated permissions.
+   * 
+   * @param title
+   * @param language - ISO language tag
    */
-  static async create(title: string): Promise<Module> {
-    const rsp = await elevated(() => axios.post('modules', { title }))
+  static async create(title: string, language: string): Promise<Module> {
+    const rsp = await elevated(() => axios.post('modules', { title, language }))
     return new Module(rsp.data)
   }
 

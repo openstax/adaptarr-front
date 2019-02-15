@@ -17,8 +17,9 @@
   align-items: center;
 }
 
-.modulesList__new input {
+.modulesList__new input, .modulesList__new .select {
   margin-right: 10px;
+  min-width: 100px;
 }
 
 .modulesList__filter {
