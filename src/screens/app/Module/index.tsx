@@ -73,7 +73,7 @@ class Module extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={mod ? mod.title : i18n.t("Unknown.module")}>
+        <Header title={mod ? mod.title : i18n.t("Unknown.module") as string}>
           {
             mod.assignee ?
               <div className="module__assignee">

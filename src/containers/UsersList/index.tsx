@@ -98,7 +98,7 @@ class UsersList extends React.Component<Props> {
             <div className="usersList">
               <Input
                 onChange={this.handleFilterInput}
-                placeholder={i18n.t("UsersList.placeholderSearch")}
+                placeholder={i18n.t("UsersList.placeholderSearch") as string}
               />
             </div>
           : null

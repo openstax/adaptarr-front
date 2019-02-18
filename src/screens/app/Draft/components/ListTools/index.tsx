@@ -33,7 +33,7 @@ export default class ListTools extends React.Component<Props> {
       <ToolGroup title="Editor.list.groupTitle">
         <Select
           className="toolbox__select"
-          value={{ value: list.type, label: i18n.t(`Editor.list.style.${list.type}`) }}
+          value={{ value: list.type, label: i18n.t(`Editor.list.style.${list.type}`) as string }}
           onChange={this.changeListStyle}
           options={LIST_STYLES}
         />

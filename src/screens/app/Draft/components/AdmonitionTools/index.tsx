@@ -35,7 +35,7 @@ export default function AdmonitionTools({ editor, value }: Props) {
     <ToolGroup title="Editor.admonition.groupTitle">
       <Select
         className="toolbox__select"
-        value={{ value: admonition.data.get('type'), label: i18n.t(`Editor.admonition.type.${admonition.data.get('type')}`) }}
+        value={{ value: admonition.data.get('type'), label: i18n.t(`Editor.admonition.type.${admonition.data.get('type')}`) as string }}
         onChange={onChange}
         options={ADMONITIONS_TYPES}
       />

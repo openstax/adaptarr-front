@@ -1,4 +1,4 @@
-import * as i18n from 'i18next'
+import i18n from 'i18next'
 import * as LanguageDetector from 'i18next-browser-languagedetector'
 
 import EN from './locale/en'

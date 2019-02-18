@@ -124,7 +124,7 @@ class UserProfile extends React.Component<Props> {
             onChange={this.updateNameInput}
             autoFocus
             validation={{minLength: 3}}
-            errorMessage={i18n.t("Profile.nameValidation")}
+            errorMessage={i18n.t("Profile.nameValidation") as string}
           />
         )
         break
@@ -257,7 +257,7 @@ class UserProfile extends React.Component<Props> {
           : null
         }
         <Section>
-          <Header title={title ? title : i18n.t("Unknown.user")} />
+          <Header title={title ? title : i18n.t("Unknown.user") as string} />
           <div className="section__content">
             <div className="profile">
               <div className="profile__top">

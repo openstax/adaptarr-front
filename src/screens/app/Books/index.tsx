@@ -143,7 +143,7 @@ class Books extends React.Component<Props> {
                       onFilesError={this.onFilesError}
                       accepts={['.zip', '.rar']}
                     />
-                    <input type="submit" value={i18n.t('Buttons.confirm')} disabled={titleInput.length === 0} />
+                    <input type="submit" value={i18n.t('Buttons.confirm') as string} disabled={titleInput.length === 0} />
                   </form>
               }
             </Dialog>

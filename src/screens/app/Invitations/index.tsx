@@ -65,11 +65,11 @@ class Invitations extends React.Component {
                   value={emailValue}
                   onChange={this.hanleInputChange}
                   isValid={this.handleInputValidation}
-                  placeholder={i18n.t("Invitations.emailPlaceholder")}
+                  placeholder={i18n.t("Invitations.emailPlaceholder") as string}
                   validation={{email: true}}
-                  errorMessage={i18n.t("Invitations.emailInvalid")}
+                  errorMessage={i18n.t("Invitations.emailInvalid") as string}
                 />
-                <input type="submit" value={i18n.t('Buttons.invite')} disabled={!isEmailVaild || !emailValue} />
+                <input type="submit" value={i18n.t('Buttons.invite') as string} disabled={!isEmailVaild || !emailValue} />
               </form>
             </div>
           </div>

@@ -53,7 +53,7 @@ class Title extends React.Component<Props> {
         <span className="draft__title">
           <Input
             value={titleInput}
-            placeholder={i18n.t('Draft.title.placeholder')}
+            placeholder={i18n.t('Draft.title.placeholder') as string}
             onChange={this.updateTitleInput}
           />
         </span>
