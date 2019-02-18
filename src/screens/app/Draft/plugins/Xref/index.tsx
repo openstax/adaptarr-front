@@ -23,7 +23,7 @@ const XrefPlugin: Plugin = {
 
 export default XrefPlugin
 
-type CmlnlCases = {
+type CmlnleCases = {
   nominative: string
   genitive: string
   dative: string
@@ -33,7 +33,7 @@ type CmlnlCases = {
   vocative: string
 }
 
-const CMLNLCASES: Map<string, CmlnlCases> = Map({
+const CASES: Map<string, CmlnleCases> = Map({
   exercise: {
     nominative: "Ćwiczenie",
     genitive: "Ćwiczenia",
@@ -121,8 +121,8 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     )
   }
 
-  getCmlnlCase (type: string, cmlnleCase: string) {
-    const dec = CMLNLCASES.get(type) ? CMLNLCASES.get(type)[cmlnleCase] : null
+  getCase (type: string, cmlnleCase: string) {
+    const dec = CASES.get(type) ? CASES.get(type)[cmlnleCase] : null
 
     if (!dec) {
       console.warn(`Couldn't find translation for target type: ${type} with cmlnl case: ${cmlnleCase}.`)
@@ -142,7 +142,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
     if (target) {
       const cnts = counters.get(targetKey) || Map()
-      text = this.getCmlnlCase(target.type, node.data.get('case')) + ' ' + cnts.get(target.type)
+      text = this.getCase(target.type, node.data.get('case')) + ' ' + cnts.get(target.type)
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey}`)
       text = i18n.t('Editor.reference.missing')
@@ -164,7 +164,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     if (!referenceTargets) {
       text = i18n.t('Editor.reference.loading')
     } else if (target) {
-      text = this.getCmlnlCase(target.type, node.data.get('case')) + ' ' + target.counter
+      text = this.getCase(target.type, node.data.get('case')) + ' ' + target.counter
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey} from document ${targetDocument}`)
       text = i18n.t('Editor.reference.missing')

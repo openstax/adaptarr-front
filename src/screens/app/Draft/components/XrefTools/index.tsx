@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Trans, withI18n } from 'react-i18next'
+import { Trans } from 'react-i18next'
 import { Editor, Value } from 'slate'
 
 import i18n from 'src/i18n'
@@ -16,14 +16,14 @@ import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 type SelectOption = { value: string, label: string }
 
-const DECLENSIONS: SelectOption[] = [
-  { value: 'none', label: i18n.t('Editor.xref.declensions.none') },
-  { value: 'genitive', label: i18n.t('Editor.xref.declensions.genitive') },
-  { value: 'dative', label: i18n.t('Editor.xref.declensions.dative') },
-  { value: 'accusative', label: i18n.t('Editor.xref.declensions.accusative') },
-  { value: 'instrumental', label: i18n.t('Editor.xref.declensions.instrumental') },
-  { value: 'locative', label: i18n.t('Editor.xref.declensions.locative') },
-  { value: 'vocative', label: i18n.t('Editor.xref.declensions.vocative') },
+const CASES: SelectOption[] = [
+  { value: 'none', label: i18n.t('Editor.xref.cases.none') },
+  { value: 'genitive', label: i18n.t('Editor.xref.cases.genitive') },
+  { value: 'dative', label: i18n.t('Editor.xref.cases.dative') },
+  { value: 'accusative', label: i18n.t('Editor.xref.cases.accusative') },
+  { value: 'instrumental', label: i18n.t('Editor.xref.cases.instrumental') },
+  { value: 'locative', label: i18n.t('Editor.xref.cases.locative') },
+  { value: 'vocative', label: i18n.t('Editor.xref.cases.vocative') },
 ]
 
 export type Props = {
@@ -43,9 +43,9 @@ export default class XrefTools extends React.Component<Props> {
       <ToolGroup title="Editor.xref.groupTitle">
         <Select
           className="toolbox__select"
-          onChange={this.changeDeclension}
-          options={DECLENSIONS}
-          value={DECLENSIONS.find(el => el.value === xref.data.get('case')) || DECLENSIONS[0]}
+          onChange={this.changeCase}
+          options={CASES}
+          value={CASES.find(el => el.value === xref.data.get('case')) || CASES[0]}
         />
         <Button clickHandler={this.openXrefModal} className="toolbox__button--insert">
           <Icon name="pencil" />
@@ -67,7 +67,7 @@ export default class XrefTools extends React.Component<Props> {
     return xref.type === 'xref' ? xref : null
   }
 
-  private changeDeclension = ({ value }: SelectOption) => {
+  private changeCase = ({ value }: SelectOption) => {
     const xref = this.getActiveXref()
     if (!xref) return
 
