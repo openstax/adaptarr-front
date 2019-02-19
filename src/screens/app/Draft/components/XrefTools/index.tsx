@@ -61,7 +61,7 @@ export default class XrefTools extends React.Component<Props> {
     return (
       <ToolGroup title="Editor.xref.groupTitle">
         <label className="toolbox__label">
-          Select language
+          {i18n.t("Editor.xref.selectLang")}
           <Select
             className="toolbox__select"
             onChange={this.changeLang}
@@ -70,7 +70,7 @@ export default class XrefTools extends React.Component<Props> {
           />
         </label>
         <label className="toolbox__label">
-          Select case
+          {i18n.t("Editor.xref.selectCase")}
           <Select
             className="toolbox__select"
             onChange={this.changeCase}

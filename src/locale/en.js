@@ -184,6 +184,8 @@ export default {
     "Editor.reference.missing": "(reference target missing)",
     "Editor.reference.tooltip": "Control-click to go to destination",
     "Editor.xref.groupTitle": "Xref",
+    "Editor.xref.selectLang": "Select language",
+    "Editor.xref.selectCase": "Select case",
     "Editor.xref.action.change": "Change xref",
     "Editor.xref.cases.none": "None",
     "Editor.xref.cases.nominative": "Nominative",
