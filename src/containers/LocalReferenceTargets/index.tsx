@@ -74,6 +74,10 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
         description = (child.nodes.first() as Block).nodes.first().text
         break
 
+      case 'section':
+        yield* this.mapBlockToTargets(child)
+        continue
+
       default:
         continue
       }
