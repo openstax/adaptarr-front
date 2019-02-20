@@ -45,6 +45,10 @@ export default class InsertTools extends React.Component<Props> {
           <Icon name="image" />
           <Trans i18nKey="Editor.insert.figure" />
         </Button>
+        <Button clickHandler={this.insertSection} className="toolbox__button--insert">
+          <Icon name="plus" />
+          <Trans i18nKey="Editor.insert.section" />
+        </Button>
         <Modal
           ref={this.setModal}
           content={this.renderModal}
@@ -80,5 +84,9 @@ export default class InsertTools extends React.Component<Props> {
     // is no way to add alt-texts, server doesn't store it yet, and it is not
     // used anywhere.
     this.props.editor.insertFigure(asset as MediaDescription)
+  }
+
+  private insertSection = () => {
+    this.props.editor.insertSection()
   }
 }
