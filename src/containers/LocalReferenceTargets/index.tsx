@@ -54,13 +54,17 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
     for (const child of block.nodes as unknown as Iterable<Node>) {
       if (child.object !== 'block') continue
 
+      let type
       let description = null
 
       switch (child.type) {
+      case 'admonition':
+        type = child.data.get('type')
+        // fall-through
+
       case 'example':
       case 'exercise_commentary':
       case 'exercise_solution':
-      case 'note':
         description = child.nodes.first().text
         break
 
@@ -87,7 +91,7 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
 
       const target: ReferenceTargetWithLabel = {
         id: child.key,
-        type: TYPE_MAP[child.type] || child.type,
+        type: type || TYPE_MAP[child.type] || child.type,
         description,
         label,
         counter: counters.get(child.type) || 0,
