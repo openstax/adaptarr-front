@@ -26,6 +26,23 @@ export type ModuleStatus = 'ready' | 'translation' | 'review' | 'done'
 export type Module = {id: string, title: string, book: string, assignee: number | null, status: ModuleStatus}
 export type ModulesMap = Map<string, Module>
 
+export type ReferenceTargetType
+  = 'commentary'
+  | 'example'
+  | 'exercise'
+  | 'figure'
+  | 'note'
+  | 'solution'
+  | 'subfigure'
+export type ReferenceTarget = {
+  id: string,
+  type: ReferenceTargetType,
+  description: string | null,
+  counter: number,
+  children: ReferenceTarget[],
+}
+export type ReferenceTargets = Map<string, ReferenceTarget[]>
+
 export type NotificationStatus = 'read' | 'unread'
 
 export type DraftShortInfo = { module: string, title: string }
