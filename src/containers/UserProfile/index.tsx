@@ -18,6 +18,8 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import UserUI from 'src/components/UserUI'
 import Load from 'src/components/Load'
+import Privileges from 'src/components/Privileges'
+import LimitedUI from 'src/components/LimitedUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -51,6 +53,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
     nameInput: string
+    flags: number[]
     // bioInput: string
     // emailInput: string
   } = {
@@ -58,6 +61,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: null,
     files: [],
     nameInput: this.props.user.name,
+    flags: [],
     // bioInput: '',
     // emailInput: '',
   }
@@ -239,6 +243,24 @@ class UserProfile extends React.Component<Props> {
     this.closeDialog()
   }
 
+  private handlePrivilegesChange = (flags: number[]) => {
+    if (JSON.stringify(this.state.flags) !== JSON.stringify(flags)) {
+      this.setState({ flags })
+    }
+  }
+
+  private changePrivileges = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    this.props.user.changePrivileges(this.state.flags)
+      .then(() => {
+        store.dispatch(addAlert('success', i18n.t("Profile.privileges.update.success")))
+      })
+      .catch(e => {
+        store.dispatch(addAlert('error', i18n.t("Profile.privileges.update.error", {e})))
+      })
+  }
+
   public render() {
     const showDialog = this.state.showDialog
     const user = this.props.user
@@ -312,6 +334,20 @@ class UserProfile extends React.Component<Props> {
                     </span>
                   </UserUI>
                 </span>
+                <LimitedUI>
+                  <div className="profile__privileges">
+                    <h3 className="profile__title">
+                      <Trans i18nKey="Profile.privileges"/>
+                    </h3>
+                    <form onSubmit={this.changePrivileges}>
+                      <Privileges
+                        onChange={this.handlePrivilegesChange}
+                        privileges={user.flags ? user.flags : []}
+                      />
+                      <input type="submit" value={i18n.t("Buttons.confirm") as string}/>
+                    </form>
+                  </div>
+                </LimitedUI>
               </div>
             </div>
           </div>

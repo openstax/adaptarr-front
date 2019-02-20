@@ -1,7 +1,6 @@
 import './index.css'
 
 import * as React from 'react'
-import { Trans } from 'react-i18next'
 
 import i18n from 'src/i18n'
 import store from 'src/store'
@@ -10,7 +9,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import Button from 'src/components/ui/Button'
+import Privileges from 'src/components/Privileges'
 import Input from 'src/components/ui/Input'
 
 class Invitations extends React.Component {
@@ -18,9 +17,11 @@ class Invitations extends React.Component {
   state: {
     emailValue: string
     isEmailVaild: boolean
+    flags: number[]
   } = {
     emailValue: '',
     isEmailVaild: false,
+    flags: [],
   }
 
   private sendInvitation = (e: React.FormEvent) => {
@@ -30,7 +31,7 @@ class Invitations extends React.Component {
 
     if (!isEmailVaild) return
 
-    Invitation.create(email)
+    Invitation.create(email, this.state.flags)
       .then(() => {
         this.setState({ emailValue: '' })
         store.dispatch(addAlert('success', i18n.t("Invitations.sentTo", {email: email})))
@@ -47,6 +48,12 @@ class Invitations extends React.Component {
   private handleInputValidation = (status: boolean) => {
     if (this.state.isEmailVaild !== status) {
       this.setState({ isEmailVaild: status})
+    }
+  }
+
+  private handlePrivilegesChange = (flags: number[]) => {
+    if (JSON.stringify(this.state.flags) !== JSON.stringify(flags)) {
+      this.setState({ flags })
     }
   }
 
@@ -69,7 +76,14 @@ class Invitations extends React.Component {
                   validation={{email: true}}
                   errorMessage={i18n.t("Invitations.emailInvalid") as string}
                 />
-                <input type="submit" value={i18n.t('Buttons.invite') as string} disabled={!isEmailVaild || !emailValue} />
+                <Privileges
+                  onChange={this.handlePrivilegesChange}
+                />
+                <input
+                  type="submit"
+                  value={i18n.t('Buttons.invite') as string}
+                  disabled={!isEmailVaild || !emailValue}
+                />
               </form>
             </div>
           </div>
