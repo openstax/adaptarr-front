@@ -8,7 +8,7 @@ import { Trans } from 'react-i18next'
 import i18n from 'src/i18n'
 import * as api from 'src/api'
 
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import EditBook from 'src/components/EditBook'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
@@ -80,14 +80,14 @@ class BookCard extends React.Component<Props> {
         <Link to={`books/${book.id}`}>
           <h2 className="card__title">{book.title}</h2>
         </Link>
-        <AdminUI>
+        <LimitedUI>
           <Button clickHandler={this.showEditBook}>
             <Icon name="pencil"/>
           </Button>
           <Button clickHandler={this.removeBook} color="red">
             <Icon name="minus"/>
           </Button>
-        </AdminUI>
+        </LimitedUI>
         {
           showConfirmationDialog ?
             <Dialog

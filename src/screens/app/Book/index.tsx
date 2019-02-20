@@ -14,7 +14,7 @@ import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import EditBook from 'src/components/EditBook'
 import BookPartGroup from 'src/components/BookPartGroup'
 import BookPartModule from 'src/components/BookPartModule'
@@ -235,7 +235,7 @@ class Book extends React.Component<Props> {
         }
         <Section>
           <Header title={book ? book.title : 'Loading'}>
-            <AdminUI>
+            <LimitedUI>
               <Button
                 clickHandler={this.showEditBook}
               >
@@ -263,7 +263,7 @@ class Book extends React.Component<Props> {
                     </React.Fragment>
                 }
               </div>
-            </AdminUI>
+            </LimitedUI>
           </Header>
           {
             !isLoading ?

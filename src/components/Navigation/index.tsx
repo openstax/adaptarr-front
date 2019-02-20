@@ -12,7 +12,7 @@ import { Notification } from 'src/api'
 import Header from 'src/components/Header'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -187,7 +187,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </a>
               </div>
             </li>
-            <AdminUI>
+            <LimitedUI>
               <li className="nav__link">
                 <Tooltip content={i18n.t("Navigation.invitationsLink")} direction="right">
                   <NavLink to="/invitations" activeClassName="active">
@@ -200,7 +200,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   </NavLink>
                 </Tooltip>
               </li>
-            </AdminUI>
+            </LimitedUI>
           </ul>
         </nav>
       </aside>

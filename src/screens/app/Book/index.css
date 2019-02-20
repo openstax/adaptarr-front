@@ -24,11 +24,11 @@
   padding: 20px;
 }
 
-.nestable-item-name .adminui {
+.nestable-item-name .limitedui {
   display: none;
 }
 
-.nestable-item-name:hover .adminui {
+.nestable-item-name:hover .limitedui {
   display: flex;
 }
 
