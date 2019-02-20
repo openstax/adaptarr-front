@@ -2,12 +2,15 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 
+import { elevated } from './utils'
+
 /**
  * User data as returned by the API.
  */
 export type UserData = {
   id: number,
   name: string,
+  flags?: number[],
 }
 
 export default class User extends Base<UserData> {
@@ -61,6 +64,13 @@ export default class User extends Base<UserData> {
   }
 
   /**
+   * Change privileges
+   */
+  async changePrivileges(flags: number[]): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}/privileges`, { flags }))
+  }
+
+  /**
    * User's identificator.
    */
   id: number
@@ -79,6 +89,11 @@ export default class User extends Base<UserData> {
    * @private
    */
   apiId: string
+
+  /**
+   * User's privileges flags.
+   */
+  flags: number[] = []
 
   constructor(data: UserData, apiId?: string) {
     super(data)
