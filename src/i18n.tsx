@@ -1,38 +1,29 @@
-import i18n from 'i18next'
-import * as LanguageDetector from 'i18next-browser-languagedetector'
+import { negotiateLanguages } from 'fluent-langneg/compat';
+import { FluentBundle } from 'fluent/compat';
 
-import EN from './locale/en'
-import PL from './locale/pl'
- 
-i18n
-  .use(LanguageDetector)
-  .init({
-    // we init with resources
-    resources: {
-      en: {
-        ...EN
-      },
-      pl: {
-        ...PL
-      }
-    },
-    fallbackLng: 'en',
-    debug: true,
- 
-    // have a common namespace used around the full app
-    ns: ['translations'],
-    defaultNS: 'translations',
- 
-    keySeparator: false, // we use content as keys
- 
-    interpolation: {
-      escapeValue: false, // not needed for react!!
-      formatSeparator: ','
-    },
- 
-    react: {
-      wait: true
-    }
-  })
- 
-export default i18n
+// XXX: Temporarily until we implement loading resources.
+const MESSAGES_ALL = {
+  'fr': 'hello = Salut le monde !',
+  'en-US': 'hello = Hello, world!',
+  'pl': 'hello = Witaj świecie!'
+};
+
+export function* generateBundles(userLocales: ReadonlyArray<string>) {
+  // Choose locales that are best for the user.
+  const currentLocales = negotiateLanguages(
+    userLocales,
+    ['fr', 'en-US', 'pl'],
+    { defaultLocale: 'en-US' }
+  );
+
+  for (const locale of currentLocales) {
+    const bundle = new FluentBundle(locale);
+    bundle.addMessages(MESSAGES_ALL[locale]);
+    yield bundle;
+  }
+}
+
+// XXX: Temporarily for type checking while we remove the rest of i18next.
+export default {
+  t(...args: any[]) { return 'TEST' },
+}
