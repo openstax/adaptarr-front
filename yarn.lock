@@ -92,6 +92,25 @@
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.8.2.tgz#576ff7fb1230185b619a75d258cbc98f0867a8dc"
   integrity sha512-rLu3wcBWH4P5q1CGoSSH/i9hrXs7SlbRLkoq9IGuoPYNGQvDJ3pt/wmOM+XgYjIDRMVIdkUWt0RsfzF50JfnCw==
 
+"@types/fluent-langneg@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@types/fluent-langneg/-/fluent-langneg-0.1.1.tgz#ec7f31c8e759e0206ac7a8367d2c92c913296dc9"
+  integrity sha512-3BX6Q5Rp+FU7ST6k63XJE+COIOC9zXkkaYvLpGpwKEvSjP9DpA6PSDR1oaea2XCoZ0AKNMwCQ7LeRS8nY5oISQ==
+
+"@types/fluent-react@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/fluent-react/-/fluent-react-0.8.0.tgz#6a21023162ed134dea81af1be416c4ff3c489e5b"
+  integrity sha512-PhPM8ZWaQAnh7gUMUV5uXr02whpAtqptjRq6rStoVIvSsc4fl+SIvzKv6CU68QQz6Z5oVGeyVmv1DyMAMYzrGg==
+  dependencies:
+    "@types/fluent" "*"
+    "@types/react" "*"
+    csstype "^2.2.0"
+
+"@types/fluent@*", "@types/fluent@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@types/fluent/-/fluent-0.10.0.tgz#97c6c07dcc18a9aa03b3dee0c1f5f913a7b6a471"
+  integrity sha512-GGXfY/epRlxKbqY2xi6aOzkjvaX0+odA4KseH9e41vOAkri9TQHVXfMKR3g6ZbZnYkMt90buHhOa+Mocdg3IMA==
+
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
@@ -1501,6 +1520,11 @@ cache-base@^1.0.1:
     to-object-path "^0.3.0"
     union-value "^1.0.0"
     unset-value "^1.0.0"
+
+cached-iterable@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/cached-iterable/-/cached-iterable-0.2.1.tgz#723958f5e7adc74c96bedb10b426bdfd95f2fe6d"
+  integrity sha512-8zAVjMjdn/S/QXJaOnqsko0+ZJzXT2Dum2u9TMGg5YR9fxONPrUjuO9VYqnb1AoldXeYVAcNJLgT5Q8WaIJSgA==
 
 caller-callsite@^2.0.0:
   version "2.0.0"
@@ -3053,6 +3077,30 @@ find-up@^2.0.0, find-up@^2.1.0:
 flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
+
+fluent-langneg@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/fluent-langneg/-/fluent-langneg-0.1.1.tgz#8a6a95e0c57a1c339aa598cb1ee7e3df0c976adb"
+  integrity sha512-7lCFviLfesnxV4SnwAJh1epnKw97doF1Fmrjx3rAjq1/bbgrmuC43rpL7Qx81keB4Eu+YsjFZ7hCMg2mM25SyA==
+
+fluent-react@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/fluent-react/-/fluent-react-0.8.3.tgz#b3681d07748aa473cfd2b3e50b88006bc15f2956"
+  integrity sha512-uNP+kefHxZ/yAqtg/cQlsruY/K8oiVMbU2E7Tcd+LEaVd5GxKWjv6CvmQNVrAsrWai0VrrVAg5SRVD19vVPHog==
+  dependencies:
+    cached-iterable "^0.2.1"
+    fluent-sequence "^0.2.0"
+    prop-types "^15.6.0"
+
+fluent-sequence@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/fluent-sequence/-/fluent-sequence-0.2.0.tgz#f351d93e0194182de60c6d5dfbdb3c96772813f8"
+  integrity sha512-t8fc4rHvzO9Yk8otP8LkTqWo6mzjdemooQcnHlDrNzrYAnwsSbVFIlthnkzK2pLsRnO9Ybmw4lXOYUx+fAIyJw==
+
+fluent@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/fluent/-/fluent-0.11.0.tgz#c6d4bcdb27d70eecb3c891e4f536e6dd94973580"
+  integrity sha512-HISy2vMEpHapwXOxp6Qljo6ObJPMLAI1Sh6RdiQLCdTgRr/0Cl1qPaXAPTvQar2dvDwzJH3oi1qsycCW/R5S/g==
 
 flush-write-stream@^1.0.0:
   version "1.0.3"
