@@ -3,7 +3,6 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import i18n from 'src/i18n'
 import * as api from 'src/api'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
@@ -23,7 +22,7 @@ const mapDispatchToProps = (dispatch: any) => {
 }
 
 class ModulePreview extends React.Component<Props> {
-  
+
   state: {
     index: string
     files: string[]
@@ -40,7 +39,7 @@ class ModulePreview extends React.Component<Props> {
       ]))
       .then(([files, index]) => this.setState({ index, files }))
       .catch(e => {
-        this.setState({ index: i18n.t("Module.fetchError", {details: e.message}) })
+        this.setState({ index: `There is no index.cnxml file for this module. Details: {e.message}` })
         this.props.addAlert('error', e.message)
       })
   }
@@ -59,8 +58,8 @@ class ModulePreview extends React.Component<Props> {
     const { index } = this.state
 
     return (
-      <div 
-        className="modulePreview cnxml" 
+      <div
+        className="modulePreview cnxml"
         dangerouslySetInnerHTML={{__html: updateImgSrcs(index, this.props.moduleId)}}
       >
       </div>

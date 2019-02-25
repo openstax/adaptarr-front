@@ -1,6 +1,5 @@
 import * as React from 'react'
-
-import i18n from 'src/i18n'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import { ReferenceTarget as RefTarget } from 'src/store/types'
@@ -37,28 +36,21 @@ export default class ReferenceTarget extends React.PureComponent<Props> {
   render() {
     const { target, context, module, onSelect } = this.props
 
-    const description =
-      target.label
-        // TODO: internationalise target: label somehow
-        ? target.description
-          ? `${target.label}: ${target.description}`
-          : target.label
-        : i18n.t(
-            target.description
-              ? `ReferenceTarget.description.${target.type}`
-              : `ReferenceTarget.name.${target.type}`,
-            {
-              lng: module ? module.language : undefined,
-              description: target.description,
-              counter: target.counter,
-              context: context && context.counter,
-            }
-          )
+    const label = target.label ? target.label : 'TODO: format'
 
     return (
       <div className="target" onClick={this.onClick}>
         <span className="target__description">
-          {description}
+          <Localized
+            id={target.description ? 'reference-target-description' : 'reference-target'}
+            $label={label}
+            $description={target.description}
+            >
+            { target.description
+              ? `${label}: ${target.description}`
+              : label
+            }
+          </Localized>
         </span>
         {target.children.length ?
           <ul className="target__nestedList">

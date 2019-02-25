@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { Block, Inline, Value } from 'slate'
@@ -7,7 +8,6 @@ import { Plugin, RenderNodeProps } from 'slate-react'
 
 import capitalize from 'src/helpers/capitalize'
 
-import i18n from 'src/i18n'
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
 
@@ -47,48 +47,46 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
     const targetDocument = node.data.get('document')
 
-    const [text, href] = targetDocument
+    const [text, attrs, href] = targetDocument
       ? this.renderRemote()
       : this.renderLocal()
 
+    // TODO: add title back
     return (
       <a
         href={href}
-        title={i18n.t('Editor.reference.tooltip')}
         onClick={this.onClick}
         {...attributes}
       >
-        {text}
+        <Localized id={text} {...attrs} />
       </a>
     )
   }
 
-  getCase (type: string, cmlnleCase: string, counter: number) {
-    const text = i18n.t(`Editor.xref.${type}.${cmlnleCase || 'none'}`, { counter }) || capitalize(type)
-
-    return text
-  }
-
-  renderLocal() {
+  renderLocal(): [string, object, string] {
     const { node, editor } = this.props
     const { counters } = this.context
     const targetKey = node.data.get('target')
     const target = editor.value.document.getNode(targetKey) as Block | Inline
 
     let text
+    let attrs = { $case: node.data.get('case') }
 
     if (target) {
       const cnts = counters.get(targetKey) || Map()
-      text = this.getCase(target.type, node.data.get('case'), cnts.get(target.type))
+      text = 'xref-label-' + target.type
+      for (const [name, value] of cnts.get(target.type)) {
+        attrs['$' + name] = value
+      }
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey}`)
-      text = i18n.t('Editor.reference.missing')
+      text = 'xref-label-local-reference-missing'
     }
 
-    return [text, "#" + targetKey]
+    return [text, attrs, "#" + targetKey]
   }
 
-  renderRemote() {
+  renderRemote(): [string, object, string] {
     const { node, referenceTargets } = this.props
 
     const targetDocument = node.data.get('document')
@@ -97,19 +95,21 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       .find(target => target.id === targetKey)
 
     let text
+    let attrs = { $case: node.data.get('case') }
 
     if (!referenceTargets) {
-      text = i18n.t('Editor.reference.loading')
+      text = 'xref-label-remote-loading'
     } else if (target) {
-      text = this.getCase(target.type, node.data.get('case'), target.counter)
+      text = 'xref-label-' + target.type
+      attrs['$' + target.type] = target.counter
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey} from document ${targetDocument}`)
-      text = i18n.t('Editor.reference.missing')
+      text = 'xref-label-remote-reference-missing'
     }
 
     const href = `/modules/${targetDocument}#${targetKey}`
 
-    return [text, href]
+    return [text, attrs, href]
   }
 
   onClick = (ev: React.MouseEvent<HTMLAnchorElement>) => {

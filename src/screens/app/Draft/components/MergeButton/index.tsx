@@ -1,11 +1,10 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Value } from 'slate'
 import { History } from 'history'
 import { withRouter, RouteComponentProps } from 'react-router-dom'
 
-import i18n from 'src/i18n'
 import Storage from 'src/api/storage'
 import Draft from 'src/api/draft'
 
@@ -47,7 +46,7 @@ class MergeButton extends React.Component<Props & RouteComponentProps> {
         size="medium"
       >
         <Icon name="save" />
-        <Trans i18nKey="Editor.merge.action" />
+        <Localized id="editor-tools-merge">Merge</Localized>
         {merging && <Spinner />}
       </Button>
     )
@@ -61,10 +60,10 @@ class MergeButton extends React.Component<Props & RouteComponentProps> {
     try {
       const draft = await Draft.load(storage.id)
       await draft.save()
-      store.dispatch(addAlert('success', i18n.t('Editor.merge.success')))
+      store.dispatch(addAlert('success', 'editor-tools-merge-alert-success'))
       this.props.history.push(`/modules/${storage.id}`)
     } catch (ex) {
-      store.dispatch(addAlert('error', i18n.t('Editor.merge.error')))
+      store.dispatch(addAlert('error', 'editor-tools-merge-alert-error'))
       console.error(ex)
       this.setState({ saving: false })
     }

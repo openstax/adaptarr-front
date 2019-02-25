@@ -24,7 +24,7 @@ export interface RemoveAlert {
 
 export type AlertsAction = PushAlert | RemoveAlert
 
-export const addAlert = (kind: RequestInfoKind, message: string): AddAlert => {
+export const addAlert = (kind: RequestInfoKind, message: string, args: object = {}): AddAlert => {
   return (dispatch: React.Dispatch<AlertsAction>) => {
     const alert: Alert = {
       id: new Date().getTime(),
@@ -32,6 +32,7 @@ export const addAlert = (kind: RequestInfoKind, message: string): AddAlert => {
       data: {
         kind,
         message,
+        arguments: args,
       },
     }
 

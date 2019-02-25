@@ -2,7 +2,7 @@ import './index.css'
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
@@ -45,13 +45,13 @@ class AssignedToMe extends React.Component<Props> {
   private sortModulesByBooksName = async () => {
     const { modules: { assignedToMe }, booksMap: { booksMap } } = this.props
 
-    let modulesByBooks: Map<string, BooksWithModules> = new Map()
+    let modulesByBooks: Map<string | null, BooksWithModules> = new Map()
 
     for (const mod of assignedToMe) {
       const booksIds = await mod.books()
       const books = booksIds.map(bookId => booksMap.get(bookId)!)
 
-      let booksName = books.length ? '' : 'Not assigned to any book'
+      let booksName = books.length ? '' : null
       books.forEach((b, i) => {
         if (i === books.length - 1) {
           booksName += b.title
@@ -100,8 +100,13 @@ class AssignedToMe extends React.Component<Props> {
             <ul className="list">
               {
                 Array.from(booksWithModules.entries()).map(([booksName, data]) => (
-                  <li key={booksName} className="list__item modulesList__book">
-                    <strong>{booksName}</strong>
+                  <li key={booksName || ''} className="list__item modulesList__book">
+                    <strong>
+                      { booksName
+                        ? booksName
+                        : <Localized id="dashboard-assigned-section-not-assigned" />
+                      }
+                    </strong>
                     {
                       data.modules.length ?
                         <ul className="list">
@@ -117,14 +122,18 @@ class AssignedToMe extends React.Component<Props> {
                                       <Button 
                                         to={`/modules/${mod.id}`}
                                       >
-                                        <Trans i18nKey="Buttons.viewDraft" />
+                                        <Localized id="dashboard-assigned-view-draft">
+                                          View draft
+                                        </Localized>
                                       </Button>
                                     :
                                       <Button
                                         color="green"
                                         clickHandler={() => this.props.onCreateDraft(mod)}
                                       >
-                                        <Trans i18nKey="Buttons.newDraft" />
+                                        <Localized id="dashboard-assigned-new-draft">
+                                          New draft
+                                        </Localized>
                                       </Button>
                                   }
                                 </span>
@@ -138,7 +147,9 @@ class AssignedToMe extends React.Component<Props> {
                 ))
               }
             </ul>
-          : <Trans i18nKey="AssignedToMe.noAssigned"/>
+          : <Localized id="dashboard-assigned-empty">
+            You are not assigned to any module.
+          </Localized>
         }
       </div>
     )

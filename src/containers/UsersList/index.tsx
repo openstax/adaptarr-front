@@ -3,7 +3,6 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import i18n from 'src/i18n'
 import sortArrayByName from 'src/helpers/sortArrayByName'
 import { User } from 'src/api'
 
@@ -61,10 +60,10 @@ class UsersList extends React.Component<Props> {
       const modulesMap = this.props.modules.modulesMap
       const modId = this.props.mod ? this.props.mod.id : null
       const mod = modId ? modulesMap.get(modId) : null
-      
+
       return (
-        <li 
-          key={user.id} 
+        <li
+          key={user.id}
           className="usersList__item"
         >
           <span onClick={() => this.props.onUserClick(user, 'assign')}>
@@ -97,8 +96,8 @@ class UsersList extends React.Component<Props> {
           teamMap.size > 6 ?
             <div className="usersList">
               <Input
+                l10nId="user-profile-team-list-search"
                 onChange={this.handleFilterInput}
-                placeholder={i18n.t("UsersList.placeholderSearch") as string}
               />
             </div>
           : null

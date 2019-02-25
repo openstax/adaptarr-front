@@ -1,21 +1,14 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Block, Editor, Value } from 'slate'
-
-import i18n from 'src/i18n'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
 
-type ListStyle = { value: string, label: string }
-
-const LIST_STYLES: ListStyle[] = [
-  { value: 'ol_list', label: i18n.t('Editor.list.style.ol_list') },
-  { value: 'ul_list', label: i18n.t('Editor.list.style.ul_list') },
-]
+const LIST_STYLES: string[] = ['ol_list','ul_list']
 
 export type Props = {
   editor: Editor,
@@ -30,32 +23,37 @@ export default class ListTools extends React.Component<Props> {
     if (list === null) return null
 
     return (
-      <ToolGroup title="Editor.list.groupTitle">
+      <ToolGroup title="editor-tools-list-title">
         <Select
           className="toolbox__select"
-          value={{ value: list.type, label: i18n.t(`Editor.list.style.${list.type}`) as string }}
+          value={list.type}
           onChange={this.changeListStyle}
           options={LIST_STYLES}
+          formatOptionLabel={OptionLabel}
         />
         <Button
           clickHandler={this.decreaseItemDepth}
           className="toolbox__button--insert"
         >
           <Icon name="outdent" />
-          <Trans i18nKey="Editor.list.decreaseLevel" />
+          <Localized id="editor-tools-list-decrease-level">
+            Decrease item level
+          </Localized>
         </Button>
         <Button
           clickHandler={this.increaseItemDepth}
           className="toolbox__button--insert"
         >
           <Icon name="indent" />
-          <Trans i18nKey="Editor.list.increaseLevel" />
+          <Localized id="editor-tools-list-increase-level">
+            Increase item level
+          </Localized>
         </Button>
       </ToolGroup>
     )
   }
 
-  private changeListStyle = ({ value }: ListStyle) => {
+  private changeListStyle = (value: string) => {
     this.props.editor.changeListType(value)
   }
 
@@ -68,4 +66,8 @@ export default class ListTools extends React.Component<Props> {
     this.props.editor.increaseItemDepth()
     this.props.editor.focus()
   }
+}
+
+function OptionLabel(style: string) {
+  return <Localized id="editor-tools-list-style" $style={style} />
 }

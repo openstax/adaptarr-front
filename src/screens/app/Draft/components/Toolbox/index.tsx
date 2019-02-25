@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
@@ -24,7 +25,9 @@ export default function Toolbox({ editor, value }: Props) {
   if (!selection.isSet) {
     return (
       <div className="toolbox">
-        No selection
+        <Localized id="editor-toolbox-no-selection">
+          No selection
+        </Localized>
       </div>
     )
   }
@@ -32,7 +35,9 @@ export default function Toolbox({ editor, value }: Props) {
   if (selection.start.key !== selection.end.key) {
     return (
       <div className="toolbox">
-        Selection across elements is not yet supported.
+        <Localized id="editor-toolbox-mulit-selection">
+          Selection across elements is not yet supported.
+        </Localized>
       </div>
     )
   }

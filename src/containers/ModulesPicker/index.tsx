@@ -3,10 +3,9 @@ import './index.css'
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import i18n from 'src/i18n'
 import * as api from 'src/api'
 import getCurrentLng from 'src/helpers/getCurrentLng'
 
@@ -27,7 +26,7 @@ type Props = {
   onModuleClick: (mod: api.Module) => any
   addModuleToMap: (mod: api.Module) => any
   removeModuleFromMap: (id: string) => any
-  addAlert: (kind: RequestInfoKind, message: string) => void
+  addAlert: (kind: RequestInfoKind, message: string, args?: object) => void
 }
 
 type SelectOption = { value: string, label: string }
@@ -84,14 +83,14 @@ class ModuleList extends React.Component<Props> {
 
   private addNewModule = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const { moduleTitleValue: title, files, moduleLanguage: lang } = this.state
 
     ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title, lang.value))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
-        this.props.addAlert('success', i18n.t("ModulesList.moduleAddSuccess", {title: this.state.moduleTitleValue}))
+        this.props.addAlert('success', 'module-list-add-module-alert-success', {title: this.state.moduleTitleValue})
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
@@ -122,7 +121,7 @@ class ModuleList extends React.Component<Props> {
     mod.delete()
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
-        this.props.addAlert('success', i18n.t("ModulesList.moduleRemoveSuccess", {title: mod.title}))
+        this.props.addAlert('success', 'module-list-delete-module-alert-success', {title: mod.title})
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
@@ -144,14 +143,14 @@ class ModuleList extends React.Component<Props> {
         {
           showRemoveModule ?
             <Dialog
-              i18nKey="ModulesList.deleteModuleDialog"
+              title="module-list-delete-module-title"
               onClose={this.closeRemoveModuleDialog}
             >
               <Button color="green" clickHandler={this.removeModule}>
-                <Trans i18nKey="Buttons.delete"/>
+                <Localized id="module-list-delete-module-confirm" />
               </Button>
               <Button color="red" clickHandler={this.closeRemoveModuleDialog}>
-                <Trans i18nKey="Buttons.cancel"/>
+                <Localized id="module-list-delete-module-cancel" />
               </Button>
             </Dialog>
           : null
@@ -161,7 +160,7 @@ class ModuleList extends React.Component<Props> {
             <form onSubmit={this.addNewModule}>
               <div className="modulesList__top-bar">
                 <Input
-                  placeholder={i18n.t("ModulesList.placeholderTitle") as string}
+                  l10nId="module-list-add-module-title"
                   value={moduleTitleValue}
                   onChange={this.updateModuleTitleValue}
                   validation={{minLength: 3}}
@@ -172,11 +171,13 @@ class ModuleList extends React.Component<Props> {
                   options={LANGUAGES}
                   onChange={this.updateModuleLanguage}
                 />
-                <input
-                  type="submit"
-                  value={i18n.t('Buttons.addNew') as string}
-                  disabled={moduleTitleValue.length < 3 || !moduleLanguage}
-                />
+                <Localized id="module-list-add-module-submit" attrs={{ value: true }}>
+                  <input
+                    type="submit"
+                    value="Add new"
+                    disabled={moduleTitleValue.length < 3 || !moduleLanguage}
+                  />
+                </Localized>
               </div>
               <FilesUploader
                 onFilesChange={this.onFilesChange}
@@ -188,8 +189,8 @@ class ModuleList extends React.Component<Props> {
         </AdminUI>
         <div className="modulesList__filter">
           <Input
+            l10nId="module-list-search-box"
             onChange={this.handleFilterInput}
-            placeholder={i18n.t("ModulesList.placeholderSearch") as string}
           />
         </div>
         <ModulesList

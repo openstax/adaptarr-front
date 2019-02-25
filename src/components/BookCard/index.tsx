@@ -3,9 +3,8 @@ import './index.css'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import * as api from 'src/api'
 
 import AdminUI from 'src/components/AdminUI'
@@ -60,7 +59,7 @@ class BookCard extends React.Component<Props> {
     this.props.book.delete()
       .then(() => {
         this.props.fetchBooksMap()
-        this.props.addAlert('success', i18n.t("Book.deleteSuccess"))
+        this.props.addAlert('success', 'book-delete-alert-success')
       })
       .catch((e) => {
         this.props.addAlert('error', e.message)
@@ -91,20 +90,20 @@ class BookCard extends React.Component<Props> {
         {
           showConfirmationDialog ?
             <Dialog
-              title={i18n.t("Book.confirmDelete", {bookTitle: book.title}) as string}
+              title="book-delete-title"
               onClose={() => this.setState({ showConfirmationDialog: false })}
             >
               <Button 
                 color="green" 
                 clickHandler={this.removeBookPermamently}
               >
-                <Trans i18nKey="Buttons.confirm"/>
+                <Localized id="book-delete-confirm">Confirm</Localized>
               </Button>
               <Button 
                 color="red" 
                 clickHandler={() => this.setState({ showConfirmationDialog: false })}
               >
-                <Trans i18nKey="Buttons.cancel"/>
+                <Localized id="book-delete-cancel">Cancel</Localized>
               </Button>
             </Dialog>
           : null

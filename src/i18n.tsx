@@ -1,29 +1,60 @@
+import * as React from 'react'
 import { negotiateLanguages } from 'fluent-langneg/compat';
 import { FluentBundle } from 'fluent/compat';
+import { LocalizationProvider } from 'fluent-react/compat';
+import { connect } from 'react-redux'
 
-// XXX: Temporarily until we implement loading resources.
-const MESSAGES_ALL = {
-  'fr': 'hello = Salut le monde !',
-  'en-US': 'hello = Hello, world!',
-  'pl': 'hello = Witaj świecie!'
-};
+import store from 'src/store'
+import { State } from 'src/store/reducers'
+import { setAvailableLocales } from 'src/store/actions/app'
 
-export function* generateBundles(userLocales: ReadonlyArray<string>) {
-  // Choose locales that are best for the user.
-  const currentLocales = negotiateLanguages(
-    userLocales,
-    ['fr', 'en-US', 'pl'],
-    { defaultLocale: 'en-US' }
-  );
+import Load from 'src/components/Load'
 
-  for (const locale of currentLocales) {
-    const bundle = new FluentBundle(locale);
-    bundle.addMessages(MESSAGES_ALL[locale]);
-    yield bundle;
+export const MANIFEST = fetch('/locale/manifest.json')
+  .then(rsp => rsp.json())
+  .then(manifest => {
+    console.log('locale manifest:', manifest)
+    store.dispatch(setAvailableLocales(manifest.available.application))
+    return manifest
+  })
+
+const mapStateToProps = ({ app }: State) => ({ locale: app.locale })
+
+async function loader(
+  { locale }: { locale: string[] },
+): Promise<{ bundles: FluentBundle[] }> {
+  const manifest = await MANIFEST
+
+  const languages = negotiateLanguages(
+    locale,
+    manifest.available.application,
+    { defaultLocale: manifest.default },
+  )
+
+  console.log('negotiated languages:', languages)
+
+  const bundles = await Promise.all(languages.map(async language => {
+    const rsp = await fetch(`/locale/${language}/ui.ftl`)
+    const bundle = new FluentBundle(language)
+    bundle.addMessages(await rsp.text())
+    return bundle
+  }))
+
+  return { bundles }
+}
+
+type Props = {
+  bundles: FluentBundle[],
+}
+
+class LocalizationLoader extends React.Component<Props> {
+  render() {
+    const { bundles, children } = this.props
+
+    return <LocalizationProvider bundles={bundles.values()}>
+      {children}
+    </LocalizationProvider>
   }
 }
 
-// XXX: Temporarily for type checking while we remove the rest of i18next.
-export default {
-  t(...args: any[]) { return 'TEST' },
-}
+export default connect(mapStateToProps)(Load(loader, ['locale'])<{}>(LocalizationLoader))

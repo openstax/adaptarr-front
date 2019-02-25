@@ -5,7 +5,7 @@ import Header from 'src/components/Header'
 const resources = (props: any) => {
   return (
     <section className="section--wrapper">
-      <Header i18nKey="Resources.title" />
+      <Header l10nId="resources-view-title" title="Resources" />
       <div className="section__content">
         Resources
       </div>

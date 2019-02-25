@@ -3,7 +3,6 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import * as api from 'src/api'
@@ -83,7 +82,7 @@ class Conversation extends React.Component<Props> {
         if (checkUsr && checkUsr.name.replace(' ', '') === username) {
           return `<a class="mention" href="/users/${id}" target="_blank">@${decodeHtmlEntity(username)}</a>`
         }
-        return i18n.t("Unknow.mention")
+        return '[Unknown mention]'
       }
       return el
     })

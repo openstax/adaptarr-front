@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import * as fromApp from './app'
 import * as fromUser from './User'
 import * as fromTeam from './Team'
 import * as fromNotifications from './Notifications'
@@ -13,6 +14,7 @@ import * as fromConvcersations from './Conversations'
  * It contains every substate of the app
  */
 export interface State {
+  app: fromApp.State
   user: fromUser.State
   team: fromTeam.State
   notifications: fromNotifications.State
@@ -26,6 +28,7 @@ export interface State {
  * initialState of the app
  */
 export const initialState: State = {
+  app: fromApp.initialState,
   user: fromUser.initialState,
   team: fromTeam.initialState,
   notifications: fromNotifications.initialState,
@@ -40,6 +43,7 @@ export const initialState: State = {
  * Returned reducer will be of type Reducer<State>
  */
 export const reducer = combineReducers<State>({
+  app: fromApp.reducer,
   user: fromUser.reducer,
   team: fromTeam.reducer,
   notifications: fromNotifications.reducer,
