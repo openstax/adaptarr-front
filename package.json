@@ -80,6 +80,7 @@
     "@types/react-dom": "^16.0.11",
     "@types/slate": "^0.43.8",
     "@types/slate-react": "^0.20.3",
+    "fluent-syntax": "^0.10.0",
     "typescript": "^3.2.1"
   },
   "jest": {
