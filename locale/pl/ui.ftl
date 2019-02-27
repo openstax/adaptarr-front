@@ -628,6 +628,12 @@ editor-tools-admonition-type = { $type ->
 
 
 
+## Editor toolboxes - document settings
+
+editor-tools-document-title = Dokument
+
+
+
 ## Editor toolboxes - exercises
 
 editor-tools-exercise-title = Ćwiczenie
@@ -727,6 +733,22 @@ editor-tools-xref-title = Odnośnik
 editor-tools-xref-case = Wybież przypadek
 
 editor-tools-xref-change = Wybież cel
+
+editor-tools-xref-hover-tooltip = Kliknij z wciśniętym klawiszem control aby
+  przejść do elementu docelowego
+
+# Text to display when target of a local (in document) reference doesn't exist.
+editor-tools-xref-label-local-reference-missing =
+  (element docelowy nie istnieje)
+
+# Text to display while remote (outside of a document) references have not been
+# loaded yet.
+editor-tools-xref-label-remote-loading = (ładowanie danych)
+
+# Text to display when target of a remote (outside of a document) reference
+# doesn't exist.
+editor-tools-xref-label-remote-reference-missing =
+  (element docelowy nie istnieje)
 
 # Entry on the list of possible grammatical cases.
 #

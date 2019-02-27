@@ -1,4 +1,7 @@
 {
   "default": "en",
-  "available": ["en", "pl"]
+  "available": {
+    "application": ["en", "pl"],
+    "document": ["en", "pl"]
+  }
 }

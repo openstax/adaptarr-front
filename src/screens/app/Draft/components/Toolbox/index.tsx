@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
+import DocumentTools from '../DocumentTools'
 import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
@@ -56,6 +57,7 @@ export default function Toolbox({ editor, value }: Props) {
       <FigureTools editor={editor} value={value} />
       <ListTools editor={editor} value={value} />
       <XrefTools editor={editor} value={value} />
+      <DocumentTools editor={editor} value={value} />
     </div>
   )
 }
