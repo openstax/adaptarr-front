@@ -1,5 +1,7 @@
 import { Notification } from 'src/api'
 
+import validateL20nArgs from 'src/helpers/validateL20nArgs'
+
 import { PUSH_ALERT, REMOVE_ALERT } from 'src/store/constants'
 import { Alert, RequestInfoKind } from 'src/store/types'
 import { pushNotificationToStore, PushNotificationToStore } from './Notifications'
@@ -32,7 +34,7 @@ export const addAlert = (kind: RequestInfoKind, message: string, args: object = 
       data: {
         kind,
         message,
-        arguments: args,
+        arguments: validateL20nArgs(args),
       },
     }
 
