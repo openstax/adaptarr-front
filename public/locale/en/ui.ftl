@@ -225,6 +225,8 @@ dashboard-assigned-view-draft = View draft
 
 dashboard-assigned-new-draft = New draft
 
+dashboard-assigned-view-module = View module
+
 dashboard-assigned-empty = You are not assigned to any module.
 
 dashboard-assigned-section-not-assigned = Not assigned to any book

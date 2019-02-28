@@ -122,8 +122,8 @@ class AssignedToMe extends React.Component<Props> {
                                       <Button 
                                         to={`/modules/${mod.id}`}
                                       >
-                                        <Localized id="dashboard-assigned-view-draft">
-                                          View draft
+                                        <Localized id="dashboard-assigned-view-module">
+                                          View module
                                         </Localized>
                                       </Button>
                                     :

@@ -226,6 +226,8 @@ dashboard-assigned-view-draft = Zobacz szkic
 
 dashboard-assigned-new-draft = Nowy szkic
 
+dashboard-assigned-view-module = Zobacz moduł
+
 dashboard-assigned-empty = Żaden moduł nie jest do Ciebie przypisany.
 
 dashboard-assigned-section-not-assigned = Nie przypisano do żadnej książki
