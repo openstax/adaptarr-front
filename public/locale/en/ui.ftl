@@ -248,7 +248,7 @@ dashboard-create-draft-alert-success = Draft was created successfully.
 
 ## Screens - dashboard - draft deletion dialog
 
-dashboard-delete-draft-dialog-title = Are you sure you want to delete this draft?
+dashboard-delete-draft-dialog-title = Are you sure you want to delete { $title } draft?
 
 dashboard-delete-draft-confirm = Delete
 

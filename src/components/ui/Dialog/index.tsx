@@ -3,17 +3,20 @@ import './index.css'
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import validateL20nArgs from 'src/helpers/validateL20nArgs'
+
 import Icon from 'src/components/ui/Icon'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
   title?: string
+  l20nArgs?: object
   className?: string
   onClose: () => void
   children: React.ReactNode
 }
 
-const dialog = ({ size, title, className, onClose, children }: Props) => {
+const dialog = ({ size, title, l20nArgs = {}, className, onClose, children }: Props) => {
   const clickOnOverlay = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement
     if (/dialog__container/.test(element.className)) onClose()
@@ -29,7 +32,7 @@ const dialog = ({ size, title, className, onClose, children }: Props) => {
           <Icon name="close" />
         </span>
         <h2 className="dialog__title">
-          { title && <Localized id={title} /> }
+          { title && <Localized id={title} {...validateL20nArgs(l20nArgs)} /> }
         </h2>
         {children}
       </div>

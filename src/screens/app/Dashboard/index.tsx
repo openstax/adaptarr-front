@@ -117,7 +117,7 @@ class Dashboard extends React.Component<Props> {
   }
 
   public render() {
-    const { drafts, isLoading } = this.state
+    const { drafts, isLoading, targetDraft } = this.state
 
     return (
       <Section>
@@ -126,6 +126,7 @@ class Dashboard extends React.Component<Props> {
           this.state.showDeleteDraftDialog ?
             <Dialog
               title="dashboard-delete-draft-dialog-title"
+              l20nArgs={{ title: targetDraft!.title }}
               onClose={this.closeDeleteDraftDialog}
             >
               <Button color="red" clickHandler={this.deleteDraft}>

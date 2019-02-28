@@ -249,7 +249,7 @@ dashboard-create-draft-alert-success = Szkic został utworzony.
 
 ## Screens - dashboard - draft deletion dialog
 
-dashboard-delete-draft-dialog-title = Jesteś pewien, że chcesz usunąć ten szkic?
+dashboard-delete-draft-dialog-title = Jesteś pewien, że chcesz usunąć szkic { $title }?
 
 dashboard-delete-draft-confirm = Usuń
 
