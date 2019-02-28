@@ -70,6 +70,8 @@ declare module 'cnx-designer' {
   export interface EditorAug {
     // Commands
     insertSection(): EditorAug
+    decreaseSectionDepth(): EditorAug
+    increaseSectionDepth(): EditorAug
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug
     insertSolution(): EditorAug
@@ -92,8 +94,6 @@ declare module 'cnx-designer' {
     isVoid(node: Node): boolean
 
     // From slate-edit-list
-    decreaseSectionDepth(): EditorAug
-    increaseSectionDepth(): EditorAug
     decreaseItemDepth(): EditorAug
     increaseItemDepth(): EditorAug
     splitListItem(): EditorAug
