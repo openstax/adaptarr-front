@@ -80,12 +80,14 @@ declare module 'cnx-designer' {
     changeListType(type: string): EditorAug
     insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
+    insertCode(): EditorAug
 
     // Queries
     getActiveAdmonition(value: Value): Block | null
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
+    getActiveCode(value: Value): Block | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean

@@ -12,10 +12,10 @@ export type Props = {
   value: Value,
 }
 
-type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript'
+type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code'
 type BlockType = { value: string, label: string }
 
-const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code']
 
 /**
  * Types of paragraph-like block that user can switch between.
@@ -35,7 +35,7 @@ export default class FormatTools extends React.Component<Props> {
     const { editor, value } = this.props
     const { startBlock } = value
 
-    if (editor.isVoid(startBlock)) {
+    if (editor.isVoid(startBlock) || editor.getActiveCode(value)) {
       return null
     }
 

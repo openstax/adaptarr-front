@@ -78,6 +78,18 @@
   font-style: italic;
 }
 
+.editor pre {
+  overflow: auto;
+}
+
+.editor pre, .editor code {
+  font-family: courier, monospace;
+  color: #222;
+  padding: 0 3px;
+  border-radius: 3px;
+  background-color: #e3e3e3;
+}
+
 .editor figure {
   margin: 0;
   padding-left: 48q;

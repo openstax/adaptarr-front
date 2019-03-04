@@ -53,6 +53,10 @@ export default class InsertTools extends React.Component<Props> {
           <Icon name="image" />
           <Trans i18nKey="Editor.insert.figure" />
         </Button>
+        <Button clickHandler={this.insertCode} className="toolbox__button--insert">
+          <Icon name="code" />
+          Insert code
+        </Button>
         <Modal
           ref={this.setFigureModal}
           content={this.renderFigureModal}
@@ -108,5 +112,9 @@ export default class InsertTools extends React.Component<Props> {
   private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
     this.xrefModal!.close()
     this.props.editor.insertXref(target.id, source ? source.id : undefined)
+  }
+
+  private insertCode = () => {
+    this.props.editor.insertCode()
   }
 }
