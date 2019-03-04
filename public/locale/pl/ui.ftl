@@ -68,7 +68,7 @@ book-assign-user-title = Wybierz użytkownika z listy, aby go przypisać.
 # - $module (string): module's title
 book-assign-user-alert-success = { $user } został/a przypisany do { $module }.
 
-book-assign-user-alert-error = Błędyn użytkownik lub moduł.
+book-assign-user-alert-error = Błędny użytkownik lub moduł.
 
 # Alert displayed when a user was unassigned from a module.
 #
@@ -212,7 +212,7 @@ book-list-add-book-confirm =
   .value = Potwierdź
 
 # Alert displayed when a book was created.
-book-list-add-book-alert-success = Książka zotała dodana.
+book-list-add-book-alert-success = Książka została dodana.
 
 
 
@@ -732,9 +732,9 @@ editor-tools-list-style = { $style ->
 
 editor-tools-xref-title = Odnośnik
 
-editor-tools-xref-case = Wybież przypadek
+editor-tools-xref-case = Wybierz przypadek
 
-editor-tools-xref-change = Wybież cel
+editor-tools-xref-change = Wybierz cel
 
 editor-tools-xref-hover-tooltip = Kliknij z wciśniętym klawiszem control aby
   przejść do elementu docelowego
