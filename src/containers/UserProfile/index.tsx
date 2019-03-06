@@ -100,12 +100,14 @@ class UserProfile extends React.Component<Props> {
 
   private showDialogWithAction = () => {
     const { updateAction, nameInput/*, bioInput, emailInput*/ } = this.state
-    let title = ''
+    let l10nId
+    let placeholder
     let body
 
     switch (updateAction){
       case 'avatar':
-        title = 'user-profile-update-avatar-title'
+        l10nId = 'user-profile-update-avatar-title'
+        placeholder = 'Upload file for your avatar.'
         body = (
           <FilesUploader
             onFilesChange={this.onFilesChange}
@@ -116,7 +118,8 @@ class UserProfile extends React.Component<Props> {
         )
         break
       case 'name':
-        title = 'user-profile-update-name-title'
+        l10nId = 'user-profile-update-name-title'
+        placeholder = 'Update your name.'
         body = (
           <Input
             value={nameInput}
@@ -148,12 +151,15 @@ class UserProfile extends React.Component<Props> {
           />
         )
         break*/
+
+      default:
+        throw new Error('Bad update action: ' + updateAction)
     }
 
     return (
       <Dialog
-        l10nId={title}
-        placeholder={title}
+        l10nId={l10nId}
+        placeholder={placeholder}
         onClose={this.closeDialog}
       >
         <div className="profile__update-dialog">
