@@ -200,7 +200,8 @@ class Group extends React.Component<Props> {
         {
           showEditGroup ?
             <Dialog
-              title="book-group-change-title-dialog-title"
+              l10nId="book-group-change-title-dialog-title"
+              placeholder="Change chapter title."
               size="medium"
               onClose={this.closeEditGroupDialog}
             >
@@ -234,7 +235,8 @@ class Group extends React.Component<Props> {
         {
           showAddGroup ?
             <Dialog
-              title="book-add-group-dialog-title"
+              l10nId="book-add-group-dialog-title"
+              placeholder="Provide chapter title."
               size="medium"
               onClose={this.closeAddGroupDialog}
             >
@@ -265,7 +267,8 @@ class Group extends React.Component<Props> {
         {
           showRemoveGroup ?
             <Dialog
-              title="book-remove-group-dialog-title"
+              l10nId="book-remove-group-dialog-title"
+              placeholder="Remove this group and all its contents?"
               size="medium"
               onClose={this.closeRemoveGroupDialog}
             >
@@ -287,7 +290,8 @@ class Group extends React.Component<Props> {
         {
           showAddModule ?
             <Dialog
-              title="book-group-add-module-dialog-title"
+              l10nId="book-group-add-module-dialog-title"
+              placeholder="Select module or create a new one."
               size="medium"
               onClose={this.closeAddModuleDialog}
             >

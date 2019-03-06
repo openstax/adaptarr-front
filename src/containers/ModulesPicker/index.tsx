@@ -143,7 +143,8 @@ class ModuleList extends React.Component<Props> {
         {
           showRemoveModule ?
             <Dialog
-              title="module-list-delete-module-title"
+              l10nId="module-list-delete-module-title"
+              placeholder="Deleting module is permanent."
               onClose={this.closeRemoveModuleDialog}
             >
               <Button color="green" clickHandler={this.removeModule}>

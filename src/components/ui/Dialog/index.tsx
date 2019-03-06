@@ -9,14 +9,15 @@ import Icon from 'src/components/ui/Icon'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  title?: string
-  l20nArgs?: object
+  l10nId: string
+  placeholder?: string
   className?: string
   onClose: () => void
   children: React.ReactNode
+  [localizationProps: string]: any
 }
 
-const dialog = ({ size, title, l20nArgs = {}, className, onClose, children }: Props) => {
+const dialog = ({ size, l10nId, placeholder = "...", className, onClose, children, ...args }: Props) => {
   const clickOnOverlay = (e: React.MouseEvent<HTMLElement>) => {
     const element = e.target as HTMLElement
     if (/dialog__container/.test(element.className)) onClose()
@@ -32,7 +33,9 @@ const dialog = ({ size, title, l20nArgs = {}, className, onClose, children }: Pr
           <Icon name="close" />
         </span>
         <h2 className="dialog__title">
-          { title && <Localized id={title} {...validateL20nArgs(l20nArgs)} /> }
+          <Localized id={l10nId} {...args}>
+            {placeholder}
+          </Localized>
         </h2>
         {children}
       </div>

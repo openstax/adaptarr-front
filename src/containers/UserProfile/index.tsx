@@ -100,7 +100,7 @@ class UserProfile extends React.Component<Props> {
 
   private showDialogWithAction = () => {
     const { updateAction, nameInput/*, bioInput, emailInput*/ } = this.state
-    let title
+    let title = ''
     let body
 
     switch (updateAction){
@@ -151,7 +151,11 @@ class UserProfile extends React.Component<Props> {
     }
 
     return (
-      <Dialog title={title} onClose={this.closeDialog}>
+      <Dialog
+        l10nId={title}
+        placeholder={title}
+        onClose={this.closeDialog}
+      >
         <div className="profile__update-dialog">
           {body}
           <Button clickHandler={this.confirmUpdateAction}>

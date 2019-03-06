@@ -90,8 +90,9 @@ class BookCard extends React.Component<Props> {
         {
           showConfirmationDialog ?
             <Dialog
-              title="book-delete-title"
-              l20nArgs={{ title: book.title }}
+              l10nId="book-delete-title"
+              placeholder="Are you sure you want to delete this book?"
+              $title={book.title}
               onClose={() => this.setState({ showConfirmationDialog: false })}
             >
               <Button 

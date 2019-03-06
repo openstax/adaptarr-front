@@ -122,7 +122,8 @@ class Books extends React.Component<Props> {
         {
           showAddBook ?
             <Dialog
-              title="book-list-add-book-dialog-title"
+              l10nId="book-list-add-book-dialog-title"
+              placeholder="Add new book"
               size="medium"
               onClose={this.closeAddBookDialog}
             >

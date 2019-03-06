@@ -125,8 +125,9 @@ class Dashboard extends React.Component<Props> {
         {
           this.state.showDeleteDraftDialog ?
             <Dialog
-              title="dashboard-delete-draft-dialog-title"
-              l20nArgs={{ title: targetDraft!.title }}
+              l10nId="dashboard-delete-draft-dialog-title"
+              placeholder="Are you sure you want to delete this draft?"
+              $title={targetDraft!.title}
               onClose={this.closeDeleteDraftDialog}
             >
               <Button color="red" clickHandler={this.deleteDraft}>

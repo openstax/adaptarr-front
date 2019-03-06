@@ -76,7 +76,8 @@ class EditBook extends React.Component<Props> {
     return (
       <React.Fragment>
         <Dialog
-          title="book-edit-dialog-title"
+          l10nId="book-edit-dialog-title"
+          placeholder="Edit book"
           size="medium"
           onClose={() => this.props.onClose()}
         >

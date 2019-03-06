@@ -130,7 +130,8 @@ class Settings extends React.Component<Props> {
         {
           showChangeLanguage ?
             <Dialog
-              title="settings-language-dialog-title"
+              l10nId="settings-language-dialog-title"
+              placeholder="Are you sure you want to change language?"
               onClose={this.closeChangeLanguage}
             >
               <Button

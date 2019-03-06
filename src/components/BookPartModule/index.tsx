@@ -134,7 +134,8 @@ class Module extends React.Component<Props> {
         {
           showRemoveModule ?
             <Dialog
-              title="book-remove-module-title"
+              l10nId="book-remove-module-title"
+              placeholder="Are you sure?"
               size="medium"
               onClose={this.closeAssignUserDialog}
             >
@@ -160,7 +161,8 @@ class Module extends React.Component<Props> {
         {
           showAssignUser ?
             <Dialog
-              title="book-assign-user-title"
+              l10nId="book-assign-user-title"
+              placeholder="Select user from a list to assign them."
               size="medium"
               onClose={this.closeAssignUserDialog}
             >
