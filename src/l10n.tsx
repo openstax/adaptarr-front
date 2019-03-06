@@ -13,7 +13,6 @@ import Load from 'src/components/Load'
 export const MANIFEST = fetch('/locale/manifest.json')
   .then(rsp => rsp.json())
   .then(manifest => {
-    console.log('locale manifest:', manifest)
     store.dispatch(setAvailableLocales(manifest.available.application))
     return manifest
   })
@@ -30,8 +29,6 @@ async function loader(
     manifest.available.application,
     { defaultLocale: manifest.default },
   )
-
-  console.log('negotiated languages:', languages)
 
   const bundles = await Promise.all(languages.map(async language => {
     const rsp = await fetch(`/locale/${language}/ui.ftl`)

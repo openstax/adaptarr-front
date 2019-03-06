@@ -4,7 +4,7 @@ import { FluentBundle } from 'fluent/compat'
 import { negotiateLanguages } from 'fluent-langneg/compat';
 import { LocalizationProvider, ReactLocalization } from 'fluent-react/compat'
 
-import { MANIFEST } from 'src/i18n'
+import { MANIFEST } from 'src/l10n'
 
 import Load from 'src/components/Load'
 

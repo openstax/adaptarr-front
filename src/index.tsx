@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 
-import LocalizationProvider from 'src/i18n'
+import LocalizationProvider from 'src/l10n'
 
 import App from 'src/App'
 import registerServiceWorker from 'src/registerServiceWorker'
