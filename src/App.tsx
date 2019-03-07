@@ -148,7 +148,8 @@ class App extends React.Component<Props> {
                                     <Icon name="close"/>
                                   </span>
                                   <Notification
-                                    notification={(alert.data as api.Notification)}/>
+                                    notification={alert.data}
+                                  />
                                 </li>
                               )
                           }

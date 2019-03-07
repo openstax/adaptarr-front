@@ -35,7 +35,7 @@ const mapStateToProps = ({ team, modules }: State) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: ChangeNotificationStatus) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     changeNotificationStatus: (noti: Notification, status: NotificationStatus) => dispatch(changeNotificationStatus(noti, status))
   }

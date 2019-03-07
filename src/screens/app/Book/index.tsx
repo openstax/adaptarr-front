@@ -154,12 +154,46 @@ class Book extends React.Component<Props> {
   }
 
   private handlePositionChange = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
-
     const targetParent = this.findParentWithinItems(newItems, realPathTo)
     const targetPosition = {
       parent: targetParent.number,
       index: realPathTo[realPathTo.length - 1]
     }
+
+    if (!(changedItem instanceof api.BookPart)) {
+      // While processing data trough react-nestable, instances are lost,
+      // so we have to recreate it
+      // TODO: Adjust / rewrite react-nestable to handle instances properly
+
+      const getPartData = (item: any): PartData | undefined => {
+        let data: PartData
+        if (item.kind === 'module') {
+          data = {
+            kind: 'module',
+            number: item.number,
+            title: item.title,
+            id: item.id,
+          }
+        } else if (item.kind === 'group') {
+          data = {
+            kind: 'group',
+            number: item.number,
+            title: item.title,
+            parts: item.parts.map((p: any) => getPartData(p)),
+          }
+        } else {
+          return undefined
+        }
+
+        return data
+      }
+
+      const data = getPartData(changedItem)
+      if (!data) return
+
+      changedItem = new api.BookPart(data, this.state.book!)
+    }
+
     changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
