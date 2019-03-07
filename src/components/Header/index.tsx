@@ -1,27 +1,25 @@
 import './index.css'
 
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 type Props = {
-  i18nKey?: string
-  title?: string
+  l10nId: string
+  title: string
   children?: any
   fixed?: boolean
+  [localizationProps: string]: any
 }
 
-const header = (props: Props) => {
+const header = ({ l10nId, title, children, fixed, ...args }: Props) => {
   return (
-    <div className={`header ${props.fixed ? 'fixed' : ''}`}>
+    <div className={`header ${fixed ? 'fixed' : ''}`}>
       <h2 className="header__title">
-        {
-          props.i18nKey ?
-            <Trans i18nKey={props.i18nKey}/>
-          :
-            props.title
-        }
+        <Localized id={l10nId} $title={title} {...args}>
+          {title}
+        </Localized>
       </h2>
-      {props.children}
+      {children}
     </div>
   )
 }

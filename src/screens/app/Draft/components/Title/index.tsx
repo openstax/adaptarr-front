@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import i18n from 'src/i18n'
 import Draft from 'src/api/draft'
 
 import { addAlert } from 'src/store/actions/Alerts'
@@ -18,19 +17,19 @@ class Title extends React.Component<Props> {
   } = {
     titleInput: '',
   }
-  
+
   private updateTitleInput = (val: string) => {
     this.setState({ titleInput: val })
   }
 
   private changeTitle = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     try {
       await this.props.draft.updateTitle(this.state.titleInput)
-      store.dispatch(addAlert('success', i18n.t('Draft.title.save.success')))
+      store.dispatch(addAlert('success', 'editor-document-title-alert-save-success'))
     } catch (e) {
-      store.dispatch(addAlert('error', i18n.t('Draft.title.save.error')))
+      store.dispatch(addAlert('error', 'editor-document-title-alert-save-error'))
       console.error(e)
     }
   }
@@ -52,8 +51,8 @@ class Title extends React.Component<Props> {
       <form onSubmit={this.changeTitle}>
         <span className="draft__title">
           <Input
+            l10nId="editor-document-title-value"
             value={titleInput}
-            placeholder={i18n.t('Draft.title.placeholder') as string}
             onChange={this.updateTitleInput}
           />
         </span>

@@ -1,7 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 
@@ -43,7 +43,7 @@ export default function ReferenceTargets({ module, targets, onSelect }: Props) {
       {Array.from(sorted.entries(), ([type, targets]) => (
         <li key={type} className="targets__category">
           <span className="targets__title">
-            <Trans i18nKey={"ReferenceTargets.category." + type} />
+            <Localized id="reference-targets-category" $type={type}>$type</Localized>
           </span>
           {targets.map(target => (
             <RefTarget

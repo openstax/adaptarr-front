@@ -22,7 +22,7 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.3.1":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.1.tgz#574b03e8e8a9898eaf4a872a92ea20b7846f6f2a"
   dependencies:
@@ -76,13 +76,28 @@
   version "0.8.2"
   resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-0.8.2.tgz#576ff7fb1230185b619a75d258cbc98f0867a8dc"
 
+"@types/fluent-langneg@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@types/fluent-langneg/-/fluent-langneg-0.1.1.tgz#ec7f31c8e759e0206ac7a8367d2c92c913296dc9"
+  integrity sha512-3BX6Q5Rp+FU7ST6k63XJE+COIOC9zXkkaYvLpGpwKEvSjP9DpA6PSDR1oaea2XCoZ0AKNMwCQ7LeRS8nY5oISQ==
+
+"@types/fluent-react@^0.8.0":
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/@types/fluent-react/-/fluent-react-0.8.0.tgz#6a21023162ed134dea81af1be416c4ff3c489e5b"
+  integrity sha512-PhPM8ZWaQAnh7gUMUV5uXr02whpAtqptjRq6rStoVIvSsc4fl+SIvzKv6CU68QQz6Z5oVGeyVmv1DyMAMYzrGg==
+  dependencies:
+    "@types/fluent" "*"
+    "@types/react" "*"
+    csstype "^2.2.0"
+
+"@types/fluent@*", "@types/fluent@^0.10.0":
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/@types/fluent/-/fluent-0.10.0.tgz#97c6c07dcc18a9aa03b3dee0c1f5f913a7b6a471"
+  integrity sha512-GGXfY/epRlxKbqY2xi6aOzkjvaX0+odA4KseH9e41vOAkri9TQHVXfMKR3g6ZbZnYkMt90buHhOa+Mocdg3IMA==
+
 "@types/history@*":
   version "4.7.2"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.2.tgz#0e670ea254d559241b6eeb3894f8754991e73220"
-
-"@types/i18next@^12.1.0":
-  version "12.1.0"
-  resolved "https://registry.yarnpkg.com/@types/i18next/-/i18next-12.1.0.tgz#7c3fd3dbe03f9531147033773bbd0ca4f474a180"
 
 "@types/jest@^23.3.10":
   version "23.3.14"
@@ -109,12 +124,6 @@
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-16.8.2.tgz#9bd7d33f908b243ff0692846ef36c81d4941ad12"
   dependencies:
     "@types/react" "*"
-
-"@types/react-i18next@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@types/react-i18next/-/react-i18next-8.1.0.tgz#5faacbfe7dc0f24729c1df6914610bfe861a50de"
-  dependencies:
-    react-i18next "*"
 
 "@types/react-portal@^4.0.1":
   version "4.0.2"
@@ -1465,6 +1474,11 @@ cache-base@^1.0.1:
     to-object-path "^0.3.0"
     union-value "^1.0.0"
     unset-value "^1.0.0"
+
+cached-iterable@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/cached-iterable/-/cached-iterable-0.2.1.tgz#723958f5e7adc74c96bedb10b426bdfd95f2fe6d"
+  integrity sha512-8zAVjMjdn/S/QXJaOnqsko0+ZJzXT2Dum2u9TMGg5YR9fxONPrUjuO9VYqnb1AoldXeYVAcNJLgT5Q8WaIJSgA==
 
 caller-callsite@^2.0.0:
   version "2.0.0"
@@ -2958,6 +2972,35 @@ flatten@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/flatten/-/flatten-1.0.2.tgz#dae46a9d78fbe25292258cc1e780a41d95c03782"
 
+fluent-langneg@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/fluent-langneg/-/fluent-langneg-0.1.1.tgz#8a6a95e0c57a1c339aa598cb1ee7e3df0c976adb"
+  integrity sha512-7lCFviLfesnxV4SnwAJh1epnKw97doF1Fmrjx3rAjq1/bbgrmuC43rpL7Qx81keB4Eu+YsjFZ7hCMg2mM25SyA==
+
+fluent-react@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/fluent-react/-/fluent-react-0.8.3.tgz#b3681d07748aa473cfd2b3e50b88006bc15f2956"
+  integrity sha512-uNP+kefHxZ/yAqtg/cQlsruY/K8oiVMbU2E7Tcd+LEaVd5GxKWjv6CvmQNVrAsrWai0VrrVAg5SRVD19vVPHog==
+  dependencies:
+    cached-iterable "^0.2.1"
+    fluent-sequence "^0.2.0"
+    prop-types "^15.6.0"
+
+fluent-sequence@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/fluent-sequence/-/fluent-sequence-0.2.0.tgz#f351d93e0194182de60c6d5dfbdb3c96772813f8"
+  integrity sha512-t8fc4rHvzO9Yk8otP8LkTqWo6mzjdemooQcnHlDrNzrYAnwsSbVFIlthnkzK2pLsRnO9Ybmw4lXOYUx+fAIyJw==
+
+fluent-syntax@^0.10.0:
+  version "0.10.0"
+  resolved "https://registry.yarnpkg.com/fluent-syntax/-/fluent-syntax-0.10.0.tgz#2dfa934752866e5d297b3df763e6d2b0ced04c5d"
+  integrity sha512-6qRhwQXDTgJjS9DW3IiXZWzUMUPqNPzqh+bZZyUOr6t8xYwkIe+5JONYZuvfvbOUk65paAno0kd8s8kUD2ptNA==
+
+fluent@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/fluent/-/fluent-0.11.0.tgz#c6d4bcdb27d70eecb3c891e4f536e6dd94973580"
+  integrity sha512-HISy2vMEpHapwXOxp6Qljo6ObJPMLAI1Sh6RdiQLCdTgRr/0Cl1qPaXAPTvQar2dvDwzJH3oi1qsycCW/R5S/g==
+
 flush-write-stream@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/flush-write-stream/-/flush-write-stream-1.1.1.tgz#8dd7d873a1babc207d94ead0c2e0e44276ebf2e8"
@@ -3420,7 +3463,7 @@ html-parse-stringify2@2.0.1:
   resolved "https://registry.yarnpkg.com/html-parse-stringify2/-/html-parse-stringify2-2.0.1.tgz#dc5670b7292ca158b7bc916c9a6735ac8872834a"
   dependencies:
     void-elements "^2.0.1"
-
+    
 html-webpack-plugin@^2.29.0:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-2.30.1.tgz#7f9c421b7ea91ec460f56527d78df484ee7537d5"
@@ -3488,16 +3531,6 @@ http-signature@~1.2.0:
 https-browserify@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/https-browserify/-/https-browserify-1.0.0.tgz#ec06c10e0a34c0f2faf199f7fd7fc78fffd03c73"
-
-i18next-browser-languagedetector@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/i18next-browser-languagedetector/-/i18next-browser-languagedetector-3.0.1.tgz#a47c43176e8412c91e808afb7c6eb5367649aa8e"
-
-i18next@^15.0.0:
-  version "15.0.4"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-15.0.4.tgz#17ee253ff2cc67c5003065fef2f4196b2d6d8b04"
-  dependencies:
-    "@babel/runtime" "^7.3.1"
 
 iconv-lite@0.4.23:
   version "0.4.23"
@@ -6105,13 +6138,6 @@ react-files@^2.4.8:
   version "2.4.8"
   resolved "https://registry.yarnpkg.com/react-files/-/react-files-2.4.8.tgz#780f140e3830923a368ee56e17e13e48b74acad6"
 
-react-i18next@*, react-i18next@^10.0.0:
-  version "10.2.0"
-  resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-10.2.0.tgz#68674945711d4ccfaca52af9e20fe648f84ffad5"
-  dependencies:
-    "@babel/runtime" "^7.3.1"
-    html-parse-stringify2 "2.0.1"
-
 react-immutable-proptypes@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/react-immutable-proptypes/-/react-immutable-proptypes-2.1.0.tgz#023d6f39bb15c97c071e9e60d00d136eac5fa0b4"
@@ -6128,9 +6154,15 @@ react-input-trigger@^1.1.2:
   dependencies:
     textarea-caret "^3.1.0"
 
-react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
-  version "16.8.3"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.3.tgz#4ad8b029c2a718fc0cfc746c8d4e1b7221e5387d"
+react-is@^16.6.3, react-is@^16.7.0:
+  version "16.8.1"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"
+  integrity sha512-ioMCzVDWvCvKD8eeT+iukyWrBGrA3DiFYkXfBsVYIRdaREZuBjENG+KjrikavCLasozqRWTwFUagU/O4vPpRMA==
+
+react-is@^16.8.1:
+  version "16.8.2"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.2.tgz#09891d324cad1cb0c1f2d91f70a71a4bee34df0f"
+  integrity sha512-D+NxhSR2HUCjYky1q1DwpNUD44cDpUXzSmmFyC3ug1bClcU/iDNy0YNn1iwme28fn+NFhpA13IndOd42CrFb+Q==
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -7770,7 +7802,7 @@ vm-browserify@0.0.4:
 void-elements@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
-
+  
 w3c-hr-time@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"

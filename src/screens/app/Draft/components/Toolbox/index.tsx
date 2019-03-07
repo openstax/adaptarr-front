@@ -1,7 +1,9 @@
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
+import DocumentTools from '../DocumentTools'
 import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
@@ -24,7 +26,9 @@ export default function Toolbox({ editor, value }: Props) {
   if (!selection.isSet) {
     return (
       <div className="toolbox">
-        No selection
+        <Localized id="editor-toolbox-no-selection">
+          No selection
+        </Localized>
       </div>
     )
   }
@@ -32,7 +36,9 @@ export default function Toolbox({ editor, value }: Props) {
   if (selection.start.key !== selection.end.key) {
     return (
       <div className="toolbox">
-        Selection across elements is not yet supported.
+        <Localized id="editor-toolbox-mulit-selection">
+          Selection across elements is not yet supported.
+        </Localized>
       </div>
     )
   }
@@ -51,6 +57,7 @@ export default function Toolbox({ editor, value }: Props) {
       <FigureTools editor={editor} value={value} />
       <ListTools editor={editor} value={value} />
       <XrefTools editor={editor} value={value} />
+      <DocumentTools editor={editor} value={value} />
     </div>
   )
 }

@@ -2,7 +2,7 @@ import './index.css'
 
 import * as React from 'react'
 import Files, { FilesError, FilesRef } from 'react-files'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -60,13 +60,17 @@ class FileUploader extends React.Component<Props> {
         onError={onFilesError}
         {...otherProps}
       >
-        <Trans i18nKey="Books.fileUploader"/>
+        <Localized id="file-upload-select-files">
+          Drop files here or click to upload (optional).
+        </Localized>
       </Files>
       {
         files.length ?
           <React.Fragment>
             <Button color="red" clickHandler={() => this.filesRemoveAll()}>
-              <Trans i18nKey="Buttons.removeAllFiles"/>
+              <Localized id="file-upload-remove-all">
+                Remove all files
+              </Localized>
             </Button>
             <ul className="files__list">
               {

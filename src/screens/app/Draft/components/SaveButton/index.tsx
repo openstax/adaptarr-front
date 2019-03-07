@@ -1,10 +1,9 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Value } from 'slate'
 import { DocumentDB } from 'cnx-designer'
 
-import i18n from 'src/i18n'
 import Storage from 'src/api/storage'
 
 import Button from 'src/components/ui/Button'
@@ -46,7 +45,7 @@ export default class SaveButton extends React.Component<Props> {
         size="medium"
       >
         <Icon name="save" />
-        <Trans i18nKey="Editor.save.action" />
+        <Localized id="editor-tools-save">Save</Localized>
         {saving && <Spinner />}
       </Button>
     )
@@ -63,7 +62,7 @@ export default class SaveButton extends React.Component<Props> {
       // TODO: get version from API
       await documentDb.save(value, Date.now().toString())
     } catch (ex) {
-      store.dispatch(addAlert('error', i18n.t('Editor.save.error') ))
+      store.dispatch(addAlert('error', 'editor-tools-save-alert-error'))
       console.error(ex)
     }
 

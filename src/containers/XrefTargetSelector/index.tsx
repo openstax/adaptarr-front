@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Editor } from 'slate'
 
 import * as api from 'src/api'
@@ -40,13 +40,17 @@ export default class XrefTargetSelector extends React.Component<Props> {
             className={`tabs__tab ${tab === 'local' ? 'selected' : ''}`}
             onClick={this.selectTabLocal}
           >
-            <Trans i18nKey="XrefTargetSelector.tabName.local" />
+            <Localized id="reference-target-list-tab-local">
+              This document
+            </Localized>
           </span>
           <span
             className={`tabs__tab ${tab === 'remote' ? 'selected' : ''}`}
             onClick={this.selectTabRemote}
           >
-            <Trans i18nKey="XrefTargetSelector.tabName.remote" />
+            <Localized id="reference-target-list-tab-remote">
+              Other documents
+            </Localized>
           </span>
         </div>
         <div className={tab === 'local' ? 'visible' : 'hidden'}>

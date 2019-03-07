@@ -1,5 +1,7 @@
 import { Notification } from 'src/api'
 
+import validateL20nArgs from 'src/helpers/validateL20nArgs'
+
 import { PUSH_ALERT, REMOVE_ALERT } from 'src/store/constants'
 import { Alert, RequestInfoKind } from 'src/store/types'
 import { pushNotificationToStore, PushNotificationToStore } from './Notifications'
@@ -24,7 +26,7 @@ export interface RemoveAlert {
 
 export type AlertsAction = PushAlert | RemoveAlert
 
-export const addAlert = (kind: RequestInfoKind, message: string): AddAlert => {
+export const addAlert = (kind: RequestInfoKind, message: string, args: object = {}): AddAlert => {
   return (dispatch: React.Dispatch<AlertsAction>) => {
     const alert: Alert = {
       id: new Date().getTime(),
@@ -32,6 +34,7 @@ export const addAlert = (kind: RequestInfoKind, message: string): AddAlert => {
       data: {
         kind,
         message,
+        arguments: validateL20nArgs(args),
       },
     }
 

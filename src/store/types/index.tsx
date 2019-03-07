@@ -53,6 +53,7 @@ export type RequestInfoKind = 'success' | 'error' | 'warning' | 'info'
 export type RequestInfo = {
   kind: RequestInfoKind
   message: string
+  arguments: object
 }
 
 export type AlertKind = 'alert' | 'notification'

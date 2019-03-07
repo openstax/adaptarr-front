@@ -2,7 +2,7 @@ import './index.css'
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
@@ -33,7 +33,7 @@ const mapStateToProps = ({ booksMap }: State) => {
 class DraftsList extends React.Component<Props> {
 
   state: {
-    booksWithDrafts: Map<string, BooksWithDrafts> | undefined
+    booksWithDrafts: Map<string | null, BooksWithDrafts> | undefined
   } = {
     booksWithDrafts: undefined,
   }
@@ -41,13 +41,13 @@ class DraftsList extends React.Component<Props> {
   private sortDraftsByBooksName = async () => {
     const { drafts, booksMap: { booksMap } } = this.props
 
-    let draftsByBooks: Map<string, BooksWithDrafts> = new Map()
+    let draftsByBooks: Map<string | null, BooksWithDrafts> = new Map()
 
     for (const draft of drafts) {
       const booksIds = await draft.books()
       const books = booksIds.map(bookId => booksMap.get(bookId)!)
 
-      let booksName = books.length ? '' : 'Not assigned to any book'
+      let booksName = books.length ? '' : null
       books.forEach((b, i) => {
         if (i === books.length - 1) {
           booksName += b.title
@@ -95,8 +95,15 @@ class DraftsList extends React.Component<Props> {
             <ul className="list">
               {
                 Array.from(booksWithDrafts.entries()).map(([booksName, data]) => (
-                  <li key={booksName} className="list__item draftsList__book">
-                    <strong>{booksName}</strong>
+                  <li key={booksName || ''} className="list__item draftsList__book">
+                    <strong>
+                      { booksName
+                        ? booksName
+                        : <Localized id="dashboard-drafts-section-not-assigned">
+                          Not assigned to any book
+                        </Localized>
+                      }
+                    </strong>
                     {
                       data.drafts.length ?
                         <ul className="list">
@@ -110,13 +117,17 @@ class DraftsList extends React.Component<Props> {
                                 <Button 
                                   to={`/drafts/${draft.module}`}
                                 >
-                                  <Trans i18nKey="Buttons.viewDraft" />
+                                  <Localized id="dashboard-drafts-view">
+                                    View draft
+                                  </Localized>
                                 </Button>
                                 <Button
                                   color="red"
                                   clickHandler={() => this.props.onDraftDeleteClick(draft)}
                                 >
-                                  <Trans i18nKey="Buttons.delete" />
+                                  <Localized id="dashboard-drafts-delete">
+                                    Delete
+                                  </Localized>
                                 </Button>
                               </span>
                               </li>
@@ -129,7 +140,9 @@ class DraftsList extends React.Component<Props> {
                 ))
               }
             </ul>
-          : <Trans i18nKey="DraftsList.noDraftsFound"/>
+          : <Localized id="dashboard-drafts-empty">
+            You don't have any drafts.
+          </Localized>
         }
       </div>
     )

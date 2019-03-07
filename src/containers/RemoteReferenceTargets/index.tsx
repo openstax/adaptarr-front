@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
@@ -54,7 +54,7 @@ class RemoteReferenceTargets extends React.Component<Props> {
         <div className="remote-reference-targets">
           <Button clickHandler={this.unselectRefSource}>
             <Icon name="arrow-left" size="small" />
-            <Trans i18nKey="RemoteReferenceTargets.back" />
+            <Localized id="reference-target-list-go-back">Back</Localized>
           </Button>
           <RefTargets
             module={selected}

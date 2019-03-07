@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
 import Storage, { FileDescription } from 'src/api/storage'
 
@@ -41,7 +41,7 @@ export default class AssetList extends React.Component<Props> {
         <li className="assetList__item">
           <Button clickHandler={this.onAddMedia}>
             <Icon name="plus" />
-            <Trans i18nKey="AssetList.addMedia" />
+            <Localized id="asset-list-add-media" />
           </Button>
         </li>
         {storage.files
