@@ -164,3 +164,67 @@
 div.editor figure > figcaption::before {
   content: attr(data-label);
 }
+
+.editor .adr-table {
+  display: table;
+  width: 100%;
+  margin: 2rem 0;
+  border-bottom: 2px solid #ddd;
+}
+
+.editor .adr-title {
+  font-weight: 700;
+  display: table-caption;
+  caption-side: bottom-outside;
+  padding: 1rem 0;
+}
+
+.editor .adr-caption {
+  display: table-caption;
+  caption-side: bottom-outside;
+  padding: 1rem 0;
+}
+
+.editor .adr-caption::before {
+  content: "Table caption: ";
+  font-weight: 700;
+}
+
+.editor .adr-tgroup {
+  display: table;
+  width: 100%;
+}
+
+.editor .adr-colspec, .editor .adr-spanspec {
+  display: none;
+}
+
+.editor .adr-thead {
+  display: table-header-group;
+}
+
+.editor .adr-thead .adr-entry {
+  font-weight: 700;
+  border-bottom: 2px solid #ddd;
+}
+
+.editor .adr-tbody {
+  display: contents;
+}
+
+.editor .adr-tfoot {
+  display: table-footer-group;
+}
+
+.editor .adr-row {
+  display: table-row;
+}
+
+.editor .adr-tbody .adr-row:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.editor .adr-entry {
+  display: table-cell;
+  padding: 0.5rem 1rem;
+}

@@ -1,3 +1,11 @@
+// Used in storage.tsx to transform document to cnxml.
+declare namespace JSX {
+  interface IntrinsicElements {
+    document: any
+    content: any
+  }
+}
+
 declare module 'cnx-designer' {
   import {
     Inline,
@@ -23,9 +31,19 @@ declare module 'cnx-designer' {
   export default class Editor extends React.Component<EditorProps> {
   }
 
+  export class Html<T> {
+    new: Html<T>
+    deserialize: (args: any) => Value
+    serialize: (args: any) => string
+  }
+
   export const CNXML: {
-    deserialize(html: string, options?: {}): Value
-    serialize(value: Value, title: string): string
+    deserializeRules: any
+    serializeRules: any
+    render: any
+    parseHtml(html: string): HTMLElement
+    deserialize(html: string, options?: {}, customRules?: any[]): Value
+    serialize(value: Value, title: string, customRules?: any[]): string
   }
 
   export class APIError extends Error {

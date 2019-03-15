@@ -1,3 +1,7 @@
+import * as React from 'react'
+import Html from 'slate-html-serializer'
+import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
+import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
 
@@ -81,7 +85,7 @@ export default class Storage extends StorageBase {
   async read() {
     const index = await this._request('/files/index.cnxml')
     this.tag = index.headers.get('ETag')
-    this.value = CNXML.deserialize(await index.text())
+    this.value = this.serializer.deserialize(await index.text())
     return this.value
   }
 
@@ -89,7 +93,22 @@ export default class Storage extends StorageBase {
    * Write the document
    */
   async write(value: Value) {
-    const text = CNXML.serialize(value, this.title)
+    const r = (
+      <document
+        xmlns="http://cnx.rice.edu/cnxml"
+        cnxml-version="0.7"
+        id="new"
+        module-id="new"
+        xmlLang="en"
+        >
+        <title>{this.title}</title>
+        <content>
+          {this.serializer.serialize(value, { render: false })}
+        </content>
+      </document>
+    )
+    
+    const text = CNXML.render(r)
 
     const req = await fetch(this.url + '/files/index.cnxml', {
       method: 'PUT',
@@ -146,4 +165,10 @@ export default class Storage extends StorageBase {
 
     return data ? req[data]() : req
   }
+
+  serializer = new Html({
+    rules: [tablesDeserialize, tablesSerialize, ...CNXML.deserializeRules, ...CNXML.serializeRules],
+    defaultBlock: { type: 'invalid' },
+    parseHtml: CNXML.parseHtml,
+  })
 }
