@@ -177,13 +177,6 @@
   dependencies:
     redux-thunk "*"
 
-"@types/slate-html-serializer@^0.6.3":
-  version "0.6.3"
-  resolved "https://registry.yarnpkg.com/@types/slate-html-serializer/-/slate-html-serializer-0.6.3.tgz#f18da3c68ccc5b25b12eb4f709b2120b2d2d954e"
-  dependencies:
-    "@types/react" "*"
-    "@types/slate" "*"
-
 "@types/slate-react@^0.20.3":
   version "0.20.4"
   resolved "https://registry.yarnpkg.com/@types/slate-react/-/slate-react-0.20.4.tgz#5075a90fbad1ca9a72c38e890168d03fc082381c"
@@ -6818,7 +6811,7 @@ slate-hotkeys@^0.2.9:
     is-hotkey "0.1.4"
     slate-dev-environment "^0.2.2"
 
-slate-html-serializer@^0.7.0, slate-html-serializer@^0.7.36:
+slate-html-serializer@^0.7.0:
   version "0.7.36"
   resolved "https://registry.yarnpkg.com/slate-html-serializer/-/slate-html-serializer-0.7.36.tgz#012673768fc4c03536f76eb732a98bd2f62ad228"
   dependencies:

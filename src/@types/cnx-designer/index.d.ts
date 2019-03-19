@@ -1,11 +1,3 @@
-// Used in storage.tsx to transform document to cnxml.
-declare namespace JSX {
-  interface IntrinsicElements {
-    document: any
-    content: any
-  }
-}
-
 declare module 'cnx-designer' {
   import {
     Inline,
@@ -31,19 +23,10 @@ declare module 'cnx-designer' {
   export default class Editor extends React.Component<EditorProps> {
   }
 
-  export class Html<T> {
-    new: Html<T>
-    deserialize: (args: any) => Value
-    serialize: (args: any) => string
-  }
-
-  export const CNXML: {
-    deserializeRules: any
-    serializeRules: any
-    render: any
-    parseHtml(html: string): HTMLElement
-    deserialize(html: string, options?: {}, customRules?: any[]): Value
-    serialize(value: Value, title: string, customRules?: any[]): string
+  export class CNXML {
+    constructor(rules: any[])
+    deserialize(html: string, options?: {}): Value
+    serialize(value: Value, title: string): string
   }
 
   export class APIError extends Error {
@@ -53,7 +36,7 @@ declare module 'cnx-designer' {
 
   export class Storage {
     static load(id: string): Promise<Storage>
-    read(): Promise<Value>
+    read(): Promise<Value | null>
     write(value: Value): Promise<void>
     writeFile(file: File): Promise<void>
     current(value: Value): boolean
