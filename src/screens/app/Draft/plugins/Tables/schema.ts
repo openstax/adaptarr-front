@@ -3,8 +3,6 @@ function normalizeTable(change: any, error: any) {
 
   switch (violation) {
     case 'child_type_invalid':
-      console.log('normalizeTable child_type_invalid')
-      console.log('child.type:', child.type)
       if (child.type === 'title') {
         change.setNodeByKey(child.key, { type: 'table_title' })
       } else if (child.type === 'caption') {
@@ -60,11 +58,11 @@ export default {
   blocks: {
     table: {
       data: {
-        summary: (s: any) => s == null || typeof s === 'string',
-        frame: (f: any) => f == null || typeof f === 'string',
-        colsep: (c: any) => c == null || c >= 0,
-        rowsep: (r: any) => r == null || r >= 0,
-        pgwide: (p: any) => p == null || p >= 0,
+        summary: () => true,
+        frame: () => true,
+        colsep: () => true,
+        rowsep: () => true,
+        pgwide: () => true,
       },
       nodes: [
         { match: { type: 'table_title' }, min: 0, max: 1, },
@@ -75,12 +73,12 @@ export default {
     },
     table_tgroup: {
       data: {
-        cols: (c: number) => c > 0,
-        colsep: (c: any) => c == null || c >= 0,
-        rowsep: (r: any) => r == null || r >= 0,
-        align: (a: any) => a == null || typeof a === 'string',
-        char: (c: any) => c == null || typeof c === 'string',
-        charoff: (c: any) => c == null || 0 >= c && c <= 100,
+        cols: () => true,
+        colsep: () => true,
+        rowsep: () => true,
+        align: () => true,
+        char: () => true,
+        charoff: () => true,
       },
       nodes: [
         { match: { type: 'table_colspec' } },
@@ -93,34 +91,34 @@ export default {
     table_colspec: {
       isVoid: true,
       data: {
-        colnum: (c: any) => c == null || c > 0,
-        colname: (c: any) => c == null || typeof c === 'string',
-        colwidth: (c: any) => c == null || typeof c === 'string',
-        colsep: (c: any) => c == null || c >= 0,
-        rowsep: (r: any) => r == null || r >= 0,
-        align: (a: any) => a == null || typeof a === 'string',
-        char: (c: any) => c == null || typeof c === 'string',
-        charoff: (c: any) => c == null || 0 >= c && c <= 100,
+        colnum: () => true,
+        colname: () => true,
+        colwidth: () => true,
+        colsep: () => true,
+        rowsep: () => true,
+        align: () => true,
+        char: () => true,
+        charoff: () => true,
       },
       normalize: normalizeColspec,
     },
     table_spanspec: {
       isVoid: true,
       data: {
-        namest: (n: any) => n == null || typeof n === 'string',
-        nameend: (n: any) => n == null || typeof n === 'string',
-        spanname: (s: any) => s == null || typeof s === 'string',
-        colsep: (c: any) => c == null || c >= 0,
-        rowsep: (r: any) => r == null || r >= 0,
-        align: (a: any) => a == null || typeof a === 'string',
-        char: (c: any) => c == null || typeof c === 'string',
-        charoff: (c: any) => c == null || 0 >= c && c <= 100,
+        namest: () => true,
+        nameend: () => true,
+        spanname: () => true,
+        colsep: () => true,
+        rowsep: () => true,
+        align: () => true,
+        char: () => true,
+        charoff: () => true,
       },
       normalize: normalizeSpanspec,
     },
     table_thead: {
       data: {
-        valign: (v: any) => v == null || typeof v === 'string',
+        valign: () => true,
       },
       nodes: [
         { match: { type: 'table_colspec' } },
@@ -130,7 +128,7 @@ export default {
     },
     table_tbody: {
       data: {
-        valign: (v: any) => v == null || typeof v === 'string',
+        valign: () => true,
       },
       nodes: [
         { match: { type: 'table_row' } },
@@ -139,7 +137,7 @@ export default {
     },
     table_tfoot: {
       data: {
-        valign: (v: any) => v == null || typeof v === 'string',
+        valign: () => true,
       },
       nodes: [
         { match: { type: 'table_colspec' } },
@@ -149,8 +147,8 @@ export default {
     },
     table_row: {
       data: {
-        valign: (v: any) => v == null || typeof v === 'string',
-        rowsep: (r: any) => r == null || r >= 0,
+        valign: () => true,
+        rowsep: () => true,
       },
       nodes: [
         { match: { type: 'table_entry' } },
@@ -159,17 +157,17 @@ export default {
     },
     table_entry: {
       data: {
-        morerows: (m: any) => m == null || m >= 0,
-        colname: (c: any) => c == null || typeof c === 'string',
-        namest: (n: any) => n == null || typeof n === 'string',
-        nameend: (n: any) => n == null || typeof n === 'string',
-        spanname: (s: any) => s == null || typeof s === 'string',
-        colsep: (c: any) => c == null || c >= 0,
-        rowsep: (r: any) => r == null || r >= 0,
-        align: (a: any) => a == null || typeof a === 'string',
-        char: (c: any) => c == null || typeof c === 'string',
-        charoff: (c: any) => c == null || 0 >= c && c <= 100,
-        valign: (v: any) => v == null || typeof v === 'string',
+        morerows: () => true,
+        colname: () => true,
+        namest: () => true,
+        nameend: () => true,
+        spanname: () => true,
+        colsep: () => true,
+        rowsep: () => true,
+        align: () => true,
+        char: () => true,
+        charoff: () => true,
+        valign: () => true,
       },
       normalize: normalizeEntry,
     },
