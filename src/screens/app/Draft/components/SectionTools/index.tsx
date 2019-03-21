@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 
 import ToolGroup from '../ToolGroup'
@@ -19,20 +19,24 @@ export default class SectionTools extends React.Component<Props> {
     if (section === null) return null
 
     return (
-      <ToolGroup title="Editor.section.groupTitle">
+      <ToolGroup title="editor-tools-sections-title">
         <Button
           clickHandler={this.decreaseSectionDepth}
           className="toolbox__button--insert"
         >
           <Icon name="outdent" />
-          <Trans i18nKey="Editor.section.decreaseLevel" />
+          <Localized id="editor-tools-sections-decrease-depth">
+            Decrease level
+          </Localized>
         </Button>
         <Button
           clickHandler={this.increaseSectionDepth}
           className="toolbox__button--insert"
         >
           <Icon name="indent" />
-          <Trans i18nKey="Editor.section.increaseLevel" />
+          <Localized id="editor-tools-sections-increase-depth">
+            Increase level
+          </Localized>
         </Button>
       </ToolGroup>
     )

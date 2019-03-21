@@ -1,11 +1,10 @@
 import './index.css'
 
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { FilesError } from 'react-files'
 
-import i18n from 'src/i18n'
 import validateEmail from 'src/helpers/validateEmail'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
@@ -101,12 +100,14 @@ class UserProfile extends React.Component<Props> {
 
   private showDialogWithAction = () => {
     const { updateAction, nameInput/*, bioInput, emailInput*/ } = this.state
-    let titlei18nKey = ''
+    let l10nId
+    let placeholder
     let body
 
     switch (updateAction){
       case 'avatar':
-        titlei18nKey = 'Profile.updateAvatar'
+        l10nId = 'user-profile-update-avatar-title'
+        placeholder = 'Upload file for your avatar.'
         body = (
           <FilesUploader
             onFilesChange={this.onFilesChange}
@@ -117,14 +118,15 @@ class UserProfile extends React.Component<Props> {
         )
         break
       case 'name':
-        titlei18nKey = 'Profile.updateName'
+        l10nId = 'user-profile-update-name-title'
+        placeholder = 'Update your name.'
         body = (
           <Input
             value={nameInput}
             onChange={this.updateNameInput}
             autoFocus
             validation={{minLength: 3}}
-            errorMessage={i18n.t("Profile.nameValidation") as string}
+            errorMessage="user-profile-name-validation-error"
           />
         )
         break
@@ -149,14 +151,21 @@ class UserProfile extends React.Component<Props> {
           />
         )
         break*/
+
+      default:
+        throw new Error('Bad update action: ' + updateAction)
     }
 
     return (
-      <Dialog onClose={this.closeDialog} i18nKey={titlei18nKey}>
+      <Dialog
+        l10nId={l10nId}
+        placeholder={placeholder}
+        onClose={this.closeDialog}
+      >
         <div className="profile__update-dialog">
           {body}
           <Button clickHandler={this.confirmUpdateAction}>
-            <Trans i18nKey="Buttons.confirm"/>
+            <Localized id="user-profile-update-confirm" />
           </Button>
         </div>
       </Dialog>
@@ -242,11 +251,15 @@ class UserProfile extends React.Component<Props> {
   public render() {
     const showDialog = this.state.showDialog
     const user = this.props.user
-    let title
+    let header
     if (this.props.user.apiId === 'me') {
-      title = 'Your profile'
-    } else if (user && user.name) {
-      title = decodeHtmlEntity(user.name)
+      header = <Header l10nId="user-profile-view-title-your" title="Your profile" />
+    } else {
+      header = <Header
+        l10nId="user-profile-view-title-named"
+        title={decodeHtmlEntity(user.name) + "'s profile"}
+        $name={decodeHtmlEntity(user.name)}
+        />
     }
 
     return (
@@ -257,7 +270,7 @@ class UserProfile extends React.Component<Props> {
           : null
         }
         <Section>
-          <Header title={title ? title : i18n.t("Unknown.user") as string} />
+          {header}
           <div className="section__content">
             <div className="profile">
               <div className="profile__top">
@@ -286,7 +299,7 @@ class UserProfile extends React.Component<Props> {
               </div>
               <div className="profile__info">
                 <h3 className="profile__title">
-                  <Trans i18nKey="Profile.bio"/>
+                  <Localized id="user-profile-section-bio">Bio</Localized>
                 </h3>
                 <div className="profile__bio">
                   <p>
@@ -302,7 +315,7 @@ class UserProfile extends React.Component<Props> {
                   </UserUI>
                 </div>
                 <h3 className="profile__title">
-                  <Trans i18nKey="Profile.contact"/>
+                  <Localized id="user-profile-section-contact">Contact</Localized>
                 </h3>
                 <span className="profile__email">
                   {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}

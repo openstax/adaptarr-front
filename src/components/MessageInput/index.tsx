@@ -2,10 +2,9 @@ import './index.css'
 
 import * as React from 'react'
 import InputTrigger, { MetaInfo } from 'react-input-trigger'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import i18n from 'src/i18n'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import { User } from 'src/api'
 
@@ -99,14 +98,14 @@ class MessageInput extends React.Component<Props> {
     const usr = user ? user : (selectedUser ? selectedUser : undefined)
 
     if (!usr) {
-      store.dispatch(addAlert('error', i18n.t("MsgInput.errorSelecUser")))
+      store.dispatch(addAlert('error', 'message-input-alert-select-user-error'))
       return
     }
     
     const newText =
       textareaValue.slice(0, startPosition) +
       decodeHtmlEntity(usr.name).replace(' ', '') +
-      textareaValue.slice(startPosition + usernameText.length, textareaValue.length)      
+      textareaValue.slice(startPosition + usernameText.length, textareaValue.length)
 
     this.hideUsersList()
     this.setState({ textareaValue: newText })
@@ -298,17 +297,19 @@ class MessageInput extends React.Component<Props> {
           onType={(metaInfo) => { this.handleInput(metaInfo) }}
           endTrigger={(endHandler) => { this.endHandler = endHandler }}
         >
-          <textarea
-            className="msgInput__text"
-            placeholder={i18n.t("MsgInput.placeholder") as string}
-            onChange={this.handleTextareaInput}
-            value={this.state.textareaValue}
-          ></textarea>
+          <Localized id="message-input-textarea" attrs={{ placeholder: true }}>
+            <textarea
+              className="msgInput__text"
+              placeholder="Type your message..."
+              onChange={this.handleTextareaInput}
+              value={this.state.textareaValue}
+            ></textarea>
+          </Localized>
         </InputTrigger>
         <Button
           clickHandler={() => this.sendMessage()}
         >
-          <Trans i18nKey="Buttons.send"/>
+          <Localized id="message-input-send">Send</Localized>
         </Button>
       </div>
     )

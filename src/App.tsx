@@ -1,4 +1,5 @@
 import * as React from 'react'
+import  { Localized } from 'fluent-react/compat'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
@@ -134,7 +135,7 @@ class App extends React.Component<Props> {
                                   >
                                     <Icon name="close"/>
                                   </span>
-                                  {alert.data.message}
+                                  <Localized id={alert.data.message} {...alert.data.arguments} />
                                 </li>
                               )
                             case 'notification':
@@ -147,7 +148,8 @@ class App extends React.Component<Props> {
                                     <Icon name="close"/>
                                   </span>
                                   <Notification
-                                    notification={(alert.data as api.Notification)}/>
+                                    notification={alert.data}
+                                  />
                                 </li>
                               )
                           }

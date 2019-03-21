@@ -12,6 +12,42 @@ export type Data = {
   assignee?: number,
   id: string,
   title: string,
+  language: string,
+}
+
+export type RefTargetType
+  = 'commentary'
+  | 'example'
+  | 'exercise'
+  | 'figure'
+  | 'note'
+  | 'solution'
+  | 'subfigure'
+
+export type RefTarget = {
+  /**
+   * This target element's ID.
+   */
+  id: string,
+  /**
+   * This element's type.
+   */
+  type: RefTargetType,
+  /**
+   * A short description of this element intended to make it easier for users
+   * to select the correct element when creating a cross-document reference.
+   */
+  description: string | null,
+  /**
+   * ID of a reference target “owning” this one.
+   */
+  context: string | null,
+  /**
+   * Value of the type-counter at this element.
+   *
+   * For elements that have `context` type counter resets at context.
+   */
+  counter: number,
 }
 
 export default class Module extends Base<Data> {
@@ -90,6 +126,11 @@ export default class Module extends Base<Data> {
   title: string
 
   /**
+   * Language of this document.
+   */
+  language: string
+
+  /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
    */
   async files(): Promise<string[]> {
@@ -101,6 +142,13 @@ export default class Module extends Base<Data> {
    */
   async read(name: string): Promise<string> {
     return (await axios.get(`modules/${this.id}/files/${name}`)).data
+  }
+
+  /**
+   * Fetch list of possible reference targets in this module.
+   */
+  async referenceTargets(): Promise<RefTarget[]> {
+    return (await axios.get(`modules/${this.id}/xref-targets`)).data
   }
 
   /**

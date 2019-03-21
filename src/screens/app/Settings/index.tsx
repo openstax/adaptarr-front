@@ -1,41 +1,42 @@
 import './index.css'
 
 import * as React from 'react'
-import i18next from 'i18next'
 import Select from 'react-select'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
+import { connect } from 'react-redux'
 
-import i18n from 'src/i18n'
 import User from 'src/api/user'
 import store from 'src/store'
+import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
+import { setLocale } from 'src/store/actions/app'
 
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
-type LanguageOption = {
-  value: string
-  label: string
+import { languages as LANGUAGES } from 'src/locale/data.json'
+
+type Props = {
+  locale: string[],
+  availableLocales: string[],
 }
 
-const languages: LanguageOption[] = [
-  { value: 'en-US', label: 'English' },
-  { value: 'pl-PL', label: 'Polski' },
-]
+const mapStateToProps = ({ app }: State) => ({
+  locale: app.locale,
+  availableLocales: app.availableLocales,
+})
 
-class Settings extends React.Component {
+class Settings extends React.Component<Props> {
   state: {
-    selectedLanguage: LanguageOption | null
-    newSelectedLanguage: LanguageOption | null
+    newSelectedLanguage: typeof LANGUAGES[0] | null
     showChangeLanguage: boolean
     arePasswordsValid: boolean
     oldPassword: string
     newPassword: string
     newPassword2: string
   } = {
-    selectedLanguage: null,
     newSelectedLanguage: null,
     showChangeLanguage: false,
     arePasswordsValid: false,
@@ -44,9 +45,7 @@ class Settings extends React.Component {
     newPassword2: '',
   }
 
-  private handleLanguageChange = (selectedLanguage: LanguageOption) => {
-    if (selectedLanguage === this.state.selectedLanguage) return
-
+  private handleLanguageChange = (selectedLanguage: typeof LANGUAGES[0]) => {
     this.setState({ showChangeLanguage: true, newSelectedLanguage: selectedLanguage })
   }
 
@@ -55,9 +54,8 @@ class Settings extends React.Component {
 
     if (!newSelectedLanguage) return
 
-    i18next.changeLanguage(newSelectedLanguage.value)
-
-    location.reload()
+    store.dispatch(setLocale([newSelectedLanguage.code]))
+    this.setState({ showChangeLanguage: false })
   }
 
   private validatePasswords = () => {
@@ -90,10 +88,10 @@ class Settings extends React.Component {
     User.changePassword(oldPassword, newPassword, newPassword2)
       .then(() => {
         this.clearPasswordForm()
-        store.dispatch(addAlert('success', i18n.t('Settings.changePasswordSuccess')))
+        store.dispatch(addAlert('success', 'settings-change-password-alert-success'))
       })
       .catch(e => {
-        store.dispatch(addAlert('error', i18n.t('Settings.changePasswordError')))
+        store.dispatch(addAlert('error', 'settings-change-password-alert-error'))
         console.log(e)
       })
   }
@@ -111,99 +109,96 @@ class Settings extends React.Component {
     this.setState({ showChangeLanguage: false })
   }
 
-  componentDidMount = () => {
-    const currentLang = localStorage.i18nextLng
-
-    if (currentLang) {
-      let selectedLanguage
-      
-      languages.some(lang => {
-        if (lang.value === currentLang) {
-          selectedLanguage = lang
-          return true
-        }
-        return false
-      })
-
-
-      if (selectedLanguage) {
-        this.setState({ selectedLanguage })
-      }
-    }
-  }
-
   public render() {
-    const { 
-      selectedLanguage, 
-      arePasswordsValid, 
-      showChangeLanguage, 
+    const { locale, availableLocales } = this.props
+    const {
+      arePasswordsValid,
+      showChangeLanguage,
       oldPassword,
       newPassword,
       newPassword2,
     } = this.state
 
+    const language = LANGUAGES.find(lang => lang.code === locale[0])
+
+    const languageOptions = availableLocales.map(locale =>
+      LANGUAGES.find(lang => lang.code === locale)
+    )
+
     return (
       <section className="section--wrapper">
         {
           showChangeLanguage ?
-            <Dialog 
-              i18nKey="Settings.changeLanguageDialog"
+            <Dialog
+              l10nId="settings-language-dialog-title"
+              placeholder="Are you sure you want to change language?"
               onClose={this.closeChangeLanguage}
             >
-              <Button 
+              <Button
                 color="green"
                 clickHandler={this.changeLanguage}
               >
-                <Trans i18nKey="Buttons.confirm" />
+                <Localized id="settings-language-dialog-confirm">
+                  Confirm
+                </Localized>
               </Button>
-              <Button 
+              <Button
                 color="red"
                 clickHandler={this.closeChangeLanguage}
               >
-                <Trans i18nKey="Buttons.cancel" />
+                <Localized id="settings-language-dialog-cancel">
+                  Cancel
+                </Localized>
               </Button>
             </Dialog>
           : null
         }
-        <Header i18nKey="Settings.title" />
+        <Header l10nId="settings-view-title" title="Settings" />
         <div className="section__content">
           <div className="settings">
             <h2 className="settings__title">
-              <Trans i18nKey="Settings.changeLanguage" />
+              <Localized id="settings-section-language">
+                Change language
+              </Localized>
             </h2>
             <Select
-              value={selectedLanguage}
+              value={language}
               onChange={this.handleLanguageChange}
-              options={languages}
+              options={languageOptions}
               className="settings__select"
+              getOptionLabel={getOptionLabel}
             />
             <h2 className="settings__title">
-              <Trans i18nKey="Settings.changePassword" />
+              <Localized id="settings-section-password">
+                Change password
+              </Localized>
             </h2>
             <form onSubmit={this.changePassword}>
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderOldPassword") as string}
+                l10nId="settings-value-old-password"
                 value={oldPassword}
                 onChange={this.updateOldPassword}
-                errorMessage={i18n.t("Settings.passwordValidation") as string}
+                errorMessage="settings-validation-password-bad-length"
               />
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderNewPassword") as string}
+                l10nId="settings-value-new-password"
                 value={newPassword}
                 onChange={this.updateNewPassword}
-                errorMessage={i18n.t("Settings.passwordValidation") as string}
+                errorMessage="settings-validation-password-bad-length"
               />
               <Input
                 type="password"
-                placeholder={i18n.t("Settings.placeholderRepeatPassword") as string}
+                l10nId="settings-value-new-password-repeat"
                 value={newPassword2}
                 onChange={this.updateNewPassword2}
                 validation={{sameAs: newPassword}}
-                errorMessage={i18n.t("Settings.passwordRepeatValidation") as string}
+                errorMessage="settings-validation-password-no-match"
               />
-              <input type="submit" value={i18n.t('Buttons.confirm') as string} disabled={!arePasswordsValid} />
+              <Localized id="settings-password-change" attrs={{ value: true }}>
+                <input type="submit" value="Confirm" disabled={!arePasswordsValid} />
+              </Localized>
             </form>
           </div>
         </div>
@@ -212,4 +207,8 @@ class Settings extends React.Component {
   }
 }
 
-export default Settings
+export default connect(mapStateToProps)(Settings)
+
+function getOptionLabel({ name }: typeof LANGUAGES[0]) {
+  return name
+}

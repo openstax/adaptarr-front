@@ -2,10 +2,9 @@ import './index.css'
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
-import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import * as api from 'src/api'
@@ -66,24 +65,19 @@ class NotificationsCentre extends React.Component<Props> {
     const mod = details.module ? modulesMap.get(details.module) : undefined
     const who = details.who ? teamMap.get(details.who) : undefined
 
-    let body
-    if (details.kind === 'assigned') {
-      body = (
-        <React.Fragment>
-          <Link to={`/users/${who ? who.id : undefined}`}>
-            {who ? decodeHtmlEntity(who.name) : i18n.t("Unknown.user")}
-          </Link>{" "}
-          <Trans i18nKey="Notifications.assigned"/>{" "}
-          <Link to={`/modules/${mod ? mod.id : undefined }`}>
-            {mod ? mod.title : i18n.t("Unknow.module")}
-          </Link>
-        </React.Fragment>
-      )
-    }
-
     return (
       <div className="details">
-        {body}
+        <Localized
+          id="notification"
+          $actor={who && decodeHtmlEntity(who.name)}
+          actor={
+            <Link to={`/users/${who && who.id}`} />
+          }
+          $title={mod && mod.title}
+          module={
+            <Link to={`/modules/${mod && mod.id}`} />
+          }
+          />
       </div>
     )
   }
@@ -101,7 +95,7 @@ class NotificationsCentre extends React.Component<Props> {
           !isLoading ?
             <React.Fragment>
               <Section>
-                <Header i18nKey="Notifications.title" />
+                <Header l10nId="notification-centre-view-title" title="Notifications" />
                 <div className="section__content">
                   {
                     unreadNotifications.length > 0 ?
@@ -109,12 +103,12 @@ class NotificationsCentre extends React.Component<Props> {
                         {
                           unreadNotifications.map((noti: api.Notification) => {
                             return (
-                              <li 
-                                key={noti.id} 
+                              <li
+                                key={noti.id}
                                 className="notificationsList__item"
                                 onClick={() => this.showDetails(noti)}
                               >
-                                <NotificationComp 
+                                <NotificationComp
                                   notification={noti}
                                   disableLink={true}
                                   avatarSize="medium"
@@ -124,8 +118,9 @@ class NotificationsCentre extends React.Component<Props> {
                           })
                         }
                       </ul>
-                    :
-                      <Trans i18nKey="NotificationsCentre.noNotiFound" />
+                    : <Localized id="notification-centre-empty">
+                      No notifications found.
+                    </Localized>
                   }
                 </div>
               </Section>
@@ -133,7 +128,7 @@ class NotificationsCentre extends React.Component<Props> {
                 {
                   showDetails ?
                     <React.Fragment>
-                      <Header title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
+                      <Header l10nId="xxx-no-translation" title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
                         <span className="date">
                           { details ? dateDiff(details.timestamp) : null }
                         </span>
@@ -149,6 +144,7 @@ class NotificationsCentre extends React.Component<Props> {
                     <React.Fragment>
                       <Header
                         fixed
+                        l10nId="xxx-no-translation"
                         title="Jason Cook"
                       >
                         <span className="date">

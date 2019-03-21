@@ -1,16 +1,20 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
+import * as api from 'src/api'
 import { FileDescription } from 'src/api/storage'
 
+import ToolGroup from '../ToolGroup'
 import Modal from 'src/components/Modal'
-import AssetList from 'src/containers/AssetList'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import ToolGroup from '../ToolGroup'
+import AssetList from 'src/containers/AssetList'
+import XrefTargetSelector from 'src/containers/XrefTargetSelector'
+
+import { ReferenceTarget } from 'src/store/types'
 
 export type Props = {
   editor: Editor,
@@ -18,20 +22,28 @@ export type Props = {
 }
 
 export default class InsertTools extends React.Component<Props> {
-  modal: Modal | null = null
+  figureModal: Modal | null = null
+  xrefModal: Modal | null = null
 
   render() {
     const { editor, value } = this.props
 
     return (
-      <ToolGroup title="Editor.insert.groupTitle">
-        <Button className="toolbox__button--insert">
+      <ToolGroup title="editor-tools-insert-title">
+        <Button
+          clickHandler={this.openXrefModal}
+          className="toolbox__button--insert"
+        >
           <Icon name="link" />
-          <Trans i18nKey="Editor.insert.reference" />
+          <Localized id="editor-tools-insert-reference">
+            Reference
+          </Localized>
         </Button>
         <Button clickHandler={this.insertAdmonition} className="toolbox__button--insert">
           <Icon name="sticky-note" />
-          <Trans i18nKey="Editor.insert.admonition" />
+          <Localized id="editor-tools-insert-admonition">
+            Admonition
+          </Localized>
         </Button>
         <Button
           clickHandler={this.insertExercise}
@@ -39,34 +51,55 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
         >
           <Icon name="flask" />
-          <Trans i18nKey="Editor.insert.exercise" />
+          <Localized id="editor-tools-insert-exercise">
+            Exercise
+          </Localized>
         </Button>
-        <Button clickHandler={this.openModal} className="toolbox__button--insert">
+        <Button clickHandler={this.openFigureModal} className="toolbox__button--insert">
           <Icon name="image" />
-          <Trans i18nKey="Editor.insert.figure" />
+          <Localized id="editor-tools-insert-figure">
+            Figure
+          </Localized>
         </Button>
         <Button clickHandler={this.insertSection} className="toolbox__button--insert">
           <Icon name="plus" />
-          <Trans i18nKey="Editor.insert.section" />
+          <Localized id="editor-tools-insert-section">
+            Section
+          </Localized>
         </Button>
         <Modal
-          ref={this.setModal}
-          content={this.renderModal}
+          ref={this.setFigureModal}
+          content={this.renderFigureModal}
+        />
+        <Modal
+          ref={this.setXrefModal}
+          content={this.renderXrefModal}
         />
       </ToolGroup>
     )
   }
 
-  private renderModal = () => (
+  private renderFigureModal = () => (
     <AssetList
       filter="image/*"
       onSelect={this.insertFigure}
-      />
+    />
   )
 
-  private setModal = (el: Modal | null) => el && (this.modal = el)
+  private renderXrefModal = () => (
+    <XrefTargetSelector
+      editor={this.props.editor}
+      onSelect={this.insertReference}
+    />
+  )
 
-  private openModal = () => this.modal!.open()
+  private setFigureModal = (el: Modal | null) => el && (this.figureModal = el)
+
+  private setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
+
+  private openFigureModal = () => this.figureModal!.open()
+
+  private openXrefModal = () => this.xrefModal!.open()
 
   private insertAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
@@ -79,7 +112,7 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private insertFigure = (asset: FileDescription) => {
-    this.modal!.close()
+    this.figureModal!.close()
     // XXX: We cast FileDescription as MediaDescription, as currently there
     // is no way to add alt-texts, server doesn't store it yet, and it is not
     // used anywhere.
@@ -88,5 +121,10 @@ export default class InsertTools extends React.Component<Props> {
 
   private insertSection = () => {
     this.props.editor.insertSection()
+  }
+
+  private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
+    this.xrefModal!.close()
+    this.props.editor.insertXref(target.id, source ? source.id : undefined)
   }
 }

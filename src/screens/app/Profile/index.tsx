@@ -71,7 +71,7 @@ const profile = ({ match, team: { teamMap } }: Props) => {
         user={new api.User({id: 0, name: 'Loading...'})}
       />
       <Section>
-        <Header i18nKey="Profile.yourTeam"/>
+        <Header l10nId="user-profile-section-team" title="Your team" />
         <div className="section__content">
           {
             teamMap.size ?

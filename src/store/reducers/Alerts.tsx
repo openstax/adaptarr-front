@@ -18,7 +18,7 @@ export function reducer (state: State = initialState, action: AlertsAction) {
     case PUSH_ALERT:
       let alertsAfterAdd = state.alerts
       alertsAfterAdd.push(action.data)
-      if (alertsAfterAdd.length > 5) {
+      if (alertsAfterAdd.length > 2) {
         alertsAfterAdd.shift()
       }
       return {

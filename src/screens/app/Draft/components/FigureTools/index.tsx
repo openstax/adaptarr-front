@@ -1,7 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Block, Editor, Value, BlockProperties } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
@@ -35,7 +35,7 @@ export default class FigureTools extends React.Component<Props> {
     const src = image.data.get('src')
 
     return (
-      <ToolGroup title="Editor.figure.groupTitle">
+      <ToolGroup title="editor-tools-figure-title">
         <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}
@@ -43,12 +43,16 @@ export default class FigureTools extends React.Component<Props> {
           />
           {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
             <Icon name="close" />
-            <Trans i18nKey="Editor.figure.removeSubfigure" />
+            <Localized id="editor-tools-remove-subfigure">
+              Remove subfigure
+            </Localized>
           </Button>}
         </div>
         <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
           <Icon name="image" />
-          <Trans i18nKey="Editor.figure.insert.subfigure" />
+          <Localized id="editor-tools-figure-add-subfigure">
+            Add subfigure
+          </Localized>
         </Button>
         <Button
           clickHandler={this.insertCaption}
@@ -56,7 +60,9 @@ export default class FigureTools extends React.Component<Props> {
           className="toolbox__button--insert"
         >
           <Icon name="comment" />
-          <Trans i18nKey="Editor.figure.insert.caption" />
+          <Localized id="editor-tools-figure-add-caption">
+            Add caption
+          </Localized>
         </Button>
         <Modal
           ref={this.setModal}
