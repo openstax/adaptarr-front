@@ -124,29 +124,25 @@
   padding-inline-start: 8px;
 }
 
-.editor .admonition > :first-child:not(.title)::before {
-  content: var(--title) ': ';
+.editor .admonition > .admonition-title:first-child {
+  user-select: none;
   display: block;
   color: gray;
 }
 
 .editor .admonition[data-type="note"] {
-  --title: "Note";
   --color: gray;
 }
 
 .editor .admonition[data-type="warning"] {
-  --title: "Warning";
   --color: yellow;
 }
 
 .editor .admonition[data-type="tip"] {
-  --title: "Tip";
   --color: gray;
 }
 
 .editor .admonition[data-type="important"] {
-  --title: "Important";
   --color: red;
 }
 
@@ -166,13 +162,17 @@
 }
 
 .editor .exercise .exercise-problem::before {
-  content: 'Problem ' counter(exercise) ':';
+  content: attr(data-label);
 }
 
 .editor .exercise .exercise-solution::before {
-  content: 'Solution ' counter(exercise_solution) ':';
+  content: attr(data-label);
 }
 
 .editor .exercise .exercise-commentary::before {
-  content: 'Commentary: ';
+  content: attr(data-label);
+}
+
+div.editor figure > figcaption::before {
+  content: attr(data-label);
 }

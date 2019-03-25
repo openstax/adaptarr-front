@@ -1,14 +1,15 @@
 import './index.css'
 
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 
 import validateEmail from 'src/helpers/validateEmail'
 
 type Props = {
   onChange: (value: string) => void
   isValid?: (status: boolean) => void
+  l10nId?: string,
   errorMessage?: string
-  placeholder?: string
   value?: string
   type?: string
   autoFocus?: boolean
@@ -113,24 +114,31 @@ class Input extends React.Component<Props> {
 
   public render() {
     const { touched, inputVal } = this.state
-    const { errorMessage, placeholder, type, autoFocus } = this.props
-  
+    const { l10nId, errorMessage, type, autoFocus } = this.props
+
     const classes = this.validateInput().classes
-    
+
+    let input = <input
+      type={type ? type : 'text'}
+      value={inputVal}
+      autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
+      onChange={this.changeInputVal}
+      onFocus={this.onFocus}
+      onBlur={this.onBlur}
+    />
+
+    if (l10nId) {
+      input = <Localized id={l10nId} attrs={{ placeholder: true }}>
+        {input}
+      </Localized>
+    }
+
     return (
       <div className={classes}>
-        <input
-          type={type ? type : 'text'}
-          placeholder={placeholder ? placeholder : ''}
-          value={inputVal}
-          autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
-          onChange={this.changeInputVal}
-          onFocus={this.onFocus}
-          onBlur={this.onBlur}
-        />
+        {input}
         {
           touched && !this.validateInput().status && errorMessage ?
-            <span className="input__error">{errorMessage}</span>
+            <span className="input__error"><Localized id={errorMessage} /></span>
           : null
         }
       </div>

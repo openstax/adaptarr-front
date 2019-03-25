@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { History } from 'history'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -79,7 +78,7 @@ class Dashboard extends React.Component<Props> {
     targetDraft.delete()
       .then(() => {
         this.fetchDrafts()
-        store.dispatch(addAlert('success', i18n.t("Draft.deleteDraftSuccess")))
+        store.dispatch(addAlert('success', 'dashboard-delete-draft-alert-success'))
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -93,7 +92,7 @@ class Dashboard extends React.Component<Props> {
 
     mod.createDraft()
       .then(() => {
-        store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
+        store.dispatch(addAlert('success', 'dashboard-create-draft-alert-success'))
         this.props.history.push(`/drafts/${mod.id}`)
       })
       .catch(e => {
@@ -118,22 +117,28 @@ class Dashboard extends React.Component<Props> {
   }
 
   public render() {
-    const { drafts, isLoading } = this.state
+    const { drafts, isLoading, targetDraft } = this.state
 
     return (
       <Section>
-        <Header i18nKey="Dashboard.title" />
+        <Header l10nId="dashboard-view-title" title="Dashboard" />
         {
           this.state.showDeleteDraftDialog ?
             <Dialog
-              title={i18n.t("Draft.deleteDraftConfirmation") as string}
+              l10nId="dashboard-delete-draft-dialog-title"
+              placeholder="Are you sure you want to delete this draft?"
+              $title={targetDraft!.title}
               onClose={this.closeDeleteDraftDialog}
             >
               <Button color="red" clickHandler={this.deleteDraft}>
-                <Trans i18nKey="Buttons.delete"/>
+                <Localized id="dashboard-delete-draft-confirm">
+                  Delete
+                </Localized>
               </Button>
               <Button clickHandler={this.closeDeleteDraftDialog}>
-                <Trans i18nKey="Buttons.cancel"/>
+                <Localized id="dashboard-delete-draft-cancel">
+                  Cancel
+                </Localized>
               </Button>
             </Dialog>
           :
@@ -146,7 +151,9 @@ class Dashboard extends React.Component<Props> {
           <div className="section__content">
             <div className="section__half">
               <h3 className="section__heading">
-                <Trans i18nKey="Dashboard.yourDrafts" />
+                <Localized id="dashboard-section-drafts">
+                  Your drafts:
+                </Localized>
               </h3>
               <DraftsList
                 drafts={drafts}
@@ -155,7 +162,9 @@ class Dashboard extends React.Component<Props> {
             </div>
             <div className="section__half">
               <h3 className="section__heading">
-                <Trans i18nKey="Dashboard.assignedToYou" />
+                <Localized id="dashboard-section-assigned">
+                  Assigned to you:
+                </Localized>
               </h3>
               <AssignedToMe
                 drafts={drafts}

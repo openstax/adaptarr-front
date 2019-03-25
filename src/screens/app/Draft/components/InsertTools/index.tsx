@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
@@ -29,17 +29,21 @@ export default class InsertTools extends React.Component<Props> {
     const { editor, value } = this.props
 
     return (
-      <ToolGroup title="Editor.insert.groupTitle">
+      <ToolGroup title="editor-tools-insert-title">
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"
         >
           <Icon name="link" />
-          <Trans i18nKey="Editor.insert.reference" />
+          <Localized id="editor-tools-insert-reference">
+            Reference
+          </Localized>
         </Button>
         <Button clickHandler={this.insertAdmonition} className="toolbox__button--insert">
           <Icon name="sticky-note" />
-          <Trans i18nKey="Editor.insert.admonition" />
+          <Localized id="editor-tools-insert-admonition">
+            Admonition
+          </Localized>
         </Button>
         <Button
           clickHandler={this.insertExercise}
@@ -47,15 +51,21 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
         >
           <Icon name="flask" />
-          <Trans i18nKey="Editor.insert.exercise" />
+          <Localized id="editor-tools-insert-exercise">
+            Exercise
+          </Localized>
         </Button>
         <Button clickHandler={this.openFigureModal} className="toolbox__button--insert">
           <Icon name="image" />
-          <Trans i18nKey="Editor.insert.figure" />
+          <Localized id="editor-tools-insert-figure">
+            Figure
+          </Localized>
         </Button>
         <Button clickHandler={this.insertCode} className="toolbox__button--insert">
           <Icon name="code" />
-          Insert code
+          <Localized id="editor-tools-insert-code">
+            Code
+          </Localized>
         </Button>
         <Modal
           ref={this.setFigureModal}

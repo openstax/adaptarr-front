@@ -1,10 +1,9 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { match } from 'react-router'
 import { History } from 'history'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -60,7 +59,7 @@ class Module extends React.Component<Props> {
 
     mod.createDraft()
       .then(draft => {
-        store.dispatch(addAlert('success', i18n.t("Draft.createDraftSuccess")))
+        store.dispatch(addAlert('success', 'module-create-draft-alert-success'))
         history.push(`/drafts/${draft.module}`)
       })
       .catch(e => {
@@ -73,11 +72,11 @@ class Module extends React.Component<Props> {
 
     return (
       <Section>
-        <Header title={mod ? mod.title : i18n.t("Unknown.module") as string}>
+        <Header l10nId="module-view-title" title={mod.title}>
           {
             mod.assignee ?
               <div className="module__assignee">
-                <span>{i18n.t("Module.assignee")}</span>
+                <span><Localized id="module-assignee">Asignee:</Localized></span>
                 <Avatar size="small" user={teamMap.get(mod.assignee)}/>
               </div>
             : null
@@ -86,14 +85,18 @@ class Module extends React.Component<Props> {
             {
               isDraftExisting ?
                 <Button to={`/drafts/${mod.id}`}>
-                  <Trans i18nKey="Buttons.viewDraft"/>
+                  <Localized id="module-open-draft">
+                    View draft
+                  </Localized>
                 </Button>
               :
               <Button
                 color="green"
                 clickHandler={this.createDraft}
               >
-                <Trans i18nKey="Buttons.newDraft"/>
+                <Localized id="module-create-draft">
+                  New draft
+                </Localized>
               </Button>
             }
           </UserUI>

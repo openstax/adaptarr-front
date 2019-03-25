@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { Block, Editor, Value } from 'slate'
 
 import Button from 'src/components/ui/Button'
@@ -18,10 +18,12 @@ export default class ExerciseTools extends React.Component<Props> {
     const exercise = editor.getActiveExercise(value)
 
     return exercise && (
-      <ToolGroup title="Editor.exercise.groupTitle">
+      <ToolGroup title="editor-tools-exercise-title">
         <Button clickHandler={this.insertSolution} className="toolbox__button--insert">
           <Icon name="check" />
-          <Trans i18nKey="Editor.exercise.insert.solution" />
+          <Localized id="editor-tools-exercise-insert-solution">
+            Add solution
+          </Localized>
         </Button>
         <Button
           clickHandler={this.insertCommentary}
@@ -29,7 +31,9 @@ export default class ExerciseTools extends React.Component<Props> {
           className="toolbox__button--insert"
         >
           <Icon name="comment" />
-          <Trans i18nKey="Editor.exercise.insert.commentary" />
+          <Localized id="editor-tools-exercise-insert-commentary">
+            Add commentary
+          </Localized>
         </Button>
       </ToolGroup>
     )

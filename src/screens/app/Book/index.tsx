@@ -4,9 +4,7 @@ import * as React from 'react'
 import Nestable from 'react-nestable'
 import { History } from 'history'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
-
-import i18n from 'src/i18n'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
@@ -40,7 +38,7 @@ type Props = {
   modules: {
     modulesMap: types.ModulesMap
   }
-  addAlert: (kind: types.RequestInfoKind, message: string) => void
+  addAlert: (kind: types.RequestInfoKind, message: string, args?: object) => void
 }
 
 const mapStateToProps = ({ team, modules }: State) => {
@@ -133,7 +131,7 @@ class Book extends React.Component<Props> {
             throw new Error(`Couldn't find parent for item at path: ${JSON.stringify(path)}`)
           }
         })
-      } 
+      }
     }
 
     return parent
@@ -151,7 +149,7 @@ class Book extends React.Component<Props> {
       console.log('You can not move modules into modules.')
       return false
     }
-    
+
     return true
   }
 
@@ -199,7 +197,7 @@ class Book extends React.Component<Props> {
     changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
-        this.props.addAlert('success', i18n.t("Book.positionChangeSuccess", {item: changedItem.title, target: targetParent.title}))
+        this.props.addAlert('success', 'book-part-moving-alert-success', {item: changedItem.title, target: targetParent.title})
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
@@ -217,7 +215,7 @@ class Book extends React.Component<Props> {
           })
           .catch(e => {
             this.setState({ isLoading: false })
-            this.props.addAlert('error', i18n.t("Book.fetchError", {title: book.title, details: e.message}))
+            this.props.addAlert('error', 'book-fetch-error', {title: book.title, details: e.message})
           })
       })
       .catch(() => {
@@ -245,9 +243,9 @@ class Book extends React.Component<Props> {
   componentDidMount () {
     this.fetchBook()
   }
-  
+
   public render() {
-    const { 
+    const {
       isLoading,
       book,
       parts,
@@ -255,6 +253,9 @@ class Book extends React.Component<Props> {
       disableDragging,
       showEditBook,
     } = this.state
+
+    const title = book ? book.title : 'Loading'
+    const titleKey = book ? 'book-view-title' : 'book-view-title-loading'
 
     return (
       <div className="container container--splitted">
@@ -268,7 +269,7 @@ class Book extends React.Component<Props> {
           : null
         }
         <Section>
-          <Header title={book ? book.title : 'Loading'}>
+          <Header l10nId={titleKey} title={title}>
             <AdminUI>
               <Button
                 clickHandler={this.showEditBook}
@@ -279,16 +280,20 @@ class Book extends React.Component<Props> {
                 {
                   disableDragging ?
                     <React.Fragment>
-                      <Trans i18nKey="Book.draggingLocked"/>
+                      <Localized id="book-part-moving-locked">
+                        Moving modules is locked.
+                      </Localized>
                       <Button
                         clickHandler={this.toggleDragging}
                       >
                         <Icon name="lock"/>
                       </Button>
                     </React.Fragment>
-                  : 
+                  :
                     <React.Fragment>
-                      <Trans i18nKey="Book.draggingUnlocked"/>
+                      <Localized id="book-part-moving-unlocked">
+                        Now you can move modules.
+                      </Localized>
                       <Button
                         clickHandler={this.toggleDragging}
                       >
@@ -318,9 +323,11 @@ class Book extends React.Component<Props> {
         {
           showModuleDetails ?
             <Section>
-              <Header title={showModuleDetails.title}>
+              <Header l10nId="module-view-title" title={showModuleDetails.title}>
                 <Button to={`/modules/${showModuleDetails.id}`}>
-                  <Trans i18nKey="Buttons.goToModule"/>
+                  <Localized id="module-go-to">
+                    Go to module
+                  </Localized>
                 </Button>
                 <Button size="small" clickHandler={this.closeModuleDetails}>
                   <Icon name="close" />

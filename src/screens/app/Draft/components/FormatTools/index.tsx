@@ -1,8 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Editor, Value } from 'slate'
-
-import i18n from 'src/i18n'
+import { Localized } from 'fluent-react/compat'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -13,7 +12,6 @@ export type Props = {
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code'
-type BlockType = { value: string, label: string }
 
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code']
 
@@ -24,11 +22,6 @@ const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'su
  * be disabled.
  */
 const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
-
-const BLOCK_TYPES: BlockType[] = [
-  { value: 'paragraph', label: i18n.t('Editor.format.textType.paragraph') },
-  { value: 'title', label: i18n.t('Editor.format.textType.title') },
-]
 
 export default class FormatTools extends React.Component<Props> {
   render() {
@@ -45,38 +38,41 @@ export default class FormatTools extends React.Component<Props> {
       <div className="toolbox-format">
         <Select
           className="toolbox__select"
-          value={{ value: startBlock.type, label: i18n.t(`Editor.format.textType.${startBlock.type}`) as string }}
+          value={startBlock.type}
           onChange={this.changeTextType}
-          options={BLOCK_TYPES}
+          options={SWITCHABLE_TEXT_TYPES}
           isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
+          formatOptionLabel={OptionLabel}
         />
         {FORMATS.map(format => (
-          <Button
-            key={format}
-            className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
-            dataId={format}
-            clickHandler={this.applyFormat}
-            title={i18n.t(`Editor.format.${format}`) as string}
-          >
-            <Icon name={format} />
-          </Button>
+          <Localized key={format} id={`editor-tools-format-button-${format}`} attrs={{ title: true }}>
+            <Button
+              className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
+              dataId={format}
+              clickHandler={this.applyFormat}
+            >
+              <Icon name={format} />
+            </Button>
+          </Localized>
         ))}
-        <Button
-          className="toolbox__button--only-icon"
-          isDisabled={list !== null}
-          clickHandler={this.formatList}
-          title={i18n.t('Editor.format.list') as string}
-        >
-          <Icon name="list-ul" />
-        </Button>
-        <Button
-          className="toolbox__button--only-icon"
-          isDisabled={value.activeMarks.isEmpty()}
-          clickHandler={this.clear}
-          title={i18n.t('Editor.format.clear') as string}
-        >
-          <Icon name="close" />
-        </Button>
+        <Localized id="editor-tools-format-button-list" attrs={{ title: true }}>
+          <Button
+            className="toolbox__button--only-icon"
+            isDisabled={list !== null}
+            clickHandler={this.formatList}
+          >
+            <Icon name="list-ul" />
+          </Button>
+        </Localized>
+        <Localized id="editor-tools-format-button-clear" attrs={{ title: true }}>
+          <Button
+            className="toolbox__button--only-icon"
+            isDisabled={value.activeMarks.isEmpty()}
+            clickHandler={this.clear}
+          >
+            <Icon name="close" />
+          </Button>
+        </Localized>
       </div>
     )
   }
@@ -85,9 +81,9 @@ export default class FormatTools extends React.Component<Props> {
     return this.props.value.marks.some(mark => mark ? mark.type === format : false)
   }
 
-  private changeTextType = (blockType: BlockType) => {
+  private changeTextType = (blockType: string) => {
     const { editor, value } = this.props
-    editor.setNodeByKey(value.startBlock.key, { type: blockType.value })
+    editor.setNodeByKey(value.startBlock.key, { type: blockType })
   }
 
   private applyFormat = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -107,4 +103,8 @@ export default class FormatTools extends React.Component<Props> {
   private formatList = () => {
     this.props.editor.wrapInList('ul_list')
   }
+}
+
+function OptionLabel(type: string) {
+  return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
 }
