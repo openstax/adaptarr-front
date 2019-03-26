@@ -846,8 +846,8 @@ editor-tools-xref-grammatical-case = { $case ->
 
 ## Editor toolboxes - sections
 
-editor-tools-sections-title = Sekcje
+editor-tools-sections-title = Sekcja
 
-editor-tools-sections-increase-depth =  Zwiększ poziom
+editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
-editor-tools-sections-decrease-depth =  Zmniejsz poziom 
+editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 

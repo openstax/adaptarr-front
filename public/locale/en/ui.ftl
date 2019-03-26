@@ -820,7 +820,7 @@ editor-tools-xref-grammatical-case = { $case ->
 
 ## Editor toolboxes - sections
 
-editor-tools-sections-title = Sections
+editor-tools-sections-title = Section
 
 editor-tools-sections-increase-depth =  Increase level
 
