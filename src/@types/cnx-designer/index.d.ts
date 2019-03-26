@@ -36,7 +36,7 @@ declare module 'cnx-designer' {
 
   export class Storage {
     static load(id: string): Promise<Storage>
-    read(): Promise<Value | null>
+    read(): Promise<Value>
     write(value: Value): Promise<void>
     writeFile(file: File): Promise<void>
     current(value: Value): boolean
