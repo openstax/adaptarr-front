@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Editor } from 'slate'
-import { EditorProps, RenderNodeProps } from 'slate-react'
+import { EditorProps, RenderNodeProps, Editor } from 'slate-react'
 
 import Admonition from '../../components/Admonition'
 import Labelled from '../../components/Labelled'

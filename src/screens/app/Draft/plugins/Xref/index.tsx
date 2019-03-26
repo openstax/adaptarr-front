@@ -93,7 +93,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     const { node, editor } = this.props
     const { counters, l10n, uiL10n } = this.context
     const targetKey = node.data.get('target')
-    const target = editor.value.document.getNode(targetKey) as Block | Inline
+    const target = editor.value.document.getNode(targetKey) as unknown as Block | Inline
 
     let l10nKey
     let args = { case: node.data.get('case') }

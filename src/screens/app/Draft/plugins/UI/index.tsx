@@ -7,8 +7,8 @@ import { EditorProps, Plugin } from 'slate-react'
 import LocalizationLoader from '../../components/LocalizationLoader'
 import Toolbox from '../../components/Toolbox'
 
-const UIPlugin: Plugin = {
-  renderEditor(props, editor, next) {
+const UIPlugin: Plugin | any = {
+  renderEditor(props: EditorProps, editor: Editor, next: () => any) {
     return <Ui editor={editor} {...props}>
       {next()}
     </Ui>
@@ -35,7 +35,7 @@ class Ui extends React.Component<Props> {
           <>
             {children}
             <MixedLocalization l10n={l10n}>
-              <Toolbox editor={editor} value={value} />
+              <Toolbox editor={editor} value={editor.value} />
             </MixedLocalization>
           </>
         </LocalizationLoader>
