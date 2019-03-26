@@ -22,11 +22,17 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.2.0":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2":
   version "7.3.1"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.3.1.tgz#574b03e8e8a9898eaf4a872a92ea20b7846f6f2a"
   dependencies:
     regenerator-runtime "^0.12.0"
+
+"@babel/runtime@^7.1.5", "@babel/runtime@^7.3.1":
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.2.tgz#f5ab6897320f16decd855eed70b705908a313fe8"
+  dependencies:
+    regenerator-runtime "^0.13.2"
 
 "@babel/types@^7.0.0":
   version "7.3.3"
@@ -79,12 +85,10 @@
 "@types/fluent-langneg@^0.1.1":
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/@types/fluent-langneg/-/fluent-langneg-0.1.1.tgz#ec7f31c8e759e0206ac7a8367d2c92c913296dc9"
-  integrity sha512-3BX6Q5Rp+FU7ST6k63XJE+COIOC9zXkkaYvLpGpwKEvSjP9DpA6PSDR1oaea2XCoZ0AKNMwCQ7LeRS8nY5oISQ==
 
 "@types/fluent-react@^0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@types/fluent-react/-/fluent-react-0.8.0.tgz#6a21023162ed134dea81af1be416c4ff3c489e5b"
-  integrity sha512-PhPM8ZWaQAnh7gUMUV5uXr02whpAtqptjRq6rStoVIvSsc4fl+SIvzKv6CU68QQz6Z5oVGeyVmv1DyMAMYzrGg==
   dependencies:
     "@types/fluent" "*"
     "@types/react" "*"
@@ -93,7 +97,6 @@
 "@types/fluent@*", "@types/fluent@^0.10.0":
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/@types/fluent/-/fluent-0.10.0.tgz#97c6c07dcc18a9aa03b3dee0c1f5f913a7b6a471"
-  integrity sha512-GGXfY/epRlxKbqY2xi6aOzkjvaX0+odA4KseH9e41vOAkri9TQHVXfMKR3g6ZbZnYkMt90buHhOa+Mocdg3IMA==
 
 "@types/history@*":
   version "4.7.2"
@@ -1478,7 +1481,6 @@ cache-base@^1.0.1:
 cached-iterable@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/cached-iterable/-/cached-iterable-0.2.1.tgz#723958f5e7adc74c96bedb10b426bdfd95f2fe6d"
-  integrity sha512-8zAVjMjdn/S/QXJaOnqsko0+ZJzXT2Dum2u9TMGg5YR9fxONPrUjuO9VYqnb1AoldXeYVAcNJLgT5Q8WaIJSgA==
 
 caller-callsite@^2.0.0:
   version "2.0.0"
@@ -2975,12 +2977,10 @@ flatten@^1.0.2:
 fluent-langneg@^0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/fluent-langneg/-/fluent-langneg-0.1.1.tgz#8a6a95e0c57a1c339aa598cb1ee7e3df0c976adb"
-  integrity sha512-7lCFviLfesnxV4SnwAJh1epnKw97doF1Fmrjx3rAjq1/bbgrmuC43rpL7Qx81keB4Eu+YsjFZ7hCMg2mM25SyA==
 
 fluent-react@^0.8.3:
   version "0.8.3"
   resolved "https://registry.yarnpkg.com/fluent-react/-/fluent-react-0.8.3.tgz#b3681d07748aa473cfd2b3e50b88006bc15f2956"
-  integrity sha512-uNP+kefHxZ/yAqtg/cQlsruY/K8oiVMbU2E7Tcd+LEaVd5GxKWjv6CvmQNVrAsrWai0VrrVAg5SRVD19vVPHog==
   dependencies:
     cached-iterable "^0.2.1"
     fluent-sequence "^0.2.0"
@@ -2989,17 +2989,14 @@ fluent-react@^0.8.3:
 fluent-sequence@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/fluent-sequence/-/fluent-sequence-0.2.0.tgz#f351d93e0194182de60c6d5dfbdb3c96772813f8"
-  integrity sha512-t8fc4rHvzO9Yk8otP8LkTqWo6mzjdemooQcnHlDrNzrYAnwsSbVFIlthnkzK2pLsRnO9Ybmw4lXOYUx+fAIyJw==
 
 fluent-syntax@^0.10.0:
   version "0.10.0"
   resolved "https://registry.yarnpkg.com/fluent-syntax/-/fluent-syntax-0.10.0.tgz#2dfa934752866e5d297b3df763e6d2b0ced04c5d"
-  integrity sha512-6qRhwQXDTgJjS9DW3IiXZWzUMUPqNPzqh+bZZyUOr6t8xYwkIe+5JONYZuvfvbOUk65paAno0kd8s8kUD2ptNA==
 
 fluent@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/fluent/-/fluent-0.11.0.tgz#c6d4bcdb27d70eecb3c891e4f536e6dd94973580"
-  integrity sha512-HISy2vMEpHapwXOxp6Qljo6ObJPMLAI1Sh6RdiQLCdTgRr/0Cl1qPaXAPTvQar2dvDwzJH3oi1qsycCW/R5S/g==
 
 flush-write-stream@^1.0.0:
   version "1.1.1"
@@ -3458,12 +3455,6 @@ html-minifier@^3.2.3:
     relateurl "0.2.x"
     uglify-js "3.4.x"
 
-html-parse-stringify2@2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/html-parse-stringify2/-/html-parse-stringify2-2.0.1.tgz#dc5670b7292ca158b7bc916c9a6735ac8872834a"
-  dependencies:
-    void-elements "^2.0.1"
-    
 html-webpack-plugin@^2.29.0:
   version "2.30.1"
   resolved "https://registry.yarnpkg.com/html-webpack-plugin/-/html-webpack-plugin-2.30.1.tgz#7f9c421b7ea91ec460f56527d78df484ee7537d5"
@@ -6154,15 +6145,17 @@ react-input-trigger@^1.1.2:
   dependencies:
     textarea-caret "^3.1.0"
 
-react-is@^16.6.3, react-is@^16.7.0:
+react-is@^16.7.0:
   version "16.8.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.1.tgz#a80141e246eb894824fb4f2901c0c50ef31d4cdb"
-  integrity sha512-ioMCzVDWvCvKD8eeT+iukyWrBGrA3DiFYkXfBsVYIRdaREZuBjENG+KjrikavCLasozqRWTwFUagU/O4vPpRMA==
 
 react-is@^16.8.1:
   version "16.8.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.2.tgz#09891d324cad1cb0c1f2d91f70a71a4bee34df0f"
-  integrity sha512-D+NxhSR2HUCjYky1q1DwpNUD44cDpUXzSmmFyC3ug1bClcU/iDNy0YNn1iwme28fn+NFhpA13IndOd42CrFb+Q==
+
+react-is@^16.8.2:
+  version "16.8.5"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.5.tgz#c54ac229dd66b5afe0de5acbe47647c3da692ff8"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -6379,6 +6372,10 @@ regenerator-runtime@^0.11.0:
 regenerator-runtime@^0.12.0:
   version "0.12.1"
   resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
+
+regenerator-runtime@^0.13.2:
+  version "0.13.2"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
 
 regenerator-transform@^0.10.0:
   version "0.10.1"
@@ -7799,10 +7796,6 @@ vm-browserify@0.0.4:
   dependencies:
     indexof "0.0.1"
 
-void-elements@^2.0.1:
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/void-elements/-/void-elements-2.0.1.tgz#c066afb582bb1cb4128d60ea92392e94d5e9dbec"
-  
 w3c-hr-time@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.1.tgz#82ac2bff63d950ea9e3189a58a65625fedf19045"
