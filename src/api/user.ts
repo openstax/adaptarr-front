@@ -8,6 +8,7 @@ import Base from './base'
 export type UserData = {
   id: number,
   name: string,
+  language: string,
 }
 
 export default class User extends Base<UserData> {
