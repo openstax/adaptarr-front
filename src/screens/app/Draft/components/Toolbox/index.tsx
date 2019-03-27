@@ -51,9 +51,9 @@ export default function Toolbox({ editor, value }: Props) {
         <MergeButton value={value} />
       </div>
       <FormatTools editor={editor} value={value} />
-      <SectionTools editor={editor} value={value} />
       <InsertTools editor={editor} value={value} />
 
+      <SectionTools editor={editor} value={value} />
       <AdmonitionTools editor={editor} value={value} />
       <ExerciseTools editor={editor} value={value} />
       <FigureTools editor={editor} value={value} />
