@@ -31,10 +31,20 @@ export function reducer(state: State = initialState, action: AppAction) {
   case SET_ROLES:
     return {
       ...state,
-      roles: action.data,
+      roles: action.data.sort(sortRoles),
     }
 
   default:
     return state
+  }
+}
+
+const sortRoles = (a: Role, b: Role) => {
+  if (a.id > b.id) {
+    return 1
+  } else if (a.id < b.id) {
+    return -1
+  } else {
+    return 0
   }
 }
