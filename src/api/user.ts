@@ -3,6 +3,7 @@ import axios from 'src/config/axios'
 import Base from './base'
 
 import { elevated } from './utils'
+import Role, { Permission } from './role'
 
 /**
  * User data as returned by the API.
@@ -10,10 +11,17 @@ import { elevated } from './utils'
 export type UserData = {
   id: number,
   name: string,
-  flags?: number[],
+  role: Role | null,
 }
 
-export default class User extends Base<UserData> {
+/**
+ * User permissions.
+ */
+export type UserPermissions = {
+  permissions?: Permission[],
+}
+
+export default class User extends Base<UserData & UserPermissions> {
   /**
    * Fetch a user by their ID.
    */
@@ -31,7 +39,12 @@ export default class User extends Base<UserData> {
   static async me(): Promise<User | null> {
     try {
       const user = await axios.get('users/me')
-      return new User(user.data, 'me')
+      const permissions = await axios.get('users/me/permissions')
+      let data = {
+        ...user.data,
+        permissions: permissions.data || [],
+      }
+      return new User(data, 'me')
     } catch (err) {
       console.log('error', err)
       if (err.response.status === 401) {
@@ -64,10 +77,17 @@ export default class User extends Base<UserData> {
   }
 
   /**
-   * Change privileges
+   * Change role
    */
-  async changePrivileges(flags: number[]): Promise<any> {
-    return await elevated(() => axios.put(`users/${this.apiId}/privileges`, { flags }))
+  async changeRole(id: number): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
+  }
+
+  /**
+   * Change permissions
+   */
+  async changePermissions(permissions: Permission[]): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
   }
 
   /**
@@ -91,9 +111,14 @@ export default class User extends Base<UserData> {
   apiId: string
 
   /**
-   * User's privileges flags.
+   * User's role.
    */
-  flags: number[] = []
+  role: Role | null
+
+  /**
+   * User's permissions.
+   */
+  permissions: Permission[]
 
   constructor(data: UserData, apiId?: string) {
     super(data)
