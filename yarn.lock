@@ -191,16 +191,9 @@
     "@types/slate" "*"
     immutable "^3.8.2"
 
-"@types/slate@*":
+"@types/slate@*", "@types/slate@^0.44.0":
   version "0.44.0"
   resolved "https://registry.yarnpkg.com/@types/slate/-/slate-0.44.0.tgz#099de36a16b1792884cd870fd9047e667d568c2f"
-  dependencies:
-    "@types/react" "*"
-    immutable "^3.8.2"
-
-"@types/slate@^0.43.8":
-  version "0.43.9"
-  resolved "https://registry.yarnpkg.com/@types/slate/-/slate-0.43.9.tgz#779e9593a7573fe28d80a9860474b3f3b14ade04"
   dependencies:
     "@types/react" "*"
     immutable "^3.8.2"

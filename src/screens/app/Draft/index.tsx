@@ -16,6 +16,7 @@ import './index.css'
 import UIPlugin from './plugins/UI'
 import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
+import TablesPlugin from './plugins/Tables'
 
 type Props = {
   documentDb: DocumentDB
@@ -57,7 +58,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 }
 
 class Draft extends React.Component<Props> {
-  prePlugins = [I10nPlugin, XrefPlugin]
+  prePlugins = [I10nPlugin, XrefPlugin, TablesPlugin]
   postPlugins = [UIPlugin]
 
   static childContextTypes = {

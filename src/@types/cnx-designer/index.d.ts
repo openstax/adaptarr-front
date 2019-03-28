@@ -23,7 +23,8 @@ declare module 'cnx-designer' {
   export default class Editor extends React.Component<EditorProps> {
   }
 
-  export const CNXML: {
+  export class CNXML {
+    constructor(rules: any[])
     deserialize(html: string, options?: {}): Value
     serialize(value: Value, title: string): string
   }

@@ -1,3 +1,5 @@
+import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
+import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
 
@@ -81,15 +83,15 @@ export default class Storage extends StorageBase {
   async read() {
     const index = await this._request('/files/index.cnxml')
     this.tag = index.headers.get('ETag')
-    this.value = CNXML.deserialize(await index.text())
+    this.value = this.serializer.deserialize(await index.text())
     return this.value
   }
 
   /**
    * Write the document
    */
-  async write(value: Value) {
-    const text = CNXML.serialize(value, this.title)
+  async write(value: Value) {   
+    const text = this.serializer.serialize(value, this.title)
 
     const req = await fetch(this.url + '/files/index.cnxml', {
       method: 'PUT',
@@ -146,4 +148,6 @@ export default class Storage extends StorageBase {
 
     return data ? req[data]() : req
   }
+
+  serializer = new CNXML([tablesDeserialize, tablesSerialize])
 }
