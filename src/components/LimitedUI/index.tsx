@@ -6,13 +6,14 @@ import { connect } from 'react-redux'
 import { User } from 'src/api'
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
+import { Permission } from 'src/api/role'
 
 type Props = {
   user: {
     isLoading: IsLoading
     user: User
   }
-  flag?: number | number[] // User has to have one or more flags to see hidden UI
+  flag?: Permission | Permission[] // User has to have one or more flags to see hidden UI
 }
 
 const mapStateToProps = ({ user }: State) => {
@@ -27,18 +28,18 @@ class LimitedUI extends React.Component<Props> {
     const { user: { user }, flag = [] } = this.props
 
     // Render component only if user have proper flags
-    if (typeof flag === 'number') {
-      if (!user.flags.includes(flag)) {
+    if (typeof flag === 'string') {
+      if (!user.permissions.includes(flag)) {
         return null
       }
     } else {
-      let access = true
-      flag.forEach(f => {
-        if (!user.flags.includes(f)) {
-          access = false
+      let noAccess = flag.some(f => {
+        if (!user.permissions.includes(f)) {
+          return true
         }
+        return false
       })
-      if (!access) return null
+      if (noAccess) return null
     }
 
     return (
