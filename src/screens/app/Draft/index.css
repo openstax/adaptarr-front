@@ -44,6 +44,18 @@
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
+.editor section > section > .title {
+  font-size: 1.6rem;
+}
+
+.editor section > section > section > .title {
+  font-size: 1.4rem;
+}
+
+.editor section > section > section > section > .title {
+  font-size: 1.2rem;
+}
+
 .editor p {
   margin-top: 0.6em;
   margin-bottom: 0.6em;
@@ -97,13 +109,13 @@
   padding: 0;
 }
 
-.editor h2.title {
+.editor .title {
   /* Use same margins for titles as for paragraphs. */
   margin-top: 1rem;
   margin-bottom: 1rem;
   /* Don't use bold for titles. */
   font-weight: normal;
-  font-size: 1.3rem;
+  font-size: 1.8rem;
 }
 
 .editor .admonition {

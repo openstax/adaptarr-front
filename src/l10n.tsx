@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { negotiateLanguages } from 'fluent-langneg/compat';
+import { negotiateLanguages } from 'fluent-langneg/compat'
 import { FluentBundle } from 'fluent/compat';
-import { LocalizationProvider } from 'fluent-react/compat';
+import { LocalizationProvider } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import store from 'src/store'

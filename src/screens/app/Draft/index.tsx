@@ -14,7 +14,7 @@ import Title from './components/Title'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
-import I18nPlugin from './plugins/I18n'
+import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
 
@@ -58,7 +58,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 }
 
 class Draft extends React.Component<Props> {
-  prePlugins = [I18nPlugin, XrefPlugin, TablesPlugin]
+  prePlugins = [I10nPlugin, XrefPlugin, TablesPlugin]
   postPlugins = [UIPlugin]
 
   static childContextTypes = {
