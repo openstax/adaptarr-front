@@ -110,7 +110,7 @@ class Books extends React.Component<Props> {
     return (
       <Section>
         <Header l10nId="book-list-view-title" title="Books">
-          <LimitedUI>
+          <LimitedUI flag="book:edit">
             <Button
               color="green"
               clickHandler={this.showAddBookDialog}
