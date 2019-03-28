@@ -142,7 +142,9 @@ class App extends React.Component<Props> {
                                   >
                                     <Icon name="close"/>
                                   </span>
-                                  <Localized id={alert.data.message} {...alert.data.arguments} />
+                                  <Localized id={alert.data.message} {...alert.data.arguments}>
+                                    Unknow alert
+                                  </Localized>
                                 </li>
                               )
                             case 'notification':
