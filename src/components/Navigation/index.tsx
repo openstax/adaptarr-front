@@ -204,7 +204,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </a>
               </div>
             </li>
-            <LimitedUI>
+            <LimitedUI flag="user:invite">
               <li className="nav__link">
                 <Tooltip l10nId="navigation-invite" direction="right">
                   <NavLink to="/invitations" activeClassName="active">
@@ -213,6 +213,22 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                       <span className="nav__text">
                         <Localized id="navigation-invite">
                           Invitations
+                        </Localized>
+                      </span>
+                    </span>
+                  </NavLink>
+                </Tooltip>
+              </li>
+            </LimitedUI>
+            <LimitedUI flag="role:edit">
+              <li className="nav__link">
+                <Tooltip l10nId="navigation-roles" direction="right">
+                  <NavLink to="/roles" activeClassName="active">
+                    <span className="nav__content">
+                      <Icon name="users" />
+                      <span className="nav__text">
+                        <Localized id="navigation-roles">
+                          Manage roles
                         </Localized>
                       </span>
                     </span>

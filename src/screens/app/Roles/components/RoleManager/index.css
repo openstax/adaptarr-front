@@ -1,0 +1,27 @@
+.role-manager {
+  margin: 10px 0;
+  min-width: 500px;
+}
+
+.role-manager__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px;
+}
+
+.role-manager__header:hover {
+  background-color: var(--light-bg);
+}
+
+.role-manager__controls .button {
+  margin-left: 5px;
+}
+
+.role-manager__content {
+  display: none;
+}
+
+.role-manager__content.active {
+  display: block;
+}
