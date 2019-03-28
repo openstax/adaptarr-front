@@ -9,6 +9,7 @@ import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
+import SectionTools from '../SectionTools'
 import XrefTools from '../XrefTools'
 import SaveButton from '../SaveButton'
 import MergeButton from '../MergeButton'
@@ -52,6 +53,7 @@ export default function Toolbox({ editor, value }: Props) {
       <FormatTools editor={editor} value={value} />
       <InsertTools editor={editor} value={value} />
 
+      <SectionTools editor={editor} value={value} />
       <AdmonitionTools editor={editor} value={value} />
       <ExerciseTools editor={editor} value={value} />
       <FigureTools editor={editor} value={value} />

@@ -707,6 +707,8 @@ editor-tools-insert-exercise = Ćwiczenie
 
 editor-tools-insert-figure = Figura
 
+editor-tools-insert-section = Sekcja
+
 
 
 ## Editor toolboxes - lists
@@ -841,3 +843,11 @@ editor-tools-xref-grammatical-case = { $case ->
   [translative] Translativus
   [vocative] Wołacz (vocativus)
 }
+
+## Editor toolboxes - sections
+
+editor-tools-sections-title = Sekcja
+
+editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
+
+editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 

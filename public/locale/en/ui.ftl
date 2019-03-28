@@ -705,6 +705,8 @@ editor-tools-insert-exercise = Exercise
 
 editor-tools-insert-figure = Figure
 
+editor-tools-insert-section = Section
+
 
 
 ## Editor toolboxes - lists
@@ -815,3 +817,12 @@ editor-tools-xref-grammatical-case = { $case ->
   [translative] Translative
   [vocative] Vocative
 }
+
+## Editor toolboxes - sections
+
+editor-tools-sections-title = Section
+
+editor-tools-sections-increase-depth =  Increase level
+
+editor-tools-sections-decrease-depth =  Decrease level 
+

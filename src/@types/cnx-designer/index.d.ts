@@ -70,6 +70,9 @@ declare module 'cnx-designer' {
 
   export interface EditorAug {
     // Commands
+    insertSection(): EditorAug
+    decreaseSectionDepth(): EditorAug
+    increaseSectionDepth(): EditorAug
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug
     insertSolution(): EditorAug
@@ -82,6 +85,7 @@ declare module 'cnx-designer' {
     removeMarks(): EditorAug
 
     // Queries
+    getActiveSection(value: Value): Block | null
     getActiveAdmonition(value: Value): Block | null
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
