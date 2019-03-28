@@ -330,6 +330,14 @@ user-profile-section-bio = Bio:
 
 user-profile-section-contact = Kontakt
 
+user-profile-section-role = Rola użytkownika
+
+user-profile-role-unknown = Nieznana rola
+
+user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name }.
+
+user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }.
+
 # Placeholder text for team search box.
 user-profile-team-list-search =
   .placeholder = Szukaj użytkownika
@@ -407,6 +415,34 @@ settings-language-dialog-cancel = Anuluj
 
 
 
+## Screens - roles
+
+roles-view-title = Role
+
+roles-section-add = Dodaj nową rolę
+
+roles-section-manage = Zarządzaj rolami
+
+role-name = Nazwa roli
+
+role-create = Utwórz rolę
+
+role-create-success = Rola "{ $name }" została utworzona.
+
+role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+
+role-delete-success = Rola "{ $name }" została usunięta.
+
+role-create-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+
+role-update-success = Rola "{ $name }" została zaktualizowana.
+
+role-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
+
+role-update = Zaktualizuj rolę
+
+
+
 ## Reusable components - navigation and side menu
 ##
 ## This component is displayed at all times and provides easy access to primary
@@ -431,6 +467,8 @@ navigation-settings = Ustawienia
 navigation-logout = Wyloguj
 
 navigation-invite = Zaproszenia
+
+navigation-roles = Role
 
 
 
