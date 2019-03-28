@@ -1,6 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
+import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { FilesError } from 'react-files'
@@ -12,6 +13,7 @@ import * as api from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { fetchUser } from 'src/store/actions/User'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -26,15 +28,18 @@ import Input from 'src/components/ui/Input'
 import FilesUploader from 'src/containers/FilesUploader'
 
 import { State } from 'src/store/reducers'
+import LimitedUI from 'src/components/LimitedUI';
 
 type Props = {
   user: api.User
   currentUser: api.User
+  roles: api.Role[],
 }
 
-const mapStateToProps = ({ user: { user } }: State) => {
+const mapStateToProps = ({ user: { user }, app: { roles } }: State) => {
   return {
     currentUser: user,
+    roles,
   }
 }
 
@@ -250,10 +255,15 @@ class UserProfile extends React.Component<Props> {
     this.closeDialog()
   }
 
-  private handlePrivilegesChange = (flags: number[]) => {
-    if (JSON.stringify(this.state.flags) !== JSON.stringify(flags)) {
-      this.setState({ flags })
-    }
+  private handleRoleChange = (role: api.Role) => {
+    this.props.user.changeRole(role.id)
+      .then(() => {
+        store.dispatch(fetchUser())
+        store.dispatch(addAlert('success', 'user-profile-change-role-success', {name: role.name}))
+      })
+      .catch((e) => {
+        store.dispatch(addAlert('error', 'user-profile-change-role-error', {details: e.response.data.error}))
+      })
   }
 
   public render() {
@@ -306,6 +316,28 @@ class UserProfile extends React.Component<Props> {
                 </h2>
               </div>
               <div className="profile__info">
+                <h3 className="profile__title">
+                  <Localized id="user-profile-section-role">User's role:</Localized>
+                </h3>
+                <span className="profile__role">
+                  {
+                    user.role ?
+                      user.role.name
+                    :
+                      <Localized id="user-profile-role-unknown">
+                        Unknow role
+                      </Localized>
+                  }
+                </span>
+                <LimitedUI flag="user:assign-role">
+                  <Select
+                    className="profile__select"
+                    value={this.props.user.role}
+                    options={this.props.roles}
+                    formatOptionLabel={(role) => role.name}
+                    onChange={this.handleRoleChange}
+                  />
+                </LimitedUI>
                 <h3 className="profile__title">
                   <Localized id="user-profile-section-bio">Bio</Localized>
                 </h3>
