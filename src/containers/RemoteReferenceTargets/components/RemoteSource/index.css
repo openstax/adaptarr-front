@@ -1,0 +1,15 @@
+.target-source {
+  display: flex;
+  padding: 10px;
+  background: #fff;
+  border-radius: 3px;
+}
+
+.target-source:hover {
+  cursor: pointer;
+  background-color: #efefef;
+}
+
+.target-source__title{
+  flex: 1;
+}

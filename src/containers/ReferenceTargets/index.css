@@ -1,0 +1,17 @@
+.targets {
+  margin: 10px;
+}
+
+.targets__category {
+  border-bottom: 1px solid var(--light-bg);
+  margin-bottom: 10px;
+}
+
+.targets__category:last-child {
+  border: none;
+  margin-bottom: 0;
+}
+
+.targets__title {
+  font-weight: 700;
+}

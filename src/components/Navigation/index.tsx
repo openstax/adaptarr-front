@@ -1,12 +1,10 @@
 import './index.css'
 
 import * as React from 'react'
-import Tooltip from 'react-tooltip-lite'
 import { connect } from 'react-redux'
 import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import { Notification } from 'src/api'
 
 import Header from 'src/components/Header'
@@ -15,6 +13,7 @@ import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Tooltip from 'src/components/ui/Tooltip'
 
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -53,7 +52,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
   }
 
   componentDidMount = () => {
-    const toggleSidebar = localStorage.getItem('toggleSidebar') 
+    const toggleSidebar = localStorage.getItem('toggleSidebar')
     if (toggleSidebar) {
       this.setState({ toggleSidebar: JSON.parse(toggleSidebar) })
     }
@@ -63,12 +62,12 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
     const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
     let { isLoading, unreadNotifications } = this.props.notifications
     unreadNotifications = [...unreadNotifications].reverse()
-    
+
     return (
       <aside className={sidebarClasses}>
-        <Header i18nKey="Navigation.title">
-          <Button 
-            className="sidebar__toggle" 
+        <Header l10nId="navigation-title" title="Menu">
+          <Button
+            className="sidebar__toggle"
             clickHandler={this.toggleSidebar}>
             <Icon name={'menu'} />
           </Button>
@@ -76,24 +75,28 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
         <nav className="nav">
           <ul>
             <li className="nav__link">
-              <Tooltip content={i18n.t("Navigation.dashboardLink")} direction="right">
+              <Tooltip l10nId="navigation-dashboard" direction="right">
                 <NavLink exact to="/" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="dashboard" />
                     <span className="nav__text">
-                      <Trans i18nKey="Navigation.dashboardLink"/>
+                      <Localized id="navigation-dashboard">
+                        Dashboard
+                      </Localized>
                     </span>
                   </span>
                 </NavLink>
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content={i18n.t("Navigation.notificationsLink")}>
+              <Tooltip l10nId="navigation-notifications">
                 <NavLink to="/notifications" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="bell" />
                     <span className="nav__text">
-                      <Trans i18nKey="Navigation.notificationsLink"/>
+                      <Localized id="navigation-notifications">
+                        Notifications
+                      </Localized>
                     </span>
                   </span>
                   {
@@ -120,7 +123,9 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                             })
                           }
                           <Link to="/notifications" className="show-more">
-                            <Trans i18nKey="Notifications.showAll"/>
+                            <Localized id="navigation-notifications-show-all">
+                              Show all
+                            </Localized>
                           </Link>
                         </React.Fragment>
                       : <Spinner />
@@ -130,8 +135,8 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               }
             </li>
             <li className="nav__link">
-              <Tooltip content={i18n.t("Navigation.booksLink")} direction="right">
-                <NavLink 
+              <Tooltip l10nId="navigation-books" direction="right">
+                <NavLink
                   to="/books"
                   activeClassName="active"
                   isActive={(_, location) => isActive(location, ['books', 'modules'])}
@@ -139,26 +144,30 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   <span className="nav__content">
                     <Icon name="book" />
                     <span className="nav__text">
-                      <Trans i18nKey="Navigation.booksLink"/>
+                      <Localized id="navigation-books">
+                        Books
+                      </Localized>
                     </span>
                   </span>
                 </NavLink>
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content={i18n.t("Navigation.resourcesLink")} direction="right">
+              <Tooltip l10nId="navigation-resources" direction="right">
                 <NavLink to="/resources" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="info" />
                     <span className="nav__text">
-                      <Trans i18nKey="Navigation.resourcesLink"/>
+                      <Localized id="navigation-resources">
+                        Resources
+                      </Localized>
                     </span>
                   </span>
                 </NavLink>
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip content={i18n.t("Navigation.yourProfileLink")}>
+              <Tooltip l10nId="navigation-profile">
                 <NavLink
                   to="/users/me"
                   activeClassName="active"
@@ -167,34 +176,44 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   <span className="nav__content">
                     <Icon name="profile"/>
                     <span className="nav__text">
-                      <Trans i18nKey="Navigation.yourProfileLink"/>
+                      <Localized id="navigation-profile">
+                        Your profile
+                      </Localized>
                     </span>
                   </span>
                 </NavLink>
               </Tooltip>
               <div className="nav__hoverbox">
                 <NavLink to="/users/me" activeClassName="active" className="nav__link">
-                  <Trans i18nKey="Navigation.yourProfileLink"/>
+                  <Localized id="navigation-profile">
+                    Your profile
+                  </Localized>
                 </NavLink>
                 <NavLink to="/settings" activeClassName="active" className="nav__link">
-                  <Trans i18nKey="Navigation.settingsLink"/>
+                  <Localized id="navigation-settings">
+                    Settings
+                  </Localized>
                 </NavLink>
-                <a 
+                <a
                   className="nav__link"
                   href="/logout"
                 >
-                  <Trans i18nKey="Navigation.logoutLink"/>
+                  <Localized id="navigation-logout">
+                    Logout
+                  </Localized>
                 </a>
               </div>
             </li>
             <LimitedUI>
               <li className="nav__link">
-                <Tooltip content={i18n.t("Navigation.invitationsLink")} direction="right">
+                <Tooltip l10nId="navigation-invite" direction="right">
                   <NavLink to="/invitations" activeClassName="active">
                     <span className="nav__content">
                       <Icon name="users" />
                       <span className="nav__text">
-                        <Trans i18nKey="Navigation.invitationsLink"/>
+                        <Localized id="navigation-invite">
+                          Invitations
+                        </Localized>
                       </span>
                     </span>
                   </NavLink>

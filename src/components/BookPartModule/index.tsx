@@ -1,8 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -72,7 +71,7 @@ class Module extends React.Component<Props> {
     targetModule.delete()
       .then(() => {
         this.props.afterAction()
-        store.dispatch(addAlert('success', i18n.t("Book.moduleRemoveSuccess", { title: targetModule.title })))
+        store.dispatch(addAlert('success', 'book-remove-module-alert-success', { title: targetModule.title }))
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -97,7 +96,7 @@ class Module extends React.Component<Props> {
     const assignee = user ? user.id : null
 
     if (!targetModule || !this.module) {
-      return store.dispatch(addAlert('error', i18n.t("User.assignError")))
+      return store.dispatch(addAlert('error', 'book-assign-user-alert-error'))
     }
 
     this.module.assign(user)
@@ -105,9 +104,9 @@ class Module extends React.Component<Props> {
         this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
         this.props.afterAction()
         if (user) {
-          store.dispatch(addAlert('success', i18n.t("User.assignSuccess", { user: user.name, module: targetModule.title })))
+          store.dispatch(addAlert('success', 'book-assign-user-alert-success', { user: user.name, module: targetModule.title }))
         } else {
-          store.dispatch(addAlert('success', i18n.t("User.unassignSuccess", { module: targetModule.title })))
+          store.dispatch(addAlert('success', 'book-unassign-user-alert-success', { module: targetModule.title }))
         }
       })
       .catch(e => {
@@ -135,21 +134,26 @@ class Module extends React.Component<Props> {
         {
           showRemoveModule ?
             <Dialog
+              l10nId="book-remove-module-title"
+              placeholder="Are you sure?"
               size="medium"
               onClose={this.closeAssignUserDialog}
-              i18nKey="Book.removeModuleDialog"
             >
               <Button 
                 color="green" 
                 clickHandler={this.removeModule}
               >
-                <Trans i18nKey="Buttons.delete" />
+                <Localized id="book-remove-module-confirm">
+                  Delete
+                </Localized>
               </Button>
               <Button 
                 color="red"
                 clickHandler={this.closeRemoveModuleDialog}
               >
-                <Trans i18nKey="Buttons.cancel" />
+                <Localized id="book-remove-module-cancel">
+                  Cancel
+                </Localized>
               </Button>
             </Dialog>
           : null
@@ -157,9 +161,10 @@ class Module extends React.Component<Props> {
         {
           showAssignUser ?
             <Dialog
+              l10nId="book-assign-user-title"
+              placeholder="Select user from a list to assign them."
               size="medium"
               onClose={this.closeAssignUserDialog}
-              i18nKey="Book.assignUserDialog"
             >
               <UsersList
                 mod={item}
@@ -181,7 +186,7 @@ class Module extends React.Component<Props> {
               clickHandler={this.showRemoveModuleDialog}
             >
               <Icon name="minus" />
-              <Trans i18nKey="Buttons.module" />
+              <Localized id="book-remove-module">Module</Localized>
             </Button>
           </LimitedUI>
           {
@@ -191,15 +196,17 @@ class Module extends React.Component<Props> {
                 <Button
                   clickHandler={this.unassignUser}
                 >
-                  <Trans i18nKey="Buttons.unassign" />
+                  <Localized id="book-unassign-user">Unassign</Localized>
                 </Button>
                 <Button clickHandler={this.showAssignUserDialog}>
-                  <Trans i18nKey="Buttons.assignOther" />
+                  <Localized id="book-assign-different-user">
+                    Assign other user
+                  </Localized>
                 </Button>
               </React.Fragment>
               :
               <Button clickHandler={this.showAssignUserDialog}>
-                <Trans i18nKey="Buttons.assign" />
+                <Localized id="book-assign-user">Assign user</Localized>
               </Button>
           }
           <span className="bookpart__status">

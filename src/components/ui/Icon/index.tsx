@@ -4,7 +4,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile' | 'lock' | 'unlock' | 'link' | 'image' | 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'list-ul' | 'list-ol' | 'flask' | 'sticky-note' | 'save' | 'comment' | 'check' | 'indent' | 'outdent',
+  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-left' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile' | 'lock' | 'unlock' | 'link' | 'image' | 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'list-ul' | 'list-ol' | 'flask' | 'sticky-note' | 'save' | 'comment' | 'check' | 'indent' | 'outdent',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -45,6 +45,10 @@ const icon = ({ size, name }: Props) => {
       case 'arrow-right':
         return (
           <svg aria-hidden="true" data-prefix="fas" data-icon="caret-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M0 384.662V127.338c0-17.818 21.543-26.741 34.142-14.142l128.662 128.662c7.81 7.81 7.81 20.474 0 28.284L34.142 398.804C21.543 411.404 0 402.48 0 384.662z"></path></svg>
+        )
+      case 'arrow-left':
+        return (
+          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path></svg>
         )
       case 'arrow-down':
         return (

@@ -1,15 +1,14 @@
 import './index.css'
 
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import { Invitation } from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import Privileges from 'src/components/Privileges'
 import Input from 'src/components/ui/Input'
 
 class Invitations extends React.Component {
@@ -34,7 +33,7 @@ class Invitations extends React.Component {
     Invitation.create(email, this.state.flags)
       .then(() => {
         this.setState({ emailValue: '' })
-        store.dispatch(addAlert('success', i18n.t("Invitations.sentTo", {email: email})))
+        store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
@@ -51,39 +50,28 @@ class Invitations extends React.Component {
     }
   }
 
-  private handlePrivilegesChange = (flags: number[]) => {
-    if (JSON.stringify(this.state.flags) !== JSON.stringify(flags)) {
-      this.setState({ flags })
-    }
-  }
-
   public render() {
     const { emailValue, isEmailVaild } = this.state
 
     return (
       <div className="container">
         <Section>
-          <Header i18nKey="Invitations.title"/>
+          <Header l10nId="invitation-view-title" title="Invite new user" />
           <div className="section__content">
             <div className="invitations">
               <form onSubmit={this.sendInvitation}>
                 <Input
                   type="email"
+                  l10nId="invitation-email"
                   value={emailValue}
                   onChange={this.hanleInputChange}
                   isValid={this.handleInputValidation}
-                  placeholder={i18n.t("Invitations.emailPlaceholder") as string}
                   validation={{email: true}}
-                  errorMessage={i18n.t("Invitations.emailInvalid") as string}
+                  errorMessage="invitation-email-validation-invalid"
                 />
-                <Privileges
-                  onChange={this.handlePrivilegesChange}
-                />
-                <input
-                  type="submit"
-                  value={i18n.t('Buttons.invite') as string}
-                  disabled={!isEmailVaild || !emailValue}
-                />
+                <Localized id="invitation-send" attrs={{ value: true }}>
+                  <input type="submit" value="Send invitation" disabled={!isEmailVaild || !emailValue} />
+                </Localized>
               </form>
             </div>
           </div>

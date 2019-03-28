@@ -2,10 +2,9 @@ import './index.css'
 
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -65,7 +64,7 @@ class Books extends React.Component<Props> {
 
   private addBook = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const { titleInput: title, files } = this.state
 
     this.setState({ uploading: true })
@@ -75,7 +74,7 @@ class Books extends React.Component<Props> {
         this.props.fetchBooksMap()
         this.props.fetchModulesMap()
         this.setState({ titleInput: '' })
-        store.dispatch(addAlert('success', i18n.t("Books.bookAddSuccess")))
+        store.dispatch(addAlert('success', 'book-list-add-book-alert-success'))
         this.closeAddBookDialog()
       })
       .catch((e) => {
@@ -110,9 +109,9 @@ class Books extends React.Component<Props> {
 
     return (
       <Section>
-        <Header i18nKey="Books.title">
+        <Header l10nId="book-list-view-title" title="Books">
           <LimitedUI>
-            <Button 
+            <Button
               color="green"
               clickHandler={this.showAddBookDialog}
             >
@@ -122,28 +121,31 @@ class Books extends React.Component<Props> {
         </Header>
         {
           showAddBook ?
-            <Dialog 
+            <Dialog
+              l10nId="book-list-add-book-dialog-title"
+              placeholder="Add new book"
               size="medium"
               onClose={this.closeAddBookDialog}
-              i18nKey="Books.addBookDialog"
             >
-              { 
+              {
                 uploading ?
                   <Spinner />
                 :
                   <form onSubmit={this.addBook}>
-                    <Input 
-                      value={this.state.titleInput} 
-                      onChange={this.updateTitleInput} 
-                      placeholder="Book title"
+                    <Input
+                      l10nId="book-list-add-book-title"
+                      value={this.state.titleInput}
+                      onChange={this.updateTitleInput}
                       validation={{minLength: 3}}
                     />
-                    <FilesUploader 
-                      onFilesChange={this.onFilesChange} 
+                    <FilesUploader
+                      onFilesChange={this.onFilesChange}
                       onFilesError={this.onFilesError}
                       accepts={['.zip', '.rar']}
                     />
-                    <input type="submit" value={i18n.t('Buttons.confirm') as string} disabled={titleInput.length === 0} />
+                    <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
+                      <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
+                    </Localized>
                   </form>
               }
             </Dialog>
@@ -157,7 +159,9 @@ class Books extends React.Component<Props> {
                   Array.from(booksMap.values()).map((book: api.Book) => (
                     <BookCard key={book.id} book={book}/>
                   ))
-                : <Trans i18nKey="Books.noBooksFound" />
+                : <Localized id="book-list-empty">
+                  No books found.
+                </Localized>
               }
             </div>
           :

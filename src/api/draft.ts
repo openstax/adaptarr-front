@@ -11,6 +11,7 @@ import Module from './module'
 export type DraftData = {
   module: string,
   title: string,
+  language: string,
 }
 
 export default class Draft extends Base<DraftData> {
@@ -48,6 +49,11 @@ export default class Draft extends Base<DraftData> {
    * Title of the module as of this draft.
    */
   title: string
+
+  /**
+   * Language of the module as of this draft.
+   */
+  language: string
 
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.

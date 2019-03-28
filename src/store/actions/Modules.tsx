@@ -1,7 +1,7 @@
-import { Module } from 'src/api'
+import Module from 'src/api/module'
 
 import * as constants from 'src/store/constants'
-import { ModulesMap } from 'src/store/types'
+import { ModulesMap, ReferenceTarget } from 'src/store/types'
 
 export interface FetchModulesMap {
   (dispatch: any): void
@@ -36,7 +36,25 @@ export interface FetchModulesAssignedToMe {
   (dispatch: any): void
 }
 
-export type ModulesAction = SetModulesMap | AddModuleToMap | RemoveModuleFromMap | SetAssignedToMe | SetAssigneeInModulesMap
+export interface FetchReferenceTargets {
+  (dispatch: any): void
+}
+
+export interface SetReferenceTargets {
+  type: constants.SET_REFERENCE_TARGETS,
+  data: {
+    moduleId: string,
+    targets: ReferenceTarget[],
+  },
+}
+
+export type ModulesAction
+  = SetModulesMap
+  | AddModuleToMap
+  | RemoveModuleFromMap
+  | SetAssignedToMe
+  | SetAssigneeInModulesMap
+  | SetReferenceTargets
 
 const setModulesMap = (payload: ModulesMap): SetModulesMap => {
   return {
@@ -100,4 +118,49 @@ export const fetchModulesAssignedToMe = (): FetchModulesAssignedToMe => {
         throw new Error(e.message)
       })
   }
+}
+
+const setReferenceTargets = (moduleId: string, targets: ReferenceTarget[]): SetReferenceTargets => ({
+  type: constants.SET_REFERENCE_TARGETS,
+  data: {
+    moduleId,
+    targets,
+  }
+})
+
+export const fetchReferenceTargets = (forModule: Module) => async (dispatch: any) => {
+  const rsp = await forModule.referenceTargets()
+  const targets = new Map<string, ReferenceTarget>()
+
+  for (const rt of rsp) {
+    if (rt.context) continue
+
+    targets.set(rt.id, {
+      id: rt.id,
+      type: rt.type,
+      description: rt.description,
+      counter: rt.counter,
+      children: [],
+    })
+  }
+
+  for (const rt of rsp) {
+    if (!rt.context) continue
+
+    const context = targets.get(rt.context)
+    if (!context) {
+      console.warn(`Context ${rt.context} missing for element ${rt.id}, ignoring`)
+      continue
+    }
+
+    context.children.push({
+      id: rt.id,
+      type: rt.type,
+      description: rt.description,
+      counter: rt.counter,
+      children: [],
+    })
+  }
+
+  dispatch(setReferenceTargets(forModule.id, Array.from(targets.values())))
 }

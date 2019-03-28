@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -75,7 +74,7 @@ class Group extends React.Component<Props> {
     this.props.item.update({ title: groupNameInput })
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', i18n.t("Book.titleChangeSuccess", {from: this.props.item.title, to: groupNameInput})))
+        store.dispatch(addAlert('success', 'book-group-change-title-alert-success', {from: this.props.item.title, to: groupNameInput}))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
@@ -111,7 +110,7 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', i18n.t("Book.groupAddSuccess")))
+        store.dispatch(addAlert('success', 'book-add-group-alert-success'))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
@@ -133,7 +132,7 @@ class Group extends React.Component<Props> {
     item.delete()
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', i18n.t("Book.groupRemoveSuccess", {title: item.title})))
+        store.dispatch(addAlert('success', 'book-remove-group-alert-success', {title: item.title}))
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -165,7 +164,7 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', i18n.t("Book.moduleAddSuccess", {title: selectedModule.title})))
+        store.dispatch(addAlert('success', 'book-group-add-module-alert-success', {title: selectedModule.title}))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
@@ -201,28 +200,33 @@ class Group extends React.Component<Props> {
         {
           showEditGroup ?
             <Dialog
+              l10nId="book-group-change-title-dialog-title"
+              placeholder="Change chapter title."
               size="medium"
               onClose={this.closeEditGroupDialog}
-              i18nKey="Book.editGroupDialog"
             >
               <form onSubmit={this.handleEditBook}>
-                <Input 
+                <Input
+                  l10nId="book-group-change-title-value"
                   value={this.props.item.title}
-                  placeholder={i18n.t("Book.placeholderChangeGroupTitle") as string}
                   onChange={this.updateGroupNameInput}
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <input
-                  type="submit"
-                  value={i18n.t('Buttons.confirm') as string}
-                  disabled={groupNameInput.length <= 2}
-                />
-                <Button 
+                <Localized id="book-group-change-title-confirm" attrs={{ value: true }}>
+                  <input
+                    type="submit"
+                    value="Confirm"
+                    disabled={groupNameInput.length <= 2}
+                  />
+                </Localized>
+                <Button
                   color="red"
                   clickHandler={this.closeEditGroupDialog}
                 >
-                  <Trans i18nKey="Buttons.cancel"/>
+                  <Localized id="book-group-change-title-cancel">
+                    Cancel
+                  </Localized>
                 </Button>
               </form>
             </Dialog>
@@ -231,27 +235,30 @@ class Group extends React.Component<Props> {
         {
           showAddGroup ?
             <Dialog
+              l10nId="book-add-group-dialog-title"
+              placeholder="Provide chapter title."
               size="medium"
               onClose={this.closeAddGroupDialog}
-              i18nKey="Book.addGroupDialog"
             >
               <form onSubmit={this.handleAddGroup}>
                 <Input
-                  placeholder="Title"
+                  l10nId="book-add-group-title"
                   onChange={this.updateGroupNameInput}
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <input
-                  type="submit"
-                  value={i18n.t('Buttons.confirm') as string}
-                  disabled={groupNameInput.length <= 2}
-                />
-                <Button 
+                <Localized id="book-add-group-confirm" attrs={{ value: true }}>
+                  <input
+                    type="submit"
+                    value="Confirm"
+                    disabled={groupNameInput.length <= 2}
+                  />
+                </Localized>
+                <Button
                   color="red"
                   clickHandler={this.closeAddGroupDialog}
                 >
-                  <Trans i18nKey="Buttons.cancel"/>
+                  <Localized id="book-add-group-cancel">Cancel</Localized>
                 </Button>
               </form>
             </Dialog>
@@ -260,21 +267,22 @@ class Group extends React.Component<Props> {
         {
           showRemoveGroup ?
             <Dialog
+              l10nId="book-remove-group-dialog-title"
+              placeholder="Remove this group and all its contents?"
               size="medium"
               onClose={this.closeRemoveGroupDialog}
-              i18nKey="Book.removeGroupDialog"
             >
               <Button 
                 color="green" 
                 clickHandler={this.handleRemoveGroup}
               >
-                <Trans i18nKey="Buttons.delete"/>
+                <Localized id="book-remove-group-confirm">Delete</Localized>
               </Button>
               <Button 
                 color="red"
                 clickHandler={this.closeRemoveGroupDialog}
               >
-                <Trans i18nKey="Buttons.cancel"/>
+                <Localized id="book-remove-group-cancel">Cancel</Localized>
               </Button>
             </Dialog>
           : null
@@ -282,9 +290,10 @@ class Group extends React.Component<Props> {
         {
           showAddModule ?
             <Dialog
+              l10nId="book-group-add-module-dialog-title"
+              placeholder="Select module or create a new one."
               size="medium"
               onClose={this.closeAddModuleDialog}
-              i18nKey="Book.addModuleDialog"
             >
               <ModulesPicker onModuleClick={this.handleModuleClick}/>
             </Dialog>
@@ -297,19 +306,19 @@ class Group extends React.Component<Props> {
           <LimitedUI>
             <Button clickHandler={this.showEditBookDialog}>
               <Icon name="pencil"/>
-              <Trans i18nKey="Buttons.edit"/>
+              <Localized id="book-change-title">Edit</Localized>
             </Button>
             <Button color="green" clickHandler={this.showAddGroupDialog}>
               <Icon name="plus"/>
-              <Trans i18nKey="Buttons.group"/>
+              <Localized id="book-add-group">Group</Localized>
             </Button>
             <Button color="red" clickHandler={this.showRemoveGroupDialog}>
               <Icon name="minus"/>
-              <Trans i18nKey="Buttons.group"/>
+              <Localized id="book-remove-group">Group</Localized>
             </Button>
             <Button color="green" clickHandler={this.showAddModuleDialog}>
               <Icon name="plus"/>
-              <Trans i18nKey="Buttons.module"/>
+              <Localized id="book-add-module">Module</Localized>
             </Button>
           </LimitedUI>
           {

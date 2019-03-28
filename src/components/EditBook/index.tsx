@@ -1,8 +1,7 @@
 import * as React from 'react'
-import { Trans } from 'react-i18next'
+import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import i18n from 'src/i18n'
 import * as api from 'src/api'
 
 import Spinner from 'src/components/Spinner'
@@ -47,7 +46,7 @@ class EditBook extends React.Component<Props> {
 
     ;(files.length ? book.replaceContent(files[0]) : book.update(payload))
       .then(() => {
-        store.dispatch(addAlert('success', i18n.t("Book.updateSuccess")))
+        store.dispatch(addAlert('success', 'book-edit-alert-success'))
         this.setState({ titleInput: '', isLoading: false })
         this.props.onSuccess()
       })
@@ -77,7 +76,8 @@ class EditBook extends React.Component<Props> {
     return (
       <React.Fragment>
         <Dialog
-          i18nKey="Books.editBookDialog"
+          l10nId="book-edit-dialog-title"
+          placeholder="Edit book"
           size="medium"
           onClose={() => this.props.onClose()}
         >
@@ -85,9 +85,9 @@ class EditBook extends React.Component<Props> {
             !isLoading ?
               <form onSubmit={this.editBook}>
                 <Input
+                  l10nId="book-edit-title"
                   value={bookTitle}
                   onChange={this.updateTitleInput}
-                  placeholder={i18n.t("Book.bookTitlePlaceholder") as string}
                   validation={{minLength: 3}}
                 />
                 <FilesUploader
@@ -95,11 +95,13 @@ class EditBook extends React.Component<Props> {
                   onFilesError={this.onFilesError}
                   accepts={['.zip', '.rar']}
                 />
-                <input
-                  type="submit"
-                  value={i18n.t('Buttons.confirm') as string}
-                  disabled={titleInput.length === 0 && files.length === 0}
-                />
+                <Localized id="book-edit-submit" attrs={{ value: true }}>
+                  <input
+                    type="submit"
+                    value="Confirm"
+                    disabled={titleInput.length === 0 && files.length === 0}
+                  />
+                </Localized>
               </form>
             : <Spinner/>
           }

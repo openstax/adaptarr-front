@@ -1,0 +1,15 @@
+.remote-reference-targets > .button {
+  margin: 10px 0px 0 10px;
+}
+
+.remote-reference-targets > .button .icon {
+  margin-left: -8px;
+}
+
+.remote-reference-targets ul li {
+  border-bottom: 1px solid var(--light-bg);
+}
+
+.remote-reference-targets ul li:last-child {
+  border: none;
+}

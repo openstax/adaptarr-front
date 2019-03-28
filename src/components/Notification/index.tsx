@@ -3,8 +3,8 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Localized } from 'fluent-react/compat'
 
-import i18n from 'src/i18n'
 import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import { Notification, User, Module } from 'src/api'
@@ -35,7 +35,7 @@ const mapStateToProps = ({ team, modules }: State) => {
   }
 }
 
-const mapDispatchToProps = (dispatch: ChangeNotificationStatus) => {
+const mapDispatchToProps = (dispatch: any) => {
   return {
     changeNotificationStatus: (noti: Notification, status: NotificationStatus) => dispatch(changeNotificationStatus(noti, status))
   }
@@ -50,24 +50,6 @@ const trimMessage = (message: string) => {
 }
 
 class NotificationComp extends React.Component<Props> {
-
-  private notificationAction = (noti: Notification, mod: Module | undefined) => {
-    switch (noti.kind) {
-      /*case 'comment':
-        return i18n.t("Notifications.commentedAt", {
-          title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
-        })*/
-      case 'assigned':
-        return i18n.t("Notifications.assigned", {
-          title: mod ? mod.title : i18n.t("Notifications.undefinedModule")
-        })
-      /*case 'mention':
-        return i18n.t("Notifications.mentioned")*/
-      default:
-        return i18n.t("Notifications.unknowAction")
-    }
-  }
-
   private onNotificationClick = () => {
     // TODO: Fire this action only on unread notifications
     this.props.changeNotificationStatus(this.props.notification, 'read')
@@ -94,14 +76,16 @@ class NotificationComp extends React.Component<Props> {
             <Avatar disableLink={true} size={avatarSize} user={who} />
           </span>
           <span className="notification__text">
-            <div className="notification__action">
-              <strong>
-                { 
-                  who ? decodeHtmlEntity(who.name) + " " : null
-                } 
-              </strong>
-              { this.notificationAction(noti, mod) }
-            </div>
+            <Localized
+              id="notification"
+              $kind={noti.kind}
+              actor={<strong/>}
+              $actor={who ? decodeHtmlEntity(who.name) : null}
+              $module={mod && mod.title}
+              >
+              <div className="notification__action">
+              </div>
+            </Localized>
             {
               /*noti.message ?
                 <span className="notification__message">
@@ -119,7 +103,7 @@ class NotificationComp extends React.Component<Props> {
 
     return this.props.disableLink ?
         body
-      : 
+      :
         <Link to={linkToNotification} className="notification__link">
           {body}
         </Link>

@@ -17,6 +17,10 @@
   align-items: center;
 }
 
+.toolbox__label {
+  width: 100%;
+}
+
 .toolbox__select {
   width: 100%;
   margin: 10px 0;

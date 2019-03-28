@@ -1,5 +1,6 @@
 declare module 'cnx-designer' {
   import {
+    Inline,
     Block,
     Data,
     Editor as SlateEditor,
@@ -77,7 +78,7 @@ declare module 'cnx-designer' {
     insertSubfigure(media: MediaDescription): EditorAug
     insertCaption(): EditorAug
     changeListType(type: string): EditorAug
-    insertXref(target: string): EditorAug
+    insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
 
     // Queries
