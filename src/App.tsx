@@ -20,9 +20,11 @@ import Resources from 'src/screens/app/Resources'
 import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
 import Invitations from 'src/screens/app/Invitations'
+import Roles from 'src/screens/app/Roles'
 import Error404 from 'src/screens/app/Error404'
 
 import * as userActions from 'src/store/actions/User'
+import * as appActions from 'src/store/actions/app'
 import * as teamActions from 'src/store/actions/Team'
 import * as notificationsActions from 'src/store/actions/Notifications'
 import * as booksActions from 'src/store/actions/Books'
@@ -52,6 +54,7 @@ type Props = {
     alerts: types.Alert[]
   }
   fetchUser: () => void
+  fetchRoles: () => void
   fetchTeamMap: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
@@ -59,7 +62,7 @@ type Props = {
   removeAlert: (alert: types.Alert) => void
 }
 
-export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts }: State) => {
+export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts, app: { roles } }: State) => {
   return {
     user,
     team,
@@ -67,12 +70,14 @@ export const mapStateToProps = ({ user, notifications, team, booksMap, modules, 
     booksMap,
     modules,
     alerts,
+    roles,
   }
 }
 
 export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap | alertsActions.AddAlert) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
+    fetchRoles: () => dispatch(appActions.fetchRoles()),
     fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
@@ -85,6 +90,7 @@ class App extends React.Component<Props> {
 
   componentDidMount () {
     this.props.fetchUser()
+    this.props.fetchRoles()
     this.props.fetchTeamMap()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
@@ -115,6 +121,7 @@ class App extends React.Component<Props> {
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
                   <Route path="/invitations" component={Invitations}/>
+                  <Route path="/roles" component={Roles}/>
                   <Route component={Error404}/>
                 </Switch>
               </main>
