@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { Block, Editor, Value } from 'slate'
 
+import Classes from '../Classes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -19,6 +20,7 @@ export default class ExerciseTools extends React.Component<Props> {
 
     return exercise && (
       <ToolGroup title="editor-tools-exercise-title">
+        <Classes editor={editor} block={exercise} />
         <Button clickHandler={this.insertSolution} className="toolbox__button--insert">
           <Icon name="check" />
           <Localized id="editor-tools-exercise-insert-solution">

@@ -4,6 +4,7 @@ import { Block, BlockProperties, Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
+import Classes from '../Classes'
 
 const ADMONITIONS_TYPES: string[] = ['note', 'warning', 'tip', 'important']
 
@@ -25,6 +26,7 @@ export default function AdmonitionTools({ editor, value }: Props) {
 
   return (
     <ToolGroup title="editor-tools-admonition-title">
+      <Classes editor={editor} block={admonition} />
       <Select
         className="toolbox__select"
         value={admonition.data.get('type')}

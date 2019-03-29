@@ -14,6 +14,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
+import Classes from '../Classes'
 
 export type Props = {
   editor: Editor,
@@ -36,6 +37,7 @@ export default class FigureTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="editor-tools-figure-title">
+        <Classes editor={editor} block={figure} />
         <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}

@@ -7,6 +7,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
+import Classes from '../Classes'
 
 const LIST_STYLES: string[] = ['ol_list','ul_list']
 
@@ -24,6 +25,7 @@ export default class ListTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="editor-tools-list-title">
+        <Classes editor={editor} block={list} />
         <Select
           className="toolbox__select"
           value={list.type}
