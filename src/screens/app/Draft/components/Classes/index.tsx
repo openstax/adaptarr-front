@@ -37,6 +37,8 @@ class ClassName extends React.Component<Props> {
     tags: [],
   }
 
+  id = 'input_' + new Date().getTime()
+
   convertClassesToTags = () => {
     const block = this.props.block
 
@@ -77,8 +79,9 @@ class ClassName extends React.Component<Props> {
     if (!block) return null
 
     return (
-      <div className="classes">
+      <div className="classes" onClick={this.onClick}>
         <ReactTags
+          id={this.id}
           tags={tags}
           handleDelete={this.handleDelete}
           handleAddition={this.handleAddition}
@@ -88,6 +91,11 @@ class ClassName extends React.Component<Props> {
         />
       </div>
     )
+  }
+
+  private onClick = () => {
+    const input = document.getElementById(this.id) as HTMLInputElement
+    input.focus()
   }
 
   private handleDelete = (i: number) => {
