@@ -125,6 +125,6 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private insertCode = () => {
-    this.props.editor.insertCode()
+    this.props.editor.insertBlock('code')
   }
 }
