@@ -58,4 +58,4 @@ class LocalizationLoader extends React.Component<Props> {
   }
 }
 
-export default Load(loader, '', ['locale'])<{}>(LocalizationLoader)
+export default Load(loader, ['locale'])<{}>(LocalizationLoader)

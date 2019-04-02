@@ -54,4 +54,4 @@ class LocalizationLoader extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Load(loader, '', ['locale'])<{}>(LocalizationLoader))
+export default connect(mapStateToProps)(Load(loader, ['locale'])<{}>(LocalizationLoader))

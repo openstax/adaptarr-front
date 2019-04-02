@@ -95,4 +95,4 @@ class Draft extends React.Component<Props> {
   }
 }
 
-export default Load(loader, 'draft-loading-message')(Draft)
+export default Load(loader, [], 'draft-loading-message')(Draft)

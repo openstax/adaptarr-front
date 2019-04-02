@@ -334,4 +334,4 @@ class UserProfile extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Load(loader, '', ['userId'])(UserProfile))
+export default connect(mapStateToProps)(Load(loader, ['userId'])(UserProfile))
