@@ -54,6 +54,7 @@ class Settings extends React.Component<Props> {
 
     if (!newSelectedLanguage) return
 
+    User.changeLanguage(newSelectedLanguage.code)
     store.dispatch(setLocale([newSelectedLanguage.code]))
     this.setState({ showChangeLanguage: false })
   }

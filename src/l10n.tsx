@@ -5,8 +5,9 @@ import { LocalizationProvider } from 'fluent-react/compat';
 import { connect } from 'react-redux'
 
 import store from 'src/store'
+import User from 'src/api/user'
 import { State } from 'src/store/reducers'
-import { setAvailableLocales } from 'src/store/actions/app'
+import { setAvailableLocales, setLocale } from 'src/store/actions/app'
 
 import Load from 'src/components/Load'
 
@@ -20,8 +21,14 @@ export const MANIFEST = fetch('/locale/manifest.json')
 const mapStateToProps = ({ app }: State) => ({ locale: app.locale })
 
 async function loader(
-  { locale }: { locale: string[] },
+  { locale }: { locale: string[]},
 ): Promise<{ bundles: FluentBundle[] }> {
+  
+  const user = await User.me()
+  if (user && user.language !== locale[0]) {
+    store.dispatch(setLocale([user.language]))
+  }
+
   const manifest = await MANIFEST
 
   const languages = negotiateLanguages(

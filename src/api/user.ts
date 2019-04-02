@@ -62,6 +62,15 @@ export default class User extends Base<UserData> {
   }
 
   /**
+   * Change language.
+   * 
+   * @param language ISO code of language
+   */
+  static async changeLanguage(language: string) {
+    return await axios.put('users/me', { language })
+  }
+
+  /**
    * User's identificator.
    */
   id: number
@@ -70,6 +79,11 @@ export default class User extends Base<UserData> {
    * User's name.
    */
   name: string
+
+  /**
+   * User's language.
+   */
+  language: string
 
   /**
    * Identificator to use when making requests.

@@ -283,7 +283,7 @@ invitation-send-alert-success = Zaproszenie wysłane do { $email }
 #
 # Variables:
 # - $details (string): error details.
-invitation-send-alert-error = Coś poszło nie tak. Sczegóły: { $details }
+invitation-send-alert-error = Coś poszło nie tak. Szczegóły: { $details }
 
 
 
