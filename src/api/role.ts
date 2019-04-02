@@ -34,6 +34,7 @@ export default class Role extends Base<RoleData> {
 
   /**
    * Create a new role.
+   * 
    * This function requires role:edit permission.
    * 
    * @param name
@@ -45,7 +46,23 @@ export default class Role extends Base<RoleData> {
   }
 
   /**
+   * Roles's ID.
+   */
+  id: number
+
+  /**
+   * Roles's name.
+   */
+  name: string
+
+  /**
+   * Roles's permissions.
+   */
+  permissions?: Permission[]
+
+  /**
    * Update a role.
+   * 
    * This function requires role:edit permission.
    * 
    * @param data - object with data to update
@@ -63,8 +80,4 @@ export default class Role extends Base<RoleData> {
   async delete(): Promise<void> {
     await elevated(() => axios.delete(`roles/${this.id}`))
   }
-
-  id: number
-  name: string
-  permissions?: Permission[]
 }

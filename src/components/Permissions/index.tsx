@@ -1,3 +1,5 @@
+import './index.css'
+
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
@@ -28,15 +30,15 @@ class Permissions extends React.Component<Props> {
   }
 
   private onInputChange = (p: Permission) => {
-    const indexInSelected = this.state.selected.indexOf(p)
-    let selected = [...this.state.selected]
-    if (indexInSelected >= 0) {
-      selected.splice(indexInSelected, 1)
+    let selected = new Set(this.state.selected)
+    if (selected.has(p)) {
+      selected.delete(p)
     } else {
-      selected.push(p)
+      selected.add(p)
     }
-    this.setState({ selected })
-    this.props.onChange(selected)
+    const selectedArray = [...selected.values()]
+    this.setState({ selected: selectedArray })
+    this.props.onChange(selectedArray)
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -61,9 +63,6 @@ class Permissions extends React.Component<Props> {
                 htmlFor={`permission-${labelsId}-${p}`}
                 className="permissions__label"
               >
-                <Localized id="permission-label" $name={p}>
-                  {p}
-                </Localized>
                 <input
                   type="checkbox"
                   className="permissions__input"
@@ -73,6 +72,9 @@ class Permissions extends React.Component<Props> {
                   value={p}
                   onChange={() => this.onInputChange(p)}
                 />
+                <Localized id="permission-label" $name={p}>
+                  {p}
+                </Localized>
               </label>
             </li>
           ))}

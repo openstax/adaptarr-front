@@ -77,20 +77,6 @@ export default class User extends Base<UserData & UserPermissions> {
   }
 
   /**
-   * Change role
-   */
-  async changeRole(id: number): Promise<any> {
-    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
-  }
-
-  /**
-   * Change permissions
-   */
-  async changePermissions(permissions: Permission[]): Promise<any> {
-    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
-  }
-
-  /**
    * User's identificator.
    */
   id: number
@@ -124,5 +110,19 @@ export default class User extends Base<UserData & UserPermissions> {
     super(data)
 
     this.apiId = apiId || data.id.toString()
+  }
+
+  /**
+   * Change role
+   */
+  async changeRole(id: number): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
+  }
+
+  /**
+   * Change permissions
+   */
+  async changePermissions(permissions: Permission[]): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
   }
 }
