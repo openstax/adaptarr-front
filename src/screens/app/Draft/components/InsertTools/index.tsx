@@ -1,11 +1,12 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value } from 'slate'
+import { Editor, Value, Inline } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
 import * as api from 'src/api'
 import { FileDescription } from 'src/api/storage'
 
+import LinkBox from '../LinkBox'
 import ToolGroup from '../ToolGroup'
 import Modal from 'src/components/Modal'
 import Button from 'src/components/ui/Button'
@@ -24,6 +25,7 @@ export type Props = {
 export default class InsertTools extends React.Component<Props> {
   figureModal: Modal | null = null
   xrefModal: Modal | null = null
+  linkModal: Modal | null = null
 
   render() {
     const { editor, value } = this.props
@@ -67,6 +69,12 @@ export default class InsertTools extends React.Component<Props> {
             Section
           </Localized>
         </Button>
+        <Button clickHandler={this.handleInsertLink} className="toolbox__button--insert">
+          <Icon name="link" />
+          <Localized id="editor-tools-insert-link">
+            Link
+          </Localized>
+        </Button>
         <Modal
           ref={this.setFigureModal}
           content={this.renderFigureModal}
@@ -74,6 +82,10 @@ export default class InsertTools extends React.Component<Props> {
         <Modal
           ref={this.setXrefModal}
           content={this.renderXrefModal}
+        />
+        <Modal
+          ref={this.setLinkModal}
+          content={this.renderLinkModal}
         />
       </ToolGroup>
     )
@@ -93,13 +105,23 @@ export default class InsertTools extends React.Component<Props> {
     />
   )
 
+  private renderLinkModal = () => (
+    <LinkBox
+      onAccept={this.insertLink}
+    />
+  )
+
   private setFigureModal = (el: Modal | null) => el && (this.figureModal = el)
 
   private setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
 
+  private setLinkModal = (el: Modal | null) => el &&(this.linkModal = el)
+
   private openFigureModal = () => this.figureModal!.open()
 
   private openXrefModal = () => this.xrefModal!.open()
+
+  private openLinkModal = () => this.linkModal!.open()
 
   private insertAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
@@ -126,5 +148,35 @@ export default class InsertTools extends React.Component<Props> {
   private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
     this.xrefModal!.close()
     this.props.editor.insertXref(target.id, source ? source.id : undefined)
+  }
+
+  private handleInsertLink = () => {
+    const link = {
+      object: 'inline',
+      type: 'link',
+      data: {
+        url: '',
+      }
+    }
+    const { selection: { anchor, focus } } = this.props.value
+
+    if ((anchor.key !== focus.key) || (anchor.offset !== focus.offset)) {
+      this.props.editor.wrapInline(link)
+      return
+    }
+
+    this.openLinkModal()
+  }
+
+  private insertLink = (text: string, url: string) => {
+    this.linkModal!.close()
+    const editor = this.props.editor
+    const link = {
+      type: 'link',
+      data: { url },
+    }
+    editor.insertText(text)
+    editor.moveFocusBackward(text.length)
+    editor.wrapInline(link)
   }
 }
