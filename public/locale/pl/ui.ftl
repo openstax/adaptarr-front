@@ -449,7 +449,9 @@ role-update-success = Rola "{ $name }" została zaktualizowana.
 
 role-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
 
-role-update = Zaktualizuj rolę
+role-update-confirm = Zaktualizuj rolę
+
+role-update-cancel = Anuluj
 
 
 

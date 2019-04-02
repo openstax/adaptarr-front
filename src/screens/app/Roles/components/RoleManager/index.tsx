@@ -21,19 +21,19 @@ type Props = {
 class RoleManager extends React.Component<Props> {
   
   state: {
-    allowEdit: boolean
+    isEditing: boolean
     roleName: string
     permissions: Permission[]
     showConfirmationDialog: boolean
   } = {
-    allowEdit: false,
+    isEditing: false,
     roleName: '',
     permissions: [],
     showConfirmationDialog: false,
   }
 
   private toggleEditMode = () => {
-    this.setState({ allowEdit: !this.state.allowEdit })
+    this.setState({ isEditing: !this.state.isEditing })
   }
 
   private openRemoveRoleDialog = () => {
@@ -86,6 +86,14 @@ class RoleManager extends React.Component<Props> {
       })
   }
 
+  private cancelEditing = () => {
+    this.setState({
+      isEditing: false,
+      roleName: this.props.role.name,
+      permissions: this.props.role.permissions,
+    })
+  }
+
   componentDidUpdate(prevProps: Props) {
     const prevRole = prevProps.role
     const currRole = this.props.role
@@ -104,7 +112,7 @@ class RoleManager extends React.Component<Props> {
   }
   
   public render() {
-    const { allowEdit, roleName, permissions, showConfirmationDialog } = this.state
+    const { isEditing, roleName, permissions, showConfirmationDialog } = this.state
     const role = this.props.role
 
     return (
@@ -112,12 +120,12 @@ class RoleManager extends React.Component<Props> {
         <div className="role-manager__header">
           <span className="role-manager__name">
             {
-              allowEdit ?
-              <Input
-                l10nId="role-name"
-                value={roleName}
-                onChange={this.onRoleNameChange}
-              />
+              isEditing ?
+                <Input
+                  l10nId="role-name"
+                  value={roleName}
+                  onChange={this.onRoleNameChange}
+                />
               : role.name
             }
           </span>
@@ -131,7 +139,7 @@ class RoleManager extends React.Component<Props> {
           </span>
         </div>
         <div
-          className={`role-manager__content ${allowEdit ? 'active' : ''}`}
+          className={`role-manager__content ${isEditing ? 'active' : ''}`}
         >
           <form onSubmit={this.updateRole}>
             <Permissions
@@ -139,9 +147,14 @@ class RoleManager extends React.Component<Props> {
               selected={permissions}
               onChange={this.handleChange}
             />
-            <Localized id="role-update" attrs={{ value: true }}>
+            <Localized id="role-update-confirm" attrs={{ value: true }}>
               <input type="submit" value="Update role" disabled={!roleName} />
             </Localized>
+            <Button clickHandler={this.cancelEditing} color="red">
+              <Localized id="role-update-cancel">
+                Cancel
+              </Localized>
+            </Button>
           </form>
         </div>
         {
@@ -150,7 +163,7 @@ class RoleManager extends React.Component<Props> {
               l10nId="role-delete-title"
               placeholder="Are you sure you want to delete this role?"
               $name={role.name}
-              onClose={() => this.setState({ showConfirmationDialog: false })}
+              onClose={this.closeDeleteRoleDialog}
             >
               <Button 
                 color="green" 

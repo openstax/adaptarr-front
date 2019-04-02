@@ -449,7 +449,9 @@ role-update-success = Role "{ $name }" has been updated.
 
 role-update-error = Couldn't update role. Details: { $details }.
 
-role-update = Update role
+role-update-confirm = Update role
+
+role-update-cancel = Cancel
 
 
 
