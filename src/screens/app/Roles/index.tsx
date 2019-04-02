@@ -70,11 +70,11 @@ class Roles extends React.Component<Props> {
 
     return (
       <section className="section--wrapper">
-        <Header l10nId="roles-view-title" title="Manage roles" />
+        <Header l10nId="role-view-title" title="Manage roles" />
         <div className="section__content roles">
           <div className="roles__col">
             <h2 className="roles__title">
-              <Localized id="roles-section-add">
+              <Localized id="role-section-add">
                 Add new role
               </Localized>
             </h2>
@@ -95,7 +95,7 @@ class Roles extends React.Component<Props> {
           </div>
           <div className="roles__col roles__col--right">
             <h2 className="roles__title">
-              <Localized id="roles-section-manage">
+              <Localized id="role-section-manage">
                 Manage all roles
               </Localized>
             </h2>

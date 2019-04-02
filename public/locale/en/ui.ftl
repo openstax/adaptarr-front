@@ -417,11 +417,11 @@ settings-language-dialog-cancel = Cancel
 
 ## Screens - roles
 
-roles-view-title = Roles
+role-view-title = Roles
 
-roles-section-add = Add new role
+role-section-add = Add new role
 
-roles-section-manage = Manage roles
+role-section-manage = Manage roles
 
 role-name = Role name
 
