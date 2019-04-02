@@ -248,7 +248,7 @@ dashboard-create-draft-alert-success = Szkic został utworzony.
 
 ## Screens - draft
 
-draft-loading-message = Loading draft. It may take a while minutes for bigger documents.
+draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
 
 
 ## Screens - dashboard - draft deletion dialog
