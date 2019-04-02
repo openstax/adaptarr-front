@@ -334,8 +334,16 @@ user-profile-section-role = Rola użytkownika
 
 user-profile-role-unknown = Nieznana rola
 
+# Alert displayed when user's role has been changed successfully.
+#
+# Variables:
+# - $name (string): name of role which has been assigned to user.
 user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name }.
 
+# Alert displayed when error occurred when changing user's role.
+#
+# Variables:
+# - $details (string): error details.
 user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }.
 
 # Placeholder text for team search box.
@@ -427,11 +435,19 @@ role-name = Nazwa roli
 
 role-create = Utwórz rolę
 
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
 role-create-success = Rola "{ $name }" została utworzona.
 
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
 role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
 
-# Alert displayed when user want to delete role.
+# Dialog displayed when user want to delete role.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
@@ -441,17 +457,51 @@ role-delete-confirm = Potwierdź
 
 role-delete-cancel = Anuluj
 
+# Alert displayed when role has been deleted.
+#
+# Variables:
+# - $name (string): name of role which user deleted.
 role-delete-success = Rola "{ $name }" została usunięta.
 
-role-create-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+# Alert displayed when role has not been deleted.
+#
+# Variables:
+# - $details (string): error details.
+role-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
 
+# Alert displayed when role has been updated.
+#
+# Variables:
+# - $name (string): name of role which user updated.
 role-update-success = Rola "{ $name }" została zaktualizowana.
 
+# Alert displayed when role has not been updated.
+#
+# Variables:
+# - $details (string): error details.
 role-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
 
 role-update-confirm = Zaktualizuj rolę
 
 role-update-cancel = Anuluj
+
+
+
+## Reusable components - permissions
+
+# Variables:
+# - $name (string): name of permission.
+permission-label = { $name ->
+  [user:invite] Zapraszanie użytkowników
+  [user:delete] Usuwanie użytkowników
+  [user:edit-permissions] Edycja uprawnień użytkowników
+  [user:assign-role] Przypisywanie ról do użytkowników
+  [book:edit] Tworzenie, usuwanie i edycja książek
+  [module:edit] Tworzenie, usuwanie i edycja modułów
+  [module:assign] Przypisywanie użytkowników do modułów
+  [role:edit] Tworzenie, usuwanie i edycja ról
+ *[unknown] Nieznane uprawnienie
+}
 
 
 

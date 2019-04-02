@@ -64,16 +64,16 @@ class Permissions extends React.Component<Props> {
                 <Localized id="permission-label" $name={p}>
                   {p}
                 </Localized>
+                <input
+                  type="checkbox"
+                  className="permissions__input"
+                  checked={this.state.selected.includes(p)}
+                  name={`permission-${labelsId}-${p}`}
+                  id={`permission-${labelsId}-${p}`}
+                  value={p}
+                  onChange={() => this.onInputChange(p)}
+                />
               </label>
-              <input
-                type="checkbox"
-                className="permissions__input"
-                checked={this.state.selected.includes(p)}
-                name={`permission-${labelsId}-${p}`}
-                id={`permission-${labelsId}-${p}`}
-                value={p}
-                onChange={() => this.onInputChange(p)}
-              />
             </li>
           ))}
         </ul>

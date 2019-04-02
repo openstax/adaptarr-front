@@ -333,8 +333,16 @@ user-profile-section-role = User's role
 
 user-profile-role-unknown = Unknown role
 
+# Alert displayed when user's role has been changed successfully.
+#
+# Variables:
+# - $name (string): name of role which has been assigned to user.
 user-profile-change-role-success = Role successfully changed to { $name }.
 
+# Alert displayed when error occurred when changing user's role.
+#
+# Variables:
+# - $details (string): error details.
 user-profile-change-role-error = Something went wrong. Details: { $details }.
 
 # Placeholder text for team search box.
@@ -427,11 +435,19 @@ role-name = Role name
 
 role-create = Create role
 
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
 role-create-success = New role "{ $name }" created successfully.
 
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
 role-create-error = Couldn't create new role. Details: { $details }.
 
-# Alert displayed when user want to delete role.
+# Dialog displayed when user want to delete role.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
@@ -441,17 +457,51 @@ role-delete-confirm = Confirm
 
 role-delete-cancel = Cancel
 
+# Alert displayed when role has been deleted.
+#
+# Variables:
+# - $name (string): name of role which user deleted.
 role-delete-success = Role "{ $name }" has been deleted.
 
-role-create-error = Couldn't delete role. Details: { $details }.
+# Alert displayed when role has not been deleted.
+#
+# Variables:
+# - $details (string): error details.
+role-delete-error = Couldn't delete role. Details: { $details }.
 
+# Alert displayed when role has been updated.
+#
+# Variables:
+# - $name (string): name of role which user updated.
 role-update-success = Role "{ $name }" has been updated.
 
+# Alert displayed when role has not been updated.
+#
+# Variables:
+# - $details (string): error details.
 role-update-error = Couldn't update role. Details: { $details }.
 
 role-update-confirm = Update role
 
 role-update-cancel = Cancel
+
+
+
+## Reusable components - permissions
+
+# Variables:
+# - $name (string): name of permission.
+permission-label = { $name ->
+  [user:invite] Invite users
+  [user:delete] Delete users
+  [user:edit-permissions] Edit user's permissions
+  [user:assign-role] Assign roles to users
+  [book:edit] Create, delete and edit book content
+  [module:edit] Create, delete and edit modules
+  [module:assign] Assign users to modules
+  [role:edit] Create, delete and edit roles
+ *[unknown] Unknow permission
+}
 
 
 
