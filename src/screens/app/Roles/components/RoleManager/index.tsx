@@ -11,6 +11,7 @@ import Permissions from 'src/components/Permissions'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
+import Dialog from 'src/components/ui/Dialog'
 
 type Props = {
   role: Role
@@ -23,14 +24,24 @@ class RoleManager extends React.Component<Props> {
     allowEdit: boolean
     roleName: string
     permissions: Permission[]
+    showConfirmationDialog: boolean
   } = {
     allowEdit: false,
     roleName: '',
     permissions: [],
+    showConfirmationDialog: false,
   }
 
   private toggleEditMode = () => {
     this.setState({ allowEdit: !this.state.allowEdit })
+  }
+
+  private openRemoveRoleDialog = () => {
+    this.setState({ showConfirmationDialog: true })
+  }
+
+  private closeDeleteRoleDialog = () => {
+    this.setState({ showConfirmationDialog: false })
   }
 
   private removeRole = () => {
@@ -93,7 +104,7 @@ class RoleManager extends React.Component<Props> {
   }
   
   public render() {
-    const { allowEdit, roleName, permissions } = this.state
+    const { allowEdit, roleName, permissions, showConfirmationDialog } = this.state
     const role = this.props.role
 
     return (
@@ -114,7 +125,7 @@ class RoleManager extends React.Component<Props> {
             <Button clickHandler={this.toggleEditMode}>
               <Icon name="pencil" />
             </Button>
-            <Button clickHandler={this.removeRole}>
+            <Button clickHandler={this.openRemoveRoleDialog} color="red">
               <Icon name="close" />
             </Button>
           </span>
@@ -133,6 +144,29 @@ class RoleManager extends React.Component<Props> {
             </Localized>
           </form>
         </div>
+        {
+          showConfirmationDialog ?
+            <Dialog
+              l10nId="role-delete-title"
+              placeholder="Are you sure you want to delete this role?"
+              $name={role.name}
+              onClose={() => this.setState({ showConfirmationDialog: false })}
+            >
+              <Button 
+                color="green" 
+                clickHandler={this.removeRole}
+              >
+                <Localized id="role-delete-confirm">Confirm</Localized>
+              </Button>
+              <Button 
+                color="red" 
+                clickHandler={this.closeDeleteRoleDialog}
+              >
+                <Localized id="role-delete-cancel">Cancel</Localized>
+              </Button>
+            </Dialog>
+          : null
+        }
       </div>
     )
   }

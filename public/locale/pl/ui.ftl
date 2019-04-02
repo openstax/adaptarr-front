@@ -431,6 +431,16 @@ role-create-success = Rola "{ $name }" została utworzona.
 
 role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
 
+# Alert displayed when user want to delete role.
+#
+# Variables:
+# - $name (string): name of role which user want to delete.
+role-delete-title = Na pewno chcesz usunąć rolę "{ $name }"?
+
+role-delete-confirm = Potwierdź
+
+role-delete-cancel = Anuluj
+
 role-delete-success = Rola "{ $name }" została usunięta.
 
 role-create-error = Nie udało się usunąć roli. Szczegóły: { $details }.
