@@ -709,6 +709,8 @@ editor-tools-insert-figure = Figura
 
 editor-tools-insert-section = Sekcja
 
+editor-tools-insert-link = Odnośnik
+
 
 
 ## Editor toolboxes - lists
@@ -844,10 +846,20 @@ editor-tools-xref-grammatical-case = { $case ->
   [vocative] Wołacz (vocativus)
 }
 
+
 ## Editor toolboxes - sections
 
 editor-tools-sections-title = Sekcja
 
 editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
-editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 
+editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
+
+
+## Editor toolboxes - links
+
+editor-tools-link-title = Odnośnik
+
+editor-tools-link-text = Wprowadź tekst
+
+editor-tools-link-url = Wprowadź odnośnik

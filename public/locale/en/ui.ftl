@@ -707,6 +707,8 @@ editor-tools-insert-figure = Figure
 
 editor-tools-insert-section = Section
 
+editor-tools-insert-link = Link
+
 
 
 ## Editor toolboxes - lists
@@ -818,11 +820,20 @@ editor-tools-xref-grammatical-case = { $case ->
   [vocative] Vocative
 }
 
+
 ## Editor toolboxes - sections
 
 editor-tools-sections-title = Section
 
 editor-tools-sections-increase-depth =  Increase level
 
-editor-tools-sections-decrease-depth =  Decrease level 
+editor-tools-sections-decrease-depth =  Decrease level
 
+
+## Editor toolboxes - links
+
+editor-tools-link-title = Link
+
+editor-tools-link-text = Provide text
+
+editor-tools-link-url = Provide link
