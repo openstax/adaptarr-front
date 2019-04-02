@@ -270,7 +270,7 @@ class Book extends React.Component<Props> {
         }
         <Section>
           <Header l10nId={titleKey} title={title}>
-            <LimitedUI flag="book:edit">
+            <LimitedUI permissions="book:edit">
               <Button
                 clickHandler={this.showEditBook}
               >

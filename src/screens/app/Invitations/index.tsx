@@ -16,11 +16,9 @@ class Invitations extends React.Component {
   state: {
     emailValue: string
     isEmailVaild: boolean
-    flags: number[]
   } = {
     emailValue: '',
     isEmailVaild: false,
-    flags: [],
   }
 
   private sendInvitation = (e: React.FormEvent) => {
@@ -30,7 +28,7 @@ class Invitations extends React.Component {
 
     if (!isEmailVaild) return
 
-    Invitation.create(email, this.state.flags)
+    Invitation.create(email)
       .then(() => {
         this.setState({ emailValue: '' })
         store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))

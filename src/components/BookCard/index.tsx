@@ -79,7 +79,7 @@ class BookCard extends React.Component<Props> {
         <Link to={`books/${book.id}`}>
           <h2 className="card__title">{book.title}</h2>
         </Link>
-        <LimitedUI flag="book:edit">
+        <LimitedUI permissions="book:edit">
           <Button clickHandler={this.showEditBook}>
             <Icon name="pencil"/>
           </Button>

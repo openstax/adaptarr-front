@@ -55,7 +55,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
     nameInput: string
-    flags: number[]
+    permissions: number[]
     // bioInput: string
     // emailInput: string
   } = {
@@ -63,7 +63,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: null,
     files: [],
     nameInput: this.props.user.name,
-    flags: [],
+    permissions: [],
     // bioInput: '',
     // emailInput: '',
   }
@@ -329,7 +329,7 @@ class UserProfile extends React.Component<Props> {
                       </Localized>
                   }
                 </span>
-                <LimitedUI flag="user:assign-role">
+                <LimitedUI permissions="user:assign-role">
                   <Select
                     className="profile__select"
                     value={this.props.user.role}

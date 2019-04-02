@@ -180,7 +180,7 @@ class Module extends React.Component<Props> {
           {item.title}
         </span>
         <span className="bookpart__info">
-          <LimitedUI flag="module:edit">
+          <LimitedUI permissions="module:edit">
             <Button
               color="red"
               clickHandler={this.showRemoveModuleDialog}

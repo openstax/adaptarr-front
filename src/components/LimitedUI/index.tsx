@@ -13,7 +13,7 @@ type Props = {
     isLoading: IsLoading
     user: User
   }
-  flag?: Permission | Permission[] // User has to have one or more flags to see hidden UI
+  permissions?: Permission | Permission[] // User has to have one or more permissions to see hidden UI
 }
 
 const mapStateToProps = ({ user }: State) => {
@@ -25,16 +25,16 @@ const mapStateToProps = ({ user }: State) => {
 class LimitedUI extends React.Component<Props> {
 
   public render() {
-    const { user: { user }, flag = [] } = this.props
+    const { user: { user }, permissions = [] } = this.props
 
-    // Render component only if user have proper flags
-    if (typeof flag === 'string') {
-      if (!user.permissions.includes(flag)) {
+    // Render component only if user have proper permissions
+    if (typeof permissions === 'string') {
+      if (!user.permissions.includes(permissions)) {
         return null
       }
     } else {
-      let noAccess = flag.some(f => {
-        if (!user.permissions.includes(f)) {
+      let noAccess = permissions.some(p => {
+        if (!user.permissions.includes(p)) {
           return true
         }
         return false

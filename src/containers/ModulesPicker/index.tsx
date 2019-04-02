@@ -156,7 +156,7 @@ class ModuleList extends React.Component<Props> {
             </Dialog>
           : null
         }
-        <LimitedUI flag="module:edit">
+        <LimitedUI permissions="module:edit">
           <div className="modulesList__new">
             <form onSubmit={this.addNewModule}>
               <div className="modulesList__top-bar">

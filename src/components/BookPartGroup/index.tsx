@@ -303,7 +303,7 @@ class Group extends React.Component<Props> {
           {this.props.item.title}
         </span>
         <span className="bookpart__info">
-          <LimitedUI flag="book:edit">
+          <LimitedUI permissions="book:edit">
             <Button clickHandler={this.showEditBookDialog}>
               <Icon name="pencil"/>
               <Localized id="book-change-title">Edit</Localized>
