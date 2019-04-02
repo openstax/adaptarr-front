@@ -334,6 +334,8 @@ user-profile-section-role = Rola użytkownika
 
 user-profile-role-unknown = Nieznana rola
 
+user-profile-section-role-unassign =  Usuń rolę użytkownikowi
+
 # Alert displayed when user's role has been changed successfully.
 #
 # Variables:
@@ -345,6 +347,14 @@ user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name
 # Variables:
 # - $details (string): error details.
 user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }.
+
+user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi.
+
+# Alert displayed when error occurred when unassiging user from role.
+#
+# Variables:
+# - $details (string): error details.
+user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }.
 
 # Placeholder text for team search box.
 user-profile-team-list-search =

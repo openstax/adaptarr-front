@@ -37,6 +37,10 @@
   min-width: 200px;
 }
 
+.profile__button--unassign-role {
+  margin-left: 20px; 
+}
+
 .profile__bio p {
   line-height: 1.4;
   margin-bottom: 10px;

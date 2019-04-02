@@ -266,6 +266,17 @@ class UserProfile extends React.Component<Props> {
       })
   }
 
+  private handleRoleUnassign = () => {
+    this.props.user.changeRole(null)
+      .then(() => {
+        store.dispatch(fetchUser())
+        store.dispatch(addAlert('success', 'user-profile-unassign-role-success'))
+      })
+      .catch((e) => {
+        store.dispatch(addAlert('error', 'user-profile-unassign-role-error', {details: e.response.data.error}))
+      })
+  }
+
   public render() {
     const showDialog = this.state.showDialog
     const user = this.props.user
@@ -337,6 +348,14 @@ class UserProfile extends React.Component<Props> {
                     formatOptionLabel={(role) => role.name}
                     onChange={this.handleRoleChange}
                   />
+                  <Button
+                    className="profile__button--unassign-role"
+                    clickHandler={this.handleRoleUnassign}
+                  >
+                    <Localized id="user-profile-section-role-unassign">
+                      Unassign user from role
+                    </Localized>
+                  </Button>
                 </LimitedUI>
                 <h3 className="profile__title">
                   <Localized id="user-profile-section-bio">Bio</Localized>

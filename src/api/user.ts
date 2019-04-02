@@ -115,7 +115,7 @@ export default class User extends Base<UserData & UserPermissions> {
   /**
    * Change role
    */
-  async changeRole(id: number): Promise<any> {
+  async changeRole(id: number | null): Promise<any> {
     return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
   }
 
