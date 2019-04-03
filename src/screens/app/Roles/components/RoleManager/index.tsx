@@ -143,7 +143,6 @@ class RoleManager extends React.Component<Props> {
         >
           <form onSubmit={this.updateRole}>
             <Permissions
-              labelsId={role.name}
               selected={permissions}
               onChange={this.handleChange}
             />

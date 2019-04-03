@@ -6,7 +6,6 @@ import { Localized } from 'fluent-react/compat'
 import { Permission } from 'src/api/role'
 
 type Props = {
-  labelsId?: string // We need custom labels id's for different Permissions component
   selected?: Permission[]
   onChange: (permissions: Permission[]) => any
 }
