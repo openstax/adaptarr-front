@@ -21,11 +21,13 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 type Props = {
   locale: string[],
   availableLocales: string[],
+  user: User,
 }
 
-const mapStateToProps = ({ app }: State) => ({
+const mapStateToProps = ({ app, user: { user } }: State) => ({
   locale: app.locale,
   availableLocales: app.availableLocales,
+  user: user,
 })
 
 class Settings extends React.Component<Props> {
@@ -54,7 +56,7 @@ class Settings extends React.Component<Props> {
 
     if (!newSelectedLanguage) return
 
-    User.changeLanguage(newSelectedLanguage.code)
+    this.props.user.changeLanguage(newSelectedLanguage.code)
     store.dispatch(setLocale([newSelectedLanguage.code]))
     this.setState({ showChangeLanguage: false })
   }
