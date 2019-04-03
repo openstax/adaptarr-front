@@ -55,7 +55,6 @@ class UserProfile extends React.Component<Props> {
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
     nameInput: string
-    permissions: number[]
     // bioInput: string
     // emailInput: string
   } = {
@@ -63,7 +62,6 @@ class UserProfile extends React.Component<Props> {
     updateAction: null,
     files: [],
     nameInput: this.props.user.name,
-    permissions: [],
     // bioInput: '',
     // emailInput: '',
   }
