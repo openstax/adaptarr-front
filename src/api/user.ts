@@ -1,6 +1,7 @@
 import axios from 'src/config/axios'
 
 import Base from './base'
+import { elevated } from './utils'
 
 /**
  * User data as returned by the API.
@@ -98,6 +99,10 @@ export default class User extends Base<UserData> {
    * @param language ISO code of language
    */
   async changeLanguage(language: string) {
-    return await axios.put(`users/${this.apiId}`, { language })
+    if (this.apiId === 'me') {
+      return await axios.put('users/me', { language })
+    } else {
+      return await elevated(() => axios.put(`users/${this.apiId}`, { language }))
+    }
   }
 }
