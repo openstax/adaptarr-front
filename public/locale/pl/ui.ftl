@@ -248,6 +248,8 @@ dashboard-create-draft-alert-success = Szkic został utworzony.
 
 ## Screens - draft
 
+draft-style-switcher-info-box = To jest funkcja eksperymentalna. Istnieją wizualne różnice między podglądem a oryginalnymi stylami.
+
 draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
 
 

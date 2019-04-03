@@ -247,6 +247,8 @@ dashboard-create-draft-alert-success = Draft was created successfully.
 
 ## Screens - draft
 
+draft-style-switcher-info-box = This is experimental feature. There are visual differences between preview and original styles.
+
 draft-loading-message = Loading draft. It may take a few minutes for bigger documents.
 
 
