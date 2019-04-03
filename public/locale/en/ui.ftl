@@ -502,15 +502,15 @@ role-update-cancel = Cancel
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user:invite] Invite users
-  [user:delete] Delete users
-  [user:edit-permissions] Edit user's permissions
-  [user:assign-role] Assign roles to users
-  [book:edit] Create, delete and edit book content
-  [module:edit] Create, delete and edit modules
-  [module:assign] Assign users to modules
-  [role:edit] Create, delete and edit roles
- *[unknown] Unknow permission
+  [user-invite] Invite users
+  [user-delete] Delete users
+  [user-edit-permissions] Edit user's permissions
+  [user-assign-role] Assign roles to users
+  [book-edit] Create, delete and edit book content
+  [module-edit] Create, delete and edit modules
+  [module-assign] Assign users to modules
+  [role-edit] Create, delete and edit roles
+ *[unknown] Unknown permission
 }
 
 

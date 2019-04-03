@@ -66,7 +66,7 @@ class Permissions extends React.Component<Props> {
                   value={p}
                   onChange={this.onInputChange}
                 />
-                <Localized id="permission-label" $name={p}>
+                <Localized id="permission-label" $name={p.replace(':', '-')}>
                   {p}
                 </Localized>
               </label>

@@ -502,14 +502,14 @@ role-update-cancel = Anuluj
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user:invite] Zapraszanie użytkowników
-  [user:delete] Usuwanie użytkowników
-  [user:edit-permissions] Edycja uprawnień użytkowników
-  [user:assign-role] Przypisywanie ról do użytkowników
-  [book:edit] Tworzenie, usuwanie i edycja książek
-  [module:edit] Tworzenie, usuwanie i edycja modułów
-  [module:assign] Przypisywanie użytkowników do modułów
-  [role:edit] Tworzenie, usuwanie i edycja ról
+  [user-invite] Zapraszanie użytkowników
+  [user-delete] Usuwanie użytkowników
+  [user-edit-permissions] Edycja uprawnień użytkowników
+  [user-assign-role] Przypisywanie ról do użytkowników
+  [book-edit] Tworzenie, usuwanie i edycja książek
+  [module-edit] Tworzenie, usuwanie i edycja modułów
+  [module-assign] Przypisywanie użytkowników do modułów
+  [role-edit] Tworzenie, usuwanie i edycja ról
  *[unknown] Nieznane uprawnienie
 }
 
