@@ -8,6 +8,8 @@ const deserializeRules = {
       nodes: next(Array.from(el.children)),
     }
 
+    if (props == null) return
+
     if (props instanceof Array) {
       props[0].key = props[0].key || el.getAttribute('id') || undefined
 
@@ -35,27 +37,28 @@ const deserializeRules = {
 }
 
 const BLOCK_TAGS = {
-  table: table,
-  tgroup: 'table_tgroup',
+  caption: caption,
   colspec: 'table_colspec',
-  thead: 'table_thead',
+  entry: entry,
+  table: table,
   tbody: 'table_tbody',
+  tgroup: 'table_tgroup',
+  thead: 'table_thead',
   tfoot: 'table_tfoot',
   row: 'table_row',
-  entry: entry,
 }
 
 /**
- * Process data for tables.
- */
-function table(el: Element, next: (nodes: any) => any) {
-  return {
-    type: 'table',
-    data: {
-      summary: el.getAttribute('summary'),
-    },
-    nodes: next(Array.from(el.children)),
+* Process data for captions.
+*/
+function caption(el: Element, next: (nodes: any) => any) {
+  if (el.parentElement && el.parentElement.tagName === 'table') {
+    return {
+      type: 'table_caption',
+      nodes: next(el.childNodes),
+    }
   }
+  return
 }
 
 /**
@@ -70,6 +73,19 @@ function entry(el: Element, next: (nodes: any) => any) {
     type: 'table_entry',
     data,
     nodes: next(el.childNodes),
+  }
+}
+
+/**
+ * Process data for tables.
+ */
+function table(el: Element, next: (nodes: any) => any) {
+  return {
+    type: 'table',
+    data: {
+      summary: el.getAttribute('summary'),
+    },
+    nodes: next(Array.from(el.children)),
   }
 }
 
