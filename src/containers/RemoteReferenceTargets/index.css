@@ -13,3 +13,21 @@
 .remote-reference-targets ul li:last-child {
   border: none;
 }
+
+.remote-reference-targets .nestable-item-name {
+  padding: 10px;
+}
+
+.remote-reference-targets .bookpart__item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.remote-reference-targets .bookpart__item::before {
+  top: 20px;
+}
+
+.remote-reference-targets .nestable-item-0 .nestable-list::before {
+  height: calc(100% - 20px);
+}

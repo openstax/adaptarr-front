@@ -1,13 +1,10 @@
 .target-source {
   display: flex;
-  padding: 10px;
-  background: #fff;
-  border-radius: 3px;
+  text-decoration: underline;
 }
 
 .target-source:hover {
   cursor: pointer;
-  background-color: #efefef;
 }
 
 .target-source__title{

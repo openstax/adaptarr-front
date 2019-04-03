@@ -1,8 +1,10 @@
 import * as React from 'react'
+import Nestable from 'react-nestable'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
+import { PartData } from 'src/api/bookpart' 
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,7 +13,7 @@ import RemoteSource from './components/RemoteSource'
 
 import RefTargets from 'src/containers/ReferenceTargets'
 
-import { ModulesMap, ReferenceTarget, ReferenceTargets } from 'src/store/types'
+import { ModulesMap, ReferenceTarget, ReferenceTargets, BooksMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
 
@@ -20,6 +22,7 @@ import './index.css'
 export type Props = {
   modules: ModulesMap,
   targets: ReferenceTargets,
+  booksMap: BooksMap,
   /**
    * Function to call when user selects a resource target.
    */
@@ -27,9 +30,10 @@ export type Props = {
   fetchReferenceTargets: (module: api.Module) => void,
 }
 
-const mapStateToProps = ({ modules: { modulesMap, referenceTargets } }: State) => ({
+const mapStateToProps = ({ modules: { modulesMap, referenceTargets }, booksMap: { booksMap } }: State) => ({
   modules: modulesMap,
   targets: referenceTargets,
+  booksMap,
 })
 
 const mapDispatchToProps = { fetchReferenceTargets }
@@ -40,13 +44,36 @@ const mapDispatchToProps = { fetchReferenceTargets }
 class RemoteReferenceTargets extends React.Component<Props> {
   state: {
     selected: api.Module | null,
+    books: api.BookPart[]
   } = {
     selected: null,
+    books: [],
+  }
+
+  private fetchBookparts = async () => {
+    let books: api.BookPart[] = []
+
+    for (const [_, book] of this.props.booksMap) {
+      const parts = await book.parts()
+      books.push(parts)
+    }
+
+    this.setState({ books })
+  }
+
+  componentDidUpdate = (prevProps: Props) => {
+    if (prevProps.booksMap.size !== this.props.booksMap.size) {
+      this.fetchBookparts()
+    }
+  }
+
+  componentDidMount = () => {
+    this.fetchBookparts()
   }
 
   render() {
-    const { modules, onSelect } = this.props
-    const { selected } = this.state
+    const { onSelect } = this.props
+    const { selected, books } = this.state
     const targets = selected ? this.props.targets.get(selected.id) : null
 
     if (targets != null) {
@@ -75,16 +102,20 @@ class RemoteReferenceTargets extends React.Component<Props> {
 
     return (
       <div className="remote-reference-targets">
-        <ul>
-          {Array.from(modules.values(), module => (
-            <li key={module.id}>
-              <RemoteSource
-                module={module}
-                onClick={this.selectRefSource}
-              />
-            </li>
-          ))}
-        </ul>
+        {
+          books.map(parts => (
+            <Nestable
+              key={parts.id}
+              isDisabled={true}
+              items={[parts]}
+              className="book-collection"
+              childrenProp="parts"
+              renderItem={this.renderItem}
+              renderCollapseIcon={this.renderCollapseIcon}
+              collapsed
+            />
+          ))
+        }
       </div>
     )
   }
@@ -109,6 +140,37 @@ class RemoteReferenceTargets extends React.Component<Props> {
   }
 
   unselectRefSource = () => this.setState({ selected: null })
+
+  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+    return (
+      <div className={`bookpart__item bookpart__item--${item.kind}`}>
+        {
+          item.kind === 'group' ?
+            <>
+              <div className="bookpart__title">
+                {item.title}
+              </div>
+              <span className="bookpart__icon">
+                {collapseIcon}
+              </span>
+            </>
+          : 
+            <RemoteSource
+              module={this.props.modules.get(item.id)!}
+              onClick={this.selectRefSource}
+            />
+        }
+      </div>
+    )
+  }
+
+  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+    if (isCollapsed) {
+      return <Icon name="arrow-right"/>
+    }
+
+    return <Icon name="arrow-down" />
+  }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
