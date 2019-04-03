@@ -12,16 +12,10 @@ export type UserData = {
   id: number,
   name: string,
   role: Role | null,
-}
-
-/**
- * User permissions.
- */
-export type UserPermissions = {
   permissions?: Permission[],
 }
 
-export default class User extends Base<UserData & UserPermissions> {
+export default class User extends Base<UserData> {
   /**
    * Fetch a user by their ID.
    */
@@ -39,12 +33,7 @@ export default class User extends Base<UserData & UserPermissions> {
   static async me(): Promise<User | null> {
     try {
       const user = await axios.get('users/me')
-      const permissions = await axios.get('users/me/permissions')
-      let data = {
-        ...user.data,
-        permissions: permissions.data || [],
-      }
-      return new User(data, 'me')
+      return new User(user.data, 'me')
     } catch (err) {
       console.log('error', err)
       if (err.response.status === 401) {
