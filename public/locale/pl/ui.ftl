@@ -246,6 +246,10 @@ dashboard-drafts-empty = Nie posiadasz żadnych szkiców.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 
 
+## Screens - draft
+
+draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
+
 
 ## Screens - dashboard - draft deletion dialog
 

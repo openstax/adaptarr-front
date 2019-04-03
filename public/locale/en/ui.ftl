@@ -245,6 +245,10 @@ dashboard-drafts-empty = You don't have any drafts.
 dashboard-create-draft-alert-success = Draft was created successfully.
 
 
+## Screens - draft
+
+draft-loading-message = Loading draft. It may take a few minutes for bigger documents.
+
 
 ## Screens - dashboard - draft deletion dialog
 
