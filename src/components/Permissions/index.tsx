@@ -29,7 +29,8 @@ class Permissions extends React.Component<Props> {
     ],
   }
 
-  private onInputChange = (p: Permission) => {
+  private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const p = e.target.value as Permission
     let selected = new Set(this.state.selected)
     if (selected.has(p)) {
       selected.delete(p)
@@ -52,25 +53,18 @@ class Permissions extends React.Component<Props> {
   }
 
   public render() {
-    const labelsId = this.props.labelsId || 'custom'
-
     return (
       <div className="permissions">
         <ul>
           {this.state.permissions.map(p => (
             <li key={p} className="permissions__item">
-              <label
-                htmlFor={`permission-${labelsId}-${p}`}
-                className="permissions__label"
-              >
+              <label className="permissions__label">
                 <input
                   type="checkbox"
                   className="permissions__input"
                   checked={this.state.selected.includes(p)}
-                  name={`permission-${labelsId}-${p}`}
-                  id={`permission-${labelsId}-${p}`}
                   value={p}
-                  onChange={() => this.onInputChange(p)}
+                  onChange={this.onInputChange}
                 />
                 <Localized id="permission-label" $name={p}>
                   {p}
