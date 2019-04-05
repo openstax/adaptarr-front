@@ -386,12 +386,7 @@ div.editor figure > figcaption::before {
 
 .editor--webview .editor .exercise .exercise-solution::before {
   display: block;
-  content: 'Solution: ';
   margin-top: 5px;
-}
-
-.editor--webview .editor .exercise .exercise-commentary::before {
-  content: 'Commentary: ';
 }
 
 /* EDITOR PDF STYLES */
@@ -537,10 +532,5 @@ div.editor figure > figcaption::before {
 
 .editor--pdf .editor .exercise .exercise-solution::before {
   display: block;
-  content: 'Solution: ';
   margin-top: 5px;
-}
-
-.editor--pdf .editor .exercise .exercise-commentary::before {
-  content: 'Commentary: ';
 }
