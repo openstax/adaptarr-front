@@ -26,7 +26,6 @@ export default function AdmonitionTools({ editor, value }: Props) {
 
   return (
     <ToolGroup title="editor-tools-admonition-title">
-      <Classes editor={editor} block={admonition} />
       <Select
         className="toolbox__select"
         value={admonition.data.get('type')}
@@ -34,6 +33,7 @@ export default function AdmonitionTools({ editor, value }: Props) {
         options={ADMONITIONS_TYPES}
         formatOptionLabel={OptionLabel}
       />
+      <Classes editor={editor} block={admonition} />
     </ToolGroup>
   )
 }

@@ -25,7 +25,6 @@ export default class ListTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="editor-tools-list-title">
-        <Classes editor={editor} block={list} />
         <Select
           className="toolbox__select"
           value={list.type}
@@ -51,6 +50,7 @@ export default class ListTools extends React.Component<Props> {
             Increase item level
           </Localized>
         </Button>
+        <Classes editor={editor} block={list} />
       </ToolGroup>
     )
   }

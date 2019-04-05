@@ -4,10 +4,12 @@ import * as React from 'react'
 import { List } from 'immutable'
 import { Editor, Block } from 'slate'
 import { WithContext as ReactTags } from 'react-tag-input'
+import { Localized, withLocalization, GetString } from 'fluent-react/compat'
 
 type Props = {
   editor: Editor,
   block: Block,
+  getString: GetString,
 }
 
 type Tag = { id: string, text: string }
@@ -46,15 +48,9 @@ class ClassName extends React.Component<Props> {
       let tags: Tag[] = []
       const classes = block.data.get('class')
       if (classes) {
-        if (List.isList(classes)) {
-          tags = classes.toArray().map((c: string) => {
-            return {id: c, text: c}
-          })
-        } else if (Array.isArray(classes)) {
-          tags = classes.map(c => {
-            return {id: c, text: c}
-          })
-        }
+        tags = Array.from(classes).filter((c: string) => c.length).map((c: string) => {
+          return {id: c, text: c}
+        })
       }
       this.setState({ tags })
     } else {
@@ -80,14 +76,20 @@ class ClassName extends React.Component<Props> {
 
     return (
       <div className="classes" onClick={this.onClick}>
+        <span className="classes__title">
+          <Localized id="editor-tools-classes-title">
+            List of classes
+          </Localized>
+        </span>
         <ReactTags
+          autofocus={false}
           id={this.id}
           tags={tags}
           handleDelete={this.handleDelete}
           handleAddition={this.handleAddition}
           handleDrag={this.handleDrag}
           delimiters={delimiters}
-          placeholder="Add new class"
+          placeholder={this.props.getString('editor-tools-classes-placeholder')}
         />
       </div>
     )
@@ -134,4 +136,4 @@ class ClassName extends React.Component<Props> {
   }
 }
 
-export default ClassName
+export default withLocalization(ClassName)

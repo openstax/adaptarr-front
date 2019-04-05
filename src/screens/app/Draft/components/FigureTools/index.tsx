@@ -37,7 +37,6 @@ export default class FigureTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="editor-tools-figure-title">
-        <Classes editor={editor} block={figure} />
         <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}
@@ -66,6 +65,7 @@ export default class FigureTools extends React.Component<Props> {
             Add caption
           </Localized>
         </Button>
+        <Classes editor={editor} block={figure} />
         <Modal
           ref={this.setModal}
           content={this.renderModal}

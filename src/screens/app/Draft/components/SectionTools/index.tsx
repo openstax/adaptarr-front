@@ -21,7 +21,6 @@ export default class SectionTools extends React.Component<Props> {
 
     return (
       <ToolGroup title="editor-tools-sections-title">
-        <Classes editor={editor} block={section} />
         <Button
           clickHandler={this.decreaseSectionDepth}
           className="toolbox__button--insert"
@@ -40,6 +39,7 @@ export default class SectionTools extends React.Component<Props> {
             Increase level
           </Localized>
         </Button>
+        <Classes editor={editor} block={section} />
       </ToolGroup>
     )
   }

@@ -20,7 +20,6 @@ export default class ExerciseTools extends React.Component<Props> {
 
     return exercise && (
       <ToolGroup title="editor-tools-exercise-title">
-        <Classes editor={editor} block={exercise} />
         <Button clickHandler={this.insertSolution} className="toolbox__button--insert">
           <Icon name="check" />
           <Localized id="editor-tools-exercise-insert-solution">
@@ -37,6 +36,7 @@ export default class ExerciseTools extends React.Component<Props> {
             Add commentary
           </Localized>
         </Button>
+        <Classes editor={editor} block={exercise} />
       </ToolGroup>
     )
   }
