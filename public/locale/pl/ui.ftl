@@ -248,6 +248,14 @@ dashboard-create-draft-alert-success = Szkic został utworzony.
 
 ## Screens - draft
 
+# Variables:
+# - $style (string): version of styles.
+draft-style-switcher = { $style ->
+ *[default] Style domyślne
+  [webview] Style wersji online
+  [pdf] Style wersji PDF
+}
+
 draft-style-switcher-info-box = To jest funkcja eksperymentalna. Istnieją wizualne różnice między podglądem a oryginalnymi stylami.
 
 draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.

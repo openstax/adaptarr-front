@@ -247,6 +247,14 @@ dashboard-create-draft-alert-success = Draft was created successfully.
 
 ## Screens - draft
 
+# Variables:
+# - $style (string): version of styles.
+draft-style-switcher = { $style ->
+ *[default] Default styles
+  [webview] Online styles
+  [pdf] PDF styles
+}
+
 draft-style-switcher-info-box = This is experimental feature. There are visual differences between preview and original styles.
 
 draft-loading-message = Loading draft. It may take a few minutes for bigger documents.

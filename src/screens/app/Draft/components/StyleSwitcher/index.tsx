@@ -1,6 +1,7 @@
 import './index.css'
 
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 
 import Icon from 'src/components/ui/Icon'
 import Button from 'src/components/ui/Button'
@@ -18,11 +19,7 @@ class StyleSwitcher extends React.Component<Props> {
     open: false,
   }
 
-  choices = {
-    default: 'Default',
-    webview: 'Webview',
-    pdf: 'PDF',
-  }
+  styles = ['default', 'webview', 'pdf']
 
   private toggleSwitcher = () => {
     this.setState({ open: !this.state.open })
@@ -48,14 +45,16 @@ class StyleSwitcher extends React.Component<Props> {
         </Button>
         <ul>
           {
-            Object.entries(this.choices).map(([key, label]: [string, string]) => (
+            this.styles.map(choice => (
               <li
-                key={key}
-                className={`style-switcher__choice ${style === key ? 'active' : ''}`}
-                data-choice={key}
+                key={choice}
+                className={`style-switcher__choice ${style === choice ? 'active' : ''}`}
+                data-choice={choice}
                 onClick={this.onClick}
               >
-                {label}
+                <Localized id="draft-style-switcher" $style={choice}>
+                  {choice}
+                </Localized>
               </li>
             ))
           }
