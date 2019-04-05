@@ -2,12 +2,17 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 
+import { elevated } from './utils'
+import Role, { Permission } from './role'
+
 /**
  * User data as returned by the API.
  */
 export type UserData = {
   id: number,
   name: string,
+  role: Role | null,
+  permissions?: Permission[],
 }
 
 export default class User extends Base<UserData> {
@@ -80,9 +85,33 @@ export default class User extends Base<UserData> {
    */
   apiId: string
 
+  /**
+   * User's role.
+   */
+  role: Role | null
+
+  /**
+   * User's permissions.
+   */
+  permissions: Permission[]
+
   constructor(data: UserData, apiId?: string) {
     super(data)
 
     this.apiId = apiId || data.id.toString()
+  }
+
+  /**
+   * Change role
+   */
+  async changeRole(id: number | null): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
+  }
+
+  /**
+   * Change permissions
+   */
+  async changePermissions(permissions: Permission[]): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
   }
 }

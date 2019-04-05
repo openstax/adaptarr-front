@@ -68,7 +68,7 @@ const profile = ({ match, team: { teamMap } }: Props) => {
     <div className="container container--splitted">
       <UserProfile
         userId={match.params.id}
-        user={new api.User({id: 0, name: 'Loading...'})}
+        user={new api.User({id: 0, name: 'Loading...', role: null})}
       />
       <Section>
         <Header l10nId="user-profile-section-team" title="Your team" />

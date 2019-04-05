@@ -5,7 +5,7 @@ import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import StackedBar from 'src/components/ui/StackedBar'
@@ -303,7 +303,7 @@ class Group extends React.Component<Props> {
           {this.props.item.title}
         </span>
         <span className="bookpart__info">
-          <AdminUI>
+          <LimitedUI permissions="book:edit">
             <Button clickHandler={this.showEditBookDialog}>
               <Icon name="pencil"/>
               <Localized id="book-change-title">Edit</Localized>
@@ -320,7 +320,7 @@ class Group extends React.Component<Props> {
               <Icon name="plus"/>
               <Localized id="book-add-module">Module</Localized>
             </Button>
-          </AdminUI>
+          </LimitedUI>
           {
             modStatuses.length ?
               <span className="bookpart__status">

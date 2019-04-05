@@ -10,7 +10,7 @@ import { Notification } from 'src/api'
 import Header from 'src/components/Header'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Tooltip from 'src/components/ui/Tooltip'
@@ -204,7 +204,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </a>
               </div>
             </li>
-            <AdminUI>
+            <LimitedUI permissions="user:invite">
               <li className="nav__link">
                 <Tooltip l10nId="navigation-invite" direction="right">
                   <NavLink to="/invitations" activeClassName="active">
@@ -219,7 +219,23 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   </NavLink>
                 </Tooltip>
               </li>
-            </AdminUI>
+            </LimitedUI>
+            <LimitedUI permissions="role:edit">
+              <li className="nav__link">
+                <Tooltip l10nId="navigation-roles" direction="right">
+                  <NavLink to="/roles" activeClassName="active">
+                    <span className="nav__content">
+                      <Icon name="users" />
+                      <span className="nav__text">
+                        <Localized id="navigation-roles">
+                          Manage roles
+                        </Localized>
+                      </span>
+                    </span>
+                  </NavLink>
+                </Tooltip>
+              </li>
+            </LimitedUI>
           </ul>
         </nav>
       </aside>

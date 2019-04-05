@@ -9,7 +9,6 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 class Invitations extends React.Component {

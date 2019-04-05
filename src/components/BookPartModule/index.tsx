@@ -6,7 +6,7 @@ import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import ModuleStatus from 'src/components/ModuleStatus'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -180,7 +180,7 @@ class Module extends React.Component<Props> {
           {item.title}
         </span>
         <span className="bookpart__info">
-          <AdminUI>
+          <LimitedUI permissions="module:edit">
             <Button
               color="red"
               clickHandler={this.showRemoveModuleDialog}
@@ -188,7 +188,7 @@ class Module extends React.Component<Props> {
               <Icon name="minus" />
               <Localized id="book-remove-module">Module</Localized>
             </Button>
-          </AdminUI>
+          </LimitedUI>
           {
             this.module && this.module.assignee ?
               <React.Fragment>

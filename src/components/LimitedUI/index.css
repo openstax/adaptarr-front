@@ -1,8 +1,8 @@
-.adminui {
+.limitedui {
   display: flex;
   align-items: center;
 }
 
-.adminui .input {
+.limitedui .input {
   margin-right: 10px;
 }
