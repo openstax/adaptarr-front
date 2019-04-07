@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Editor, Value } from 'slate'
 
 import ToolGroup from '../ToolGroup'
+import Classes from '../Classes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -38,6 +39,7 @@ export default class SectionTools extends React.Component<Props> {
             Increase level
           </Localized>
         </Button>
+        <Classes editor={editor} block={section} />
       </ToolGroup>
     )
   }

@@ -942,6 +942,8 @@ editor-tools-xref-grammatical-case = { $case ->
   [vocative] Vocative
 }
 
+
+
 ## Editor toolboxes - sections
 
 editor-tools-sections-title = Section
@@ -950,3 +952,10 @@ editor-tools-sections-increase-depth =  Increase level
 
 editor-tools-sections-decrease-depth =  Decrease level 
 
+
+
+## Editor toolboxes - classes
+
+editor-tools-classes-title = List of classes:
+
+editor-tools-classes-placeholder = Add new class

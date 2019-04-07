@@ -14,6 +14,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import ToolGroup from '../ToolGroup'
+import Classes from '../Classes'
 
 export type Props = {
   editor: Editor,
@@ -64,6 +65,7 @@ export default class FigureTools extends React.Component<Props> {
             Add caption
           </Localized>
         </Button>
+        <Classes editor={editor} block={figure} />
         <Modal
           ref={this.setModal}
           content={this.renderModal}
