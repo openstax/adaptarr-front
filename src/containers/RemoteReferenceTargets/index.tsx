@@ -8,7 +8,6 @@ import { PartData } from 'src/api/bookpart'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-import Spinner from 'src/components/Spinner'
 import RemoteSource from './components/RemoteSource'
 
 import RefTargets from 'src/containers/ReferenceTargets'
@@ -70,48 +69,38 @@ class RemoteReferenceTargets extends React.Component<Props> {
     const { onSelect } = this.props
     const { selected, books } = this.state
     const targets = selected ? this.props.targets.get(selected.id) : null
-
-    if (targets != null) {
-      return (
-        <div className="remote-reference-targets">
-          <Button clickHandler={this.unselectRefSource}>
-            <Icon name="arrow-left" size="small" />
-            <Localized id="reference-target-list-go-back">Back</Localized>
-          </Button>
-          <RefTargets
-            module={selected}
-            targets={targets}
-            onSelect={onSelect}
-          />
-        </div>
-      )
-    }
-
-    if (selected != null) {
-      return (
-        <div className="remote-reference-targets">
-          <Spinner />
-        </div>
-      )
-    }
-
     return (
-      <div className="remote-reference-targets">
+      <>
         {
-          books.map(parts => (
-            <Nestable
-              key={parts.id}
-              isDisabled={true}
-              items={[parts]}
-              className="book-collection"
-              childrenProp="parts"
-              renderItem={this.renderItem}
-              renderCollapseIcon={this.renderCollapseIcon}
-              collapsed
+          targets && <div className="remote-reference-targets">
+            <Button clickHandler={this.unselectRefSource}>
+              <Icon name="arrow-left" size="small" />
+              <Localized id="reference-target-list-go-back">Back</Localized>
+            </Button>
+            <RefTargets
+              module={selected}
+              targets={targets}
+              onSelect={onSelect}
             />
-          ))
+          </div>
         }
-      </div>
+        <div className={`remote-reference-targets ${targets ? 'hide' : ''}`}>
+          {
+            books.map(parts => (
+              <Nestable
+                key={parts.id}
+                isDisabled={true}
+                items={[parts]}
+                className="book-collection"
+                childrenProp="parts"
+                renderItem={this.renderItem}
+                renderCollapseIcon={this.renderCollapseIcon}
+                collapsed
+              />
+            ))
+          }
+        </div>
+      </>
     )
   }
 
