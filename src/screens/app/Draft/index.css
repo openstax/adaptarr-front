@@ -28,6 +28,12 @@
   width: 100%;
 }
 
+.draft__editor .info-box {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+}
+
 .document {
   flex: 1;
   margin-right: 260px; /* width of toolbox */
@@ -105,7 +111,7 @@
 }
 
 .editor img[data-selected=true] {
-  border: 2px solid blue;
+  border: 2px solid var(--dark-bg);
   padding: 0;
 }
 
@@ -239,4 +245,292 @@ div.editor figure > figcaption::before {
 .editor .adr-entry {
   display: table-cell;
   padding: 0.5rem 1rem;
+}
+
+
+/* EDITOR WEBVIEW STYLES */
+
+.editor--webview div.editor {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.editor--webview div.editor .title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+}
+
+.editor--webview div.editor h1,
+.editor--webview div.editor h2,
+.editor--webview div.editor h3,
+.editor--webview div.editor h4,
+.editor--webview div.editor h5,
+.editor--webview div.editor h6 {
+  color: #333;
+}
+
+.editor--webview div.editor p {
+  margin: 1rem 0 0;
+  color: #555;
+}
+
+.editor--webview div.editor a {
+  color: #21366b;
+  text-decoration: underline;
+}
+
+.editor--webview div.editor a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.editor--webview div.editor a:hover,
+.editor--webview div.editor a:focus {
+  color: #0f1831;
+  text-decoration: underline;
+}
+
+.editor--webview div.editor figure {
+  display: table;
+  margin: 2rem auto;
+}
+
+.editor--webview div.editor img {
+  min-width: auto;
+  margin: 0;
+}
+
+.editor--webview div.editor figcaption {
+  display: table-caption;
+  caption-side: bottom;
+  min-width: auto;
+  font-size: 0.9rem;
+  padding: 0.8rem 2.8rem 0 2.9rem;
+}
+
+.editor--webview div.editor figcaption::before {
+  font-weight: 700;
+}
+
+.editor--webview div.editor .admonition {
+  margin: 2rem 0;
+  padding: 1rem;
+  background-color: #ededed;
+  border: .2rem solid #dcdcdc;
+}
+
+.editor--webview div.editor .admonition > * {
+  padding: 0 1rem;
+}
+
+.editor--webview div.editor .admonition p:last-child {
+  padding-bottom: 0;
+}
+
+.editor--webview div.editor .admonition .title,
+.editor--webview div.editor .admonition .admonition-title {
+  display: block;
+  margin-bottom: 1rem;
+  margin-top: 0;
+  padding-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+  border-bottom: .2rem solid #dcdcdc;
+}
+
+.editor--webview div.editor .admonition > :first-child:not(.title)::before {
+  display: block;
+  /* There is no title so first child will have paddings same as paragraphs
+  so we have to adjust */
+  margin: -1rem -1rem 1rem -1rem;
+  padding-left: 1rem;
+  padding-bottom: 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: .1rem;
+  border-bottom: .2rem solid #dcdcdc;
+}
+
+.editor--webview .editor .exercise {
+  border-inline-start: 0 solid transparent;
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  margin-bottom: 10px;
+}
+
+.editor--webview .editor .exercise ::before {
+  display: inline;
+  color: #555;
+  font-weight: bold;
+}
+
+.editor--webview .editor .exercise .exercise-problem::before {
+  content: counter(exercise) '. ';
+}
+
+.editor--webview .editor .exercise .exercise-problem > :first-child {
+  display: inline;
+}
+
+.editor--webview .editor .exercise .exercise-problem ul {
+  list-style-type: lower-latin;
+}
+
+.editor--webview .editor .exercise .exercise-solution::before {
+  display: block;
+  margin-top: 5px;
+}
+
+/* EDITOR PDF STYLES */
+
+.editor--pdf div.editor {
+  font-family: 'Times New Roman', serif;
+  font-size: 19px;
+  line-height: 1.3;
+}
+
+.editor--pdf div.editor .title {
+  margin-top: 2rem;
+  font-weight: 700;
+  font-size: 1.2rem;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+
+.editor--pdf div.editor h1,
+.editor--pdf div.editor h2,
+.editor--pdf div.editor h3,
+.editor--pdf div.editor h4,
+.editor--pdf div.editor h5,
+.editor--pdf div.editor h6 {
+  color: #333;
+}
+
+.editor--pdf div.editor p {
+  margin: 1rem 0 0;
+  color: #333;;
+}
+
+.editor--pdf div.editor a {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #c41717;
+  text-decoration: none;
+}
+
+.editor--pdf div.editor a:focus {
+  outline: thin dotted;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+.editor--pdf div.editor a:hover,
+.editor--pdf div.editor a:focus {
+  color: #0f1831;
+  text-decoration: underline;
+}
+
+.editor--pdf div.editor figure {
+  padding: 0;
+  margin: 2rem 0;
+}
+
+.editor--pdf div.editor img {
+  min-width: auto;
+}
+
+.editor--pdf div.editor figcaption {
+  display: block;
+  width: 100%;
+  padding-top: 0.5rem;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1rem;
+  color: #333;
+}
+
+.editor--pdf div.editor figcaption::before {
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  color: #c41717;
+  font-weight: 700;
+}
+
+.editor--pdf div.editor .admonition {
+  margin: 3rem 0 2rem 0;
+  padding: 1rem;
+  font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-size: 1rem;
+  border: 2px solid #3d3dec;
+  border-radius: 20px;
+}
+
+.editor--pdf div.editor .admonition > * {
+  padding: 0 1rem;
+}
+
+.editor--pdf div.editor .admonition p:last-child {
+  padding-bottom: 0;
+}
+
+.editor--pdf div.editor .admonition .title,
+.editor--pdf div.editor .admonition .admonition-title,
+.editor--pdf div.editor .admonition > :first-child:not(.title)::before {
+  display: flex;
+  align-items: center;
+  width: 60%;
+  margin-bottom: 1rem;
+  margin-top: -42px;
+  padding: 0.5rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: orange;
+  text-transform: uppercase;
+  background-color: #3d3dec;
+  border-radius: 20px;
+  border: 2px solid orange;
+}
+
+.editor--pdf div.editor .admonition > :first-child:not(.title)::before {
+  margin-top: -58px;
+  margin-left: -1rem;
+}
+
+.editor--pdf .editor .exercise {
+  display: inline-table;
+  width: 45%;
+  margin-right: 5%;
+  margin-bottom: 10px;
+  margin-inline-start: 0;
+  padding-inline-start: 0;
+  border-inline-start: 0 solid transparent;  
+}
+
+.editor--pdf .editor .exercise ::before {
+  display: inline;
+  color: #333;
+  font-weight: bold;
+}
+
+.editor--pdf .editor .exercise .exercise-problem::before {
+  content: counter(exercise) '. ';
+}
+
+.editor--pdf .editor .exercise .exercise-problem > :first-child {
+  display: inline;
+}
+
+.editor--pdf .editor .exercise .exercise-problem ul {
+  list-style-type: lower-latin;
+}
+
+.editor--pdf .editor .exercise .exercise-solution::before {
+  display: block;
+  margin-top: 5px;
 }
