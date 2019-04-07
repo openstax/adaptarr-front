@@ -35,3 +35,19 @@
 .remote-reference-targets .nestable-item-0 .nestable-list::before {
   height: calc(100% - 20px);
 }
+
+.remote-reference-targets .bookpart__icon .icon {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px; 
+  z-index: 1;
+}
+
+.remote-reference-targets .bookpart__icon .icon svg {
+  margin-right: 10px;
+}
