@@ -51,12 +51,7 @@ class RemoteReferenceTargets extends React.Component<Props> {
   }
 
   private fetchBookparts = async () => {
-    let books: api.BookPart[] = []
-
-    for (const [_, book] of this.props.booksMap) {
-      const parts = await book.parts()
-      books.push(parts)
-    }
+    const books: api.BookPart[] = await Promise.all([...this.props.booksMap].map(([_, book]) => book.parts()))
 
     this.setState({ books })
   }
