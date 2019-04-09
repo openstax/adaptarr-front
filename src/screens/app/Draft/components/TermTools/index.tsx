@@ -47,16 +47,17 @@ export default class TermTools extends React.Component<Props> {
   }
 
   public render() {
-    const term = this.isActiveTerm()
+    const term = this.props.editor.getActiveTerm(this.props.value)
 
     if (!term) return null
 
     return (
       <ToolGroup title="editor-tools-term-title">
         <label className="terms__label">
-          Index form
+          <Localized id="editor-tools-term-label" $text={term.leaf.text}>
+            Index form for ...
+          </Localized>
           <Input
-            l10nId="editor-tools-term-reference-form"
             value={this.state.reference}
             onChange={this.onChange}
           />

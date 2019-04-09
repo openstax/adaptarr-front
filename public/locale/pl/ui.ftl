@@ -864,6 +864,8 @@ editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
 
 editor-tools-term-title = Termin
 
-editor-tools-term-reference-form = Forma indeksowa
+# Variables:
+# - $text (string): text marked as a term.
+editor-tools-term-label = Forma indeksowa dla "{ $text }":
 
 editor-tools-term-remove = Usuń termin

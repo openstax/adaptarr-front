@@ -838,6 +838,8 @@ editor-tools-sections-decrease-depth =  Decrease level
 
 editor-tools-term-title = Term
 
-editor-tools-term-reference-form = Index form
+# Variables:
+# - $text (string): text marked as a term.
+editor-tools-term-label = Index form for "{ $text }":
 
 editor-tools-term-remove = Remove term
