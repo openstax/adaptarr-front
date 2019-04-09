@@ -848,6 +848,8 @@ editor-tools-xref-grammatical-case = { $case ->
   [vocative] Wołacz (vocativus)
 }
 
+
+
 ## Editor toolboxes - sections
 
 editor-tools-sections-title = Sekcja
@@ -855,3 +857,13 @@ editor-tools-sections-title = Sekcja
 editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
 editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 
+
+
+
+## Editor toolboxes - terms
+
+editor-tools-term-title = Termin
+
+editor-tools-term-reference-form = Forma indeksowa
+
+editor-tools-term-remove = Usuń termin

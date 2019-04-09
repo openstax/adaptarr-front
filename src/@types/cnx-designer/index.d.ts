@@ -4,9 +4,11 @@ declare module 'cnx-designer' {
     Block,
     Data,
     Editor as SlateEditor,
+    Leaf,
     Node,
     Operation,
     Range,
+    Text,
     Value,
   } from 'slate'
   import { Plugin } from 'slate-react'
@@ -69,6 +71,14 @@ declare module 'cnx-designer' {
     alt: string,
   }
 
+  export type Term = {
+    reference: string,
+    leaf: Leaf,
+    focusText: Text,
+    offsetStart: number,
+    offsetEnd: number,
+  }
+
   export interface EditorAug {
     // Commands
     insertSection(): EditorAug
@@ -84,6 +94,9 @@ declare module 'cnx-designer' {
     changeListType(type: string): EditorAug
     insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
+    addTerm(): EditorAug
+    removeTerm(): EditorAug
+    changeTermReference(reference: string): EditorAug
 
     // Queries
     getActiveSection(value: Value): Block | null
@@ -91,6 +104,7 @@ declare module 'cnx-designer' {
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
+    getActiveTerm(value: Value): Term | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean

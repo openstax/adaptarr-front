@@ -4,7 +4,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-left' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile' | 'lock' | 'unlock' | 'link' | 'image' | 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'list-ul' | 'list-ol' | 'flask' | 'sticky-note' | 'save' | 'comment' | 'check' | 'indent' | 'outdent',
+  name: 'menu' | 'dashboard' | 'bell' | 'book' | 'resources' | 'cog' | 'info' | 'close' | 'arrow-right' | 'arrow-left' | 'arrow-down' | 'plus' | 'minus' | 'users' | 'pencil' | 'profile' | 'lock' | 'unlock' | 'link' | 'image' | 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'list-ul' | 'list-ol' | 'flask' | 'sticky-note' | 'save' | 'comment' | 'check' | 'indent' | 'outdent' | 'term',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -145,6 +145,10 @@ const icon = ({ size, name }: Props) => {
       case 'outdent':
         return (
           <svg aria-hidden="true" data-prefix="fas" data-icon="outdent" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M0 84V44c0-8.837 7.163-16 16-16h416c8.837 0 16 7.163 16 16v40c0 8.837-7.163 16-16 16H16c-8.837 0-16-7.163-16-16zm208 144h224c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H208c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zM16 484h416c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H16c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zm192-128h224c8.837 0 16-7.163 16-16v-40c0-8.837-7.163-16-16-16H208c-8.837 0-16 7.163-16 16v40c0 8.837 7.163 16 16 16zM4.687 267.313l96 95.984C110.734 373.348 128 366.224 128 351.984V160.008c0-14.329-17.325-21.304-27.313-11.313l-96 95.992c-6.249 6.248-6.249 16.378 0 22.626z"></path></svg>
+        )
+      case 'term':
+        return (
+          <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="bookmark" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M336 0H48C21.49 0 0 21.49 0 48v464l192-112 192 112V48c0-26.51-21.49-48-48-48zm0 428.43l-144-84-144 84V54a6 6 0 0 1 6-6h276c3.314 0 6 2.683 6 5.996V428.43z"></path></svg>
         )
       default:
         return (

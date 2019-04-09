@@ -11,9 +11,9 @@ export type Props = {
   value: Value,
 }
 
-type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript'
+type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'term'
 
-const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'term']
 
 /**
  * Types of paragraph-like block that user can switch between.
@@ -89,8 +89,17 @@ export default class FormatTools extends React.Component<Props> {
   private applyFormat = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault()
 
-    const format = (ev.target as HTMLButtonElement).dataset.id
+    const format = (ev.currentTarget as HTMLButtonElement).dataset.id
     if (!format) return
+
+    if (format === 'term') {
+      if (this.props.value.marks.some(mark => mark ? mark.type === 'term' : false)) {
+        this.props.editor.removeTerm()
+      } else {
+        this.props.editor.addTerm()
+      }
+      return
+    }
 
     this.props.editor.toggleMark(format)
   }
