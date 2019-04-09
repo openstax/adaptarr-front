@@ -67,6 +67,11 @@ export default class InsertTools extends React.Component<Props> {
             Section
           </Localized>
         </Button>
+        <Button clickHandler={this.insertQuotation} className="toolbox__button--insert">
+          <Localized id="editor-tools-insert-quotation">
+            Quotation
+          </Localized>
+        </Button>
         <Modal
           ref={this.setFigureModal}
           content={this.renderFigureModal}
@@ -126,5 +131,9 @@ export default class InsertTools extends React.Component<Props> {
   private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
     this.xrefModal!.close()
     this.props.editor.insertXref(target.id, source ? source.id : undefined)
+  }
+
+  private insertQuotation = () => {
+    this.props.editor.wrapBlock('quotation')
   }
 }
