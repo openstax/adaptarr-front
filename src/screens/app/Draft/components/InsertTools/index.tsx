@@ -68,6 +68,7 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button clickHandler={this.insertQuotation} className="toolbox__button--insert">
+          <Icon name="quote" />
           <Localized id="editor-tools-insert-quotation">
             Quotation
           </Localized>
