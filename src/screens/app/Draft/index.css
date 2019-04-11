@@ -247,6 +247,11 @@ div.editor figure > figcaption::before {
   padding: 0.5rem 1rem;
 }
 
+.editor blockquote {
+  border-inline-start: 4px solid gray;
+  padding-inline-start: 4px;
+  font-style: italic;
+}
 
 /* EDITOR WEBVIEW STYLES */
 
@@ -509,7 +514,7 @@ div.editor figure > figcaption::before {
   margin-bottom: 10px;
   margin-inline-start: 0;
   padding-inline-start: 0;
-  border-inline-start: 0 solid transparent;  
+  border-inline-start: 0 solid transparent;
 }
 
 .editor--pdf .editor .exercise ::before {

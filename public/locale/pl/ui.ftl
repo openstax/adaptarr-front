@@ -833,6 +833,8 @@ editor-tools-insert-figure = Figura
 
 editor-tools-insert-section = Sekcja
 
+editor-tools-insert-quotation = Cytat
+
 
 
 ## Editor toolboxes - lists
@@ -976,7 +978,7 @@ editor-tools-sections-title = Sekcja
 
 editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
-editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 
+editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
 
 
 
