@@ -14,47 +14,43 @@ export type Props = {
   value: Value,
 }
 
-export type Term = {
-  reference: string,
-  leaf: Leaf,
-  focusText: Text,
-  offsetStart: number,
-  offsetEnd: number,
-}
-
 type State = {
   // Index form of given term
   reference: string,
-  term: Term | null,
 }
 
 export default class TermTools extends React.Component<Props> {
   state: State = {
     reference: '',
-    term: null,
   }
 
   componentDidUpdate(_: Props, prevState: State) {
-    const term = this.props.editor.getActiveTerm(this.props.value)
-    if (JSON.stringify(term) !== JSON.stringify(prevState.term)) {
-      this.setState({ term, reference: term ? term.reference : '' })
+    const term = this.getActiveTerm()
+    if (term && term.data.get('reference') !== prevState.reference) {
+      const reference = term.data.get('reference') ? term.data.get('reference') : term.text
+      if (reference !== prevState.reference) {
+        this.setState({ reference })
+      }
     }
   }
 
   componentDidMount() {
-    const term = this.props.editor.getActiveTerm(this.props.value)
-    this.setState({ term, reference: term ? term.reference : '' })
+    const term = this.getActiveTerm()
+    if (term) {
+      const reference = term.data.get('reference') ? term.data.get('reference') : term.text
+      this.setState({ reference })
+    }
   }
 
   public render() {
-    const term = this.props.editor.getActiveTerm(this.props.value)
+    const term = this.getActiveTerm()
 
     if (!term) return null
 
     return (
       <ToolGroup title="editor-tools-term-title">
         <label className="terms__label">
-          <Localized id="editor-tools-term-label" $text={term.leaf.text}>
+          <Localized id="editor-tools-term-label" $text={term.text}>
             Index form for ...
           </Localized>
           <Input
@@ -75,8 +71,10 @@ export default class TermTools extends React.Component<Props> {
     )
   }
 
-  private isActiveTerm = () => {
-    return this.props.value.marks.some(m => m ? m.type === 'term' : false)
+  private getActiveTerm = () => {
+    const inline = this.props.value.startInline
+    if (!inline) return null
+    return inline.type === 'term' ? inline : null
   }
 
   private onChange = (val: string) => {
@@ -84,10 +82,20 @@ export default class TermTools extends React.Component<Props> {
   }
 
   private changeReference = () => {
-    this.props.editor.changeTermReference(this.state.reference)
+    const term = this.getActiveTerm()
+    if (!term) return
+
+    this.props.editor.setNodeByKey(term.key, {
+      type: 'term',
+      data: {
+        reference: this.state.reference
+      }
+    })
   }
 
   private removeTerm = () => {
-    this.props.editor.removeTerm()
+    const term = this.getActiveTerm()
+    if (!term) return
+    this.props.editor.unwrapInlineByKey(term.key, { type: 'term', data: term.data.toJS() })
   }
 }

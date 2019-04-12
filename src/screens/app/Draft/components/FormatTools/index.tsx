@@ -78,7 +78,10 @@ export default class FormatTools extends React.Component<Props> {
   }
 
   private isActive = (format: Format) => {
-    return this.props.value.marks.some(mark => mark ? mark.type === format : false)
+    const isMark = this.props.value.marks.some(mark => mark ? mark.type === format : false)
+    const inline = this.props.value.startInline
+    const isInline = inline && inline.type === 'format' ? true : false
+    return isMark || isInline
   }
 
   private changeTextType = (blockType: string) => {
@@ -93,10 +96,11 @@ export default class FormatTools extends React.Component<Props> {
     if (!format) return
 
     if (format === 'term') {
-      if (this.props.value.marks.some(mark => mark ? mark.type === 'term' : false)) {
-        this.props.editor.removeTerm()
+      const inline = this.props.value.startInline
+      if (!inline || inline.type !== 'term') {
+        this.props.editor.wrapInline({ type: 'term' })
       } else {
-        this.props.editor.addTerm()
+        this.props.editor.unwrapInlineByKey(inline.key, { type: 'term', data: inline.data.toJS() })
       }
       return
     }

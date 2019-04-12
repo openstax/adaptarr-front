@@ -94,9 +94,6 @@ declare module 'cnx-designer' {
     changeListType(type: string): EditorAug
     insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
-    addTerm(): EditorAug
-    removeTerm(): EditorAug
-    changeTermReference(reference: string): EditorAug
 
     // Queries
     getActiveSection(value: Value): Block | null
@@ -104,7 +101,6 @@ declare module 'cnx-designer' {
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
-    getActiveTerm(value: Value): Term | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean
