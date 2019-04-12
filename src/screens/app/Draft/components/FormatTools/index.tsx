@@ -80,7 +80,7 @@ export default class FormatTools extends React.Component<Props> {
   private isActive = (format: Format) => {
     const isMark = this.props.value.marks.some(mark => mark ? mark.type === format : false)
     const inline = this.props.value.startInline
-    const isInline = inline && inline.type === 'format' ? true : false
+    const isInline = inline && inline.type === format ? true : false
     return isMark || isInline
   }
 
