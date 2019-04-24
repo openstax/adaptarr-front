@@ -91,7 +91,8 @@
 }
 
 .editor .term {
-  color: var(--orange);
+  border: 1px solid var(--font-dark);
+  padding: 0 2px;
 }
 
 .editor figure {
