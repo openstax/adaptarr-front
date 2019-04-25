@@ -686,6 +686,8 @@ reference-target-list-tab-local = This document
 
 reference-target-list-tab-remote = Other documents
 
+reference-target-list-tab-remote-not-assigned = Not assigned to any book
+
 
 
 ## Editor - document title
