@@ -21,6 +21,7 @@ export const initialState = {
     id: 0,
     name: 'Loading...',
     role: null,
+    language: 'en',
   })
 }
 

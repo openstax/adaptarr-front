@@ -292,6 +292,12 @@ invitation-send =
 # - $email (string): email address to which the invitation was sent.
 invitation-send-alert-success = Invitation sent to { $email }
 
+# Alert displayed if error occurs when sending invitation.
+#
+# Variables:
+# - $details (string): error details.
+invitation-send-alert-error = Something went wrong. Details: { $details }
+
 
 
 ## Screens - module view

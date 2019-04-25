@@ -1,7 +1,6 @@
 import axios from 'src/config/axios'
 
 import Base from './base'
-
 import { elevated } from './utils'
 import Role, { Permission } from './role'
 
@@ -13,6 +12,7 @@ export type UserData = {
   name: string,
   role: Role | null,
   permissions?: Permission[],
+  language: string,
 }
 
 export default class User extends Base<UserData> {
@@ -76,6 +76,11 @@ export default class User extends Base<UserData> {
   name: string
 
   /**
+   * User's language.
+   */
+  language: string
+
+  /**
    * Identificator to use when making requests.
    *
    * This is usually the same as {@link User#id}, except for current user,
@@ -113,5 +118,18 @@ export default class User extends Base<UserData> {
    */
   async changePermissions(permissions: Permission[]): Promise<any> {
     return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
+  }
+  
+  /**
+   * Change language.
+   * 
+   * @param language ISO code of language
+   */
+  async changeLanguage(language: string) {
+    if (this.apiId === 'me') {
+      return await axios.put('users/me', { language })
+    } else {
+      return await elevated(() => axios.put(`users/${this.apiId}`, { language }))
+    }
   }
 }
