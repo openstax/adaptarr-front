@@ -863,3 +863,5 @@ editor-tools-link-title = Odnośnik
 editor-tools-link-text = Wprowadź tekst
 
 editor-tools-link-url = Wprowadź odnośnik
+
+editor-tools-link-remove = Usuń link

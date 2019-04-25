@@ -151,20 +151,6 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private handleInsertLink = () => {
-    const link = {
-      object: 'inline',
-      type: 'link',
-      data: {
-        url: '',
-      }
-    }
-    const { selection: { anchor, focus } } = this.props.value
-
-    if ((anchor.key !== focus.key) || (anchor.offset !== focus.offset)) {
-      this.props.editor.wrapInline(link)
-      return
-    }
-
     this.openLinkModal()
   }
 

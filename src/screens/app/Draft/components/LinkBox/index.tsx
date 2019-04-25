@@ -4,7 +4,6 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import Input from 'src/components/ui/Input'
-import Button from 'src/components/ui/Button'
 
 type Props = {
   onAccept: (text: string, url: string) => any
@@ -14,9 +13,11 @@ class LinkBox extends React.Component<Props> {
   state: {
     text: string
     url: string
+    isUrlValid: boolean
   } = {
     text: '',
     url: '',
+    isUrlValid: false,
   }
 
   private handleTextChange = (val: string) => {
@@ -24,16 +25,26 @@ class LinkBox extends React.Component<Props> {
   }
 
   private handleUrlChange = (val: string) => {
-    this.setState({ url: val })
+    this.setState({ url: val }, this.validateUrl)
   }
 
   private onAccept = () => {
     const { text, url } = this.state
-    this.props.onAccept(text, url)
+    this.props.onAccept(text.trim() ? text : url, url)
+  }
+
+  private validateUrl = () => {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    this.setState({ isUrlValid: !!pattern.test(this.state.url) })
   }
 
   public render() {
-    const { text, url } = this.state
+    const { text, url, isUrlValid } = this.state
 
     return (
       <div className="linkbox">
@@ -61,9 +72,10 @@ class LinkBox extends React.Component<Props> {
               type="text"
               value={url}
               onChange={this.handleUrlChange}
+              validation={{custom: () => isUrlValid}}
             />
           </label>
-          <input className="button" type="submit" value="Accept"/>
+          <input className="button" type="submit" value="Accept" disabled={!isUrlValid} />
         </form>
       </div>
     )

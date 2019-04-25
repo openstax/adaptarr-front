@@ -1,8 +1,13 @@
 import * as React from 'react'
 import { Editor, Value } from 'slate'
+import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
 import Input from 'src/components/ui/Input'
+import Icon from 'src/components/ui/Icon'
+import Button from 'src/components/ui/Button'
+
+import './index.css'
 
 export type Props = {
   editor: Editor,
@@ -12,8 +17,7 @@ export type Props = {
 export default class DocumentTools extends React.Component<Props> {
 
   private onChange = (val: string) => {
-    const { value: { startInline } } = this.props
-    const link = startInline && startInline.type === 'link' ? startInline : null
+    const link = this.getActiveLink()
     if (!link) return
 
     let newLink = {
@@ -26,9 +30,19 @@ export default class DocumentTools extends React.Component<Props> {
     this.props.editor.setNodeByKey(link.key, newLink)
   }
 
-  render() {
+  private removeLink = () => {
+    const link = this.getActiveLink()
+    if (!link) return
+    this.props.editor.unwrapInlineByKey(link.key, { type: 'link', data: link.data.toJS() })
+  }
+
+  private getActiveLink = () => {
     const { value: { startInline } } = this.props
-    const link = startInline && startInline.type === 'link' ? startInline : null
+    return startInline && startInline.type === 'link' ? startInline : null
+  }
+
+  render() {
+    const link = this.getActiveLink()
     if (!link) return null
 
     return (
@@ -38,6 +52,15 @@ export default class DocumentTools extends React.Component<Props> {
           value={link.data.get('url')}
           onChange={this.onChange}
         />
+        <Button
+          className="link__button"
+          clickHandler={this.removeLink}
+        >
+          <Icon name="close" />
+          <Localized id="editor-tools-link-remove">
+            Remove link
+          </Localized>
+        </Button>
       </ToolGroup>
     )
   }

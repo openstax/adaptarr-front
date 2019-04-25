@@ -837,3 +837,5 @@ editor-tools-link-title = Link
 editor-tools-link-text = Provide text
 
 editor-tools-link-url = Provide link
+
+editor-tools-link-remove = Remove link
