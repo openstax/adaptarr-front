@@ -16,9 +16,17 @@ export type Props = {
 
 export default class DocumentTools extends React.Component<Props> {
 
+  state: {
+    isUrlValid: boolean
+  } = {
+    isUrlValid: true,
+  }
+
   private onChange = (val: string) => {
     const link = this.getActiveLink()
     if (!link) return
+
+    if (!this.validateUrl(val)) return
 
     let newLink = {
       type: 'link',
@@ -41,6 +49,17 @@ export default class DocumentTools extends React.Component<Props> {
     return startInline && startInline.type === 'link' ? startInline : null
   }
 
+  private validateUrl = (url: string) => {
+    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    const isValid = !!pattern.test(url)
+    return isValid
+  }
+
   render() {
     const link = this.getActiveLink()
     if (!link) return null
@@ -51,6 +70,7 @@ export default class DocumentTools extends React.Component<Props> {
           l10nId="editor-tools-link-url"
           value={link.data.get('url')}
           onChange={this.onChange}
+          validation={{ custom: this.validateUrl }}
         />
         <Button
           className="link__button"
