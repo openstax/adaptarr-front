@@ -841,6 +841,8 @@ editor-tools-insert-section = Section
 
 editor-tools-insert-quotation = Quotation
 
+editor-tools-insert-link = Link
+
 
 
 ## Editor toolboxes - lists
@@ -969,3 +971,15 @@ editor-tools-sections-decrease-depth =  Decrease level
 editor-tools-classes-title = List of classes:
 
 editor-tools-classes-placeholder = Add new class
+
+
+
+## Editor toolboxes - links
+
+editor-tools-link-title = Link
+
+editor-tools-link-text = Provide text
+
+editor-tools-link-url = Provide link
+
+editor-tools-link-remove = Remove link

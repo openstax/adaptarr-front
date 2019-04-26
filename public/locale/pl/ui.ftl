@@ -843,6 +843,8 @@ editor-tools-insert-section = Sekcja
 
 editor-tools-insert-quotation = Cytat
 
+editor-tools-insert-link = Odnośnik
+
 
 
 ## Editor toolboxes - lists
@@ -995,3 +997,15 @@ editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
 editor-tools-classes-title = Lista klas:
 
 editor-tools-classes-placeholder = Dodaj nową klasę
+
+
+
+## Editor toolboxes - links
+
+editor-tools-link-title = Odnośnik
+
+editor-tools-link-text = Wprowadź tekst
+
+editor-tools-link-url = Wprowadź odnośnik
+
+editor-tools-link-remove = Usuń link
