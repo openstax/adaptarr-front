@@ -30,14 +30,15 @@
   font-weight: 700;
   font-size: 1.2rem;
   line-height: 1.6;
-}
-
-.profile__info {
   margin-top: 30px;
 }
 
-.profile__bio {
-  margin-bottom: 30px;
+.profile__select {
+  min-width: 200px;
+}
+
+.profile__button--unassign-role {
+  margin-left: 20px; 
 }
 
 .profile__bio p {

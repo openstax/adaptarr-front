@@ -9,7 +9,7 @@ import { FilesError } from 'react-files'
 import * as api from 'src/api'
 import getCurrentLng from 'src/helpers/getCurrentLng'
 
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import ModulesList from 'src/components/ModulesList'
 import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
@@ -156,7 +156,7 @@ class ModuleList extends React.Component<Props> {
             </Dialog>
           : null
         }
-        <AdminUI>
+        <LimitedUI permissions="module:edit">
           <div className="modulesList__new">
             <form onSubmit={this.addNewModule}>
               <div className="modulesList__top-bar">
@@ -187,7 +187,7 @@ class ModuleList extends React.Component<Props> {
               />
             </form>
           </div>
-        </AdminUI>
+        </LimitedUI>
         <div className="modulesList__filter">
           <Input
             l10nId="module-list-search-box"

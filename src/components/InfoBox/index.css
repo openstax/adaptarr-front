@@ -1,0 +1,16 @@
+.info-box {
+  position: relative;
+  font-size: 0.9rem;
+  padding: 10px;
+  border: 1px solid var(--dark-bg);
+  border-radius: 3px;
+  background-color: var(--light-bg);
+}
+
+.info-box__close {
+  position: absolute;
+  top: 0;
+  right:0;
+  padding: 5px;
+  cursor: pointer;
+}

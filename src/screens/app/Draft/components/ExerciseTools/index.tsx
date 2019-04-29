@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { Block, Editor, Value } from 'slate'
 
+import Classes from '../Classes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -35,6 +36,7 @@ export default class ExerciseTools extends React.Component<Props> {
             Add commentary
           </Localized>
         </Button>
+        <Classes editor={editor} block={exercise} />
       </ToolGroup>
     )
   }

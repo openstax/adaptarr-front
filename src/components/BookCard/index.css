@@ -17,13 +17,13 @@
   font-weight: 700;
 }
 
-.card .adminui {
+.card .limitedui {
   position: absolute;
   top: 0;
   right: 0;
   padding: 20px;
 }
 
-.card .adminui .button {
+.card .limitedui .button {
   margin-left: 10px;
 }

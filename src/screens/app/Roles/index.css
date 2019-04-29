@@ -1,0 +1,23 @@
+.roles__title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 20px 0;
+}
+
+.roles__col {
+  flex: 1;
+}
+
+.roles__col--right {
+  padding: 0 0 0 20px;
+}
+
+.permissions {
+  margin: 10px 0;
+}
+
+.permissions__label {
+  display: inline-block;
+  padding: 5px 10px 5px 0px;
+  cursor: pointer;
+}

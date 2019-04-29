@@ -18,6 +18,7 @@ type Props = {
     maxLength?: number
     email?: boolean
     sameAs?: string
+    custom?: (val: string) => boolean
   }
 }
 
@@ -76,6 +77,11 @@ class Input extends React.Component<Props> {
         }
         if (validation.sameAs) {
           if (inputVal !== validation.sameAs) {
+            status = false
+          }
+        }
+        if (validation.custom) {
+          if (!validation.custom(inputVal)) {
             status = false
           }
         }

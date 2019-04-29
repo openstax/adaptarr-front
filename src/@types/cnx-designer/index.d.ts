@@ -23,7 +23,8 @@ declare module 'cnx-designer' {
   export default class Editor extends React.Component<EditorProps> {
   }
 
-  export const CNXML: {
+  export class CNXML {
+    constructor(rules: any[])
     deserialize(html: string, options?: {}): Value
     serialize(value: Value, title: string): string
   }
@@ -70,6 +71,9 @@ declare module 'cnx-designer' {
 
   export interface EditorAug {
     // Commands
+    insertSection(): EditorAug
+    decreaseSectionDepth(): EditorAug
+    increaseSectionDepth(): EditorAug
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug
     insertSolution(): EditorAug
@@ -82,6 +86,7 @@ declare module 'cnx-designer' {
     removeMarks(): EditorAug
 
     // Queries
+    getActiveSection(value: Value): Block | null
     getActiveAdmonition(value: Value): Block | null
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null

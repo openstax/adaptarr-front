@@ -19,7 +19,9 @@ export const initialState = {
   isLoading: true,
   user: new User({
     id: 0,
-    name: 'Loading...'
+    name: 'Loading...',
+    role: null,
+    language: 'en',
   })
 }
 

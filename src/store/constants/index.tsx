@@ -84,3 +84,6 @@ export type SET_LOCALE = typeof SET_LOCALE
 
 export const SET_AVAILABLE_LOCALES = 'SET_AVAILABLE_LOCALES'
 export type SET_AVAILABLE_LOCALES = typeof SET_AVAILABLE_LOCALES
+
+export const SET_ROLES = 'SET_ROLES'
+export type SET_ROLES = typeof SET_ROLES

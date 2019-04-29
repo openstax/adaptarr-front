@@ -32,6 +32,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 1,
             name: 'adaptarr',
+            role: null,
+            language: 'en',
           }),
           message: 'Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
@@ -40,6 +42,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 2,
             name: 'Test',
+            role: null,
+            language: 'en',
           }),
           message: 'Error corrupti [MENTION adaptarr 1] dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
@@ -48,6 +52,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 2,
             name: 'Test',
+            role: null,
+            language: 'en',
           }),
           message: 'Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
@@ -56,6 +62,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 1,
             name: 'adaptarr',
+            role: null,
+            language: 'en',
           }),
           message: 'Error corrupti dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
@@ -64,6 +72,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 1,
             name: 'adaptarr',
+            role: null,
+            language: 'en',
           }),
           message: 'Error corrupti [MENTION Test 2] dolor ea nam perspiciatis veniam animi non nobis culpa, dignissimos, veritatis facilis.',
           timestamp: new Date().toISOString(),
@@ -72,6 +82,8 @@ export const fetchConversation = (id: string): FetchConversation => {
           user: new User({
             id: 2,
             name: 'Test',
+            role: null,
+            language: 'en',
           }),
           message: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Error corrupti dolor ea nam perspiciatis [MENTION Test 2]veniam animi non nobis[MENTION adaptarr 1]culpa, dignissimos, veritatis facilis fugiat nemo asperiores odit voluptatibus ratione neque minima.',
           timestamp: new Date().toISOString(),

@@ -11,7 +11,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import AdminUI from 'src/components/AdminUI'
+import LimitedUI from 'src/components/LimitedUI'
 import BookCard from 'src/components/BookCard'
 import Spinner from 'src/components/Spinner'
 import Button from 'src/components/ui/Button'
@@ -110,14 +110,14 @@ class Books extends React.Component<Props> {
     return (
       <Section>
         <Header l10nId="book-list-view-title" title="Books">
-          <AdminUI>
+          <LimitedUI permissions="book:edit">
             <Button
               color="green"
               clickHandler={this.showAddBookDialog}
             >
               <Icon name="plus"/>
             </Button>
-          </AdminUI>
+          </LimitedUI>
         </Header>
         {
           showAddBook ?

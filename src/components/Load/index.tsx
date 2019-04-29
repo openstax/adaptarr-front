@@ -23,14 +23,16 @@ type Handler = React.ComponentType<{ error: Error }>;
  *
  * @param loader   function responsible for loading props
  * @param propsToCompare   array of props to compare inside componentDidUpdate
+ * @param l10nId   Id of translated loading message
  * @param Handler  component responsible for displaying errors
  * @param Progress component responsible for displaying progress indicator
  */
 export default <Args extends {}, Value extends {}> (
   loader: Loader<Args, Value>,
   propsToCompare: string[] = [],
+  l10nId?: string,
   Handler: Handler = DefaultHandler,
-  Progress: React.ComponentType = Spinner,
+  Progress: React.ComponentType<{l10nId?: string}> = Spinner,
 ) => <Props extends {}> (
   Component: React.ComponentType<Props & Value>,
 ) => class Load extends React.Component<Args & Props> {
@@ -74,7 +76,7 @@ export default <Args extends {}, Value extends {}> (
 
     if (value) return <Component {...this.props} {...value} />
 
-    return <Progress />
+    return <Progress l10nId={l10nId} />
   }
 }
 

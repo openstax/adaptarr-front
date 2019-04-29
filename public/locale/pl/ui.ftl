@@ -246,6 +246,20 @@ dashboard-drafts-empty = Nie posiadasz żadnych szkiców.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 
 
+## Screens - draft
+
+# Variables:
+# - $style (string): version of styles.
+draft-style-switcher = { $style ->
+ *[default] Style domyślne
+  [webview] Style wersji online
+  [pdf] Style wersji PDF
+}
+
+draft-style-switcher-info-box = To jest funkcja eksperymentalna. Istnieją wizualne różnice między podglądem a oryginalnymi stylami.
+
+draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
+
 
 ## Screens - dashboard - draft deletion dialog
 
@@ -278,6 +292,12 @@ invitation-send =
 # Variables:
 # - $email (string): email address to which the invitation was sent.
 invitation-send-alert-success = Zaproszenie wysłane do { $email }
+
+# Alert displayed if error occurs when sending invitation.
+#
+# Variables:
+# - $details (string): error details.
+invitation-send-alert-error = Coś poszło nie tak. Szczegóły: { $details }
 
 
 
@@ -329,6 +349,32 @@ user-profile-section-team = Twój zespół
 user-profile-section-bio = Bio:
 
 user-profile-section-contact = Kontakt
+
+user-profile-section-role = Rola użytkownika
+
+user-profile-role-unknown = Nieznana rola
+
+user-profile-section-role-unassign =  Usuń rolę użytkownikowi
+
+# Alert displayed when user's role has been changed successfully.
+#
+# Variables:
+# - $name (string): name of role which has been assigned to user.
+user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name }.
+
+# Alert displayed when error occurred when changing user's role.
+#
+# Variables:
+# - $details (string): error details.
+user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }.
+
+user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi.
+
+# Alert displayed when error occurred when unassiging user from role.
+#
+# Variables:
+# - $details (string): error details.
+user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }.
 
 # Placeholder text for team search box.
 user-profile-team-list-search =
@@ -407,6 +453,88 @@ settings-language-dialog-cancel = Anuluj
 
 
 
+## Screens - roles
+
+role-view-title = Role
+
+role-section-add = Dodaj nową rolę
+
+role-section-manage = Zarządzaj rolami
+
+role-name = Nazwa roli
+
+role-create = Utwórz rolę
+
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
+role-create-success = Rola "{ $name }" została utworzona.
+
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
+role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+
+# Dialog displayed when user want to delete role.
+#
+# Variables:
+# - $name (string): name of role which user want to delete.
+role-delete-title = Na pewno chcesz usunąć rolę "{ $name }"?
+
+role-delete-confirm = Potwierdź
+
+role-delete-cancel = Anuluj
+
+# Alert displayed when role has been deleted.
+#
+# Variables:
+# - $name (string): name of role which user deleted.
+role-delete-success = Rola "{ $name }" została usunięta.
+
+# Alert displayed when role has not been deleted.
+#
+# Variables:
+# - $details (string): error details.
+role-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+
+# Alert displayed when role has been updated.
+#
+# Variables:
+# - $name (string): name of role which user updated.
+role-update-success = Rola "{ $name }" została zaktualizowana.
+
+# Alert displayed when role has not been updated.
+#
+# Variables:
+# - $details (string): error details.
+role-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
+
+role-update-confirm = Zaktualizuj rolę
+
+role-update-cancel = Anuluj
+
+
+
+## Reusable components - permissions
+
+# Variables:
+# - $name (string): name of permission.
+permission-label = { $name ->
+  [user-invite] Zapraszanie użytkowników
+  [user-delete] Usuwanie użytkowników
+  [user-edit-permissions] Edycja uprawnień użytkowników
+  [user-assign-role] Przypisywanie ról do użytkowników
+  [book-edit] Tworzenie, usuwanie i edycja książek
+  [module-edit] Tworzenie, usuwanie i edycja modułów
+  [module-assign] Przypisywanie użytkowników do modułów
+  [role-edit] Tworzenie, usuwanie i edycja ról
+ *[unknown] Nieznane uprawnienie
+}
+
+
+
 ## Reusable components - navigation and side menu
 ##
 ## This component is displayed at all times and provides easy access to primary
@@ -431,6 +559,8 @@ navigation-settings = Ustawienia
 navigation-logout = Wyloguj
 
 navigation-invite = Zaproszenia
+
+navigation-roles = Role
 
 
 
@@ -562,6 +692,8 @@ reference-target-list-go-back = Wstecz
 reference-target-list-tab-local = Ten dokument
 
 reference-target-list-tab-remote = Inne dokumenty
+
+reference-target-list-tab-remote-not-assigned = Nie przypisany do żadnej książki
 
 
 
@@ -711,6 +843,13 @@ editor-tools-insert-figure = Figura
 
 editor-tools-insert-code = Kod
 
+editor-tools-insert-section = Sekcja
+
+editor-tools-insert-quotation = Cytat
+
+editor-tools-insert-link = Odnośnik
+
+
 
 ## Editor toolboxes - lists
 
@@ -844,3 +983,33 @@ editor-tools-xref-grammatical-case = { $case ->
   [translative] Translativus
   [vocative] Wołacz (vocativus)
 }
+
+
+
+## Editor toolboxes - sections
+
+editor-tools-sections-title = Sekcja
+
+editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
+
+editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
+
+
+
+## Editor toolboxes - classes
+
+editor-tools-classes-title = Lista klas:
+
+editor-tools-classes-placeholder = Dodaj nową klasę
+
+
+
+## Editor toolboxes - links
+
+editor-tools-link-title = Odnośnik
+
+editor-tools-link-text = Wprowadź tekst
+
+editor-tools-link-url = Wprowadź odnośnik
+
+editor-tools-link-remove = Usuń link

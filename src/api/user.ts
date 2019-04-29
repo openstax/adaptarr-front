@@ -1,6 +1,8 @@
 import axios from 'src/config/axios'
 
 import Base from './base'
+import { elevated } from './utils'
+import Role, { Permission } from './role'
 
 /**
  * User data as returned by the API.
@@ -8,6 +10,9 @@ import Base from './base'
 export type UserData = {
   id: number,
   name: string,
+  role: Role | null,
+  permissions?: Permission[],
+  language: string,
 }
 
 export default class User extends Base<UserData> {
@@ -71,6 +76,11 @@ export default class User extends Base<UserData> {
   name: string
 
   /**
+   * User's language.
+   */
+  language: string
+
+  /**
    * Identificator to use when making requests.
    *
    * This is usually the same as {@link User#id}, except for current user,
@@ -80,9 +90,46 @@ export default class User extends Base<UserData> {
    */
   apiId: string
 
+  /**
+   * User's role.
+   */
+  role: Role | null
+
+  /**
+   * User's permissions.
+   */
+  permissions: Permission[]
+
   constructor(data: UserData, apiId?: string) {
     super(data)
 
     this.apiId = apiId || data.id.toString()
+  }
+
+  /**
+   * Change role
+   */
+  async changeRole(id: number | null): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
+  }
+
+  /**
+   * Change permissions
+   */
+  async changePermissions(permissions: Permission[]): Promise<any> {
+    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
+  }
+  
+  /**
+   * Change language.
+   * 
+   * @param language ISO code of language
+   */
+  async changeLanguage(language: string) {
+    if (this.apiId === 'me') {
+      return await axios.put('users/me', { language })
+    } else {
+      return await elevated(() => axios.put(`users/${this.apiId}`, { language }))
+    }
   }
 }

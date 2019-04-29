@@ -1,5 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
+import { Localized } from 'fluent-react/compat'
 import Editor, { PersistDB, DocumentDB } from 'cnx-designer'
 import { match } from 'react-router'
 import { Value } from 'slate'
@@ -10,12 +11,15 @@ import { fetchReferenceTargets } from 'src/store/actions/Modules'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
+import InfoBox from 'src/components/InfoBox'
 import Title from './components/Title'
+import StyleSwitcher from './components/StyleSwitcher'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
-import I18nPlugin from './plugins/I18n'
+import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
+import TablesPlugin from './plugins/Tables'
 
 type Props = {
   documentDb: DocumentDB
@@ -57,11 +61,27 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 }
 
 class Draft extends React.Component<Props> {
-  prePlugins = [I18nPlugin, XrefPlugin]
+  state: {
+    editorStyle: string
+    showInfoBox: boolean
+  } = {
+    editorStyle: '',
+    showInfoBox: false,
+  }
+
+  prePlugins = [I10nPlugin, XrefPlugin, TablesPlugin]
   postPlugins = [UIPlugin]
 
   static childContextTypes = {
     documentDb: PropTypes.instanceOf(DocumentDB),
+  }
+
+  private handleStyleChange = (style: string) => {
+    this.setState({ editorStyle: style, showInfoBox: true })
+  }
+
+  private hideInfoBox = () => {
+    this.setState({ showInfoBox: false })
   }
 
   getChildContext() {
@@ -72,13 +92,24 @@ class Draft extends React.Component<Props> {
 
   public render() {
     const { documentDb, storage, value, draft } = this.props
+    const { editorStyle, showInfoBox } = this.state
 
     return (
       <Section>
         <div className="section__content draft">
-          <div className="draft__editor">
+          <div className={`draft__editor ${editorStyle}`}>
             <div className="document">
-              <Title draft={draft}/>
+              <StyleSwitcher onChange={this.handleStyleChange} />
+              {
+                showInfoBox ?
+                  <InfoBox onClose={this.hideInfoBox}>
+                    <Localized id="draft-style-switcher-info-box">
+                      This is experimental feature. There are visual differences between preview and original styles.
+                    </Localized>
+                  </InfoBox>
+                : null
+              }
+              <Title draft={draft} />
               <Editor
                 documentDb={documentDb}
                 storage={storage}
@@ -94,4 +125,4 @@ class Draft extends React.Component<Props> {
   }
 }
 
-export default Load(loader)(Draft)
+export default Load(loader, [], 'draft-loading-message')(Draft)
