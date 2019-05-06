@@ -101,7 +101,7 @@
 }
 
 .editor pre, .editor code {
-  font-family: courier, monospace;
+  font-family: 'Source Code Pro', monospace;
   color: #222;
   padding: 0 3px;
   border-radius: 3px;
