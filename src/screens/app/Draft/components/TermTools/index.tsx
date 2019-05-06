@@ -50,8 +50,8 @@ export default class TermTools extends React.Component<Props> {
     return (
       <ToolGroup title="editor-tools-term-title">
         <label className="terms__label">
-          <Localized id="editor-tools-term-label" $text={term.text}>
-            Index form for ...
+          <Localized id="editor-tools-term-label">
+            Index form
           </Localized>
           <Input
             value={this.state.reference}
