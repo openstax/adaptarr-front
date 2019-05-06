@@ -4,9 +4,11 @@ declare module 'cnx-designer' {
     Block,
     Data,
     Editor as SlateEditor,
+    Leaf,
     Node,
     Operation,
     Range,
+    Text,
     Value,
   } from 'slate'
   import { Plugin } from 'slate-react'
@@ -67,6 +69,14 @@ declare module 'cnx-designer' {
     mime: string,
     name: string,
     alt: string,
+  }
+
+  export type Term = {
+    reference: string,
+    leaf: Leaf,
+    focusText: Text,
+    offsetStart: number,
+    offsetEnd: number,
   }
 
   export interface EditorAug {
