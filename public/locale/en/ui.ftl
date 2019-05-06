@@ -811,6 +811,9 @@ editor-tools-format-button-superscript =
 editor-tools-format-button-underline =
   .title = Underline
 
+editor-tools-format-button-code =
+  .title = Code
+
 
 
 ## Editor toolboxes - figures
@@ -836,6 +839,8 @@ editor-tools-insert-admonition = Admonition
 editor-tools-insert-exercise = Exercise
 
 editor-tools-insert-figure = Figure
+
+editor-tools-insert-code = Code
 
 editor-tools-insert-section = Section
 

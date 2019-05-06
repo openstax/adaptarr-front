@@ -63,6 +63,12 @@ export default class InsertTools extends React.Component<Props> {
             Figure
           </Localized>
         </Button>
+        <Button clickHandler={this.insertCode} className="toolbox__button--insert">
+          <Icon name="code" />
+          <Localized id="editor-tools-insert-code">
+            Code
+          </Localized>
+        </Button>
         <Button clickHandler={this.insertSection} className="toolbox__button--insert">
           <Icon name="plus" />
           <Localized id="editor-tools-insert-section">
@@ -156,6 +162,10 @@ export default class InsertTools extends React.Component<Props> {
     this.props.editor.insertXref(target.id, source ? source.id : undefined)
   }
 
+  private insertCode = () => {
+    this.props.editor.insertBlock('code')
+  }
+  
   private insertQuotation = () => {
     this.props.editor.wrapBlock('quotation')
   }

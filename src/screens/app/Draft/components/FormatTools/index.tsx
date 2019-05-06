@@ -1,7 +1,8 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value } from 'slate'
+import { Editor, Value, Text } from 'slate'
 import { Localized } from 'fluent-react/compat'
+import { List } from 'immutable'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,9 +12,9 @@ export type Props = {
   value: Value,
 }
 
-type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript'
+type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code'
 
-const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript']
+const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code']
 
 /**
  * Types of paragraph-like block that user can switch between.
@@ -27,8 +28,9 @@ export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
     const { startBlock } = value
-
-    if (editor.isVoid(startBlock)) {
+    const code = startBlock.type === 'code' ? startBlock : null
+    
+    if (editor.isVoid(startBlock) || code) {
       return null
     }
 
@@ -78,7 +80,10 @@ export default class FormatTools extends React.Component<Props> {
   }
 
   private isActive = (format: Format) => {
-    return this.props.value.marks.some(mark => mark ? mark.type === format : false)
+    const isMark = this.props.value.marks.some(mark => mark ? mark.type === format : false)
+    const inline = this.props.value.startInline
+    const isInline = inline && inline.type === format ? true : false
+    return isMark || isInline
   }
 
   private changeTextType = (blockType: string) => {
@@ -91,6 +96,21 @@ export default class FormatTools extends React.Component<Props> {
 
     const format = (ev.target as HTMLButtonElement).dataset.id
     if (!format) return
+
+    if (format === 'code') {
+      const inline = this.props.value.startInline
+      if (!inline || inline.type !== 'code') {
+        if (this.props.value.selection.isCollapsed) {
+          this.props.editor.insertInline({ type: 'code', nodes: List([Text.create(' ')]) })
+          this.props.editor.moveBackward()
+        } else {
+          this.props.editor.wrapInline({ type: 'code' })
+        }
+      } else {
+        this.props.editor.unwrapInlineByKey(inline.key, { type: 'code' })
+      }
+      return
+    }
 
     this.props.editor.toggleMark(format)
   }

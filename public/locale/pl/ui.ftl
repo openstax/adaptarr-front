@@ -813,6 +813,8 @@ editor-tools-format-button-superscript =
 editor-tools-format-button-underline =
   .title = Podkreślenie
 
+editor-tools-format-button-code =
+  .title = Kod
 
 
 ## Editor toolboxes - figures
@@ -838,6 +840,8 @@ editor-tools-insert-admonition = Admonition
 editor-tools-insert-exercise = Ćwiczenie
 
 editor-tools-insert-figure = Figura
+
+editor-tools-insert-code = Kod
 
 editor-tools-insert-section = Sekcja
 
