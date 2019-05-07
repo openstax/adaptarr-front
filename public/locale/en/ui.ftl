@@ -517,6 +517,12 @@ role-update-cancel = Cancel
 
 
 
+## Screens - processes
+
+processes-view-title = Manage processes
+
+
+
 ## Reusable components - permissions
 
 # Variables:
@@ -563,6 +569,8 @@ navigation-logout = Logout
 navigation-invite = Invitations
 
 navigation-roles = Roles
+
+navigation-processes = Processes
 
 
 

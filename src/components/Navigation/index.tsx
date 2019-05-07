@@ -236,6 +236,22 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </Tooltip>
               </li>
             </LimitedUI>
+            <LimitedUI permissions="editing-process:edit">
+              <li className="nav__link">
+                <Tooltip l10nId="navigation-roles" direction="right">
+                  <NavLink to="/processes" activeClassName="active">
+                    <span className="nav__content">
+                      <Icon name="users" />
+                      <span className="nav__text">
+                        <Localized id="navigation-processes">
+                          Processes
+                        </Localized>
+                      </span>
+                    </span>
+                  </NavLink>
+                </Tooltip>
+              </li>
+            </LimitedUI>
           </ul>
         </nav>
       </aside>

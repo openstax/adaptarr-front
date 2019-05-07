@@ -21,6 +21,7 @@ import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
 import Invitations from 'src/screens/app/Invitations'
 import Roles from 'src/screens/app/Roles'
+import Processes from 'src/screens/app/Processes'
 import Error404 from 'src/screens/app/Error404'
 
 import * as userActions from 'src/store/actions/User'
@@ -122,6 +123,7 @@ class App extends React.Component<Props> {
                   <Route path="/settings" component={Settings}/>
                   <Route path="/invitations" component={Invitations}/>
                   <Route path="/roles" component={Roles}/>
+                  <Route path="/processes" component={Processes}/>
                   <Route component={Error404}/>
                 </Switch>
               </main>
