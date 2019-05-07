@@ -530,6 +530,8 @@ permission-label = { $name ->
   [module-edit] Tworzenie, usuwanie i edycja modułów
   [module-assign] Przypisywanie użytkowników do modułów
   [role-edit] Tworzenie, usuwanie i edycja ról
+  [editing-process-edit] Tworzenie i edycja procesów
+  [editing-process-manage] Przypisywanie modułów do procesów
  *[unknown] Nieznane uprawnienie
 }
 
