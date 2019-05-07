@@ -6,11 +6,11 @@ import { Localized } from 'fluent-react/compat'
 import validateEmail from 'src/helpers/validateEmail'
 
 type Props = {
-  onChange: (value: string) => void
+  onChange: (value: string | boolean) => void
   isValid?: (status: boolean) => void
   l10nId?: string,
   errorMessage?: string
-  value?: string
+  value?: string | boolean
   type?: string
   autoFocus?: boolean
   validation?: {

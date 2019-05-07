@@ -29,6 +29,10 @@ input[type="disabled"] {
   width: 100%;
 }
 
+.input input[type="checkbox"] {
+  width: auto;
+}
+
 .input.valid input {
   color: var(--green);
   border: 1px solid var(--green);
