@@ -75,8 +75,8 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
-            value={to ? steps[to].name : null}
-            options={steps.map(s => s.name)}
+            value={to !== null && steps[to] ? {value: steps[to].id, label: steps[to].name} : null}
+            options={steps.map(s => { return { value: s.id, label: s.name } })}
             onChange={this.handleTargetStepChange}
           />
         </label>
@@ -87,8 +87,8 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
-            value={slot ? slots[slot].name : null}
-            options={slots.map(s => s.name)}
+            value={slot !== null && slots[slot] ? {value: slots[slot].id, label: slots[slot].name} : null}
+            options={slots.map(s => { return { value: s.id, label: s.name } })}
             onChange={this.handleSlotChange}
           />
         </label>
@@ -114,8 +114,7 @@ class LinkComp extends React.Component<SlotProps> {
     })
   }
 
-  private handleTargetStepChange = (stepName: SlotPermission) => {
-    const stepIndex = this.props.steps.findIndex(s => s.name === stepName)
+  private handleTargetStepChange = ({ value: stepIndex }: { value: number, label: string }) => {
     this.setState({ to: stepIndex })
     this.props.onChange({
       ...this.props.link,
@@ -123,8 +122,7 @@ class LinkComp extends React.Component<SlotProps> {
     })
   }
 
-  private handleSlotChange = (slotName: string) => {
-    const slotIndex = this.props.slots.findIndex(s => s.name === slotName)
+  private handleSlotChange = ({ value: slotIndex }: { value: number, label: string }) => {
     this.setState({ slot: slotIndex })
     this.props.onChange({
       ...this.props.link,
@@ -134,7 +132,3 @@ class LinkComp extends React.Component<SlotProps> {
 }
 
 export default LinkComp
-
-function getOptionLabel(permission: SlotPermission) {
-  return permission.split(/(?=[A-Z])/).join(' ')
-}
