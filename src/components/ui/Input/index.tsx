@@ -39,8 +39,13 @@ class Input extends React.Component<Props> {
     }
 
     const input = e.target as HTMLInputElement
-    this.setState({ inputVal: input.value })
-    this.props.onChange(input.value)
+    if (this.props.type === 'checkbox') {
+      this.setState({ inputVal: input.checked })
+      this.props.onChange(input.checked)
+    } else {
+      this.setState({ inputVal: input.value })
+      this.props.onChange(input.value)
+    }
   }
 
   private onFocus = () => {
