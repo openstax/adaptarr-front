@@ -79,11 +79,13 @@ class Processes extends React.Component<Props> {
               Current processes:
             </Localized>
           </h2>
-          {
-            this.props.processes.map(p => {
-              return JSON.stringify(p)
-            })
-          }
+          <ul className="processes__list">
+            {
+              this.props.processes.map(p => {
+                return <li className="processes__process-name">{p.name}</li>
+              })
+            }
+          </ul>
         </div>
       </section>
     )

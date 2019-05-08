@@ -2,10 +2,21 @@
   flex-direction: column;
 }
 
+.processes h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
 .processes__create-new {
   margin-bottom: 10px;
 }
 
 .processes__create-new button .icon {
   margin-right: 6px;
+}
+
+.processes__process-name {
+  padding: 5px;
+  margin-bottom: 10px;
 }
