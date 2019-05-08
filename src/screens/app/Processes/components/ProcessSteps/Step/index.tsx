@@ -61,7 +61,8 @@ class Step extends React.Component<StepProps> {
     })
   }
 
-  private updateLink = (index: number, link: Link) => {
+  private updateLink = (link: Link, index: number) => {
+    console.log(index, link)
     let links = [...this.state.links]
     links[index] = link
     this.setState({ links })
@@ -71,10 +72,8 @@ class Step extends React.Component<StepProps> {
     })
   }
 
-  private removeLink = (link: Link) => {
+  private removeLink = (index: number) => {
     let links = [...this.state.links]
-    const index = links.findIndex((l) => l.name === link.name)
-    if (index < 0) return
     links.splice(index, 1)
     this.setState({ links })
     this.props.onChange({
@@ -87,9 +86,10 @@ class Step extends React.Component<StepProps> {
     const slots = [
       ...this.state.slots,
       {
+        id: this.state.slots.length,
         slot: 0,
         permission: 'view',
-      } as StepSlot
+      } as StepSlotWithId
     ]
     this.setState({ slots })
     this.props.onChange({
@@ -190,8 +190,8 @@ class Step extends React.Component<StepProps> {
                 link={l}
                 steps={processSteps}
                 slots={processSlots}
-                onChange={this.updateLink.bind(i)}
-                remove={this.removeLink}
+                onChange={(link) => this.updateLink(link, i)}
+                remove={() => this.removeLink(i)}
               />
             })
           }
