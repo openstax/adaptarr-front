@@ -62,7 +62,6 @@ class Step extends React.Component<StepProps> {
   }
 
   private updateLink = (link: Link, index: number) => {
-    console.log(index, link)
     let links = [...this.state.links]
     links[index] = link
     this.setState({ links })
