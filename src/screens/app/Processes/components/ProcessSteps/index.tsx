@@ -21,12 +21,7 @@ class ProcessSteps extends React.Component<Props> {
   state: {
     steps: ProcessStep[]
   } = {
-    steps: [{
-      id: 0,
-      name: '',
-      slots: [],
-      links: [],
-    }],
+    steps: [],
   }
 
   private updateStep = (step: ProcessStep) => {

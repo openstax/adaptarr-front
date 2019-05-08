@@ -22,12 +22,7 @@ export default class ProcessSlots extends React.Component<Props> {
     slots: ProcessSlot[]
   } = {
     name: '',
-    slots: [{
-      id: 0,
-      name: '',
-      autofill: false,
-      role: null,
-    }],
+    slots: [],
   }
 
   private updateSlot = (slot: ProcessSlot) => {
