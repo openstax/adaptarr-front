@@ -87,3 +87,6 @@ export type SET_AVAILABLE_LOCALES = typeof SET_AVAILABLE_LOCALES
 
 export const SET_ROLES = 'SET_ROLES'
 export type SET_ROLES = typeof SET_ROLES
+
+export const SET_PROCESSES = 'SET_PROCESSES'
+export type SET_PROCESSES = typeof SET_PROCESSES

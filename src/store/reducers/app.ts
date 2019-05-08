@@ -1,17 +1,20 @@
 import { AppAction } from 'src/store/actions/app'
-import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES } from 'src/store/constants'
+import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES, SET_PROCESSES } from 'src/store/constants'
 import Role from 'src/api/role'
+import Process from 'src/api/process'
 
 export interface State {
   locale: string[],
   availableLocales: string[],
   roles: Role[],
+  processes: Process[],
 }
 
 export const initialState: State = {
   locale: Array.from(navigator.languages),
   availableLocales: [],
   roles: [],
+  processes: [],
 }
 
 export function reducer(state: State = initialState, action: AppAction) {
@@ -32,6 +35,12 @@ export function reducer(state: State = initialState, action: AppAction) {
     return {
       ...state,
       roles: action.data.sort(sortRoles),
+    }
+  
+  case SET_PROCESSES:
+    return {
+      ...state,
+      processes: action.data,
     }
 
   default:

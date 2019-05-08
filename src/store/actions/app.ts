@@ -1,5 +1,5 @@
-import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES } from 'src/store/constants'
-import Role from 'src/api/role'
+import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES, SET_PROCESSES } from 'src/store/constants'
+import { Process, Role } from 'src/api'
 
 export interface SetLocale {
   type: SET_LOCALE,
@@ -20,7 +20,16 @@ export interface SetRoles {
   data: Role[],
 }
 
-export type AppAction = SetLocale | SetAvailableLocales | SetRoles
+export interface FetchProcesses {
+  (dispatch: any): void
+}
+
+export interface SetProcesses {
+  type: SET_PROCESSES,
+  data: Process[],
+}
+
+export type AppAction = SetLocale | SetAvailableLocales | SetRoles | SetProcesses
 
 export const setLocale = (locale: string[]): SetLocale => ({
   type: SET_LOCALE,
@@ -42,4 +51,16 @@ export const fetchRoles = (): FetchRoles => {
 export const setRoles = (roles: Role[]): SetRoles => ({
   type: SET_ROLES,
   data: roles,
+})
+
+export const fetchProcesses = (): FetchProcesses => {
+  return async (dispatch: React.Dispatch<SetProcesses>) => {
+    const processes = await Process.all()
+    dispatch(setProcesses(processes))
+  }
+}
+
+export const setProcesses = (processes: Process[]): SetProcesses => ({
+  type: SET_PROCESSES,
+  data: processes,
 })

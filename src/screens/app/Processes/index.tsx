@@ -2,13 +2,15 @@ import './index.css'
 
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
+import { connect } from 'react-redux'
 
 import Process, { ProcessStructure } from 'src/api/process'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers'
+import { fetchProcesses } from 'src/store/actions/app'
 
 import ProcessForm from './components/ProcessForm'
-import Load from 'src/components/Load'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -17,9 +19,10 @@ type Props = {
   processes: Process[],
 }
 
-async function loader() {
-  const processes = await Process.all()
-  return { processes }
+const mapStateToProps = ({ app: { processes } }: State) => {
+  return {
+    processes,
+  }
 }
 
 class Processes extends React.Component<Props> {
@@ -38,6 +41,7 @@ class Processes extends React.Component<Props> {
       .then(() => {
         this.setState({ showForm: false })
         store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
+        store.dispatch(fetchProcesses())
       })
       .catch((e) => {
         store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
@@ -92,4 +96,4 @@ class Processes extends React.Component<Props> {
   }
 }
 
-export default Load(loader, [], '')(Processes)
+export default connect(mapStateToProps)(Processes)
