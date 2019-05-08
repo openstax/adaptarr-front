@@ -55,7 +55,7 @@ export type StepSlot = {
 /**
  * Slot permissions.
  */
-export type SlotPermission = 'View' | 'Edit' | 'ProposeChanges' | 'AcceptChanges'
+export type SlotPermission = 'view' | 'edit' | 'propose-changes' | 'accept-changes'
 
 /**
  * Link data.

@@ -33,7 +33,7 @@ class Step extends React.Component<StepProps> {
     slots: [{
       id: 0,
       slot: 0,
-      permission: 'View',
+      permission: 'view',
     }],
     links: [],
   }
@@ -88,7 +88,7 @@ class Step extends React.Component<StepProps> {
       ...this.state.slots,
       {
         slot: 0,
-        permission: 'View',
+        permission: 'view',
       } as StepSlot
     ]
     this.setState({ slots })
