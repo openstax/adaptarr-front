@@ -19,23 +19,28 @@ type StepProps = {
   remove: (step: ProcessStep) => any
 }
 
+export interface StepSlotWithId extends StepSlot {
+  id: number
+}
+
 class Step extends React.Component<StepProps> {
   state: {
     name: string
-    slots: StepSlot[],
+    slots: StepSlotWithId[],
     links: Link[],
   } = {
     name: '',
     slots: [{
+      id: 0,
       slot: 0,
       permission: 'View',
     }],
     links: [],
   }
 
-  private updateSlot = (slot: StepSlot) => {
+  private updateSlot = (slot: StepSlotWithId) => {
     let slots = [...this.state.slots]
-    slots[slot.slot] = slot
+    slots[slot.id] = slot
     this.setState({ slots })
     this.props.onChange({
       ...this.props.step,
@@ -43,9 +48,9 @@ class Step extends React.Component<StepProps> {
     })
   }
 
-  private removeSlot = (slot: StepSlot) => {
+  private removeSlot = (slot: StepSlotWithId) => {
     let slots = [...this.state.slots]
-    slots.splice(slot.slot, 1)
+    slots.splice(slot.id, 1)
     slots = slots.map((s, i) => {
       return {...s, id: i}
     })

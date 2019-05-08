@@ -3,6 +3,7 @@ import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 
 import { ProcessSlot, SlotPermission, StepSlot } from 'src/api/process'
+import { StepSlotWithId } from '../Step'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,7 +12,7 @@ const PERMISSIONS: SlotPermission[] = ['View', 'Edit', 'AcceptChanges', 'Propose
 
 type SlotProps = {
   slots: ProcessSlot[]
-  slot: StepSlot
+  slot: StepSlotWithId
   onChange: (slot: StepSlot) => any
   remove: (slot: StepSlot) => any
 }
@@ -59,8 +60,8 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
-            value={slot ? slots[slot].name : null}
-            options={slots.map(s => s.name)}
+            value={slot !== null ? {value: slots[slot].id, label: slots[slot].name} : null}
+            options={slots.map(s => {return {value: s.id, label: s.name}})}
             onChange={this.handleSlotChange}
           />
         </label>
@@ -71,10 +72,9 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
-            value={permission}
-            options={PERMISSIONS}
+            value={permission ? {value: permission, label: permission} : null}
+            options={PERMISSIONS.map(p => {return {value: p, label: p.split(/(?=[A-Z])/).join(' ')}})}
             onChange={this.handlePermissionChange}
-            getOptionLabel={getOptionLabel}
           />
         </label>
         <Button clickHandler={this.removeSlot} color="red">
@@ -91,8 +91,7 @@ class Slot extends React.Component<SlotProps> {
     this.props.remove(this.props.slot)
   }
 
-  private handleSlotChange = (slotName: string) => {
-    const slotIndex = this.props.slots.findIndex(s => s.name === slotName)
+  private handleSlotChange = ({ value: slotIndex }: {value: number, label: string}) => {
     this.setState({ slot: slotIndex })
     this.props.onChange({
       ...this.props.slot,
@@ -100,7 +99,7 @@ class Slot extends React.Component<SlotProps> {
     })
   }
 
-  private handlePermissionChange = (permission: SlotPermission) => {
+  private handlePermissionChange = ({ value: permission }: { value: SlotPermission, label: string }) => {
     this.setState({ permission })
     this.props.onChange({
       ...this.props.slot,
@@ -110,7 +109,3 @@ class Slot extends React.Component<SlotProps> {
 }
 
 export default Slot
-
-function getOptionLabel(permission: SlotPermission) {
-  return permission.split(/(?=[A-Z])/).join(' ')
-}
