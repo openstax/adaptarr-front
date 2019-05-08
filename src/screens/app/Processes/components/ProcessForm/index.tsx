@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 
 import { ProcessSlot, ProcessStep, ProcessStructure } from 'src/api/process'
@@ -19,16 +20,22 @@ type Props = {
 class ProcessForm extends React.Component<Props> {
   state: {
     name: string
+    startingStep: number
     slots: ProcessSlot[]
     steps: ProcessStep[]
   } = {
     name: '',
+    startingStep: 0,
     slots: [],
     steps: [],
   }
 
   private handleNameChange = (name: string) => {
     this.setState({ name })
+  }
+
+  private handleStartingStepChange = ({ value }: { value: number, label: string }) => {
+    this.setState({ startingStep: value })
   }
 
   private handleSlotsChange = (slots: ProcessSlot[]) => {
@@ -42,10 +49,10 @@ class ProcessForm extends React.Component<Props> {
   private onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { name, slots, steps } = this.state
+    const { name, startingStep, slots, steps } = this.state
 
     this.props.onSubmit({
-      start: 0,
+      start: startingStep,
       name,
       slots,
       steps,
@@ -54,6 +61,8 @@ class ProcessForm extends React.Component<Props> {
   }
 
   public render() {
+    const { startingStep, steps } = this.state
+
     return (
       <form
         className="process-form"
@@ -82,6 +91,24 @@ class ProcessForm extends React.Component<Props> {
           <Input
             value={name}
             onChange={this.handleNameChange}
+            validation={{ minLength: 1 }}
+          />
+        </label>
+        <label>
+          <span>
+            <Localized id="process-form-process-starting-step">
+              Starting step
+            </Localized>
+          </span>
+          <Select
+            value={startingStep >= 0 && steps[startingStep] ? {value: startingStep, label: steps[startingStep].name} : null}
+            options={steps.map((s, i) => {
+              return {
+                value: i,
+                label: s.name,
+              }
+            })}
+            onChange={this.handleStartingStepChange}
           />
         </label>
         <div className="process-form__split">
