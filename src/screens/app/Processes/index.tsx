@@ -82,7 +82,7 @@ class Processes extends React.Component<Props> {
           <ul className="processes__list">
             {
               this.props.processes.map(p => {
-                return <li className="processes__process-name">{p.name}</li>
+                return <li key={p.id} className="processes__process-name">{p.name}</li>
               })
             }
           </ul>
