@@ -40,7 +40,7 @@ class Processes extends React.Component<Props> {
         store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
       })
       .catch((e) => {
-        store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.error}))
+        store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
       })
   }
 

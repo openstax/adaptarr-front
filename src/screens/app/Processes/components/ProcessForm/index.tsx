@@ -57,7 +57,6 @@ class ProcessForm extends React.Component<Props> {
       slots,
       steps,
     })
-    this.setState({ name: '', slots: [], steps: [] })
   }
 
   public render() {
