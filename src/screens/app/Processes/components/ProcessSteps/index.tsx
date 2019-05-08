@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import Process, { ProcessStep, ProcessSlot } from 'src/api/process'
+import { ProcessStep, ProcessSlot } from 'src/api/process'
 
 import Step from './Step'
 import Button from 'src/components/ui/Button'

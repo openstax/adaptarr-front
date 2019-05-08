@@ -590,6 +590,21 @@ process-form-step-link-slot = Slot allowed to use this link:
 process-form-step-link-remove = Remove link
 
 
+process-form-error-name = Please provide name for a process.
+
+process-form-error-slot-name = All slots have to have names.
+
+process-form-error-step-name = All steps have to have names.
+
+process-form-error-step-link-name = All links have to have names.
+
+process-form-error-starting-step = Process provide starting step.
+
+process-form-error-slots-min = Minimum one slote is required.
+
+process-form-error-steps-min = Minimum two steps are required.
+
+
 
 ## Reusable components - permissions
 

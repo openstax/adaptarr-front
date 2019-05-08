@@ -10,6 +10,21 @@
   margin-right: 6px;
 }
 
+.process-form__errors {
+  padding: 10px;
+  border: 1px solid var(--red);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.process-form__errors li {
+  margin-bottom: 10px;
+}
+
+.process-form__errors li:last-child {
+  margin-bottom: 0;
+}
+
 .process-form .process-form__split {
   display: flex;
 }

@@ -591,6 +591,21 @@ process-form-step-link-slot = Slot, którt moze używać tego linku:
 process-form-step-link-remove = Usuń link
 
 
+process-form-error-name = Proszę podać nazwę procesu.
+
+process-form-error-slot-name = Wszystkie sloty muszą posiadać nazwy.
+
+process-form-error-step-name = Wszystkie kroki muszą posiadać nazwy..
+
+process-form-error-step-link-name = Wszystkie linki muszą posiadać nazwy.
+
+process-form-error-starting-step = Proszę określić krok początkowy.
+
+process-form-error-slots-min = Wymagany jest przynajmniej jeden slot.
+
+process-form-error-steps-min = Wymagane są minimum dwa kroki.
+
+
 
 ## Reusable components - permissions
 

@@ -23,31 +23,53 @@ class ProcessForm extends React.Component<Props> {
     startingStep: number
     slots: ProcessSlot[]
     steps: ProcessStep[]
+    errors: Set<string>
   } = {
     name: '',
     startingStep: 0,
     slots: [],
     steps: [],
+    errors: new Set(),
   }
 
   private handleNameChange = (name: string) => {
-    this.setState({ name })
+    this.setState({ name }, () => {
+      if (this.state.errors.size) {
+        // We validate form every each change only if validation failed before.
+        // This way user is able to see that errors, are updating when he make actions.
+        this.validateForm()
+      }
+    })
   }
 
   private handleStartingStepChange = ({ value }: { value: number, label: string }) => {
-    this.setState({ startingStep: value })
+    this.setState({ startingStep: value }, () => {
+      if (this.state.errors.size) {
+        this.validateForm()
+      }
+    })
   }
 
   private handleSlotsChange = (slots: ProcessSlot[]) => {
-    this.setState({ slots })
+    this.setState({ slots }, () => {
+      if (this.state.errors.size) {
+        this.validateForm()
+      }
+    })
   }
 
   private handleStepsChange = (steps: ProcessStep[]) => {
-    this.setState({ steps })
+    this.setState({ steps }, () => {
+      if (this.state.errors.size) {
+        this.validateForm()
+      }
+    })
   }
 
   private onSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+
+    if (!this.validateForm()) return
 
     const { name, startingStep, slots, steps } = this.state
 
@@ -60,7 +82,7 @@ class ProcessForm extends React.Component<Props> {
   }
 
   public render() {
-    const { startingStep, steps } = this.state
+    const { startingStep, steps, errors } = this.state
 
     return (
       <form
@@ -68,7 +90,11 @@ class ProcessForm extends React.Component<Props> {
         onSubmit={this.onSubmit}
       >
         <div className="controls">
-          <Button clickHandler={this.onSubmit} color="green">
+          <Button
+            clickHandler={this.onSubmit}
+            color="green"
+            isDisabled={errors.size > 0}
+          >
             <Icon name="save" />
             <Localized id="process-form-create">
               Create process
@@ -81,6 +107,17 @@ class ProcessForm extends React.Component<Props> {
             </Localized>
           </Button>
         </div>
+        {
+          errors.size ?
+            <ul className="process-form__errors">
+              {
+                [...errors].map(e => {
+                  return <li key={e}><Localized id={e}>{e}</Localized></li>
+                })
+              }
+            </ul>
+          : null
+        }
         <label>
           <span>
             <Localized id="process-form-process-name">
@@ -121,6 +158,59 @@ class ProcessForm extends React.Component<Props> {
         </div>
       </form>
     )
+  }
+
+  private validateForm = (): boolean => {
+    // List with l10n ids for error messages.
+    let errors: Set<string> = new Set()
+
+    const { name, startingStep, slots, steps } = this.state
+
+    // Validate that names for process, slots, links and step slots exists.
+    if (!name.length) {
+      errors.add('process-form-error-name')
+    }
+
+    slots.some(s => {
+      if (!s.name.length) {
+        errors.add('process-form-error-slot-name')
+        return true
+      }
+      return false
+    })
+
+    steps.some(s => {
+      if (!s.name.length) {
+        errors.add('process-form-error-step-name')
+      }
+      return s.links.some(l => {
+        if (!l.name.length) {
+          errors.add('process-form-error-step-link-name')
+          return true
+        }
+        return false
+      })
+    })
+
+    // Validate that starting step exists
+    if (!steps[startingStep]) {
+      errors.add('process-form-error-starting-step')
+    }
+
+    // Validate that slots and steps have minimum length
+    if (!slots.length) {
+      errors.add('process-form-error-slots-min')
+    }
+
+    if (steps.length < 2) {
+      errors.add('process-form-error-steps-min')
+    }
+
+    // Update state
+    this.setState({ errors })
+
+    if (!errors.size) return true
+    return false
   }
 }
 
