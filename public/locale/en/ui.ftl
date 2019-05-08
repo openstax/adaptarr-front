@@ -521,6 +521,74 @@ role-update-cancel = Cancel
 
 processes-view-title = Manage processes
 
+processes-view-add = Add new process
+
+processes-view-list = Current processes:
+
+# Alert displayed when process has been created.
+#
+# Variables:
+# - $name (string): name of process which was created.
+process-create-success = Process "{ $name }" has been created.
+
+# Alert displayed when process has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-error = Couldn't create new process. Details: { $details }.
+
+
+## Components for creating and updating process
+
+process-form-create = Create process
+
+process-form-cancel = Cancel
+
+process-form-process-name = Process name
+
+
+process-form-slot-title = List of slots:
+
+process-form-slot-add = Add slot
+
+process-form-slot-remove = Remove slot
+
+process-form-slot-name = Slot name:
+
+process-form-slot-autofill = Autofill:
+
+process-form-slot-role = Role:
+
+process-form-step-title = List of steps:
+
+process-form-step-add = Add step
+
+process-form-step-remove = Remove step
+
+process-form-step-name = Step name:
+
+process-form-step-slots = Slots:
+
+process-form-step-slots-add = Add slot
+
+process-form-step-links = Links:
+
+process-form-step-links-add = Add link
+
+
+process-form-step-slot-slot = Slot:
+
+process-form-step-slot-permission = Permission:
+
+
+process-form-step-link-name = Link name:
+
+process-form-step-link-to = Next step:
+
+process-form-step-link-slot = Slot allowed to use this link:
+
+process-form-step-link-remove = Remove link
+
 
 
 ## Reusable components - permissions

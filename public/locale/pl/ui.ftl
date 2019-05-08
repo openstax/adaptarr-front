@@ -521,6 +521,75 @@ role-update-cancel = Anuluj
 
 processes-view-title = Zarządzaj procesami
 
+processes-view-add = Dodaj nowy proces
+
+processes-view-list = Obecne procesy:
+
+# Alert displayed when process has been created.
+#
+# Variables:
+# - $name (string): name of process which was created.
+process-create-success = Proces "{ $name }" został utworzony.
+
+# Alert displayed when process has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-error = Nie udało się utworzyć procesu. Szczegóły: { $details }.
+
+
+## Components for creating and updating process
+
+process-form-create = Utwórz proces
+
+process-form-cancel = Anuluj
+
+process-form-process-name = Nazwa procesu
+
+
+process-form-slot-title = Lista slotów:
+
+process-form-slot-add = Dodaj slot
+
+process-form-slot-remove = Usuń slot
+
+process-form-slot-name = Nazwa slotu:
+
+process-form-slot-autofill = Autouzupełnianie:
+
+process-form-slot-role = Rola:
+
+
+process-form-step-title = Lista kroków:
+
+process-form-step-add = Dodaj krok
+
+process-form-step-remove = Usuń krok
+
+process-form-step-name = Nazwa kroku:
+
+process-form-step-slots = Sloty:
+
+process-form-step-slots-add = Dodaj slot
+
+process-form-step-links = Linki:
+
+process-form-step-links-add = Dodaj link
+
+
+process-form-step-slot-slot = Slot:
+
+process-form-step-slot-permission = Uprawnienie:
+
+
+process-form-step-link-name = Nazwa linku:
+
+process-form-step-link-to = Następny krok:
+
+process-form-step-link-slot = Slot, którt moze używać tego linku:
+
+process-form-step-link-remove = Usuń link
+
 
 
 ## Reusable components - permissions

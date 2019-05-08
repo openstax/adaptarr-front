@@ -1,0 +1,21 @@
+.process-form .controls {
+  margin-bottom: 20px;
+}
+
+.process-form .controls .button {
+  margin-right: 10px;
+}
+
+.process-form .controls .button .icon {
+  margin-right: 6px;
+}
+
+.process-form .process-form__split {
+  display: flex;
+}
+
+.process-form h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}

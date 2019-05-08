@@ -1,0 +1,14 @@
+.process-slot {
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  box-shadow: 0px 2px 7px rgba(0,0,0,0.2);
+}
+
+.process-slot .button {
+  margin-top: 10px;
+}
+
+.process-slot .button .icon {
+  margin-right: 6px;
+}

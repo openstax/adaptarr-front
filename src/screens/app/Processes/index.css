@@ -1,0 +1,11 @@
+.processes {
+  flex-direction: column;
+}
+
+.processes__create-new {
+  margin-bottom: 10px;
+}
+
+.processes__create-new button .icon {
+  margin-right: 6px;
+}
