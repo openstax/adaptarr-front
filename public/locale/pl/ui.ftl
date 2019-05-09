@@ -25,6 +25,12 @@ book-add-module = Moduł
 
 book-remove-module = Moduł
 
+# Variable:
+# - $name (string): process name.
+book-in-process = Proces: { $name }
+
+book-begin-process = Rozpocznij proces
+
 book-assign-user = Przypisz użytkownika
 
 book-assign-different-user = Przypisz innego użytkownika

@@ -59,28 +59,7 @@ class Module extends React.Component<Props> {
 
     return (
       <Section>
-        <Header l10nId="module-view-title" title={mod.title}>
-          {
-            mod.assignee ?
-              <div className="module__assignee">
-                <span><Localized id="module-assignee">Asignee:</Localized></span>
-                <Avatar size="small" user={teamMap.get(mod.assignee)}/>
-              </div>
-            : null
-          }
-          <UserUI userId={mod.assignee}>
-            {
-              isDraftExisting ?
-                <Button to={`/drafts/${mod.id}`}>
-                  <Localized id="module-open-draft">
-                    View draft
-                  </Localized>
-                </Button>
-              :
-                null
-            }
-          </UserUI>
-        </Header>
+        <Header l10nId="module-view-title" title={mod.title} />
         <div className="section__content">
           <ModulePreview moduleId={mod.id}/>
         </div>

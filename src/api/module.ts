@@ -9,10 +9,19 @@ import { elevated } from './utils'
  * Module data as returned by the API.
  */
 export type Data = {
-  assignee?: number,
   id: string,
   title: string,
   language: string,
+  process: ModuleProcess | null
+}
+
+/**
+ * Short info about current process for module.
+ */
+export type ModuleProcess = {
+  process: number,
+  step: number,
+  version: number,
 }
 
 export type RefTargetType
@@ -102,11 +111,6 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * ID of the {@link User} currently assigned to this module.`
-   */
-  assignee?: number
-
-  /**
    * ID of this module.
    */
   id: string
@@ -120,6 +124,11 @@ export default class Module extends Base<Data> {
    * Language of this document.
    */
   language: string
+
+  /**
+   * Short info about current process for this module.
+   */
+  process: ModuleProcess | null
 
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.

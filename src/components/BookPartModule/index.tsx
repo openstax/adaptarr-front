@@ -11,7 +11,6 @@ import ModuleStatus from 'src/components/ModuleStatus'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
-import Avatar from 'src/components/ui/Avatar'
 
 import BeginProcess from 'src/containers/BeginProcess'
 
@@ -21,12 +20,14 @@ import { State } from 'src/store/reducers'
 type Props = {
   item: api.BookPart
   modulesMap: types.ModulesMap
+  processes: Map<number, api.Process>
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
 }
 
-const mapStateToProps = ({ modules: { modulesMap } }: State) => ({
+const mapStateToProps = ({ modules: { modulesMap }, app: { processes } }: State) => ({
   modulesMap,
+  processes,
 })
 
 class Module extends React.Component<Props> {
@@ -81,7 +82,7 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const item = this.props.item
+    const { item, processes } = this.props
     const { showRemoveModule, showBeginProcess } = this.state
 
     return (
@@ -145,16 +146,20 @@ class Module extends React.Component<Props> {
             </Button>
           </LimitedUI>
           {
-            this.module && this.module.assignee ?
-                <Avatar size="small" user={this.module.assignee} />
+            this.module && this.module.process ?
+                <span className="bookpart__process">
+                  <Localized
+                    id="book-in-process"
+                    $name={processes.get(this.module.process.process)!.name}
+                  >
+                    Process: [process name]
+                  </Localized>
+                </span>
               :
                 <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>
                 </Button>
           }
-          <span className="bookpart__status">
-            <ModuleStatus status={/*item.status*/'ready'} />
-          </span>
         </span>
       </React.Fragment>
     )
