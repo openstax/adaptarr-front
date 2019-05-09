@@ -379,6 +379,8 @@ user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 user-profile-team-list-search =
   .placeholder = Search for user
 
+user-profile-team-list-no-results = There are not users with specified criteria.
+
 
 
 ## Screens - user's profile - update dialog

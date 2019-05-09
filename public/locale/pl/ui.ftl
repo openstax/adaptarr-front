@@ -380,6 +380,8 @@ user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details
 user-profile-team-list-search =
   .placeholder = Szukaj użytkownika
 
+user-profile-team-list-no-results = Brak wyników dla określonych kryteriów.
+
 
 
 ## Screens - user's profile - update dialog

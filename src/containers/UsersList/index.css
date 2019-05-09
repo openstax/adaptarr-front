@@ -26,6 +26,15 @@
   background-color: var(--dark-bg);
 }
 
+.usersList__item--no-results {
+  padding: 10px;
+}
+
+.usersList__item--no-results:hover {
+  color: var(--font-dark);
+  background-color: var(--light-bg);
+}
+
 .usersList__info {
   display: flex;
   align-items: center;
