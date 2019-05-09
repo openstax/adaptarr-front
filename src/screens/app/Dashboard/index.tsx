@@ -11,12 +11,10 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 import DraftsList from 'src/components/DraftsList'
-import AssignedToMe from 'src/components/AssignedToMe'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
 import * as types from 'src/store/types'
-import { FetchModulesAssignedToMe, fetchModulesAssignedToMe } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers/index'
 
 type Props = {
@@ -29,9 +27,7 @@ type Props = {
   }
   modules: {
     modulesMap: types.ModulesMap
-    assignedToMe: api.Module[]
   }
-  fetchModulesAssignedToMe: () => void
 }
 
 const mapStateToProps = ({ user, booksMap, modules }: State) => {
@@ -39,12 +35,6 @@ const mapStateToProps = ({ user, booksMap, modules }: State) => {
     user,
     booksMap,
     modules,
-  }
-}
-
-const mapDispatchToProps = (dispatch: FetchModulesAssignedToMe) => {
-  return {
-    fetchModulesAssignedToMe: () => dispatch(fetchModulesAssignedToMe())
   }
 }
 
@@ -87,19 +77,6 @@ class Dashboard extends React.Component<Props> {
     this.closeDeleteDraftDialog()
   }
 
-  private createDraft = (mod: api.Module) => {
-    if (!mod) return
-
-    mod.createDraft()
-      .then(() => {
-        store.dispatch(addAlert('success', 'dashboard-create-draft-alert-success'))
-        this.props.history.push(`/drafts/${mod.id}`)
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
-  }
-
   private fetchDrafts = () => {
     api.Draft.all()
       .then(drafts => {
@@ -112,7 +89,6 @@ class Dashboard extends React.Component<Props> {
   }
 
   componentDidMount () {
-    this.props.fetchModulesAssignedToMe()
     this.fetchDrafts()
   }
 
@@ -166,10 +142,6 @@ class Dashboard extends React.Component<Props> {
                   Assigned to you:
                 </Localized>
               </h3>
-              <AssignedToMe
-                drafts={drafts}
-                onCreateDraft={this.createDraft}
-              />
             </div>
           </div>
         }
@@ -178,4 +150,4 @@ class Dashboard extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
+export default connect(mapStateToProps)(Dashboard)

@@ -2,7 +2,6 @@ import { AxiosResponse } from 'axios'
 import axios from 'src/config/axios'
 
 import Base from './base'
-import User from './user'
 import Draft from './draft'
 import { elevated } from './utils'
 
@@ -58,15 +57,6 @@ export default class Module extends Base<Data> {
   static async load(id: string): Promise<Module> {
     const rsp = await axios.get(`modules/${id}`)
     return new Module(rsp.data)
-  }
-
-  /**
-   * Fetch list of all modules assigned to a particular user.
-   */
-  static async assignedTo(user: User | string | number): Promise<Module[]> {
-    const userId = user instanceof User ? user.apiId : user
-    const modules = await axios.get(`modules/assigned/to/${userId}`)
-    return modules.data.map((data: Data) => new Module(data))
   }
 
   /**
@@ -153,16 +143,6 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * Assign a user to this module.
-   *
-   * This method requires elevated permissions.
-   */
-  async assign(user: User | null): Promise<void> {
-    const userId = user instanceof User ? user.id : user
-    await elevated(() => axios.put(`modules/${this.id}`, { assignee: userId }))
-  }
-
-  /**
    * Get an existing draft for this module, or {@code null}.
    */
   async draft(): Promise<Draft | null> {
@@ -183,16 +163,6 @@ export default class Module extends Base<Data> {
    */
   async beginProcess(data: { process: number, slots: [number, number][]}): Promise<AxiosResponse> {
     return await elevated(() => axios.post(`modules/${this.id}`, data))
-  }
-
-  /**
-   * Create a new draft of this module.
-   *
-   * This method will fail if current user is not assigned to this module.
-   */
-  async createDraft(): Promise<Draft> {
-    let data = await axios.post(`modules/${this.id}`)
-    return new Draft(data.data)
   }
 
   /**

@@ -54,19 +54,6 @@ async function loader({ match }: { match: match<{ id: string }> }) {
 }
 
 class Module extends React.Component<Props> {
-  private createDraft = () => {
-    const { mod, history } = this.props
-
-    mod.createDraft()
-      .then(draft => {
-        store.dispatch(addAlert('success', 'module-create-draft-alert-success'))
-        history.push(`/drafts/${draft.module}`)
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
-  }
-
   public render() {
     const { mod, isDraftExisting, team: { teamMap } } = this.props
 
@@ -90,14 +77,7 @@ class Module extends React.Component<Props> {
                   </Localized>
                 </Button>
               :
-              <Button
-                color="green"
-                clickHandler={this.createDraft}
-              >
-                <Localized id="module-create-draft">
-                  New draft
-                </Localized>
-              </Button>
+                null
             }
           </UserUI>
         </Header>
