@@ -7,14 +7,14 @@ export interface State {
   locale: string[],
   availableLocales: string[],
   roles: Role[],
-  processes: Process[],
+  processes: Map<number, Process>,
 }
 
 export const initialState: State = {
   locale: Array.from(navigator.languages),
   availableLocales: [],
   roles: [],
-  processes: [],
+  processes: new Map(),
 }
 
 export function reducer(state: State = initialState, action: AppAction) {

@@ -26,7 +26,7 @@ export interface FetchProcesses {
 
 export interface SetProcesses {
   type: SET_PROCESSES,
-  data: Process[],
+  data: Map<number, Process>,
 }
 
 export type AppAction = SetLocale | SetAvailableLocales | SetRoles | SetProcesses
@@ -55,12 +55,13 @@ export const setRoles = (roles: Role[]): SetRoles => ({
 
 export const fetchProcesses = (): FetchProcesses => {
   return async (dispatch: React.Dispatch<SetProcesses>) => {
-    const processes = await Process.all()
+    const data = await Process.all()
+    const processes = new Map(data.map((p): [number, Process] => [p.id, p]))
     dispatch(setProcesses(processes))
   }
 }
 
-export const setProcesses = (processes: Process[]): SetProcesses => ({
+export const setProcesses = (processes: Map<number, Process>): SetProcesses => ({
   type: SET_PROCESSES,
   data: processes,
 })

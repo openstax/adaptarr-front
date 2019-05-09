@@ -16,7 +16,7 @@ import './index.css'
 
 type Props = {
   module: Module
-  processes: Process[]
+  processes: Map<number, Process>
   onClose: () => any
 }
 
@@ -53,7 +53,7 @@ class BeginProcess extends React.Component<Props> {
         </h3>
         <Select
           value={process !== null ? {value: process, label: process.name} : null}
-          options={processes.map(p => {return {value: p, label: p.name}})}
+          options={Array.from(processes.values()).map(p => {return {value: p, label: p.name}})}
           onChange={this.handleProcessChange}
         />
         {

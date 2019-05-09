@@ -16,7 +16,7 @@ import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 type Props = {
-  processes: Process[],
+  processes: Map<number, Process>,
 }
 
 const mapStateToProps = ({ app: { processes } }: State) => {
@@ -85,7 +85,7 @@ class Processes extends React.Component<Props> {
           </h2>
           <ul className="processes__list">
             {
-              this.props.processes.map(p => {
+              Array.from(this.props.processes.values()).map(p => {
                 return <li key={p.id} className="processes__process-name">{p.name}</li>
               })
             }
