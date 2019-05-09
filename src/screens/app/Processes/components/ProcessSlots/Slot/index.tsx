@@ -65,12 +65,19 @@ class Slot extends React.Component<SlotProps> {
 
     return (
       <div className="process-slot">
-        <label>
-          <span>
+        <div className="process-form__title">
+          <h3>
             <Localized id="process-form-slot-name">
               Slot name:
             </Localized>
-          </span>
+          </h3>
+          <div className="process-form__title-controls">
+            <Button clickHandler={this.removeSlot} color="red">
+              <Icon name="minus" />
+            </Button>
+          </div>
+        </div>
+        <label>
           <Input
             value={name}
             onChange={this.handleNameChange}
@@ -102,12 +109,6 @@ class Slot extends React.Component<SlotProps> {
             getOptionLabel={getOptionLabel}
           />
         </label>
-        <Button clickHandler={this.removeSlot} color="red">
-          <Icon name="close" />
-          <Localized id="process-form-slot-remove">
-            Remove slot
-          </Localized>
-        </Button>
       </div>
     )
   }

@@ -141,12 +141,19 @@ class Step extends React.Component<StepProps> {
 
     return (
       <div className="process-step">
-        <label>
-          <span>
+        <div className="process-form__title">
+          <h3>
             <Localized id="process-form-step-name">
               Step name:
             </Localized>
-          </span>
+          </h3>
+          <div className="process-form__title-controls">
+            <Button clickHandler={this.removeStep} color="red">
+              <Icon name="minus" />
+            </Button>
+          </div>
+        </div>
+        <label>
           <Input
             value={name}
             onChange={this.handleNameChange}
@@ -155,7 +162,7 @@ class Step extends React.Component<StepProps> {
         </label>
         <h3>
           <Localized id="process-form-step-slots">
-            Slots:
+            Step slots:
           </Localized>
         </h3>
         <div className="process-step__slots">
@@ -179,7 +186,7 @@ class Step extends React.Component<StepProps> {
         </div>
         <h3>
           <Localized id="process-form-step-links">
-            Links:
+            Step links:
           </Localized>
         </h3>
         <div className="process-step__links">
@@ -202,12 +209,6 @@ class Step extends React.Component<StepProps> {
             </Localized>
           </Button>
         </div>
-        <Button clickHandler={this.removeStep} color="red">
-          <Icon name="close" />
-          <Localized id="process-form-step-remove">
-            Remove step
-          </Localized>
-        </Button>
       </div>
     )
   }

@@ -1,0 +1,15 @@
+.processes__list {
+  max-width: 400px;
+}
+
+.processes__name .input {
+  margin-bottom: 0;
+}
+
+.processes__name .input input {
+  font-size: 1rem;
+  color: var(--font-dark);
+  padding: 0;
+  background: transparent;
+  border: transparent;
+}

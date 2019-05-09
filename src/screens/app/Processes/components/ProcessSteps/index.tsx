@@ -10,6 +10,7 @@ import Icon from 'src/components/ui/Icon'
 import './index.css'
 
 type Props = {
+  steps: ProcessStep[]
   slots: ProcessSlot[]
   onChange: (steps: ProcessStep[]) => any
 }
@@ -53,6 +54,30 @@ class ProcessSteps extends React.Component<Props> {
     ]
     this.setState({ steps })
     this.props.onChange(steps)
+  }
+
+  private updateSteps = () => {
+    // Form expect indexes as an id.
+    const steps = this.props.steps.map((s, i) => {
+      return {
+        ...s,
+        id: i,
+      }
+    })
+    this.setState({ steps })
+    this.props.onChange(steps)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const prevSteps = prevProps.steps
+    const steps = this.props.steps
+    if (JSON.stringify(prevSteps) !== JSON.stringify(steps)) {
+      this.updateSteps()
+    }
+  }
+
+  componentDidMount() {
+    this.updateSteps()
   }
 
   public render() {

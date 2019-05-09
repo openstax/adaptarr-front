@@ -166,7 +166,7 @@ export default class Process extends Base<ProcessData> {
    * This function requires editing-process:edit permission.
    */
   async update(name: string): Promise<Process> {
-    const rsp = await elevated(() => axios.post(`processes/${this.id}`, name))
+    const rsp = await elevated(() => axios.put(`processes/${this.id}`, { name }))
     return new Process(rsp.data)
   }
 
@@ -175,8 +175,8 @@ export default class Process extends Base<ProcessData> {
    * 
    * This function requires editing-process:edit permission.
    */
-  async createVersion(name: string): Promise<ProcessVersion> {
-    const rsp = await elevated(() => axios.post(`processes/${this.id}`, name))
+  async createVersion(structure: ProcessStructure): Promise<ProcessVersion> {
+    const rsp = await elevated(() => axios.post(`processes/${this.id}/versions`, structure))
     return new ProcessVersion(rsp.data, this.id)
   }
 }

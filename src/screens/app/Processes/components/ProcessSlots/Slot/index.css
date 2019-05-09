@@ -5,10 +5,14 @@
   box-shadow: 0px 2px 7px rgba(0,0,0,0.2);
 }
 
-.process-slot .button {
-  margin-top: 10px;
-}
-
 .process-slot .button .icon {
   margin-right: 6px;
+}
+
+.process-slot > .process-form__title .process-form__title-controls {
+  opacity: 0;
+}
+
+.process-slot:hover > .process-form__title .process-form__title-controls {
+  opacity: 1;
 }

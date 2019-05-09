@@ -57,12 +57,19 @@ class LinkComp extends React.Component<SlotProps> {
 
     return (
       <div className="process-link">
-        <label>
-          <span>
+        <div className="process-form__title">
+          <h3>
             <Localized id="process-form-step-link-name">
               Link name:
             </Localized>
-          </span>
+          </h3>
+          <div className="process-form__title-controls">
+            <Button clickHandler={this.removeLink} color="red">
+              <Icon name="minus" />
+            </Button>
+          </div>
+        </div>
+        <label>
           <Input
             value={name}
             onChange={this.handleNameChange}
@@ -93,12 +100,6 @@ class LinkComp extends React.Component<SlotProps> {
             onChange={this.handleSlotChange}
           />
         </label>
-        <Button clickHandler={this.removeLink} color="red">
-          <Icon name="close" />
-          <Localized id="process-form-step-link-remove">
-            Remove link
-          </Localized>
-        </Button>
       </div>
     )
   }

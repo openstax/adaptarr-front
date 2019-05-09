@@ -10,6 +10,7 @@ import Icon from 'src/components/ui/Icon'
 import './index.css'
 
 type Props = {
+  slots: ProcessSlot[]
   onChange: (slots: ProcessSlot[]) => any
 }
 
@@ -54,6 +55,30 @@ export default class ProcessSlots extends React.Component<Props> {
     ]
     this.setState({ slots })
     this.props.onChange(slots)
+  }
+
+  private updateSlots = () => {
+    // Form expect indexes as an id.
+    const slots = this.props.slots.map((s, i) => {
+      return {
+        ...s,
+        id: i,
+      }
+    })
+    this.setState({ slots })
+    this.props.onChange(slots)
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const prevSlots = prevProps.slots
+    const slots = this.props.slots
+    if (JSON.stringify(prevSlots) !== JSON.stringify(slots)) {
+      this.updateSlots()
+    }
+  }
+
+  componentDidMount() {
+    this.updateSlots()
   }
 
   public render() {

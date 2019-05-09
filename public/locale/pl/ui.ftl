@@ -547,10 +547,34 @@ process-create-success = Proces "{ $name }" został utworzony.
 # - $details (string): error details.
 process-create-error = Nie udało się utworzyć procesu. Szczegóły: { $details }.
 
+# Alert displayed when name of process has been updated.
+process-update-name-success = Nazwa została zaktualizowana.
+
+# Alert displayed when name has not beed updated.
+#
+# Variables:
+# - $details (string): error details.
+process-update-name-error = Nazwa nie została zaktualizowana. Szczegóły: { $details }.
+
+# Alert displayed when version of process has been created.
+#
+# Variables:
+# - $name (string): name of new version which was created.
+process-create-version-success = Wersja "{ $name }" została utworzona.
+
+# Alert displayed when version has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-version-error = Nie udało się utworzyć nowej wersji. Szczegóły: { $details }.
+
+
 
 ## Components for creating and updating process
 
 process-form-create = Utwórz proces
+
+process-form-new-version = Utwórz nową wersję
 
 process-form-cancel = Anuluj
 
@@ -578,11 +602,11 @@ process-form-step-remove = Usuń krok
 
 process-form-step-name = Nazwa kroku:
 
-process-form-step-slots = Sloty:
+process-form-step-slots = Sloty dla kroku:
 
 process-form-step-slots-add = Dodaj slot
 
-process-form-step-links = Linki:
+process-form-step-links = Linki dla kroku:
 
 process-form-step-links-add = Dodaj link
 

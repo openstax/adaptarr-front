@@ -2,54 +2,68 @@ import './index.css'
 
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { connect } from 'react-redux'
 
 import Process, { ProcessStructure } from 'src/api/process'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { State } from 'src/store/reducers'
 import { fetchProcesses } from 'src/store/actions/app'
 
 import ProcessForm from './components/ProcessForm'
+import ProcessesList from './components/ProcessesList'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-type Props = {
-  processes: Map<number, Process>,
-}
-
-const mapStateToProps = ({ app: { processes } }: State) => {
-  return {
-    processes,
-  }
-}
-
-class Processes extends React.Component<Props> {
+class Processes extends React.Component<{}> {
   state: {
     showForm: boolean
+    structure: ProcessStructure | null
+    process: Process | null
   } = {
     showForm: false,
+    structure: null,
+    process: null,
   }
 
-  private toggleForm = () => {
-    this.setState({ showForm: !this.state.showForm })
+  private showForm = () => {
+    this.setState({ showForm: true, structure: null, process: null })
+  }
+
+  private closeForm = () => {
+    this.setState({ showForm: false, structure: null, process: null })
+  }
+
+  private onProcessEdit = async (p: Process) => {
+    const structure = await p.structure()
+    this.setState({ showForm: true, structure, process: p })
   }
 
   private createProcess = (structure: ProcessStructure) => {
-    Process.create(structure)
-      .then(() => {
-        this.setState({ showForm: false })
-        store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
-        store.dispatch(fetchProcesses())
-      })
-      .catch((e) => {
-        store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
-      })
+    if (!this.state.process) {
+      Process.create(structure)
+        .then(() => {
+          this.closeForm()
+          store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
+          store.dispatch(fetchProcesses())
+        })
+        .catch((e) => {
+          store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
+        })
+    } else {
+      this.state.process.createVersion(structure)
+        .then(() => {
+          this.closeForm()
+          store.dispatch(addAlert('success', 'process-create-version-success', {name: structure.name}))
+          store.dispatch(fetchProcesses())
+        })
+        .catch((e) => {
+          store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
+        })
+    }
   }
 
   public render() {
-    const { showForm } = this.state
+    const { showForm, structure } = this.state
     
     return (
       <section className="section--wrapper">
@@ -60,7 +74,7 @@ class Processes extends React.Component<Props> {
               !showForm ?
                 <Button
                   color="green"
-                  clickHandler={this.toggleForm}
+                  clickHandler={this.showForm}
                 >
                   <Icon name="plus" />
                   <Localized id="processes-view-add">
@@ -73,27 +87,19 @@ class Processes extends React.Component<Props> {
           {
             showForm ?
               <ProcessForm
+                structure={structure}
                 onSubmit={this.createProcess}
-                onCancel={this.toggleForm}
+                onCancel={this.closeForm}
               />
-            : null
+            :
+              <ProcessesList
+                onProcessEdit={this.onProcessEdit}
+              />
           }
-          <h2>
-            <Localized id="processes-view-list">
-              Current processes:
-            </Localized>
-          </h2>
-          <ul className="processes__list">
-            {
-              Array.from(this.props.processes.values()).map(p => {
-                return <li key={p.id} className="processes__process-name">{p.name}</li>
-              })
-            }
-          </ul>
         </div>
       </section>
     )
   }
 }
 
-export default connect(mapStateToProps)(Processes)
+export default Processes

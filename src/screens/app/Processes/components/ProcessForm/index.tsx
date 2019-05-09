@@ -13,6 +13,7 @@ import Icon from 'src/components/ui/Icon'
 import './index.css'
 
 type Props = {
+  structure?: ProcessStructure | null
   onSubmit: (structure: ProcessStructure) => any
   onCancel: () => any
 }
@@ -81,8 +82,32 @@ class ProcessForm extends React.Component<Props> {
     })
   }
 
+  private updateStructure = () => {
+    const s = this.props.structure
+    if (s) {
+      this.setState({
+        name: s.name,
+        start: s.start,
+        slots: s.slots,
+        steps: s.steps,
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const prevS = prevProps.structure
+    const s = this.props.structure
+    if (JSON.stringify(prevS) !== JSON.stringify(s)) {
+      this.updateStructure()
+    }
+  }
+
+  componentDidMount() {
+    this.updateStructure()
+  }
+
   public render() {
-    const { startingStep, steps, errors } = this.state
+    const { startingStep, slots, steps, errors, name } = this.state
 
     return (
       <form
@@ -96,9 +121,16 @@ class ProcessForm extends React.Component<Props> {
             isDisabled={errors.size > 0}
           >
             <Icon name="save" />
-            <Localized id="process-form-create">
-              Create process
-            </Localized>
+            {
+              !this.props.structure ?
+                <Localized id="process-form-create">
+                  Create process
+                </Localized>
+              :
+                <Localized id="process-form-new-version">
+                  Create new version
+                </Localized>
+            }
           </Button>
           <Button clickHandler={this.props.onCancel} color="red">
             <Icon name="close" />
@@ -149,9 +181,11 @@ class ProcessForm extends React.Component<Props> {
         </label>
         <div className="process-form__split">
           <ProcessSlots
+            slots={slots}
             onChange={this.handleSlotsChange}
           />
           <ProcessSteps
+            steps={steps}
             slots={this.state.slots}
             onChange={this.handleStepsChange}
           />

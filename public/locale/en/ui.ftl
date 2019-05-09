@@ -549,10 +549,34 @@ process-create-success = Process "{ $name }" has been created.
 # - $details (string): error details.
 process-create-error = Couldn't create new process. Details: { $details }.
 
+# Alert displayed when name of process has been updated.
+process-update-name-success = Name has been updated.
+
+# Alert displayed when name has not beed updated.
+#
+# Variables:
+# - $details (string): error details.
+process-update-name-error = Couldn't update name. Details: { $details }.
+
+# Alert displayed when version of process has been created.
+#
+# Variables:
+# - $name (string): name of new version which was created.
+process-create-version-success = Version "{ $name }" has been created.
+
+# Alert displayed when version has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-version-error = Couldn't create new version. Details: { $details }.
+
+
 
 ## Components for creating and updating process
 
 process-form-create = Create process
+
+process-form-new-version = Create new version
 
 process-form-cancel = Cancel
 
@@ -579,11 +603,11 @@ process-form-step-remove = Remove step
 
 process-form-step-name = Step name:
 
-process-form-step-slots = Slots:
+process-form-step-slots = Step slots:
 
 process-form-step-slots-add = Add slot
 
-process-form-step-links = Links:
+process-form-step-links = Step links:
 
 process-form-step-links-add = Add link
 

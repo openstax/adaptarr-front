@@ -34,3 +34,18 @@
   font-weight: 700;
   margin: 10px 0;
 }
+
+.process-form__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.process-form__title .button .icon {
+  margin: 0;
+}
+
+.process-form label {
+  display: block;
+  margin-bottom: 10px;
+}
