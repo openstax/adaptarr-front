@@ -4,6 +4,7 @@ import Base from './base'
 import ProcessVersion from './processversion'
 
 import { elevated } from './utils'
+import { AxiosResponse } from 'axios';
 
 /**
  * Process data.
@@ -111,6 +112,13 @@ export default class Process extends Base<ProcessData> {
   static async freeSlots(): Promise<FreeSlot[]> {
     const rsp = await axios.get('processes/slots/free')
     return rsp.data
+  }
+
+  /**
+   * Assign self to a free slot.
+   */
+  static async takeSlot(data: { draft: string, slot: number }): Promise<AxiosResponse> {
+    return await axios.post('processes/slots', data)
   }
 
   /**
