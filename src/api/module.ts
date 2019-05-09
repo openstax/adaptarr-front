@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios'
 import axios from 'src/config/axios'
 
 import Base from './base'
@@ -170,6 +171,18 @@ export default class Module extends Base<Data> {
     } catch (ex) {
       return null
     }
+  }
+
+  /**
+   * Begin process for this module.
+   *
+   * This method requires editing-process:manage permission.
+   * 
+   * @param process processId
+   * @param slots array of pairs [slotId, userId]
+   */
+  async beginProcess(data: { process: number, slots: [number, number][]}): Promise<AxiosResponse> {
+    return await elevated(() => axios.post(`modules/${this.id}`, data))
   }
 
   /**
