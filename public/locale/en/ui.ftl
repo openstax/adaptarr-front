@@ -608,6 +608,35 @@ process-form-error-steps-min = Minimum two steps are required.
 
 
 
+## Reusable components - begin process
+
+begin-process-select-process = Select process:
+
+begin-process-start = Start process
+
+# Alert displayed when process has been started.
+#
+# Variables:
+# - $process (string): name of process which was started.
+# - #module (string): tile of module for which process was started.
+begin-process-success = Started "{ $process }" for "{ $module }".
+
+# Alert displayed when process has not been started.
+#
+# Variables:
+# - $details (string): error details.
+begin-process-error = Couldn't start a process. Details: { $details }.
+
+begin-process-assign-user-title = Select user for current slot.
+
+begin-process-slots-title = Configure slots:
+
+begin-process-assign-user = Select user
+
+begin-process-unassign-user = Unassign user
+
+
+
 ## Reusable components - permissions
 
 # Variables:
