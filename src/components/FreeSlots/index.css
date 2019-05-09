@@ -1,0 +1,13 @@
+.free-slots__info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.free-slots__name {
+  margin-bottom: 5px;
+}
+
+.free-slots__name strong, .free-slots__draft strong {
+  margin-right: 4px;
+}

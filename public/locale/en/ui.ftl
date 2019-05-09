@@ -244,6 +244,8 @@ dashboard-drafts-empty = You don't have any drafts.
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Draft was created successfully.
 
+dashboard-section-free-slots = Free slots:
+
 
 ## Screens - draft
 
@@ -634,6 +636,30 @@ begin-process-slots-title = Configure slots:
 begin-process-assign-user = Select user
 
 begin-process-unassign-user = Unassign user
+
+
+
+## Reusable components - free slots
+
+free-slots-slot-name = Slot name:
+
+free-slots-draft-title = Draft title:
+
+free-slots-not-avaible = There are no free slots for you to take.
+
+free-slots-take-slot = Take slot
+
+# Alert displayed when user assign himself to a free slot.
+#
+# Variables:
+# - $name (string): name of slot which was taken.
+free-slots-success = You've been assigned to: { $slot }.
+
+# Alert displayed when there was an error while taking free slot.
+#
+# Variables:
+# - $details (string): error details.
+free-slots-error = Couldn't assign you to this slot. Details: { $details }.
 
 
 

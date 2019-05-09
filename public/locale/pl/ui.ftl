@@ -245,6 +245,8 @@ dashboard-drafts-empty = Nie posiadasz żadnych szkiców.
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 
+dashboard-section-free-slots = Wolne miejsca:
+
 
 ## Screens - draft
 
@@ -636,6 +638,29 @@ begin-process-assign-user = Wybierz użytkownika
 
 begin-process-unassign-user = Usuń użytkownika
 
+
+
+## Reusable components - free slots
+
+free-slots-slot-name = Nazwa slotu:
+
+free-slots-draft-title = Tytuł szkicu:
+
+free-slots-not-avaible = Obecnie nie ma żadnych wolnych miejsc do zajęcia.
+
+free-slots-take-slot = Zajmij miejsce
+
+# Alert displayed when user assign himself to a free slot.
+#
+# Variables:
+# - $name (string): name of slot which was taken.
+free-slots-success = Przypisano do: { $slot }.
+
+# Alert displayed when there was an error while taking free slot.
+#
+# Variables:
+# - $details (string): error details.
+free-slots-error = Nie udało się przypisać do miejsca. Szczegóły: { $details }.
 
 
 ## Reusable components - permissions

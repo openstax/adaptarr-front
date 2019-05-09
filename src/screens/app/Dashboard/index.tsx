@@ -11,8 +11,7 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 import DraftsList from 'src/components/DraftsList'
-import Button from 'src/components/ui/Button'
-import Dialog from 'src/components/ui/Dialog'
+import FreeSlots from 'src/components/FreeSlots'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers/index'
@@ -86,10 +85,13 @@ class Dashboard extends React.Component<Props> {
             </div>
             <div className="section__half">
               <h3 className="section__heading">
-                <Localized id="dashboard-section-assigned">
-                  Assigned to you:
+                <Localized id="dashboard-section-free-slots">
+                  Free slots:
                 </Localized>
               </h3>
+              <FreeSlots
+                onUpdate={this.fetchDrafts}
+              />
             </div>
           </div>
         }
