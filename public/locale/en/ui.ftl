@@ -1137,9 +1137,8 @@ editor-tools-link-text = Provide text
 
 editor-tools-link-url = Provide link
 
-<<<<<<< HEAD
 editor-tools-link-remove = Remove link
-=======
+
 
 
 ## Editor toolboxes - terms
@@ -1149,4 +1148,3 @@ editor-tools-term-title = Term
 editor-tools-term-label = Index form
 
 editor-tools-term-remove = Remove term
->>>>>>> terms-inlines

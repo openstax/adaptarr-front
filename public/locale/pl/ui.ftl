@@ -1142,7 +1142,6 @@ editor-tools-sections-title = Sekcja
 
 editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
-<<<<<<< HEAD
 editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
 
 
@@ -1164,8 +1163,6 @@ editor-tools-link-text = Wprowadź tekst
 editor-tools-link-url = Wprowadź odnośnik
 
 editor-tools-link-remove = Usuń link
-=======
-editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 
 
 
 
@@ -1176,4 +1173,3 @@ editor-tools-term-title = Termin
 editor-tools-term-label = Forma indeksowa
 
 editor-tools-term-remove = Usuń termin
->>>>>>> terms-inlines
