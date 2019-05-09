@@ -249,6 +249,8 @@ dashboard-section-free-slots = Free slots:
 
 ## Screens - draft
 
+draft-title = Draft
+
 # Variables:
 # - $style (string): version of styles.
 draft-style-switcher = { $style ->
@@ -660,6 +662,28 @@ free-slots-success = You've been assigned to: { $slot }.
 # Variables:
 # - $details (string): error details.
 free-slots-error = Couldn't assign you to this slot. Details: { $details }.
+
+
+## Reusable components - step changer
+
+step-changer-choose = Choose link:
+
+step-changer-move = Move using selected link
+
+# Alert displayed when draft was advanced to the next step.
+#
+# Variables:
+# - $code (string): draft-process-advanced or draft-process-finished
+free-slots-success = { $code ->
+  [draft-process-advanced] Draft was advanced to the next step.
+  [draft-process-finished] Process has ended. Draft was saved as a module.
+}
+
+# Alert displayed when there was an error while advancing to the next step.
+#
+# Variables:
+# - $details (string): error details.
+step-changer-error = Couldn't advance to the next step. Details: { $details }.
 
 
 

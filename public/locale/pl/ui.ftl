@@ -663,6 +663,30 @@ free-slots-success = Przypisano do: { $slot }.
 free-slots-error = Nie udało się przypisać do miejsca. Szczegóły: { $details }.
 
 
+
+## Reusable components - step changer
+
+step-changer-choose = Wybierz link:
+
+step-changer-move = Przenieś używając wybranego linku
+
+# Alert displayed when draft was advanced to the next step.
+#
+# Variables:
+# - $code (string): draft-process-advanced or draft-process-finished
+free-slots-success = { $code ->
+  [draft-process-advanced] Szkic został przeniesiony do następnego kroku.
+  [draft-process-finished] Proces został zakończony. Zapisano szkic jako moduł.
+}
+
+# Alert displayed when there was an error while advancing to the next step.
+#
+# Variables:
+# - $details (string): error details.
+step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }.
+
+
+
 ## Reusable components - permissions
 
 # Variables:

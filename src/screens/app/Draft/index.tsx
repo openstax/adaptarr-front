@@ -12,8 +12,10 @@ import { fetchReferenceTargets } from 'src/store/actions/Modules'
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
 import InfoBox from 'src/components/InfoBox'
+import Header from 'src/components/Header'
 import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
+import StepChanger from './components/StepChanger'
 
 import './index.css'
 import UIPlugin from './plugins/UI'
@@ -96,6 +98,9 @@ class Draft extends React.Component<Props> {
 
     return (
       <Section>
+        <Header l10nId="draft-title" title="Draft">
+          <StepChanger draft={draft} />
+        </Header>
         <div className="section__content draft">
           <div className={`draft__editor ${editorStyle}`}>
             <div className="document">

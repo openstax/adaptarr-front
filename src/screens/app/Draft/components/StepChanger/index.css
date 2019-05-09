@@ -1,0 +1,9 @@
+.step-changer {
+  display: flex;
+  align-items: center;
+}
+
+.step-changer__select-link {
+  margin: 0 10px;
+  width: 200px;
+}
