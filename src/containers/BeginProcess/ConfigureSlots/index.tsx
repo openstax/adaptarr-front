@@ -91,14 +91,18 @@ class ConfigureSlots extends React.Component<Props> {
     const { currentSlot, slots } = this.state
     if (currentSlot) {
       slots.set(currentSlot.id, user.id)
-      this.forceUpdate()
+      this.forceUpdate(() => {
+        this.props.onChange(this.state.slots)
+      })
       this.closeAssignUserDialog()
     }
   }
 
   private unassignUser = (slotId: SlotId) => {
     this.state.slots.delete(slotId)
-    this.forceUpdate()
+    this.forceUpdate(() => {
+      this.props.onChange(this.state.slots)
+    })
   }
 
   private showAssignUserDialog = (slot: ProcessSlot) => {
