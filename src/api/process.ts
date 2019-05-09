@@ -109,7 +109,7 @@ export default class Process extends Base<ProcessData> {
    * Fetch list of all free slots which can be taken by current user.
    */
   static async freeSlots(): Promise<FreeSlot[]> {
-    const rsp = await elevated(() => axios.post('processes/slots/free'))
+    const rsp = await axios.get('processes/slots/free')
     return rsp.data
   }
 
