@@ -16,7 +16,6 @@ type Props = {
     booksMap: BooksMap
   }
   drafts: api.Draft[]
-  onDraftDeleteClick: (draft: api.Draft) => any
 }
 
 type BooksWithDrafts = {
@@ -119,14 +118,6 @@ class DraftsList extends React.Component<Props> {
                                 >
                                   <Localized id="dashboard-drafts-view">
                                     View draft
-                                  </Localized>
-                                </Button>
-                                <Button
-                                  color="red"
-                                  clickHandler={() => this.props.onDraftDeleteClick(draft)}
-                                >
-                                  <Localized id="dashboard-drafts-delete">
-                                    Delete
                                   </Localized>
                                 </Button>
                               </span>

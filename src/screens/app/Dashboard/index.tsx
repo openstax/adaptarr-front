@@ -43,38 +43,9 @@ class Dashboard extends React.Component<Props> {
   public state: {
     isLoading: boolean,
     drafts: api.Draft[],
-    showDeleteDraftDialog: boolean,
-    targetDraft: api.Draft | null,
   } = {
     isLoading: true,
     drafts: [],
-    showDeleteDraftDialog: false,
-    targetDraft: null,
-  }
-
-  private showDeleteDraftDialog = (targetDraft: api.Draft) => {
-    this.setState({ showDeleteDraftDialog: true, targetDraft })
-  }
-
-  private closeDeleteDraftDialog = () => {
-    this.setState({ showDeleteDraftDialog: false, targetDraftId: null })
-  }
-
-  private deleteDraft = () => {
-    const { targetDraft } = this.state
-
-    if (!targetDraft) return
-
-    targetDraft.delete()
-      .then(() => {
-        this.fetchDrafts()
-        store.dispatch(addAlert('success', 'dashboard-delete-draft-alert-success'))
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
-
-    this.closeDeleteDraftDialog()
   }
 
   private fetchDrafts = () => {
@@ -93,33 +64,11 @@ class Dashboard extends React.Component<Props> {
   }
 
   public render() {
-    const { drafts, isLoading, targetDraft } = this.state
+    const { drafts, isLoading } = this.state
 
     return (
       <Section>
         <Header l10nId="dashboard-view-title" title="Dashboard" />
-        {
-          this.state.showDeleteDraftDialog ?
-            <Dialog
-              l10nId="dashboard-delete-draft-dialog-title"
-              placeholder="Are you sure you want to delete this draft?"
-              $title={targetDraft!.title}
-              onClose={this.closeDeleteDraftDialog}
-            >
-              <Button color="red" clickHandler={this.deleteDraft}>
-                <Localized id="dashboard-delete-draft-confirm">
-                  Delete
-                </Localized>
-              </Button>
-              <Button clickHandler={this.closeDeleteDraftDialog}>
-                <Localized id="dashboard-delete-draft-cancel">
-                  Cancel
-                </Localized>
-              </Button>
-            </Dialog>
-          :
-            null
-        }
         {
           isLoading ?
             <Spinner />
@@ -133,7 +82,6 @@ class Dashboard extends React.Component<Props> {
               </h3>
               <DraftsList
                 drafts={drafts}
-                onDraftDeleteClick={this.showDeleteDraftDialog}
               />
             </div>
             <div className="section__half">

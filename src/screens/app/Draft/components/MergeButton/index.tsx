@@ -59,7 +59,6 @@ class MergeButton extends React.Component<Props & RouteComponentProps> {
 
     try {
       const draft = await Draft.load(storage.id)
-      await draft.save()
       store.dispatch(addAlert('success', 'editor-tools-merge-alert-success'))
       this.props.history.push(`/modules/${storage.id}`)
     } catch (ex) {
