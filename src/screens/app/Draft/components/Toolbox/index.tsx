@@ -14,7 +14,6 @@ import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SaveButton from '../SaveButton'
-import MergeButton from '../MergeButton'
 
 import './index.css'
 
@@ -58,7 +57,6 @@ export default function Toolbox({ editor, value }: Props) {
     <div className="toolbox" onMouseDown={onMouseDown}>
       <div className="toolbox__group">
         <SaveButton value={value} />
-        <MergeButton value={value} />
       </div>
       <FormatTools editor={editor} value={value} />
       <InsertTools editor={editor} value={value} />

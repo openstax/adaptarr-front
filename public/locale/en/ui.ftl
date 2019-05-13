@@ -934,18 +934,6 @@ editor-tools-save-alert-error = Draft couldn't be saved.
 
 
 
-## Editor - toolboxes - merge
-
-editor-tools-merge = Merge
-
-# Alert displayed when draft was merged into source module.
-editor-tools-merge-alert-success = Draft has been merged successfully.
-
-# Alert displayed when draft could not be merged.
-editor-tools-merge-alert-error = Draft couldn't be merged.
-
-
-
 ## Editor toolboxes - admonitions
 
 editor-tools-admonition-title = Admonition

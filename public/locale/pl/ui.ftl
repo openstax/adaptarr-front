@@ -936,18 +936,6 @@ editor-tools-save-alert-error = Nie udało się zapisać szkicu.
 
 
 
-## Editor - toolboxes - merge
-
-editor-tools-merge = Zjednocz
-
-# Alert displayed when draft was merged into source module.
-editor-tools-merge-alert-success = Zjednoczono.
-
-# Alert displayed when draft could not be merged.
-editor-tools-merge-alert-error = Nie udało się zjednoczyć.
-
-
-
 ## Editor toolboxes - admonitions
 
 editor-tools-admonition-title = Admonition
