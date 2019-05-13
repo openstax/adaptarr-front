@@ -1,0 +1,18 @@
+form.processes__name {
+  display: flex;
+}
+
+.process__small-icon {
+  cursor: pointer;
+  margin-left: 10px;
+  color: #b4afaf;
+}
+
+.process__small-icon:hover {
+  color: var(--font-dark);
+}
+
+form.processes__name .input.focused {
+  border-bottom: 1px solid var(--light-bg);
+  padding: 0 0 2px 0;
+}

@@ -2,11 +2,14 @@ import * as React from 'react'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { fetchProcesses } from 'src/store/actions/app'
 import { Process } from 'src/api'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
+
+import './index.css'
 
 type Props = {
   process: Process
@@ -43,6 +46,24 @@ class ProcessInfo extends React.Component<Props> {
             value={this.state.name}
             onChange={this.handleNameChange}
           />
+          {
+            this.state.name !== this.props.process.name ?
+              <div className="process__controls">
+                <span
+                  className="process__small-icon"
+                  onClick={this.onSubmit}
+                >
+                  <Icon name="check" />
+                </span>
+                <span
+                  className="process__small-icon"
+                  onClick={this.cancelEdit}
+                >
+                  <Icon name="close" />
+                </span>
+              </div>
+            : null
+          }
         </form>
         <div className="processes__controls">
           <Button clickHandler={this.editProcess}>
@@ -68,11 +89,16 @@ class ProcessInfo extends React.Component<Props> {
       this.props.process.update(this.state.name)
         .then(() => {
           store.dispatch(addAlert('success', 'process-update-name-success'))
+          store.dispatch(fetchProcesses())
         })
         .catch((e) => {
           store.dispatch(addAlert('error', 'process-update-name-error', {details: e.response.data.raw}))
         })
     }
+  }
+
+  private cancelEdit = () => {
+    this.setState({ name: this.props.process.name })
   }
 }
 
