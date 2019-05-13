@@ -5,6 +5,8 @@ import { Localized } from 'fluent-react/compat'
 
 import validateEmail from 'src/helpers/validateEmail'
 
+const leadingSpace = new RegExp(/^\s+/)
+
 type Props = {
   onChange: (value: string | boolean) => void
   isValid?: (status: boolean) => void
@@ -13,6 +15,7 @@ type Props = {
   value?: string | boolean
   type?: string
   autoFocus?: boolean
+  trim?: boolean
   validation?: {
     minLength?: number
     maxLength?: number
@@ -43,7 +46,11 @@ class Input extends React.Component<Props> {
       this.setState({ inputVal: input.checked })
       this.props.onChange(input.checked)
     } else {
-      this.setState({ inputVal: input.value })
+      if (this.props.trim) {
+        this.setState({ inputVal: input.value.replace(leadingSpace, '') })
+      } else {
+        this.setState({ inputVal: input.value })
+      }
       this.props.onChange(input.value)
     }
   }
@@ -111,21 +118,38 @@ class Input extends React.Component<Props> {
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    if (prevProps.value !== this.props.value) {
-      this.setState({ inputVal: this.props.value })
+    const { value, trim } = this.props
+    if (prevProps.value !== value) {
+      if (typeof value === 'string') {
+        if (trim) {
+          this.setState({ inputVal: value.replace(leadingSpace, '') })
+        } else {
+          this.setState({ inputVal: value })
+        }  
+      } else {
+        this.setState({ inputVal: this.props.value })
+      }
     }
   }
 
   componentDidMount = () => {
-    const value = this.props.value
+    const { value, trim } = this.props
     if (value) {
-      this.setState({ inputVal: value})
+      if (typeof value === 'string') {
+        if (trim) {
+          this.setState({ inputVal: value.replace(leadingSpace, '') })
+        } else {
+          this.setState({ inputVal: value })
+        }  
+      } else {
+        this.setState({ inputVal: this.props.value })
+      }
     }
   }
 
   public render() {
     const { touched, inputVal } = this.state
-    const { l10nId, errorMessage, type, autoFocus } = this.props
+    const { l10nId, errorMessage, type, autoFocus, trim } = this.props
 
     const classes = this.validateInput().classes
 
