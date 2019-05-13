@@ -45,6 +45,7 @@ class ProcessInfo extends React.Component<Props> {
           <Input
             value={this.state.name}
             onChange={this.handleNameChange}
+            trim={true}
           />
           {
             this.state.name !== this.props.process.name ?

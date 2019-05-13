@@ -160,6 +160,7 @@ class ProcessForm extends React.Component<Props> {
             value={name}
             onChange={this.handleNameChange}
             validation={{ minLength: 1 }}
+            trim={true}
           />
         </label>
         <label>

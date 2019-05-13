@@ -158,6 +158,7 @@ class Step extends React.Component<StepProps> {
             value={name}
             onChange={this.handleNameChange}
             validation={{ minLength: 1 }}
+            trim={true}
           />
         </label>
         <h3>

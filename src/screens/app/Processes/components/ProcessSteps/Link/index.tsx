@@ -74,6 +74,7 @@ class LinkComp extends React.Component<SlotProps> {
             value={name}
             onChange={this.handleNameChange}
             validation={{ minLength: 1 }}
+            trim={true}
           />
         </label>
         <label>
