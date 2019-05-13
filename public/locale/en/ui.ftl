@@ -705,9 +705,10 @@ step-changer-move = Move using selected link
 #
 # Variables:
 # - $code (string): draft-process-advanced or draft-process-finished
-free-slots-success = { $code ->
+step-changer-success = { $code ->
   [draft-process-advanced] Draft was advanced to the next step.
   [draft-process-finished] Process has ended. Draft was saved as a module.
+ *[unknown] Moved successfully!
 }
 
 # Alert displayed when there was an error while advancing to the next step.

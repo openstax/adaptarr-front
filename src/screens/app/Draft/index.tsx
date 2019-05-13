@@ -4,6 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import Editor, { PersistDB, DocumentDB } from 'cnx-designer'
 import { match } from 'react-router'
 import { Value } from 'slate'
+import { History } from 'history'
 
 import store from 'src/store'
 import * as api from 'src/api'
@@ -28,6 +29,7 @@ type Props = {
   storage: api.Storage
   value: Value
   draft: api.Draft
+  history: History
 }
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
@@ -86,6 +88,10 @@ class Draft extends React.Component<Props> {
     this.setState({ showInfoBox: false })
   }
 
+  private handleStepChange = () => {
+    this.props.history.push('/')
+  }
+
   getChildContext() {
     return {
       documentDb: this.props.documentDb,
@@ -99,7 +105,10 @@ class Draft extends React.Component<Props> {
     return (
       <Section>
         <Header l10nId="draft-title" title="Draft">
-          <StepChanger draft={draft} />
+          <StepChanger
+            draft={draft}
+            onStepChange={this.handleStepChange}
+          />
         </Header>
         <div className="section__content draft">
           <div className={`draft__editor ${editorStyle}`}>

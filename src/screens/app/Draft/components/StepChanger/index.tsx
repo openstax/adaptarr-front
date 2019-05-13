@@ -13,6 +13,7 @@ import './index.css'
 
 type Props = {
   draft: Draft
+  onStepChange: () => any
 }
 
 class StepChanger extends React.Component<Props> {
@@ -64,8 +65,9 @@ class StepChanger extends React.Component<Props> {
     this.props.draft.advance({ target: link.to, slot: link.slot })
       .then((res) => {
         store.dispatch(addAlert('success', 'step-changer-success', {
-          code: res.code.replace(':', '-'),
+          code: res.code.replace(/:/g, '-'),
         }))
+        this.props.onStepChange()
       })
       .catch(e => {
         store.dispatch(addAlert('error', 'step-changer-error', {
