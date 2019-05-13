@@ -728,7 +728,6 @@ permission-label = { $name ->
   [user-assign-role] Assign roles to users
   [book-edit] Create, delete and edit book content
   [module-edit] Create, delete and edit modules
-  [module-assign] Assign users to modules
   [role-edit] Create, delete and edit roles
   [editing-process-edit] Create and edit processes
   [editing-process-manage] Assign modules to processes
