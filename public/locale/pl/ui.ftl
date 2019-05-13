@@ -683,8 +683,9 @@ free-slots-take-slot = Zajmij miejsce
 # Alert displayed when user assign himself to a free slot.
 #
 # Variables:
-# - $name (string): name of slot which was taken.
-free-slots-success = Przypisano do: { $slot }.
+# - $slot (string): name of slot which was taken.
+# - $draft (string): draft name for which user was assigned.
+free-slots-success = Zostałeś przypisany do "{ $draft }" w miejscu: { $slot }.
 
 # Alert displayed when there was an error while taking free slot.
 #

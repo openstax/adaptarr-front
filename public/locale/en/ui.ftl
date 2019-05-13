@@ -684,8 +684,9 @@ free-slots-take-slot = Take slot
 # Alert displayed when user assign himself to a free slot.
 #
 # Variables:
-# - $name (string): name of slot which was taken.
-free-slots-success = You've been assigned to: { $slot }.
+# - $slot (string): name of slot which was taken.
+# - $draft (string): draft name for which user was assigned.
+free-slots-success = You've been assigned to "{ $draft }" with slot: { $slot }.
 
 # Alert displayed when there was an error while taking free slot.
 #

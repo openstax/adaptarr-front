@@ -78,7 +78,10 @@ class FreeSlots extends React.Component<Props> {
   private takeSlot = (slot: FreeSlot) => {
     Process.takeSlot({ draft: slot.draft.module, slot: slot.id })
       .then(() => {
-        store.dispatch(addAlert('success', 'free-slots-success', {name: slot.name}))
+        store.dispatch(addAlert('success', 'free-slots-success', {
+          slot: slot.name,
+          draft: slot.draft.title,
+        }))
         let freeSlots = [...this.state.freeSlots]
         const index = freeSlots.findIndex(s => {
           return s.id === slot.id && s.draft.module === slot.draft.module
