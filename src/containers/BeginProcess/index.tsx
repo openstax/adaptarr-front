@@ -5,6 +5,7 @@ import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { fetchModulesMap } from 'src/store/actions/Modules'
 import { Process, Module } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
 import { State } from 'src/store/reducers'
@@ -88,6 +89,7 @@ class BeginProcess extends React.Component<Props> {
 
     this.props.module.beginProcess(processData)
       .then(() => {
+        store.dispatch(fetchModulesMap())
         store.dispatch(addAlert('success', 'begin-process-success', {
           process: process.name,
           module: this.props.module.title,

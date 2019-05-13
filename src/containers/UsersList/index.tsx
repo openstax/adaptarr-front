@@ -71,7 +71,7 @@ class UsersList extends React.Component<Props> {
       return (
         <li className="usersList__item--no-results">
           <Localized id="user-profile-team-list-no-results">
-            There are not users with specified criteria.
+            There are no users with specified criteria.
           </Localized>
         </li>
       )
@@ -82,10 +82,9 @@ class UsersList extends React.Component<Props> {
         <li
           key={user.id}
           className="usersList__item"
+          onClick={() => this.props.onUserClick(user)}
         >
-          <span onClick={() => this.props.onUserClick(user)}>
-            <UserInfo user={user} />
-          </span>
+          <UserInfo user={user} />
         </li>
       )
     })
