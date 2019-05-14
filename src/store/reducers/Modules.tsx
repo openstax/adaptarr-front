@@ -1,4 +1,3 @@
-import { Module } from 'src/api'
 import sortRefTargets from 'src/helpers/sortRefTargets'
 
 import { ModulesMap, ReferenceTargets } from 'src/store/types'

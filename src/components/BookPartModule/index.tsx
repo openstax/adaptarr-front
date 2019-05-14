@@ -7,7 +7,6 @@ import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
-import ModuleStatus from 'src/components/ModuleStatus'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -34,12 +33,12 @@ class Module extends React.Component<Props> {
   state: {
     showRemoveModule: boolean
     showBeginProcess: boolean
+    module: api.Module | undefined
   } = {
     showRemoveModule: false,
     showBeginProcess: false,
+    module: this.props.modulesMap.get(this.props.item.id!),
   }
-
-  module: api.Module | undefined = this.props.modulesMap.get(this.props.item.id!)
 
   private showRemoveModuleDialog = () => {
     this.setState({ showRemoveModule: true })
@@ -77,13 +76,13 @@ class Module extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
-      this.module = this.props.modulesMap.get(this.props.item.id!)
+      this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
     }
   }
 
   public render() {
     const { item, processes } = this.props
-    const { showRemoveModule, showBeginProcess } = this.state
+    const { showRemoveModule, showBeginProcess, module: mod } = this.state
 
     return (
       <React.Fragment>
@@ -115,7 +114,7 @@ class Module extends React.Component<Props> {
           : null
         }
         {
-          showBeginProcess && this.module ?
+          showBeginProcess && mod ?
             <Dialog
               l10nId="book-begin-process-title"
               placeholder="Configure and begin process."
@@ -123,7 +122,7 @@ class Module extends React.Component<Props> {
               onClose={this.closeBeginProcessDialog}
             >
               <BeginProcess
-                module={this.module}
+                module={mod}
                 onClose={this.closeBeginProcessDialog}
               />
             </Dialog>
@@ -146,11 +145,11 @@ class Module extends React.Component<Props> {
             </Button>
           </LimitedUI>
           {
-            this.module && this.module.process ?
+            mod && mod.process ?
                 <span className="bookpart__process">
                   <Localized
                     id="book-in-process"
-                    $name={processes.get(this.module.process.process)!.name}
+                    $name={processes.get(mod.process.process)!.name}
                   >
                     Process: [process name]
                   </Localized>
