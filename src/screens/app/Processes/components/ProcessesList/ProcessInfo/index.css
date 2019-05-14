@@ -1,5 +1,7 @@
 form.processes__name {
   display: flex;
+  flex: 1;
+  margin-right: 10px;
 }
 
 .process__small-icon {
@@ -12,7 +14,18 @@ form.processes__name {
   color: var(--font-dark);
 }
 
-form.processes__name .input.focused {
+.process__content-editable {
+  outline: none;
+  flex: 1;
+}
+
+.process__content-editable[contenteditable="true"]:active,
+.process__content-editable[contenteditable="true"]:focus {
   border-bottom: 1px solid var(--light-bg);
-  padding: 0 0 2px 0;
+  padding: 0 0 3px 0;
+}
+
+form.processes__name .process__controls {
+  flex: 1;
+  max-width: 60px;
 }

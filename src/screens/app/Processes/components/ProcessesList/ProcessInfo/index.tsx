@@ -19,8 +19,10 @@ type Props = {
 class ProcessInfo extends React.Component<Props> {
   state: {
     name: string,
+    focused: boolean,
   } = {
     name: '',
+    focused: false,
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -35,6 +37,8 @@ class ProcessInfo extends React.Component<Props> {
     this.setState({ name: this.props.process.name })
   }
 
+  nameRef: React.RefObject<HTMLSpanElement> = React.createRef()
+
   public render() {
     return (
       <>
@@ -42,11 +46,14 @@ class ProcessInfo extends React.Component<Props> {
           className="processes__name"
           onSubmit={this.onSubmit}
         >
-          <Input
-            value={this.state.name}
-            onChange={this.handleNameChange}
-            trim={true}
-          />
+          <span
+            className="process__content-editable"
+            contentEditable
+            onInput={this.handleNameChange}
+            onKeyDown={this.onKeyDown}
+            dangerouslySetInnerHTML={{ __html: this.props.process.name }}
+            ref={this.nameRef}
+          ></span>
           {
             this.state.name !== this.props.process.name ?
               <div className="process__controls">
@@ -79,13 +86,26 @@ class ProcessInfo extends React.Component<Props> {
     this.props.onProcessEdit(this.props.process)
   }
 
-  private handleNameChange = (name: string) => {
+  private handleNameChange = (e: React.FormEvent<HTMLSpanElement>) => {
+    const name = e.currentTarget.innerText
     this.setState({ name })
   }
 
-  private onSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+  private onKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
+    switch (e.key) {
+      case 'Enter':
+        e.preventDefault()
+        this.onSubmit()
+        break
+      case 'Escape':
+        this.cancelEdit()
+        break
+      default:
+        return
+    }
+  }
 
+  private onSubmit = () => {
     if (this.state.name.length) {
       this.props.process.update(this.state.name)
         .then(() => {
@@ -100,6 +120,7 @@ class ProcessInfo extends React.Component<Props> {
 
   private cancelEdit = () => {
     this.setState({ name: this.props.process.name })
+    this.nameRef.current!.innerText = this.props.process.name
   }
 }
 
