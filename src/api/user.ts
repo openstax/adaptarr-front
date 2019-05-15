@@ -11,7 +11,7 @@ export type UserData = {
   id: number,
   name: string,
   role: Role | null,
-  permissions?: Permission[],
+  permissions?: Permission[], // Converted to Set<Permission> and merged with user.role.permissions
   language: string,
 }
 
@@ -20,8 +20,11 @@ export default class User extends Base<UserData> {
    * Fetch a user by their ID.
    */
   static async load(id: number | string): Promise<User> {
-    const rsp = await axios.get(`users/${id}`)
-    return new User(rsp.data)
+    const user = (await axios.get(`users/${id}`)).data
+    const userPermissions = user.permissions ? user.permissions : []
+    const rolePermissions = user.role && user.role.permissions ? user.role.permissions : []
+    const permissions = new Set([...userPermissions, ...rolePermissions])
+    return new User({...user, permissions})
   }
 
   /**
@@ -32,8 +35,11 @@ export default class User extends Base<UserData> {
    */
   static async me(): Promise<User | null> {
     try {
-      const user = await axios.get('users/me')
-      return new User(user.data, 'me')
+      const user = (await axios.get('users/me')).data
+      const userPermissions = user.permissions ? user.permissions : []
+      const rolePermissions = user.role && user.role.permissions ? user.role.permissions : []
+      const permissions = new Set([...userPermissions, ...rolePermissions])
+      return new User({...user, permissions}, 'me')
     } catch (err) {
       console.log('error', err)
       if (err.response.status === 401) {
@@ -98,7 +104,7 @@ export default class User extends Base<UserData> {
   /**
    * User's permissions.
    */
-  permissions: Permission[]
+  permissions: Set<Permission>
 
   constructor(data: UserData, apiId?: string) {
     super(data)

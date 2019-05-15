@@ -29,12 +29,12 @@ class LimitedUI extends React.Component<Props> {
 
     // Render component only if user have proper permissions
     if (typeof permissions === 'string') {
-      if (!user.permissions.includes(permissions)) {
+      if (!user.permissions.has(permissions)) {
         return null
       }
     } else {
       let noAccess = permissions.some(p => {
-        if (!user.permissions.includes(p)) {
+        if (!user.permissions.has(p)) {
           return true
         }
         return false
