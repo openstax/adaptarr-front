@@ -708,7 +708,7 @@ begin-process-start = Rozpocznij proces
 #
 # Variables:
 # - $process (string): name of process which was started.
-# - #module (string): tile of module for which process was started.
+# - $module (string): title of module for which process was started.
 begin-process-success = Rozpoczęto "{ $process }" dla "{ $module }".
 
 # Alert displayed when process has not been started.
