@@ -102,9 +102,9 @@ class Step extends React.Component<StepProps> {
       ...this.state.links,
       {
         name: '',
-        to: 0,
+        to: null, // When adding empty link we do not want to select origin as a target
         slot: 0,
-      }
+      } as unknown  as Link
     ]
     this.setState({ links })
     this.props.onChange({
@@ -137,7 +137,7 @@ class Step extends React.Component<StepProps> {
 
   public render() {
     const { name, slots, links } = this.state
-    const { slots: processSlots, steps: processSteps } = this.props
+    const { slots: processSlots, steps: processSteps, step } = this.props
 
     return (
       <div className="process-step">
@@ -196,6 +196,7 @@ class Step extends React.Component<StepProps> {
               return <LinkComp
                 key={i}
                 link={l}
+                step={step}
                 steps={processSteps}
                 slots={processSlots}
                 onChange={(link) => this.updateLink(link, i)}

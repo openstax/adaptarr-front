@@ -14,6 +14,7 @@ type SlotProps = {
   link: Link,
   slots: ProcessSlot[]
   steps: ProcessStep[]
+  step: ProcessStep
   onChange: (link: Link) => any
   remove: (slot: Link) => any
 }
@@ -23,26 +24,38 @@ class LinkComp extends React.Component<SlotProps> {
     name: string
     to: number | null
     slot: number | null
+    stepsOptions: {value: number, label: string}[],
   } = {
     name: '',
     to: null,
     slot: null,
+    stepsOptions: [],
   }
 
   private updateStateWithProps = () => {
-    const link = this.props.link
+    const { link, step } = this.props
+
+    // Do not pass current step as an option for link target.
+    let stepsOptions = this.props.steps.filter(s => s.id !== step.id)
+      .map(s => {
+        return { value: s.id, label: s.name }
+      })
+    
     this.setState({
       name: link.name,
       to: link.to,
       slot: link.slot,
+      stepsOptions,
     })
   }
 
   componentDidUpdate(prevProps: SlotProps) {
-    const prevLink = prevProps.link
-    const link = this.props.link
+    const { link: prevLink, steps: prevSteps } = prevProps
+    const { link, steps } = this.props
     
     if (JSON.stringify(prevLink) !== JSON.stringify(link)) {
+      this.updateStateWithProps()
+    } else if (JSON.stringify(prevSteps) !== JSON.stringify(steps)) {
       this.updateStateWithProps()
     }
   }
@@ -52,7 +65,7 @@ class LinkComp extends React.Component<SlotProps> {
   }
 
   public render() {
-    const { name, to, slot } = this.state
+    const { name, to, slot, stepsOptions } = this.state
     const { slots, steps } = this.props
 
     return (
@@ -85,7 +98,7 @@ class LinkComp extends React.Component<SlotProps> {
           </span>
           <Select
             value={to !== null && steps[to] ? {value: steps[to].id, label: steps[to].name} : null}
-            options={steps.map(s => { return { value: s.id, label: s.name } })}
+            options={stepsOptions}
             onChange={this.handleTargetStepChange}
           />
         </label>
