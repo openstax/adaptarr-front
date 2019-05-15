@@ -4,6 +4,7 @@ import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import { ProcessStructure } from 'src/api/process'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
@@ -12,9 +13,12 @@ import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 
 import BeginProcess from 'src/containers/BeginProcess'
+import ProcessPreview from 'src/containers/ProcessPreview'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
+
+import './index.css'
 
 type Props = {
   item: api.BookPart
@@ -33,10 +37,12 @@ class Module extends React.Component<Props> {
   state: {
     showRemoveModule: boolean
     showBeginProcess: boolean
+    processStructure: ProcessStructure | null
     module: api.Module | undefined
   } = {
     showRemoveModule: false,
     showBeginProcess: false,
+    processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
   }
 
@@ -74,6 +80,17 @@ class Module extends React.Component<Props> {
     this.setState({ showBeginProcess: false })
   }
 
+  private showProcessDetails = async () => {
+    const processId = this.state.module!.process!.process
+    const process = this.props.processes.get(processId)!
+    const structure = await process.structure()
+    this.setState({ processStructure: structure })
+  }
+
+  private closeProcessDetails = () => {
+    this.setState({ processStructure: null })
+  }
+
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
@@ -82,7 +99,12 @@ class Module extends React.Component<Props> {
 
   public render() {
     const { item, processes } = this.props
-    const { showRemoveModule, showBeginProcess, module: mod } = this.state
+    const {
+      showRemoveModule,
+      showBeginProcess,
+      processStructure,
+      module: mod,
+    } = this.state
 
     return (
       <React.Fragment>
@@ -128,6 +150,20 @@ class Module extends React.Component<Props> {
             </Dialog>
           : null
         }
+        {
+          processStructure ?
+            <Dialog
+              l10nId="book-process-preview-title"
+              placeholder="Process details:"
+              size="medium"
+              onClose={this.closeProcessDetails}
+            >
+              <ProcessPreview
+                structure={processStructure}
+              />
+            </Dialog>
+          : null
+        }
         <span 
           className="bookpart__title" 
           onClick={() => this.props.onModuleClick(item)}
@@ -146,14 +182,17 @@ class Module extends React.Component<Props> {
           </LimitedUI>
           {
             mod && mod.process ?
-                <span className="bookpart__process">
+                <Button
+                  className="bookpart__process"
+                  clickHandler={this.showProcessDetails}
+                >
                   <Localized
                     id="book-in-process"
                     $name={processes.get(mod.process.process)!.name}
                   >
                     Process: [process name]
                   </Localized>
-                </span>
+                </Button>
               :
                 <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>

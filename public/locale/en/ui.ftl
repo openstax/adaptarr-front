@@ -31,6 +31,8 @@ book-in-process = Process: { $name }
 
 book-begin-process = Begin process
 
+book-process-preview-title = Process details:
+
 book-assign-user = Assign user
 
 book-assign-different-user = Assign other user
