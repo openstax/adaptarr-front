@@ -1,3 +1,16 @@
 .process-preview {
+  display: flex;
+  flex-wrap: wrap;
+}
 
+.process-preview > h2 {
+  width: 100%;
+}
+
+.process-preview h3 {
+  font-weight: 700;
+}
+
+.process-preview__slots, .process-preview__steps {
+  flex: 1;
 }

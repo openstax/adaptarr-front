@@ -3,6 +3,8 @@ import { Localized } from 'fluent-react/compat'
 
 import { ProcessStep, Link, ProcessSlot } from 'src/api/process'
 
+import './index.css'
+
 type Props = {
   slots: ProcessSlot[]
   steps: ProcessStep[]

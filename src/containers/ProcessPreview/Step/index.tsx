@@ -39,7 +39,7 @@ class Step extends React.Component<Props> {
             }
           </ul>
         </div>
-        <div className="process-preview-step__steps">
+        <div className="process-preview-step__links">
           <h3>
             <Localized id="process-preview-step-links-list">
               List of step links:

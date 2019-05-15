@@ -671,6 +671,10 @@ process-preview-role = Role: { $name ->
  *[name] { $name }
 }
 
+# Variables:
+# - $name (string): name of the step.
+process-preview-step-name = Step name: { $name }
+
 process-preview-step-slots-list = List of step slots:
 
 process-preview-step-links-list = List of step links:

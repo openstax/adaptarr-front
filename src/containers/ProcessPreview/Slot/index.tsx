@@ -42,11 +42,11 @@ class Slot extends React.Component<SlotProps> {
 
     return (
       <div className="process-preview-slot">
-        <h3>
+        <span>
           <Localized id="process-preview-slot-name" $name={slot.name}>
             Slot name:
           </Localized>
-        </h3>
+        </span>
         <span>
           <Localized id="process-preview-slot-autofill" $value={slot.autofill.toString()}>
             Autofill:
