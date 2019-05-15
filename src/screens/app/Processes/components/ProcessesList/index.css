@@ -1,4 +1,13 @@
 .processes__list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.processes__col {
+  flex: 1;
+}
+
+.processes__list ul{
   max-width: 400px;
 }
 

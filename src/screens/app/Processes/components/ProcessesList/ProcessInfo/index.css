@@ -29,3 +29,16 @@ form.processes__name .process__controls {
   flex: 1;
   max-width: 60px;
 }
+
+.processes__controls {
+  display: flex;
+}
+
+.processes__controls .button {
+  background: none;
+  color: #b4afaf;
+}
+
+.processes__controls .button:hover {
+  color: var(--font-dark);
+}

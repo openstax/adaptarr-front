@@ -7,13 +7,14 @@ import { Process } from 'src/api'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-import Input from 'src/components/ui/Input'
+import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
 type Props = {
   process: Process
   onProcessEdit: (process: Process) => any
+  onProcessPreview: (process: Process) => any
 }
 
 class ProcessInfo extends React.Component<Props> {
@@ -74,8 +75,13 @@ class ProcessInfo extends React.Component<Props> {
           }
         </form>
         <div className="processes__controls">
-          <Button clickHandler={this.editProcess}>
-            <Icon name="pencil" />
+          <LimitedUI permissions="editing-process:edit">
+            <Button clickHandler={this.editProcess}>
+              <Icon name="pencil" />
+            </Button>
+          </LimitedUI>
+          <Button clickHandler={this.previewProcess}>
+            <Icon name="eye" />
           </Button>
         </div>
       </>
@@ -84,6 +90,10 @@ class ProcessInfo extends React.Component<Props> {
 
   private editProcess = () => {
     this.props.onProcessEdit(this.props.process)
+  }
+
+  private previewProcess = () => {
+    this.props.onProcessPreview(this.props.process)
   }
 
   private handleNameChange = (e: React.FormEvent<HTMLSpanElement>) => {
