@@ -641,6 +641,57 @@ process-form-error-steps-min = Wymagane są minimum dwa kroki.
 
 
 
+## Reusable components - process preview
+
+# Variables:
+# - $name (string): name of the process.
+process-preview-title = Nazwa procesu: { $name }
+
+process-preview-slots-list = Lista pozycji:
+
+process-preview-steps-list = Lista kroków:
+
+# Variables:
+# - $name (string): name of the slot.
+process-preview-slot-name = Nazwa pozycji: { $name }
+
+# Variables:
+# - $value (string): value of autofill for this slot.
+process-preview-slot-autofill = { $value ->
+  [true] Automatyczne przydzielanie: Włączone
+  [false] Automatyczne przydzielanie: Wyłączone
+}
+
+# Variables:
+# - $name (string): role name for this slot.
+process-preview-role = { $name ->
+  [undefined]  Rola: Nieprzypisana
+ *[name]  Rola: { $name }
+}
+
+process-preview-step-slots-list = Lista pozycji dla tego kroku:
+
+process-preview-step-links-list = Lista linków dla tego kroku:
+
+# Variables:
+# - $name (string): slot name.
+# - $permission (string): permission granted to this slot.
+process-preview-step-slot = { $name } może { $permission ->
+  [view] oglądać szkice.
+  [edit] edytować szkice.
+  [propose-changes] proponować zmiany.
+  [accept-changes] akceptować zmiany.
+ *[unknown] Nieznane uprawnienie
+}
+
+# Variables:
+# - $slot (string): slot name.
+# - $link (string): link name.
+# - $to (string): target step name.
+process-preview-step-link = { $slot } może użyć linku "{ $link }", który prowadzi do kroku "{ $to }".
+
+
+
 ## Reusable components - begin process
 
 begin-process-select-process = Wybierz proces:

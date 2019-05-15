@@ -642,6 +642,57 @@ process-form-error-steps-min = Minimum two steps are required.
 
 
 
+## Reusable components - process preview
+
+# Variables:
+# - $name (string): name of the process.
+process-preview-title = Process name: { $name }
+
+process-preview-slots-list = List of slots:
+
+process-preview-steps-list = List of steps:
+
+# Variables:
+# - $name (string): name of the slot.
+process-preview-slot-name = Slot name: { $name }
+
+# Variables:
+# - $value (string: true | false): value of autofill for this slot.
+process-preview-slot-autofill = Autofill: { $value ->
+  [true] On
+  [false] Off
+ *[unknown] Unknown
+}
+
+# Variables:
+# - $name (string): role name for this slot.
+process-preview-role = Role: { $name ->
+  [undefined] Undefined
+ *[name] { $name }
+}
+
+process-preview-step-slots-list = List of step slots:
+
+process-preview-step-links-list = List of step links:
+
+# Variables:
+# - $name (string): slot name.
+# - $permission (string): permission granted to this slot.
+process-preview-step-slot = { $name } is able to { $permission ->
+  [view] view drafts.
+  [edit] edit drafts.
+  [propose-changes] propose changes.
+  [accept-changes] accept changes.
+ *[unknown] Unknown permission
+}
+
+# Variables:
+# - $slot (string): slot name.
+# - $link (string): link name.
+# - $to (string): target step name.
+process-preview-step-link = { $slot } may use link "{ $link }" which lead to step "{ $to }".
+
+
 ## Reusable components - begin process
 
 begin-process-select-process = Select process:
