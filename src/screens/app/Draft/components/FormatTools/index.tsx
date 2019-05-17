@@ -31,7 +31,7 @@ export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
     const { startBlock } = value
-    const code = startBlock.type === 'code' ? startBlock : null
+    const code = startBlock && startBlock.type === 'code' ? startBlock : null
     
     if (editor.isVoid(startBlock) || code) {
       return null
