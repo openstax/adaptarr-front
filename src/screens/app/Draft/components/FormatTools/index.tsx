@@ -25,6 +25,8 @@ const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'su
  */
 const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
 
+const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section']
+
 export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
@@ -59,7 +61,7 @@ export default class FormatTools extends React.Component<Props> {
         <Localized id="editor-tools-format-button-list" attrs={{ title: true }}>
           <Button
             className="toolbox__button--only-icon"
-            isDisabled={this.invalidParents(['figure_caption', 'inline', 'list_item'])}
+            isDisabled={!this.validateParents(VALID_LIST_PARENTS)}
             clickHandler={this.formatList}
           >
             <Icon name="list-ul" />
@@ -130,10 +132,10 @@ export default class FormatTools extends React.Component<Props> {
     this.props.editor.wrapInList('ul_list')
   }
 
-  private invalidParents = (invalidParents: string[]): boolean => {
+  private validateParents = (validParents: string[]): boolean => {
     const sp = this.props.selectionParent
     if (!sp) return false
-    if (invalidParents.includes(sp.type) || invalidParents.includes(sp.object)) return true
+    if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
     return false
   }
 }
