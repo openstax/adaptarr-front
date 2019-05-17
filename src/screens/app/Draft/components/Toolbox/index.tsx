@@ -48,22 +48,26 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
+    if (!selection.isSet) {
+      return (
+        <div className="toolbox">
+          <Localized id="editor-toolbox-no-selection">
+            No selection
+          </Localized>
+        </div>
+      )
+    }
+    
+    if (selection.start.key !== selection.end.key) {
+      <div className="toolbox">
+        <Localized id="editor-toolbox-mulit-selection">
+          Selection across elements is not yet supported.
+        </Localized>
+      </div>
+    }
+
     return (
       <div className="toolbox" onMouseDown={this.onMouseDown}>
-        {
-          !selection.isSet ?
-            <Localized id="editor-toolbox-no-selection">
-              No selection
-            </Localized>
-          : null
-        }
-        {
-          selection.start.key !== selection.end.key ?
-            <Localized id="editor-toolbox-mulit-selection">
-              Selection across elements is not yet supported.
-            </Localized>
-          : null
-        }
         <div className="toolbox__group">
           <SaveButton value={value} />
           <MergeButton value={value} />
