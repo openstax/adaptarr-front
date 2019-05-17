@@ -73,7 +73,7 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.insertCode}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
         >
           <Icon name="code" />
           <Localized id="editor-tools-insert-code">
@@ -93,7 +93,7 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.insertQuotation}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
         >
           <Icon name="quote" />
           <Localized id="editor-tools-insert-quotation">
