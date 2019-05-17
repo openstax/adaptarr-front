@@ -20,7 +20,7 @@ import { ReferenceTarget } from 'src/store/types'
 export type Props = {
   editor: Editor,
   value: Value,
-  lca: Document | Block | Inline | null,
+  selectionParent: Document | Block | Inline | null,
 }
 
 export default class InsertTools extends React.Component<Props> {
@@ -206,9 +206,9 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private validateParents = (validParents: string[]): boolean => {
-    const lca = this.props.lca
-    if (!lca) return false
-    if (validParents.includes(lca.type) || validParents.includes(lca.object)) return true
+    const sp = this.props.selectionParent
+    if (!sp) return false
+    if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
     return false
   }
 }

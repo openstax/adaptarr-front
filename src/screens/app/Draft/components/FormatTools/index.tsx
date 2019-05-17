@@ -10,7 +10,7 @@ import Icon from 'src/components/ui/Icon'
 export type Props = {
   editor: Editor,
   value: Value,
-  lca: Document | Block | Inline | null,
+  selectionParent: Document | Block | Inline | null,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
@@ -131,9 +131,9 @@ export default class FormatTools extends React.Component<Props> {
   }
 
   private invalidParents = (invalidParents: string[]): boolean => {
-    const lca = this.props.lca
-    if (!lca) return false
-    if (invalidParents.includes(lca.type) || invalidParents.includes(lca.object)) return true
+    const sp = this.props.selectionParent
+    if (!sp) return false
+    if (invalidParents.includes(sp.type) || invalidParents.includes(sp.object)) return true
     return false
   }
 }

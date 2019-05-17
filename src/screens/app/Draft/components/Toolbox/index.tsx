@@ -25,25 +25,29 @@ export type Props = {
 
 class Toolbox extends React.Component<Props> {
   state: {
-    lca: Document | Block | Inline | null
+    selectionParent: Document | Block | Inline | null
   } = {
-    lca: null
+    selectionParent: null
   }
 
-  componentDidUpdate(_: Props, prevState: {lca: Document | Block | Inline | null}) {
-    const prevLca = prevState.lca
-    const lca = this.lca()
-    if (JSON.stringify(prevLca) !== JSON.stringify(lca)) {
-      this.setState({ lca: this.lca() })
+  componentDidUpdate(_: Props, prevState: {selectionParent: Document | Block | Inline | null}) {
+    const prevSelPar = prevState.selectionParent
+    const selPar = this.selectionParent()
+    if ((!prevSelPar && selPar) || (prevSelPar && !selPar)) {
+      this.setState({ selectionParent: selPar })
+    } else if (!prevSelPar!.equals(selPar!)) {
+      this.setState({ selectionParent: selPar })
     }
   }
 
   componentDidMount() {
-    this.setState({ lca: this.lca() })
+    this.setState({ selectionParent: this.selectionParent() })
   }
 
   public render() {
     const { value: { selection }, editor, value } = this.props
+    const { selectionParent } = this.state
+
     return (
       <div className="toolbox" onMouseDown={this.onMouseDown}>
         {
@@ -64,8 +68,8 @@ class Toolbox extends React.Component<Props> {
           <SaveButton value={value} />
           <MergeButton value={value} />
         </div>
-        <FormatTools editor={editor} value={value} lca={this.state.lca} />
-        <InsertTools editor={editor} value={value} lca={this.state.lca} />
+        <FormatTools editor={editor} value={value} selectionParent={selectionParent} />
+        <InsertTools editor={editor} value={value} selectionParent={selectionParent} />
 
         <SectionTools editor={editor} value={value} />
         <AdmonitionTools editor={editor} value={value} />
@@ -90,7 +94,7 @@ class Toolbox extends React.Component<Props> {
 
   // Find Lowest Common Ancestor for start and end of selection.
   // We omit Text and Paragraphs.
-  private lca = (): Node | null => {
+  private selectionParent = (): Node | null => {
     const { selection: { start, end }, document } = this.props.value
     if (!start.key || !end.key) return null
     const a = document.getNode(start.key)
