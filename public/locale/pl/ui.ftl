@@ -774,6 +774,18 @@ step-changer-success = { $code ->
 # - $details (string): error details.
 step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }.
 
+step-changer-dialog-title = Czy na pewno chcesz przenieść szkic do następnego kroku?
+
+step-changer-unsaved-changes = Masz niezapisane zmiany.
+
+step-changer-advance = Przenieś
+
+step-changer-cancel = Anuluj
+
+step-changer-discard-advance = Odrzuć zmiany i przenieś
+
+step-changer-discard-save-advance = Zapisz i przenieś
+
 
 
 ## Reusable components - permissions

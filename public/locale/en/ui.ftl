@@ -774,6 +774,18 @@ step-changer-success = { $code ->
 # - $details (string): error details.
 step-changer-error = Couldn't advance to the next step. Details: { $details }.
 
+step-changer-dialog-title = Do you want to move this draft to the next step?
+
+step-changer-unsaved-changes = You have unsaved changes.
+
+step-changer-advance = Advance
+
+step-changer-cancel = Cancel
+
+step-changer-discard-advance = Discard changs and advance
+
+step-changer-discard-save-advance = Save and advance
+
 
 
 ## Reusable components - permissions
