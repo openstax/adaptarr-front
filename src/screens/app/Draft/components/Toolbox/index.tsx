@@ -35,7 +35,7 @@ class Toolbox extends React.Component<Props> {
     const selPar = this.selectionParent()
     if ((!prevSelPar && selPar) || (prevSelPar && !selPar)) {
       this.setState({ selectionParent: selPar })
-    } else if (!prevSelPar!.equals(selPar!)) {
+    } else if (prevSelPar && selPar && !prevSelPar.equals(selPar)) {
       this.setState({ selectionParent: selPar })
     }
   }
