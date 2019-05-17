@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Text } from 'slate'
+import { Editor, Value, Text, Document, Block, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
 import { List } from 'immutable'
 
@@ -10,6 +10,7 @@ import Icon from 'src/components/ui/Icon'
 export type Props = {
   editor: Editor,
   value: Value,
+  lca: Document | Block | Inline | null,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
@@ -33,8 +34,6 @@ export default class FormatTools extends React.Component<Props> {
     if (editor.isVoid(startBlock) || code) {
       return null
     }
-
-    const list = editor.getCurrentList(value)
 
     return (
       <div className="toolbox-format">
@@ -60,7 +59,7 @@ export default class FormatTools extends React.Component<Props> {
         <Localized id="editor-tools-format-button-list" attrs={{ title: true }}>
           <Button
             className="toolbox__button--only-icon"
-            isDisabled={list !== null}
+            isDisabled={this.invalidParents(['figure_caption', 'inline', 'list_item'])}
             clickHandler={this.formatList}
           >
             <Icon name="list-ul" />
@@ -129,6 +128,13 @@ export default class FormatTools extends React.Component<Props> {
 
   private formatList = () => {
     this.props.editor.wrapInList('ul_list')
+  }
+
+  private invalidParents = (invalidParents: string[]): boolean => {
+    const lca = this.props.lca
+    if (!lca) return false
+    if (invalidParents.includes(lca.type) || invalidParents.includes(lca.object)) return true
+    return false
   }
 }
 
