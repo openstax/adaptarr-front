@@ -637,9 +637,21 @@ process-form-error-step-link-name = Wszystkie linki muszą posiadać nazwy.
 
 process-form-error-starting-step = Proszę określić krok początkowy.
 
+process-form-error-starting-step-no-links = Krok początkowy musi posiadać linki.
+
 process-form-error-slots-min = Wymagany jest przynajmniej jeden slot.
 
 process-form-error-steps-min = Wymagane są minimum dwa kroki.
+
+process-form-error-no-finish = Musi istnieć krok końcowy.
+
+process-form-error-propose-and-accept-changes = Jeżeli w kroku istnieje pozcyja z uprawnieniem "Propozycja zmian" to musi również istnieć pozycja z uprawnieniem "Akceptacja zmian".
+
+process-form-error-edit-and-changes = Jeżeli w kroku istnieje pozycja z uprawnieniem "Edycja" to nie może istnieć pozycja z uprawnieniem "Propozycja zmian" lub "Akceptacja zmian".
+
+process-form-error-step-slot-permission-or-slot = Pozycje w krokach muszą wkazywać na utworzone pozycje oraz posiadać uprawnienia.
+
+process-form-error-step-link-to-or-slot = Linki w krokach muszą wskazywać na kolejny krok oraz wskazywać pozycję, która może ich używać.
 
 
 

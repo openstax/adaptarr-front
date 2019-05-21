@@ -2,7 +2,7 @@ import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessSlot, ProcessStep, ProcessStructure } from 'src/api/process'
+import { ProcessSlot, ProcessStep, ProcessStructure, SlotPermission } from 'src/api/process'
 
 import ProcessSlots from '../ProcessSlots'
 import ProcessSteps from '../ProcessSteps'
@@ -201,7 +201,7 @@ class ProcessForm extends React.Component<Props> {
 
     const { name, startingStep, slots, steps } = this.state
 
-    // Validate that names for process, slots, links and step slots exists.
+    // Validate that name for process exists.
     if (!name.length) {
       errors.add('process-form-error-name')
     }
@@ -214,21 +214,12 @@ class ProcessForm extends React.Component<Props> {
       return false
     })
 
-    steps.some(s => {
-      if (!s.name.length) {
-        errors.add('process-form-error-step-name')
+    // Validate that starting step exists and have links.
+    if (steps[startingStep]) {
+      if (!steps[startingStep].links.length) {
+        errors.add('process-form-error-starting-step-no-links')
       }
-      return s.links.some(l => {
-        if (!l.name.length) {
-          errors.add('process-form-error-step-link-name')
-          return true
-        }
-        return false
-      })
-    })
-
-    // Validate that starting step exists
-    if (!steps[startingStep]) {
+    } else {
       errors.add('process-form-error-starting-step')
     }
 
@@ -239,6 +230,54 @@ class ProcessForm extends React.Component<Props> {
 
     if (steps.length < 2) {
       errors.add('process-form-error-steps-min')
+    }
+
+    // Validate steps
+    // Validate if there is finish step...
+    let stepsWithoutLinks = 0
+    steps.forEach(s => {
+      // If there is propose-changes or accept-changes slot then the second one
+      // is also required. Edit permission cannot exists with them.
+      let permissions: Set<SlotPermission> = new Set()
+      s.slots.forEach(sl => {
+        permissions.add(sl.permission)
+
+        // Slots have to be filled.
+        if (!sl.permission || typeof sl.slot !== 'number') {
+          errors.add('process-form-error-step-slot-permission-or-slot')
+        }
+      })
+      if (permissions.has('accept-changes') !== permissions.has('propose-changes')) {
+        errors.add('process-form-error-propose-and-accept-changes')
+      }
+      if (permissions.has('edit') && (permissions.has('propose-changes') || permissions.has('accept-changes'))) {
+        errors.add('process-form-error-edit-and-changes')
+      }
+
+      // Validate that name of step exists.
+      if (!s.name.length) {
+        errors.add('process-form-error-step-name')
+      }
+
+      // Validate if there is finish step...
+      if (s.links.length === 0) {
+        stepsWithoutLinks++
+      }
+
+      // Slots and links have to be filled.
+      s.links.forEach(l => {
+        if (!l.name.length) {
+          errors.add('process-form-error-step-link-name')
+        }
+        if (typeof l.to !== 'number' || typeof l.slot !== 'number') {
+          errors.add('process-form-error-step-link-to-or-slot')
+        }
+      })
+    })
+
+    // Validate if there is finish step...
+    if (stepsWithoutLinks === 0) {
+      errors.add('process-form-error-no-finish')
     }
 
     // Update state

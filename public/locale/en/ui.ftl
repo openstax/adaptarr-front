@@ -638,9 +638,21 @@ process-form-error-step-link-name = All links have to have names.
 
 process-form-error-starting-step = Process provide starting step.
 
+process-form-error-starting-step-no-links = Starting step have to have links.
+
 process-form-error-slots-min = Minimum one slote is required.
 
 process-form-error-steps-min = Minimum two steps are required.
+
+process-form-error-no-finish = There should be at least one finish step.
+
+process-form-error-propose-and-accept-changes = Slot with propose changes permission can exists only if there is slot with accept changes permission.
+
+process-form-error-edit-and-changes = Slot with edit permission cannot exists if there is already slot with propose or accept changes permissions.
+
+process-form-error-step-slot-permission-or-slot = Step slots have to use slot and have permission.
+
+process-form-error-step-link-to-or-slot = Links in steps have to have target and slot values.
 
 
 
