@@ -24,7 +24,8 @@ class Link_ extends React.Component<Props> {
             $link={link.name}
             $to={steps[link.to].name}
           >
-            [slot name] may use [link name] which lead to [target name]
+            {slots[link.slot].name} can use “{link.name}” which lead to
+            “{steps[link.to].name}”
           </Localized>
         </span>
       </div>

@@ -49,7 +49,7 @@ class Slot extends React.Component<SlotProps> {
         </span>
         <span>
           <Localized id="process-preview-slot-autofill" $value={slot.autofill.toString()}>
-            Autofill:
+            Automatic assignment of users
           </Localized>
         </span>
         <span>

@@ -244,7 +244,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                       <Icon name="users" />
                       <span className="nav__text">
                         <Localized id="navigation-processes">
-                          Processes
+                          Editing processes
                         </Localized>
                       </span>
                     </span>

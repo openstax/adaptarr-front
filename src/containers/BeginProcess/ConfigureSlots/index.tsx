@@ -37,7 +37,7 @@ class ConfigureSlots extends React.Component<Props> {
           showAssignUser && currentSlot ?
             <Dialog
               l10nId="begin-process-assign-user-title"
-              placeholder="Select user for current slot."
+              placeholder="Select user for this slot."
               size="medium"
               onClose={this.closeAssignUserDialog}
             >

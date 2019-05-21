@@ -253,7 +253,7 @@ dashboard-drafts-empty = Nie posiadasz żadnych szkiców.
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 
-dashboard-section-free-slots = Wolne miejsca:
+dashboard-section-free-slots = Wolne funkcje edycyjne:
 
 
 ## Screens - draft
@@ -541,7 +541,7 @@ processes-view-list = Obecne procesy:
 #
 # Variables:
 # - $name (string): name of process which was created.
-process-create-success = Proces "{ $name }" został utworzony.
+process-create-success = Proces „{ $name }” został utworzony.
 
 # Alert displayed when process has not been created.
 #
@@ -562,7 +562,7 @@ process-update-name-error = Nazwa nie została zaktualizowana. Szczegóły: { $d
 #
 # Variables:
 # - $name (string): name of new version which was created.
-process-create-version-success = Wersja "{ $name }" została utworzona.
+process-create-version-success = Wersja „{ $name }” została utworzona.
 
 # Alert displayed when version has not been created.
 #
@@ -582,19 +582,17 @@ process-form-cancel = Anuluj
 
 process-form-process-name = Nazwa procesu
 
+process-form-slot-title = Lista funkcji:
 
-process-form-slot-title = Lista slotów:
+process-form-slot-add = Dodaj funkcję
 
-process-form-slot-add = Dodaj slot
+process-form-slot-remove = Usuń funkcję
 
-process-form-slot-remove = Usuń slot
+process-form-slot-name = Nazwa funkcji:
 
-process-form-slot-name = Nazwa slotu:
-
-process-form-slot-autofill = Autouzupełnianie:
+process-form-slot-autofill = Automatycznie przypisz użytkownika:
 
 process-form-slot-role = Rola:
-
 
 process-form-step-title = Lista kroków:
 
@@ -606,32 +604,29 @@ process-form-step-name = Nazwa kroku:
 
 process-form-step-slots = Sloty dla kroku:
 
-process-form-step-slots-add = Dodaj slot
+process-form-step-slots-add = Dodaj funkcję
 
 process-form-step-links = Linki dla kroku:
 
 process-form-step-links-add = Dodaj link
 
-
-process-form-step-slot-slot = Slot:
+process-form-step-slot-slot = Funkcja:
 
 process-form-step-slot-permission = Uprawnienie:
-
 
 process-form-step-link-name = Nazwa linku:
 
 process-form-step-link-to = Następny krok:
 
-process-form-step-link-slot = Slot, którt moze używać tego linku:
+process-form-step-link-slot = Funkcja, która może używać tego linku:
 
 process-form-step-link-remove = Usuń link
 
-
 process-form-error-name = Proszę podać nazwę procesu.
 
-process-form-error-slot-name = Wszystkie sloty muszą posiadać nazwy.
+process-form-error-slot-name = Wszystkie funkcje muszą posiadać nazwy.
 
-process-form-error-step-name = Wszystkie kroki muszą posiadać nazwy..
+process-form-error-step-name = Wszystkie kroki muszą posiadać nazwy.
 
 process-form-error-step-link-name = Wszystkie linki muszą posiadać nazwy.
 
@@ -639,19 +634,29 @@ process-form-error-starting-step = Proszę określić krok początkowy.
 
 process-form-error-starting-step-no-links = Krok początkowy musi posiadać linki.
 
-process-form-error-slots-min = Wymagany jest przynajmniej jeden slot.
+process-form-error-slots-min = Proces musi zawierać przynajmniej jedną funkcję.
 
-process-form-error-steps-min = Wymagane są minimum dwa kroki.
+process-form-error-steps-min = Proces musi zawierać przynajmniej dwa kroki.
 
-process-form-error-no-finish = Musi istnieć krok końcowy.
+process-form-error-no-finish =
+  Proces musi zawierać przynajmniej jeden krok końcowy (taki, z którego nie
+  wychodzą żadne linki).
 
-process-form-error-propose-and-accept-changes = Jeżeli w kroku istnieje pozcyja z uprawnieniem "Propozycja zmian" to musi również istnieć pozycja z uprawnieniem "Akceptacja zmian".
+process-form-error-propose-and-accept-changes =
+  Funkcja może otrzymać w danym kroku uprawnienie do sugerowania zmian tylko
+  jeżeli w tym kroku jest również funkcja która otrzymała uprawnienie
+  do akceptowania zmian.
 
-process-form-error-edit-and-changes = Jeżeli w kroku istnieje pozycja z uprawnieniem "Edycja" to nie może istnieć pozycja z uprawnieniem "Propozycja zmian" lub "Akceptacja zmian".
+process-form-error-edit-and-changes =
+  Uprawnienia do edycji oraz do sugerowania zmian nie mogą być przyznane w tym
+  samym kroku.
 
-process-form-error-step-slot-permission-or-slot = Pozycje w krokach muszą wkazywać na utworzone pozycje oraz posiadać uprawnienia.
+process-form-error-step-slot-permission-or-slot =
+  Każde uprawnienie musi mieć przypisaną funkcję.
 
-process-form-error-step-link-to-or-slot = Linki w krokach muszą wskazywać na kolejny krok oraz wskazywać pozycję, która może ich używać.
+process-form-error-step-link-to-or-slot =
+  Każdy link musi wskazywać na krok oraz mieć przypisaną funkcję, która może go
+  używać.
 
 
 
@@ -661,33 +666,30 @@ process-form-error-step-link-to-or-slot = Linki w krokach muszą wskazywać na k
 # - $name (string): name of the process.
 process-preview-title = Nazwa procesu: { $name }
 
-process-preview-slots-list = Lista pozycji:
+process-preview-slots-list = Lista funkcji:
 
 process-preview-steps-list = Lista kroków:
 
 # Variables:
 # - $name (string): name of the slot.
-process-preview-slot-name = Nazwa pozycji: { $name }
+process-preview-slot-name = Nazwa funkcji: { $name }
 
 # Variables:
 # - $value (string): value of autofill for this slot.
-process-preview-slot-autofill = { $value ->
-  [true] Automatyczne przydzielanie: Włączone
-  [false] Automatyczne przydzielanie: Wyłączone
+process-preview-slot-autofill = Automatyczne przypisywanie użytkowników { $value ->
+  [true] włączone
+ *[false] wyłączone
 }
 
 # Variables:
 # - $name (string): role name for this slot.
-process-preview-role = { $name ->
-  [undefined]  Rola: Nieprzypisana
- *[name]  Rola: { $name }
-}
+process-preview-role = Rola: { $name }
 
 # Variables:
 # - $name (string): name of the step.
 process-preview-step-name = Nazwa kroku: { $name }
 
-process-preview-step-slots-list = Lista pozycji dla tego kroku:
+process-preview-step-slots-list = Lista funkcji dla tego kroku:
 
 process-preview-step-links-list = Lista linków dla tego kroku:
 
@@ -695,18 +697,19 @@ process-preview-step-links-list = Lista linków dla tego kroku:
 # - $name (string): slot name.
 # - $permission (string): permission granted to this slot.
 process-preview-step-slot = { $name } może { $permission ->
-  [view] oglądać szkice.
-  [edit] edytować szkice.
-  [propose-changes] proponować zmiany.
-  [accept-changes] akceptować zmiany.
- *[unknown] Nieznane uprawnienie
-}
+  [view] oglądać szkice
+  [edit] edytować szkice
+  [propose-changes] proponować zmiany
+  [accept-changes] akceptować zmiany
+ *[notavalidvalue] { $permission }
+}.
 
 # Variables:
 # - $slot (string): slot name.
 # - $link (string): link name.
 # - $to (string): target step name.
-process-preview-step-link = { $slot } może użyć linku "{ $link }", który prowadzi do kroku "{ $to }".
+process-preview-step-link =
+  { $slot } może używać linku „{ $link }”, który prowadzi do kroku „{ $to }”.
 
 
 
@@ -721,7 +724,7 @@ begin-process-start = Rozpocznij proces
 # Variables:
 # - $process (string): name of process which was started.
 # - $module (string): title of module for which process was started.
-begin-process-success = Rozpoczęto "{ $process }" dla "{ $module }".
+begin-process-success = Rozpoczęto proces „{ $process }” dla „{ $module }”.
 
 # Alert displayed when process has not been started.
 #
@@ -729,9 +732,9 @@ begin-process-success = Rozpoczęto "{ $process }" dla "{ $module }".
 # - $details (string): error details.
 begin-process-error = Nie udało się rozpocząć procesu. Szczegóły: { $details }.
 
-begin-process-assign-user-title = Wybierz użytkownika dla danego slotu.
+begin-process-assign-user-title = Wybierz użytkownika dla danej funkcji.
 
-begin-process-slots-title = Skonfiguruj sloty:
+begin-process-slots-title = Skonfiguruj funkcje:
 
 begin-process-assign-user = Wybierz użytkownika
 
@@ -741,26 +744,26 @@ begin-process-unassign-user = Usuń użytkownika
 
 ## Reusable components - free slots
 
-free-slots-slot-name = Nazwa slotu:
+free-slots-slot-name = Nazwa funkcji:
 
 free-slots-draft-title = Tytuł szkicu:
 
-free-slots-not-avaible = Obecnie nie ma żadnych wolnych miejsc do zajęcia.
+free-slots-not-avaible = Obecnie nie ma żadnych wolnych funkcji do objęcia.
 
-free-slots-take-slot = Zajmij miejsce
+free-slots-take-slot = Obejmij funkcję
 
 # Alert displayed when user assign himself to a free slot.
 #
 # Variables:
 # - $slot (string): name of slot which was taken.
 # - $draft (string): draft name for which user was assigned.
-free-slots-success = Zostałeś przypisany do "{ $draft }" w miejscu: { $slot }.
+free-slots-success = Zostałeś przypisany do „{ $draft }” w funkcji { $slot }.
 
 # Alert displayed when there was an error while taking free slot.
 #
 # Variables:
 # - $details (string): error details.
-free-slots-error = Nie udało się przypisać do miejsca. Szczegóły: { $details }.
+free-slots-error = Nie udało się objąć funkcji. Szczegóły: { $details }.
 
 
 
@@ -777,7 +780,7 @@ step-changer-move = Przenieś używając wybranego linku
 step-changer-success = { $code ->
   [draft-process-advanced] Szkic został przeniesiony do następnego kroku.
   [draft-process-finished] Proces został zakończony. Zapisano szkic jako moduł.
- *[unknown] Przeniesiono z sukcesem!
+ *[notavalidvalue] { $code }
 }
 
 # Alert displayed when there was an error while advancing to the next step.
@@ -786,7 +789,8 @@ step-changer-success = { $code ->
 # - $details (string): error details.
 step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }.
 
-step-changer-dialog-title = Czy na pewno chcesz przenieść szkic do następnego kroku?
+step-changer-dialog-title =
+  Czy na pewno chcesz przenieść szkic do następnego kroku?
 
 step-changer-unsaved-changes = Masz niezapisane zmiany.
 
@@ -846,7 +850,7 @@ navigation-invite = Zaproszenia
 
 navigation-roles = Role
 
-navigation-processes = Procesy
+navigation-processes = Procesy edycyjne
 
 
 

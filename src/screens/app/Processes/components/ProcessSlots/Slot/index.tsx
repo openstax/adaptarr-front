@@ -49,7 +49,7 @@ class Slot extends React.Component<SlotProps> {
   componentDidUpdate(prevProps: SlotProps) {
     const prevSlot = prevProps.slot
     const slot = this.props.slot
-    
+
     if (JSON.stringify(prevSlot) !== JSON.stringify(slot)) {
       this.updateStateWithProps()
     }
@@ -88,7 +88,7 @@ class Slot extends React.Component<SlotProps> {
         <label>
           <span>
             <Localized id="process-form-slot-autofill">
-              Autofill:
+              Automatically assign users:
             </Localized>
           </span>
           <Input
