@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Text } from 'slate'
+import { Editor, Value, Text, Document, Block, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
 import { List } from 'immutable'
 
@@ -10,6 +10,7 @@ import Icon from 'src/components/ui/Icon'
 export type Props = {
   editor: Editor,
   value: Value,
+  selectionParent: Document | Block | Inline | null,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
@@ -24,17 +25,17 @@ const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'su
  */
 const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
 
+const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section']
+
 export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value } = this.props
     const { startBlock } = value
-    const code = startBlock.type === 'code' ? startBlock : null
+    const code = startBlock && startBlock.type === 'code' ? startBlock : null
     
     if (editor.isVoid(startBlock) || code) {
       return null
     }
-
-    const list = editor.getCurrentList(value)
 
     return (
       <div className="toolbox-format">
@@ -60,7 +61,7 @@ export default class FormatTools extends React.Component<Props> {
         <Localized id="editor-tools-format-button-list" attrs={{ title: true }}>
           <Button
             className="toolbox__button--only-icon"
-            isDisabled={list !== null}
+            isDisabled={!this.validateParents(VALID_LIST_PARENTS)}
             clickHandler={this.formatList}
           >
             <Icon name="list-ul" />
@@ -129,6 +130,13 @@ export default class FormatTools extends React.Component<Props> {
 
   private formatList = () => {
     this.props.editor.wrapInList('ul_list')
+  }
+
+  private validateParents = (validParents: string[]): boolean => {
+    const sp = this.props.selectionParent
+    if (!sp) return false
+    if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
+    return false
   }
 }
 
