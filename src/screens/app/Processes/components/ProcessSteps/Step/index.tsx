@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessStep, StepSlot, Link, ProcessSlot } from 'src/api/process'
+import { ProcessStep, Link, ProcessSlot, SlotPermission } from 'src/api/process'
 
 import Slot from '../Slot'
 import LinkComp from '../Link'
@@ -19,8 +19,10 @@ type StepProps = {
   remove: (step: ProcessStep) => any
 }
 
-export interface StepSlotWithId extends StepSlot {
+export interface StepSlotWithId {
   id: number
+  slot: number
+  permission: SlotPermission
 }
 
 class Step extends React.Component<StepProps> {
@@ -199,6 +201,7 @@ class Step extends React.Component<StepProps> {
                 step={step}
                 steps={processSteps}
                 slots={processSlots}
+                stepSlots={slots}
                 onChange={(link) => this.updateLink(link, i)}
                 remove={() => this.removeLink(i)}
               />

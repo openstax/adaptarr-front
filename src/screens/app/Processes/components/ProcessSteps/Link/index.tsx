@@ -2,11 +2,12 @@ import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessSlot, ProcessStep, SlotPermission, Link } from 'src/api/process'
+import { ProcessStep, Link, ProcessSlot } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
+import { StepSlotWithId } from '../Step'
 
 import './index.css'
 
@@ -15,6 +16,7 @@ type SlotProps = {
   slots: ProcessSlot[]
   steps: ProcessStep[]
   step: ProcessStep
+  stepSlots: StepSlotWithId[]
   onChange: (link: Link) => any
   remove: (slot: Link) => any
 }
@@ -24,28 +26,41 @@ class LinkComp extends React.Component<SlotProps> {
     name: string
     to: number | null
     slot: number | null
-    stepsOptions: {value: number, label: string}[],
+    stepsOptions: {value: number, label: string}[]
+    stepSlotsOptions: {value: number, label: string}[]
   } = {
     name: '',
     to: null,
     slot: null,
     stepsOptions: [],
+    stepSlotsOptions: [],
   }
 
   private updateStateWithProps = () => {
-    const { link, step } = this.props
+    const { link, step, steps, stepSlots, slots } = this.props
 
     // Do not pass current step as an option for link target.
-    let stepsOptions = this.props.steps.filter(s => s.id !== step.id)
+    let stepsOptions = steps.filter(s => s.id !== step.id)
       .map(s => {
         return { value: s.id, label: s.name }
       })
+
+    let temp: {[key: number]: StepSlotWithId} = {}
+    stepSlots.forEach(s => {
+      temp[s.slot] = s
+    })
+    console.log('temp', JSON.stringify(temp))
+    let stepSlotsOptions = Object.values(temp).map(s => {
+      return { value: s.slot, label: slots[s.slot].name }
+    })
+    console.log('stepSlotsOptions', JSON.stringify(stepSlotsOptions))
     
     this.setState({
       name: link.name,
       to: link.to,
       slot: link.slot,
       stepsOptions,
+      stepSlotsOptions,
     })
   }
 
@@ -65,8 +80,10 @@ class LinkComp extends React.Component<SlotProps> {
   }
 
   public render() {
-    const { name, to, slot, stepsOptions } = this.state
-    const { slots, steps } = this.props
+    const { name, to, slot, stepsOptions, stepSlotsOptions } = this.state
+    const { slots, steps, stepSlots } = this.props
+    const selectedSlot = slot !== null ? slots[slot] : null
+    let stepSlotValue = selectedSlot && stepSlots.find(s => s.slot === slot) ? {value: selectedSlot.id, label: selectedSlot.name} : null
 
     return (
       <div className="process-link">
@@ -109,8 +126,8 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
-            value={slot !== null && slots[slot] ? {value: slots[slot].id, label: slots[slot].name} : null}
-            options={slots.map(s => { return { value: s.id, label: s.name } })}
+            value={stepSlotValue}
+            options={stepSlotsOptions}
             onChange={this.handleSlotChange}
           />
         </label>
