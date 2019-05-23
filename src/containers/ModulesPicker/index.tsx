@@ -148,10 +148,10 @@ class ModuleList extends React.Component<Props> {
               onClose={this.closeRemoveModuleDialog}
             >
               <Button color="green" clickHandler={this.removeModule}>
-                <Localized id="module-list-delete-module-confirm" />
+                <Localized id="module-list-delete-module-confirm">Delete</Localized>
               </Button>
               <Button color="red" clickHandler={this.closeRemoveModuleDialog}>
-                <Localized id="module-list-delete-module-cancel" />
+                <Localized id="module-list-delete-module-cancel">Cancel</Localized>
               </Button>
             </Dialog>
           : null

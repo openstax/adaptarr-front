@@ -144,7 +144,7 @@ class Input extends React.Component<Props> {
         {input}
         {
           touched && !this.validateInput().status && errorMessage ?
-            <span className="input__error"><Localized id={errorMessage} /></span>
+            <span className="input__error"><Localized id={errorMessage}>{errorMessage}</Localized></span>
           : null
         }
       </div>
