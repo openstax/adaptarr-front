@@ -1,8 +1,11 @@
 import axios from 'src/config/axios'
+import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import Module from './module'
 import { SlotPermission, Link } from './process'
+import { UserData } from './user'
+import { elevated } from './utils'
 
 /**
  * Draft data as returned by the API.
@@ -40,6 +43,23 @@ export type DraftStep = {
   links: Link[],
 }
 
+/**
+ * Details about the process this draft follows.
+ */
+export type ProcessDetails = {
+  id: number,
+  name: string,
+  version: string,
+  slots: SlotDetails[],
+}
+
+export type SlotDetails = {
+  id: number,
+  name: string,
+  role: number | null,
+  user: UserData | null,
+}
+
 export default class Draft extends Base<DraftData> {
   /**
    * Fetch module by ID.
@@ -56,6 +76,24 @@ export default class Draft extends Base<DraftData> {
   static async all(): Promise<Draft[]> {
     const drafts = await axios.get('drafts')
     return drafts.data.map((data: DraftData) => new Draft(data))
+  }
+
+  /**
+   * Assign user to a slot.
+   * 
+   * This function requires editing-process:manage permission.
+   */
+  static async assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId))
+  }
+
+  /**
+   * Get details about the process this draft follows.
+   * 
+   * This function requires editing-process:manage permission. 
+   */
+  static async details(draftId: string): Promise<ProcessDetails> {
+    return (await elevated(() => axios.get(`drafts/${draftId}/process`))).data
   }
 
   /**
