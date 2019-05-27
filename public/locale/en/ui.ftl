@@ -740,6 +740,35 @@ begin-process-unassign-user = Unassign user
 
 
 
+## Reusable components - update slots
+
+update-slots-title = Manage slots assignments:
+
+# Variables:
+# - $name (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-name = { $role ->
+  [undefined] { $name }
+ *[role] { $name } for users with role: { $role }
+}
+
+update-slots-assign-user = Select user
+
+update-slots-unassign-user = Unassign user
+
+# Variables:
+# - $slot (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-assign-user-title = Select user { $role ->
+  [undefined] for slot: { $slot }
+ *[role] with role: { $role } for slot: { $slot }
+}
+
+# Alert displayed when there was an error while fetching data.
+update-slots-fetching-error = Couldn't fetch details about slots in this process for given module. Please try again later.
+
+
+
 ## Reusable components - free slots
 
 free-slots-slot-name = Slot name:

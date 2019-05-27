@@ -739,6 +739,35 @@ begin-process-unassign-user = Usuń użytkownika
 
 
 
+## Reusable components - update slots
+
+update-slots-title = Zarządzaj funkcjami w procesie:
+
+# Variables:
+# - $name (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-name = { $role ->
+  [undefined] { $name }
+ *[role] { $name } dla użytkowników z rolą: { $role }
+}
+
+update-slots-assign-user = Wybierz użytkownika
+
+update-slots-unassign-user = Cofnij przypisanie
+
+# Variables:
+# - $slot (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-assign-user-title = Wybierz użytkownika { $role ->
+  [undefined] dla funkcji: { $slot }
+ *[role] z rolą: { $role } dla funkcji: { $slot }
+}
+
+# Alert displayed when there was an error while fetching data.
+update-slots-fetching-error = Coś poszło nie tak podczas pobierania informacji o funkcjach w tym procesie. Spróbuj ponownie później.
+
+
+
 ## Reusable components - free slots
 
 free-slots-slot-name = Nazwa slotu:

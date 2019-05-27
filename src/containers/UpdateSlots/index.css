@@ -1,0 +1,19 @@
+.update-slots {
+  margin: 10px 0;
+}
+
+.update-slots__slot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.update-slots__info {
+  display: flex;
+  align-items: center;
+}
+
+.update-slots__info .update-slots__name {
+  margin-right: 10px;
+}
