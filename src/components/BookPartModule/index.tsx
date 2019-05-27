@@ -14,6 +14,7 @@ import Dialog from 'src/components/ui/Dialog'
 
 import BeginProcess from 'src/containers/BeginProcess'
 import ProcessPreview from 'src/containers/ProcessPreview'
+import UpdateSlots from 'src/containers/UpdateSlots'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -158,6 +159,9 @@ class Module extends React.Component<Props> {
               size="medium"
               onClose={this.closeProcessDetails}
             >
+              <UpdateSlots
+                module={this.state.module}
+              />
               <ProcessPreview
                 structure={processStructure}
               />
