@@ -440,7 +440,7 @@ settings-value-new-password-repeat =
 
 # Message displayed below new password when it has invalid length.
 settings-validation-password-bad-length =
-  Password must be bewtween 6 and 12 characters.
+  Password must be between 6 and 12 characters.
 
 # Message displayed below new password repetition when it doesn't match
 # new password.
@@ -543,7 +543,7 @@ processes-view-list = Current processes:
 #
 # Variables:
 # - $name (string): name of process which was created.
-process-create-success = Process "{ $name }" has been created.
+process-create-success = Process “{ $name }” has been created.
 
 # Alert displayed when process has not been created.
 #
@@ -554,7 +554,7 @@ process-create-error = Couldn't create new process. Details: { $details }.
 # Alert displayed when name of process has been updated.
 process-update-name-success = Name has been updated.
 
-# Alert displayed when name has not beed updated.
+# Alert displayed when name has not been updated.
 #
 # Variables:
 # - $details (string): error details.
@@ -564,7 +564,7 @@ process-update-name-error = Couldn't update name. Details: { $details }.
 #
 # Variables:
 # - $name (string): name of new version which was created.
-process-create-version-success = Version "{ $name }" has been created.
+process-create-version-success = Version “{ $name }” has been created.
 
 # Alert displayed when version has not been created.
 #
@@ -584,7 +584,6 @@ process-form-cancel = Cancel
 
 process-form-process-name = Process name
 
-
 process-form-slot-title = List of slots:
 
 process-form-slot-add = Add slot
@@ -593,7 +592,7 @@ process-form-slot-remove = Remove slot
 
 process-form-slot-name = Slot name:
 
-process-form-slot-autofill = Autofill:
+process-form-slot-autofill = Automatically assign users:
 
 process-form-slot-role = Role:
 
@@ -613,11 +612,9 @@ process-form-step-links = Step links:
 
 process-form-step-links-add = Add link
 
-
 process-form-step-slot-slot = Slot:
 
 process-form-step-slot-permission = Permission:
-
 
 process-form-step-link-name = Link name:
 
@@ -627,32 +624,39 @@ process-form-step-link-slot = Slot allowed to use this link:
 
 process-form-step-link-remove = Remove link
 
+process-form-error-name = Please specify name of this process.
 
-process-form-error-name = Please provide name for a process.
+process-form-error-slot-name = All slots must have a name.
 
-process-form-error-slot-name = All slots have to have names.
+process-form-error-step-name = All steps must have a name.
 
-process-form-error-step-name = All steps have to have names.
+process-form-error-step-link-name = All links must have a name.
 
-process-form-error-step-link-name = All links have to have names.
+process-form-error-starting-step = Please specify starting step.
 
-process-form-error-starting-step = Process provide starting step.
+process-form-error-starting-step-no-links = Starting step must have links.
 
-process-form-error-starting-step-no-links = Starting step have to have links.
+process-form-error-slots-min = Process must have at least one slot.
 
-process-form-error-slots-min = Minimum one slote is required.
+process-form-error-steps-min = Process must have at least two steps.
 
-process-form-error-steps-min = Minimum two steps are required.
+process-form-error-no-finish =
+  Process must have at lest one final step (a step from which there are
+  no outgoing links).
 
-process-form-error-no-finish = There should be at least one finish step.
+process-form-error-propose-and-accept-changes =
+  A slot can only be granted the permission to propose changes if there is also
+  a slot (in the same step) which was granted the permission to accept changes.
 
-process-form-error-propose-and-accept-changes = Slot with propose changes permission can exists only if there is slot with accept changes permission.
+process-form-error-edit-and-changes =
+  The permissions to edit and propose changes cannot both be granted in the same
+  step.
 
-process-form-error-edit-and-changes = Slot with edit permission cannot exists if there is already slot with propose or accept changes permissions.
+process-form-error-step-slot-permission-or-slot =
+  Each permission must have a slot assigned.
 
-process-form-error-step-slot-permission-or-slot = Step slots have to use slot and have permission.
-
-process-form-error-step-link-to-or-slot = Links in steps have to have target and slot values.
+process-form-error-step-link-to-or-slot =
+  Each link must have a target and a specify a slot which can use it.
 
 
 
@@ -672,18 +676,14 @@ process-preview-slot-name = Slot name: { $name }
 
 # Variables:
 # - $value (string: true | false): value of autofill for this slot.
-process-preview-slot-autofill = Autofill: { $value ->
-  [true] On
-  [false] Off
- *[unknown] Unknown
+process-preview-slot-autofill = Automatic assignment of users { $value ->
+  [true] enabled
+ *[false] disabled
 }
 
 # Variables:
 # - $name (string): role name for this slot.
-process-preview-role = Role: { $name ->
-  [undefined] Undefined
- *[name] { $name }
-}
+process-preview-role = Role: { $name }
 
 # Variables:
 # - $name (string): name of the step.
@@ -697,18 +697,20 @@ process-preview-step-links-list = List of step links:
 # - $name (string): slot name.
 # - $permission (string): permission granted to this slot.
 process-preview-step-slot = { $name } is able to { $permission ->
-  [view] view drafts.
-  [edit] edit drafts.
-  [propose-changes] propose changes.
-  [accept-changes] accept changes.
- *[unknown] Unknown permission
-}
+  [view] view drafts
+  [edit] edit drafts
+  [propose-changes] propose changes
+  [accept-changes] accept changes
+ *[notavalidvalue] { $permission }
+}.
 
 # Variables:
 # - $slot (string): slot name.
 # - $link (string): link name.
 # - $to (string): target step name.
-process-preview-step-link = { $slot } may use link "{ $link }" which lead to step "{ $to }".
+process-preview-step-link =
+  { $slot } can use link “{ $link }” which leads to step “{ $to }”.
+
 
 
 ## Reusable components - begin process
@@ -722,15 +724,15 @@ begin-process-start = Start process
 # Variables:
 # - $process (string): name of process which was started.
 # - $module (string): title of module for which process was started.
-begin-process-success = Started "{ $process }" for "{ $module }".
+begin-process-success = Started process “{ $process }” for “{ $module }”.
 
 # Alert displayed when process has not been started.
 #
 # Variables:
 # - $details (string): error details.
-begin-process-error = Couldn't start a process. Details: { $details }.
+begin-process-error = Couldn't start process. Details: { $details }.
 
-begin-process-assign-user-title = Select user for current slot.
+begin-process-assign-user-title = Select user for this slot.
 
 begin-process-slots-title = Configure slots:
 
@@ -784,13 +786,14 @@ free-slots-take-slot = Take slot
 # Variables:
 # - $slot (string): name of slot which was taken.
 # - $draft (string): draft name for which user was assigned.
-free-slots-success = You've been assigned to "{ $draft }" with slot: { $slot }.
+free-slots-success = You've been assigned to “{ $draft }” with slot: { $slot }.
 
 # Alert displayed when there was an error while taking free slot.
 #
 # Variables:
 # - $details (string): error details.
 free-slots-error = Couldn't assign you to this slot. Details: { $details }.
+
 
 
 ## Reusable components - step changer
@@ -806,7 +809,7 @@ step-changer-move = Move using selected link
 step-changer-success = { $code ->
   [draft-process-advanced] Draft was advanced to the next step.
   [draft-process-finished] Process has ended. Draft was saved as a module.
- *[unknown] Moved successfully!
+ *[notavalidvalue] { $code }
 }
 
 # Alert displayed when there was an error while advancing to the next step.
@@ -823,7 +826,7 @@ step-changer-advance = Advance
 
 step-changer-cancel = Cancel
 
-step-changer-discard-advance = Discard changs and advance
+step-changer-discard-advance = Discard changes and advance
 
 step-changer-discard-save-advance = Save and advance
 
@@ -875,7 +878,7 @@ navigation-invite = Invitations
 
 navigation-roles = Roles
 
-navigation-processes = Processes
+navigation-processes = Editing processes
 
 
 
