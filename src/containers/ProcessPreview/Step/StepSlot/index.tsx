@@ -22,7 +22,7 @@ class StepSlot_ extends React.Component<Props> {
             $name={slots[slot.slot].name}
             $permission={slot.permission}
           >
-            [slot name] is able to [permission]
+            {`${slots[slot.slot].name} is able to ${slot.permission}`}
           </Localized>
         </span>
       </div>
