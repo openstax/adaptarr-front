@@ -123,7 +123,11 @@ class UpdateSlots extends React.Component<Props> {
                   </span>
                   {
                     slots.has(s.id) ?
-                      <Avatar size="small" user={slots.get(s.id)} />
+                      <Avatar
+                        size="small"
+                        user={slots.get(s.id)}
+                        withName={true}
+                      />
                     : null
                   }
                 </div>

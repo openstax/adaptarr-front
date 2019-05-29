@@ -61,7 +61,11 @@ class ConfigureSlots extends React.Component<Props> {
                   <span className="configure-slots__name">{s.name}</span>
                   {
                     slots.has(s.id) ?
-                      <Avatar size="small" user={slots.get(s.id)} />
+                      <Avatar
+                        size="small"
+                        user={slots.get(s.id)}
+                        withName={true}
+                      />
                     : null
                   }
                 </div>
