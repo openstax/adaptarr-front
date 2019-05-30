@@ -41,7 +41,7 @@ export default class AssetList extends React.Component<Props> {
         <li className="assetList__item">
           <Button clickHandler={this.onAddMedia}>
             <Icon name="plus" />
-            <Localized id="asset-list-add-media" />
+            <Localized id="asset-list-add-media">Add media</Localized>
           </Button>
         </li>
         {storage.files

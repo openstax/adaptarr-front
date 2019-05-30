@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Inline } from 'slate'
+import { Editor, Value, Block, Inline, Document } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
 import * as api from 'src/api'
@@ -20,6 +20,7 @@ import { ReferenceTarget } from 'src/store/types'
 export type Props = {
   editor: Editor,
   value: Value,
+  selectionParent: Document | Block | Inline | null,
 }
 
 export default class InsertTools extends React.Component<Props> {
@@ -28,8 +29,6 @@ export default class InsertTools extends React.Component<Props> {
   linkModal: Modal | null = null
 
   render() {
-    const { editor, value } = this.props
-
     return (
       <ToolGroup title="editor-tools-insert-title">
         <Button
@@ -41,7 +40,11 @@ export default class InsertTools extends React.Component<Props> {
             Reference
           </Localized>
         </Button>
-        <Button clickHandler={this.insertAdmonition} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.insertAdmonition}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section'])}
+        >
           <Icon name="sticky-note" />
           <Localized id="editor-tools-insert-admonition">
             Admonition
@@ -49,33 +52,49 @@ export default class InsertTools extends React.Component<Props> {
         </Button>
         <Button
           clickHandler={this.insertExercise}
-          isDisabled={editor.getActiveExercise(value) != null}
           className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section'])}
         >
           <Icon name="flask" />
           <Localized id="editor-tools-insert-exercise">
             Exercise
           </Localized>
         </Button>
-        <Button clickHandler={this.openFigureModal} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.openFigureModal}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section'])}
+        >
           <Icon name="image" />
           <Localized id="editor-tools-insert-figure">
             Figure
           </Localized>
         </Button>
-        <Button clickHandler={this.insertCode} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.insertCode}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
+        >
           <Icon name="code" />
           <Localized id="editor-tools-insert-code">
             Code
           </Localized>
         </Button>
-        <Button clickHandler={this.insertSection} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.insertSection}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section'])}
+        >
           <Icon name="plus" />
           <Localized id="editor-tools-insert-section">
             Section
           </Localized>
         </Button>
-        <Button clickHandler={this.insertQuotation} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.insertQuotation}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
+        >
           <Icon name="quote" />
           <Localized id="editor-tools-insert-quotation">
             Quotation
@@ -184,5 +203,12 @@ export default class InsertTools extends React.Component<Props> {
     editor.insertText(text)
     editor.moveFocusBackward(text.length)
     editor.wrapInline(link)
+  }
+
+  private validateParents = (validParents: string[]): boolean => {
+    const sp = this.props.selectionParent
+    if (!sp) return false
+    if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
+    return false
   }
 }

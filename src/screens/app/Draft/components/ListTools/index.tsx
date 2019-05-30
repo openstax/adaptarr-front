@@ -71,5 +71,5 @@ export default class ListTools extends React.Component<Props> {
 }
 
 function OptionLabel(style: string) {
-  return <Localized id="editor-tools-list-style" $style={style} />
+  return <Localized id="editor-tools-list-style" $style={style}>{style}</Localized>
 }
