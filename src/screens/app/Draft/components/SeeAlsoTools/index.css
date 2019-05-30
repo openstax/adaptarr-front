@@ -1,0 +1,13 @@
+.ReactTags__tag {
+  display: inline-block;
+  margin: 5px 5px 5px 0px;
+  padding: 5px;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  background-color: var(--light-bg);
+}
+
+.ReactTags__remove {
+  padding: 0 3px;
+  cursor: default;
+}
