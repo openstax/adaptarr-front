@@ -1,7 +1,11 @@
 import axios from 'src/config/axios'
+import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import Module from './module'
+import { SlotPermission, Link } from './process'
+import { UserData } from './user'
+import { elevated } from './utils'
 
 /**
  * Draft data as returned by the API.
@@ -12,6 +16,48 @@ export type DraftData = {
   module: string,
   title: string,
   language: string,
+  permissions?: SlotPermission[],
+  step?: DraftStep,
+}
+
+/**
+ * Result data for POST /api/v1/drafts/:id/advance
+ */
+export type AdvanceResult = {
+  code: AdvanceCode,
+  draft?: Draft, // if code is draft:process:advanced
+  module?: Module, // if code is draft:process:finished
+}
+
+/**
+ * draft:process:advanced if draft was advanced to the next step.
+ * draft:process:finished if action has ended the process.
+ */
+export type AdvanceCode = 'draft:process:advanced' | 'draft:process:finished'
+
+/**
+ * Data from ProcessStep but without slots and with links only for current user.
+ */
+export type DraftStep = {
+  name: string,
+  links: Link[],
+}
+
+/**
+ * Details about the process this draft follows.
+ */
+export type ProcessDetails = {
+  id: number,
+  name: string,
+  version: string,
+  slots: SlotDetails[],
+}
+
+export type SlotDetails = {
+  id: number,
+  name: string,
+  role: number | null,
+  user: UserData | null,
 }
 
 export default class Draft extends Base<DraftData> {
@@ -30,6 +76,24 @@ export default class Draft extends Base<DraftData> {
   static async all(): Promise<Draft[]> {
     const drafts = await axios.get('drafts')
     return drafts.data.map((data: DraftData) => new Draft(data))
+  }
+
+  /**
+   * Assign user to a slot.
+   * 
+   * This function requires editing-process:manage permission.
+   */
+  static async assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId))
+  }
+
+  /**
+   * Get details about the process this draft follows.
+   * 
+   * This function requires editing-process:manage permission. 
+   */
+  static async details(draftId: string): Promise<ProcessDetails> {
+    return (await elevated(() => axios.get(`drafts/${draftId}/process`))).data
   }
 
   /**
@@ -56,6 +120,26 @@ export default class Draft extends Base<DraftData> {
   language: string
 
   /**
+   * List of slot permissions current user has at this step.
+   */
+  permissions?: SlotPermission[]
+
+  /**
+   * Information about the step this draft is currently in.
+   */
+  step?: DraftStep
+
+  /**
+   * Advance this draft to the next step.
+   * 
+   * @param target and @param slot together must name one of the links returned in
+   * GET /api/v1/drafts/:id.
+   */
+  async advance(data: { target: number, slot: number }): Promise<AdvanceResult> {
+    return (await axios.post(`drafts/${this.module}/advance`, data)).data
+  }
+
+  /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
    */
   async files(): Promise<string[]> {
@@ -67,20 +151,6 @@ export default class Draft extends Base<DraftData> {
    */
   async read(name: string): Promise<string> {
     return (await axios.get(`drafts/${this.module}/files/${name}`)).data
-  }
-
-  /**
-   * Save this draft as a new version of the module.
-   */
-  async save() {
-    await axios.post(`drafts/${this.module}/save`)
-  }
-
-  /**
-   * Delete this draft.
-   */
-  async delete() {
-    await axios.delete(`drafts/${this.module}`)
   }
 
   /**

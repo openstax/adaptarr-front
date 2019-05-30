@@ -19,6 +19,7 @@
   justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid var(--light-bg);
+  cursor: pointer;
 }
 
 .usersList__item:hover {
@@ -26,12 +27,20 @@
   background-color: var(--dark-bg);
 }
 
+.usersList__item--no-results {
+  padding: 10px;
+}
+
+.usersList__item--no-results:hover {
+  color: var(--font-dark);
+  background-color: var(--light-bg);
+}
+
 .usersList__info {
   display: flex;
   align-items: center;
   width: 100%;
   padding: 10px;
-  cursor: pointer;
 }
 
 .usersList__avatar {

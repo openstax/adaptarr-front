@@ -18,6 +18,9 @@
 .dialog__content {
   position: relative;
   width: 300px;
+  width: 600px;
+  max-height: 80%;
+  overflow: auto;
   padding: 20px;
   background-color: var(--light-bg);
   border-radius: 5px;

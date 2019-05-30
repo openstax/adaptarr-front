@@ -1,0 +1,15 @@
+.process-link {
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 20px;
+  -webkit-box-shadow: 0px 2px 7px rgba(0,0,0,0.2);
+  box-shadow: 0px 2px 7px rgba(0,0,0,0.2);
+}
+
+.process-link > .process-form__title .process-form__title-controls {
+  opacity: 0;
+}
+
+.process-link:hover > .process-form__title .process-form__title-controls {
+  opacity: 1;
+}

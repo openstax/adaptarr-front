@@ -1,7 +1,9 @@
 .style-switcher {
-  position: fixed;
-  z-index: 1;
-  top: 15px;
+  position: relative;
+}
+
+.style-switcher .button {
+  padding: 8px 12px;
 }
 
 .style-switcher ul {
@@ -14,6 +16,8 @@
 .style-switcher.open ul {
   display: block;
   box-shadow: 5px 7px 12px rgba(0,0,0,0.15);
+  position: absolute;
+  z-index: 1;
 }
 
 .style-switcher__choice {

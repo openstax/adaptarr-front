@@ -54,53 +54,12 @@ async function loader({ match }: { match: match<{ id: string }> }) {
 }
 
 class Module extends React.Component<Props> {
-  private createDraft = () => {
-    const { mod, history } = this.props
-
-    mod.createDraft()
-      .then(draft => {
-        store.dispatch(addAlert('success', 'module-create-draft-alert-success'))
-        history.push(`/drafts/${draft.module}`)
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
-  }
-
   public render() {
     const { mod, isDraftExisting, team: { teamMap } } = this.props
 
     return (
       <Section>
-        <Header l10nId="module-view-title" title={mod.title}>
-          {
-            mod.assignee ?
-              <div className="module__assignee">
-                <span><Localized id="module-assignee">Asignee:</Localized></span>
-                <Avatar size="small" user={teamMap.get(mod.assignee)}/>
-              </div>
-            : null
-          }
-          <UserUI userId={mod.assignee}>
-            {
-              isDraftExisting ?
-                <Button to={`/drafts/${mod.id}`}>
-                  <Localized id="module-open-draft">
-                    View draft
-                  </Localized>
-                </Button>
-              :
-              <Button
-                color="green"
-                clickHandler={this.createDraft}
-              >
-                <Localized id="module-create-draft">
-                  New draft
-                </Localized>
-              </Button>
-            }
-          </UserUI>
-        </Header>
+        <Header l10nId="module-view-title" title={mod.title} />
         <div className="section__content">
           <ModulePreview moduleId={mod.id}/>
         </div>

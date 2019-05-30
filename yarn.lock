@@ -1711,9 +1711,9 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://npm.pkg.naukosfera.com:443/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
 
-"cnx-designer@https://github.com/katalysteducation/cnx-designer.git":
+"cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer.git#905089680d4a0fc2bf43126df508e8941bb91821"
+  resolved "https://github.com/katalysteducation/cnx-designer#afad65e696183e227335b3e6ec4e4dc0696d1567"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"

@@ -1,4 +1,3 @@
-import { Module } from 'src/api'
 import sortRefTargets from 'src/helpers/sortRefTargets'
 
 import { ModulesMap, ReferenceTargets } from 'src/store/types'
@@ -7,22 +6,18 @@ import {
   SET_MODULES_MAP,
   ADD_MODULE_TO_MAP,
   REMOVE_MODULE_FROM_MAP,
-  SET_ASSIGNED_TO_ME,
-  SET_ASSIGNE_IN_MODULES_MAP,
   SET_REFERENCE_TARGETS,
 } from 'src/store/constants'
 
 export interface State {
   modulesMap: ModulesMap
-  referenceTargets: ReferenceTargets,
-  assignedToMe: Module[]
+  referenceTargets: ReferenceTargets
 }
 
 // Define our initialState
 export const initialState: State = {
   modulesMap: new Map(),
   referenceTargets: new Map(),
-  assignedToMe: [],
 }
 
 export function reducer (state: State = initialState, action: ModulesAction): State {
@@ -46,23 +41,6 @@ export function reducer (state: State = initialState, action: ModulesAction): St
         ...state,
         modulesMap: modulesMapAfterDel,
       }
-    case SET_ASSIGNE_IN_MODULES_MAP:
-      const { moduleId, assignee } = action.data
-      let modMapAfter = new Map(state.modulesMap)
-      modMapAfter.set(moduleId, new Module({
-        ...modMapAfter.get(moduleId)!,
-        assignee: assignee || undefined,
-      }))
-      return {
-        ...state,
-        modulesMap: modMapAfter,
-      }
-    case SET_ASSIGNED_TO_ME:
-      return {
-        ...state,
-        assignedToMe: action.data,
-      }
-
     case SET_REFERENCE_TARGETS:
       const targets = new Map(state.referenceTargets)
       targets.set(action.data.moduleId, action.data.targets.sort(sortRefTargets))

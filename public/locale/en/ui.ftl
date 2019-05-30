@@ -25,6 +25,14 @@ book-add-module = Module
 
 book-remove-module = Module
 
+# Variable:
+# - $name (string): process name.
+book-in-process = Process: { $name }
+
+book-begin-process = Begin process
+
+book-process-preview-title = Process details:
+
 book-assign-user = Assign user
 
 book-assign-different-user = Assign other user
@@ -244,8 +252,12 @@ dashboard-drafts-empty = You don't have any drafts.
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Draft was created successfully.
 
+dashboard-section-free-slots = Free slots:
+
 
 ## Screens - draft
+
+draft-title = Draft
 
 # Variables:
 # - $style (string): version of styles.
@@ -388,6 +400,8 @@ user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 user-profile-team-list-search =
   .placeholder = Search for user
 
+user-profile-team-list-no-results = There are no users with specified criteria.
+
 
 
 ## Screens - user's profile - update dialog
@@ -435,7 +449,7 @@ settings-value-new-password-repeat =
 
 # Message displayed below new password when it has invalid length.
 settings-validation-password-bad-length =
-  Password must be bewtween 6 and 12 characters.
+  Password must be between 6 and 12 characters.
 
 # Message displayed below new password repetition when it doesn't match
 # new password.
@@ -526,6 +540,307 @@ role-update-cancel = Cancel
 
 
 
+## Screens - processes
+
+processes-view-title = Manage processes
+
+processes-view-add = Add new process
+
+processes-view-list = Current processes:
+
+# Alert displayed when process has been created.
+#
+# Variables:
+# - $name (string): name of process which was created.
+process-create-success = Process “{ $name }” has been created.
+
+# Alert displayed when process has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-error = Couldn't create new process. Details: { $details }.
+
+# Alert displayed when name of process has been updated.
+process-update-name-success = Name has been updated.
+
+# Alert displayed when name has not been updated.
+#
+# Variables:
+# - $details (string): error details.
+process-update-name-error = Couldn't update name. Details: { $details }.
+
+# Alert displayed when version of process has been created.
+#
+# Variables:
+# - $name (string): name of new version which was created.
+process-create-version-success = Version “{ $name }” has been created.
+
+# Alert displayed when version has not been created.
+#
+# Variables:
+# - $details (string): error details.
+process-create-version-error = Couldn't create new version. Details: { $details }.
+
+
+
+## Components for creating and updating process
+
+process-form-create = Create process
+
+process-form-new-version = Create new version
+
+process-form-cancel = Cancel
+
+process-form-process-name = Process name
+
+process-form-slot-title = List of slots:
+
+process-form-slot-add = Add slot
+
+process-form-slot-remove = Remove slot
+
+process-form-slot-name = Slot name:
+
+process-form-slot-autofill = Automatically assign users:
+
+process-form-slot-role = Role:
+
+process-form-step-title = List of steps:
+
+process-form-step-add = Add step
+
+process-form-step-remove = Remove step
+
+process-form-step-name = Step name:
+
+process-form-step-slots = Step slots:
+
+process-form-step-slots-add = Add slot
+
+process-form-step-links = Step links:
+
+process-form-step-links-add = Add link
+
+process-form-step-slot-slot = Slot:
+
+process-form-step-slot-permission = Permission:
+
+process-form-step-link-name = Link name:
+
+process-form-step-link-to = Next step:
+
+process-form-step-link-slot = Slot allowed to use this link:
+
+process-form-step-link-remove = Remove link
+
+process-form-error-name = Please specify name of this process.
+
+process-form-error-slot-name = All slots must have a name.
+
+process-form-error-step-name = All steps must have a name.
+
+process-form-error-step-link-name = All links must have a name.
+
+process-form-error-starting-step = Please specify starting step.
+
+process-form-error-starting-step-no-links = Starting step must have links.
+
+process-form-error-slots-min = Process must have at least one slot.
+
+process-form-error-steps-min = Process must have at least two steps.
+
+process-form-error-no-finish =
+  Process must have at lest one final step (a step from which there are
+  no outgoing links).
+
+process-form-error-propose-and-accept-changes =
+  A slot can only be granted the permission to propose changes if there is also
+  a slot (in the same step) which was granted the permission to accept changes.
+
+process-form-error-edit-and-changes =
+  The permissions to edit and propose changes cannot both be granted in the same
+  step.
+
+process-form-error-step-slot-permission-or-slot =
+  Each permission must have a slot assigned.
+
+process-form-error-step-link-to-or-slot =
+  Each link must have a target and a specify a slot which can use it.
+
+
+
+## Reusable components - process preview
+
+# Variables:
+# - $name (string): name of the process.
+process-preview-title = Process name: { $name }
+
+process-preview-slots-list = List of slots:
+
+process-preview-steps-list = List of steps:
+
+# Variables:
+# - $name (string): name of the slot.
+process-preview-slot-name = Slot name: { $name }
+
+# Variables:
+# - $value (string: true | false): value of autofill for this slot.
+process-preview-slot-autofill = Automatic assignment of users { $value ->
+  [true] enabled
+ *[false] disabled
+}
+
+# Variables:
+# - $name (string): role name for this slot.
+process-preview-role = Role: { $name }
+
+# Variables:
+# - $name (string): name of the step.
+process-preview-step-name = Step name: { $name }
+
+process-preview-step-slots-list = List of step slots:
+
+process-preview-step-links-list = List of step links:
+
+# Variables:
+# - $name (string): slot name.
+# - $permission (string): permission granted to this slot.
+process-preview-step-slot = { $name } is able to { $permission ->
+  [view] view drafts
+  [edit] edit drafts
+  [propose-changes] propose changes
+  [accept-changes] accept changes
+ *[notavalidvalue] { $permission }
+}.
+
+# Variables:
+# - $slot (string): slot name.
+# - $link (string): link name.
+# - $to (string): target step name.
+process-preview-step-link =
+  { $slot } can use link “{ $link }” which leads to step “{ $to }”.
+
+
+
+## Reusable components - begin process
+
+begin-process-select-process = Select process:
+
+begin-process-start = Start process
+
+# Alert displayed when process has been started.
+#
+# Variables:
+# - $process (string): name of process which was started.
+# - $module (string): title of module for which process was started.
+begin-process-success = Started process “{ $process }” for “{ $module }”.
+
+# Alert displayed when process has not been started.
+#
+# Variables:
+# - $details (string): error details.
+begin-process-error = Couldn't start process. Details: { $details }.
+
+begin-process-assign-user-title = Select user for this slot.
+
+begin-process-slots-title = Configure slots:
+
+begin-process-assign-user = Select user
+
+begin-process-unassign-user = Unassign user
+
+
+
+## Reusable components - update slots
+
+update-slots-title = Manage slots assignments:
+
+# Variables:
+# - $name (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-name = { $role ->
+  [undefined] { $name }
+ *[role] { $name } for users with role: { $role }
+}
+
+update-slots-assign-user = Select user
+
+update-slots-unassign-user = Unassign user
+
+# Variables:
+# - $slot (string): slot name.
+# - $role (string): role name for this slot.
+update-slots-assign-user-title = Select user { $role ->
+  [undefined] for slot: { $slot }
+ *[role] with role: { $role } for slot: { $slot }
+}
+
+# Alert displayed when there was an error while fetching data.
+update-slots-fetching-error = Couldn't fetch details about slots in this process for given module. Please try again later.
+
+
+
+## Reusable components - free slots
+
+free-slots-slot-name = Slot name:
+
+free-slots-draft-title = Draft title:
+
+free-slots-not-avaible = There are no free slots for you to take.
+
+free-slots-take-slot = Take slot
+
+# Alert displayed when user assign himself to a free slot.
+#
+# Variables:
+# - $slot (string): name of slot which was taken.
+# - $draft (string): draft name for which user was assigned.
+free-slots-success = You've been assigned to “{ $draft }” with slot: { $slot }.
+
+# Alert displayed when there was an error while taking free slot.
+#
+# Variables:
+# - $details (string): error details.
+free-slots-error = Couldn't assign you to this slot. Details: { $details }.
+
+
+
+## Reusable components - step changer
+
+step-changer-choose = Choose link:
+
+step-changer-move = Move using selected link
+
+# Alert displayed when draft was advanced to the next step.
+#
+# Variables:
+# - $code (string): draft-process-advanced or draft-process-finished
+step-changer-success = { $code ->
+  [draft-process-advanced] Draft was advanced to the next step.
+  [draft-process-finished] Process has ended. Draft was saved as a module.
+ *[notavalidvalue] { $code }
+}
+
+# Alert displayed when there was an error while advancing to the next step.
+#
+# Variables:
+# - $details (string): error details.
+step-changer-error = Couldn't advance to the next step. Details: { $details }.
+
+step-changer-dialog-title = Do you want to move this draft to the next step?
+
+step-changer-unsaved-changes = You have unsaved changes.
+
+step-changer-advance = Advance
+
+step-changer-cancel = Cancel
+
+step-changer-discard-advance = Discard changes and advance
+
+step-changer-discard-save-advance = Save and advance
+
+
+
 ## Reusable components - permissions
 
 # Variables:
@@ -537,8 +852,9 @@ permission-label = { $name ->
   [user-assign-role] Assign roles to users
   [book-edit] Create, delete and edit book content
   [module-edit] Create, delete and edit modules
-  [module-assign] Assign users to modules
   [role-edit] Create, delete and edit roles
+  [editing-process-edit] Create and edit processes
+  [editing-process-manage] Assign modules to processes
  *[unknown] Unknown permission
 }
 
@@ -570,6 +886,8 @@ navigation-logout = Logout
 navigation-invite = Invitations
 
 navigation-roles = Roles
+
+navigation-processes = Editing processes
 
 
 
@@ -736,18 +1054,6 @@ editor-tools-save-alert-success = Draft has been saved successfully.
 
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Draft couldn't be saved.
-
-
-
-## Editor - toolboxes - merge
-
-editor-tools-merge = Merge
-
-# Alert displayed when draft was merged into source module.
-editor-tools-merge-alert-success = Draft has been merged successfully.
-
-# Alert displayed when draft could not be merged.
-editor-tools-merge-alert-error = Draft couldn't be merged.
 
 
 
@@ -1031,6 +1337,7 @@ editor-tools-definition-insert-seealso = Add "see also"
 editor-tools-meaning-title = Meaning
 
 editor-tools-meaning-insert-example = Add example
+
 
 
 ## Editor toolboxes - see also

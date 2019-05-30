@@ -1,0 +1,19 @@
+.process-preview {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.process-preview > h2 {
+  width: 100%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.process-preview h3 {
+  font-weight: 700;
+}
+
+.process-preview__slots, .process-preview__steps {
+  flex: 1;
+}

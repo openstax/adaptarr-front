@@ -4,6 +4,7 @@ import Counters from 'slate-counters'
 import { Localized } from 'fluent-react/compat'
 import { PersistDB, DocumentDB, uuid, Document, Glossary, Persistence } from 'cnx-designer'
 import { match } from 'react-router'
+import { History } from 'history'
 import { Block, Value, Text, KeyUtils, Editor as Editor_ } from 'slate'
 import { Editor } from 'slate-react'
 import { List } from 'immutable'
@@ -15,10 +16,12 @@ import { fetchReferenceTargets } from 'src/store/actions/Modules'
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
 import InfoBox from 'src/components/InfoBox'
+import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
+import StepChanger from './components/StepChanger'
 import SaveButton from './components/SaveButton'
 import ToolboxDocument from './components/ToolboxDocument'
 import ToolboxGlossary from './components/ToolboxGlossary'
@@ -37,6 +40,7 @@ type Props = {
   draft: api.Draft
   document: Value
   glossary: Value
+  history: History
 }
 
 ;KeyUtils.resetGenerator()
@@ -134,6 +138,10 @@ class Draft extends React.Component<Props> {
     this.setState({ showInfoBox: false })
   }
 
+  private handleStepChange = () => {
+    this.props.history.push('/')
+  }
+
   getChildContext() {
     return {
       documentDbContent: this.props.documentDbContent,
@@ -227,30 +235,36 @@ class Draft extends React.Component<Props> {
 
     return (
       <Section>
+        <Header l10nId="draft-title" title="Draft">
+          <StepChanger
+            draft={draft}
+            onStepChange={this.handleStepChange}
+          />
+          <div className="draft__controls">
+            <StyleSwitcher onChange={this.handleStyleChange} />
+            <SaveButton
+              document={valueDocument}
+              glossary={valueGlossary}
+              isGlossaryEmpty={isGlossaryEmpty}
+              storage={storage}
+              documentDbContent={documentDbContent}
+              documentDbGlossary={documentDbGlossary}
+            />
+          </div>
+        </Header>
         <div className="section__content draft">
           <div className={`draft__editor ${editorStyle}`}>
-          <StyleSwitcher onChange={this.handleStyleChange} />
-            {
-              showInfoBox ?
-                <InfoBox onClose={this.hideInfoBox}>
-                  <Localized id="draft-style-switcher-info-box">
-                    This is experimental feature. There are visual differences between preview and original styles.
-                  </Localized>
-                </InfoBox>
-              : null
-            }
-            <div className="draft__save-buttons">
-              <SaveButton
-                document={valueDocument}
-                glossary={valueGlossary}
-                isGlossaryEmpty={isGlossaryEmpty}
-                storage={storage}
-                documentDbContent={documentDbContent}
-                documentDbGlossary={documentDbGlossary}
-              />
-            </div>
             <div className="document">
               <div className="document__content">
+                {
+                  showInfoBox ?
+                    <InfoBox onClose={this.hideInfoBox}>
+                      <Localized id="draft-style-switcher-info-box">
+                        This is experimental feature. There are visual differences between preview and original styles.
+                      </Localized>
+                    </InfoBox>
+                  : null
+                }
                 <Title draft={draft} />
                 <LocalizationLoader
                   locale={valueDocument.data.get('language') || 'en'}

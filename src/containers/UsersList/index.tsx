@@ -2,27 +2,26 @@ import './index.css'
 
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Localized } from 'fluent-react/compat'
 
 import sortArrayByName from 'src/helpers/sortArrayByName'
 import { User } from 'src/api'
 
 import UserInfo from 'src/components/UserInfo'
-import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
 
-import { TeamMap, ModulesMap, BookPart } from 'src/store/types'
+import { TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
-  mod: BookPart | null
+  allowedRole?: number | null,
   team: {
     teamMap: TeamMap
   }
   modules: {
     modulesMap: ModulesMap
   }
-  onUserClick: (user: User, action: 'assign' | 'remove') =>  any
+  onUserClick: (user: User) =>  any
 }
 
 const mapStateToProps = ({ team, modules }: State) => {
@@ -33,7 +32,6 @@ const mapStateToProps = ({ team, modules }: State) => {
 }
 
 class UsersList extends React.Component<Props> {
-
   state: {
     filterInput: string
   } = {
@@ -41,41 +39,52 @@ class UsersList extends React.Component<Props> {
   }
 
   private listOfUsers = (teamMap: TeamMap) => {
+    const allowedRole = this.props.allowedRole
     const filterReg = new RegExp('^' + this.state.filterInput, 'i')
     let users: User[] = []
 
     teamMap.forEach(user => {
       if (this.state.filterInput) {
         if (filterReg.test(user.name)) {
-          users.push(user)
+          if (allowedRole) {
+            if (user.role && user.role.id === allowedRole) {
+              users.push(user)
+            }
+          } else {
+            users.push(user)
+          }
         }
       } else {
-        users.push(user)
+        if (allowedRole) {
+          if (user.role && user.role.id === allowedRole) {
+            users.push(user)
+          }
+        } else {
+          users.push(user)
+        }
       }
     })
 
     users.sort(sortArrayByName)
 
-    return users.map((user: User) => {
-      const modulesMap = this.props.modules.modulesMap
-      const modId = this.props.mod ? this.props.mod.id : null
-      const mod = modId ? modulesMap.get(modId) : null
+    if (!users.length) {
+      return (
+        <li className="usersList__item--no-results">
+          <Localized id="user-profile-team-list-no-results">
+            There are no users with specified criteria.
+          </Localized>
+        </li>
+      )
+    }
 
+    return users.map((user: User) => {
       return (
         <li
           key={user.id}
           className="usersList__item"
+          onClick={() => this.props.onUserClick(user)}
         >
-          <span onClick={() => this.props.onUserClick(user, 'assign')}>
-            <UserInfo user={user} />
-          </span>
-          {
-            mod && mod.assignee === user.id ?
-              <Button color="red" clickHandler={() => this.props.onUserClick(user, 'remove')}>
-                <Icon name="minus" />
-              </Button>
-            : null
-          }
+          <UserInfo user={user} />
         </li>
       )
     })

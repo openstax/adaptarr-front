@@ -6,6 +6,13 @@
   background-color: #f8f5f5;
 }
 
+.draft__controls {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
+}
+
 .draft__title {
   display: block;
   width: 80%;
@@ -31,7 +38,7 @@
 .draft__editor .info-box {
   width: 90%;
   max-width: 900px;
-  margin: 20px auto;
+  margin: 10px auto 0 auto;
 }
 
 .draft__save-buttons {

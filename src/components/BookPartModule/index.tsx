@@ -4,54 +4,48 @@ import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import { ProcessStructure } from 'src/api/process'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
-import ModuleStatus from 'src/components/ModuleStatus'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
-import Avatar from 'src/components/ui/Avatar'
 
-import UsersList from 'src/containers/UsersList'
+import BeginProcess from 'src/containers/BeginProcess'
+import ProcessPreview from 'src/containers/ProcessPreview'
+import UpdateSlots from 'src/containers/UpdateSlots'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { setAssigneeInModulesMap } from 'src/store/actions/Modules'
+
+import './index.css'
 
 type Props = {
   item: api.BookPart
   modulesMap: types.ModulesMap
+  processes: Map<number, api.Process>
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
-  setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => void
 }
 
-type AssignActions = 'assign' | 'remove'
-
-const mapStateToProps = ({ modules: { modulesMap } }: State) => ({
+const mapStateToProps = ({ modules: { modulesMap }, app: { processes } }: State) => ({
   modulesMap,
+  processes,
 })
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    setAssigneeInModulesMap: (moduleId: string, assignee: number | null) => dispatch(setAssigneeInModulesMap(moduleId, assignee))
-  }
-}
-
 class Module extends React.Component<Props> {
-
   state: {
-    showAssignUser: boolean
     showRemoveModule: boolean
-    userToAssign?: api.User
-    assignAction?: AssignActions
+    showBeginProcess: boolean
+    processStructure: ProcessStructure | null
+    module: api.Module | undefined
   } = {
-    showAssignUser: false,
     showRemoveModule: false,
+    showBeginProcess: false,
+    processStructure: null,
+    module: this.props.modulesMap.get(this.props.item.id!),
   }
-
-  module: api.Module | undefined = this.props.modulesMap.get(this.props.item.id!)
 
   private showRemoveModuleDialog = () => {
     this.setState({ showRemoveModule: true })
@@ -79,55 +73,39 @@ class Module extends React.Component<Props> {
     this.closeRemoveModuleDialog()
   }
 
-  private showAssignUserDialog = () => {
-    this.setState({ showAssignUser: true })
+  private showBeginProcessDialog = () => {
+    this.setState({ showBeginProcess: true })
   }
 
-  private closeAssignUserDialog = () => {
-    this.setState({ showAssignUser: false })
+  private closeBeginProcessDialog = () => {
+    this.setState({ showBeginProcess: false })
   }
 
-  private handleUserClick = (user: api.User) => {
-    this.assignUser(user)
+  private showProcessDetails = async () => {
+    const processId = this.state.module!.process!.process
+    const process = this.props.processes.get(processId)!
+    const structure = await process.structure()
+    this.setState({ processStructure: structure })
   }
 
-  private assignUser = (user: api.User | null) => {
-    const targetModule = this.props.item
-    const assignee = user ? user.id : null
-
-    if (!targetModule || !this.module) {
-      return store.dispatch(addAlert('error', 'book-assign-user-alert-error'))
-    }
-
-    this.module.assign(user)
-      .then(() => {
-        this.props.setAssigneeInModulesMap((targetModule.id as string), assignee)
-        this.props.afterAction()
-        if (user) {
-          store.dispatch(addAlert('success', 'book-assign-user-alert-success', { user: user.name, module: targetModule.title }))
-        } else {
-          store.dispatch(addAlert('success', 'book-unassign-user-alert-success', { module: targetModule.title }))
-        }
-      })
-      .catch(e => {
-        store.dispatch(addAlert('error', e.message))
-      })
-    this.closeAssignUserDialog()
-  }
-
-  private unassignUser = () => {
-    this.assignUser(null)
+  private closeProcessDetails = () => {
+    this.setState({ processStructure: null })
   }
 
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
-      this.module = this.props.modulesMap.get(this.props.item.id!)
+      this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
     }
   }
 
   public render() {
-    const item = this.props.item
-    const { showRemoveModule, showAssignUser } = this.state
+    const { item, processes } = this.props
+    const {
+      showRemoveModule,
+      showBeginProcess,
+      processStructure,
+      module: mod,
+    } = this.state
 
     return (
       <React.Fragment>
@@ -137,7 +115,7 @@ class Module extends React.Component<Props> {
               l10nId="book-remove-module-title"
               placeholder="Are you sure?"
               size="medium"
-              onClose={this.closeAssignUserDialog}
+              onClose={this.closeRemoveModuleDialog}
             >
               <Button 
                 color="green" 
@@ -159,16 +137,33 @@ class Module extends React.Component<Props> {
           : null
         }
         {
-          showAssignUser ?
+          showBeginProcess && mod ?
             <Dialog
-              l10nId="book-assign-user-title"
-              placeholder="Select user from a list to assign them."
+              l10nId="book-begin-process-title"
+              placeholder="Configure and begin process."
               size="medium"
-              onClose={this.closeAssignUserDialog}
+              onClose={this.closeBeginProcessDialog}
             >
-              <UsersList
-                mod={item}
-                onUserClick={this.handleUserClick}
+              <BeginProcess
+                module={mod}
+                onClose={this.closeBeginProcessDialog}
+              />
+            </Dialog>
+          : null
+        }
+        {
+          processStructure ?
+            <Dialog
+              l10nId="book-process-preview-title"
+              placeholder="Process details:"
+              size="medium"
+              onClose={this.closeProcessDetails}
+            >
+              <UpdateSlots
+                module={this.state.module}
+              />
+              <ProcessPreview
+                structure={processStructure}
               />
             </Dialog>
           : null
@@ -190,32 +185,27 @@ class Module extends React.Component<Props> {
             </Button>
           </LimitedUI>
           {
-            this.module && this.module.assignee ?
-              <React.Fragment>
-                <Avatar size="small" user={this.module.assignee} />
+            mod && mod.process ?
                 <Button
-                  clickHandler={this.unassignUser}
+                  className="bookpart__process"
+                  clickHandler={this.showProcessDetails}
                 >
-                  <Localized id="book-unassign-user">Unassign</Localized>
-                </Button>
-                <Button clickHandler={this.showAssignUserDialog}>
-                  <Localized id="book-assign-different-user">
-                    Assign other user
+                  <Localized
+                    id="book-in-process"
+                    $name={processes.get(mod.process.process)!.name}
+                  >
+                    Process: [process name]
                   </Localized>
                 </Button>
-              </React.Fragment>
               :
-              <Button clickHandler={this.showAssignUserDialog}>
-                <Localized id="book-assign-user">Assign user</Localized>
-              </Button>
+                <Button clickHandler={this.showBeginProcessDialog}>
+                  <Localized id="book-begin-process">Begin process</Localized>
+                </Button>
           }
-          <span className="bookpart__status">
-            <ModuleStatus status={/*item.status*/'ready'} />
-          </span>
         </span>
       </React.Fragment>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Module)
+export default connect(mapStateToProps)(Module)

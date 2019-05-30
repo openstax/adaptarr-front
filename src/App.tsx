@@ -21,6 +21,7 @@ import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
 import Invitations from 'src/screens/app/Invitations'
 import Roles from 'src/screens/app/Roles'
+import Processes from 'src/screens/app/Processes'
 import Error404 from 'src/screens/app/Error404'
 
 import * as userActions from 'src/store/actions/User'
@@ -55,6 +56,7 @@ type Props = {
   }
   fetchUser: () => void
   fetchRoles: () => void
+  fetchProcesses: () => void
   fetchTeamMap: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
@@ -62,7 +64,7 @@ type Props = {
   removeAlert: (alert: types.Alert) => void
 }
 
-export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts, app: { roles } }: State) => {
+export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts, app: { roles, processes } }: State) => {
   return {
     user,
     team,
@@ -71,6 +73,7 @@ export const mapStateToProps = ({ user, notifications, team, booksMap, modules, 
     modules,
     alerts,
     roles,
+    processes,
   }
 }
 
@@ -78,6 +81,7 @@ export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificatio
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchRoles: () => dispatch(appActions.fetchRoles()),
+    fetchProcesses: () => dispatch(appActions.fetchProcesses()),
     fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
@@ -91,6 +95,7 @@ class App extends React.Component<Props> {
   componentDidMount () {
     this.props.fetchUser()
     this.props.fetchRoles()
+    this.props.fetchProcesses()
     this.props.fetchTeamMap()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
@@ -122,6 +127,7 @@ class App extends React.Component<Props> {
                   <Route path="/settings" component={Settings}/>
                   <Route path="/invitations" component={Invitations}/>
                   <Route path="/roles" component={Roles}/>
+                  <Route path="/processes" component={Processes}/>
                   <Route component={Error404}/>
                 </Switch>
               </main>

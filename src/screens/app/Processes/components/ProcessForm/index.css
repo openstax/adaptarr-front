@@ -1,0 +1,51 @@
+.process-form .controls {
+  margin-bottom: 20px;
+}
+
+.process-form .controls .button {
+  margin-right: 10px;
+}
+
+.process-form .controls .button .icon {
+  margin-right: 6px;
+}
+
+.process-form__errors {
+  padding: 10px;
+  border: 1px solid var(--red);
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.process-form__errors li {
+  margin-bottom: 10px;
+}
+
+.process-form__errors li:last-child {
+  margin-bottom: 0;
+}
+
+.process-form .process-form__split {
+  display: flex;
+}
+
+.process-form h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+
+.process-form__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.process-form__title .button .icon {
+  margin: 0;
+}
+
+.process-form label {
+  display: block;
+  margin-bottom: 10px;
+}

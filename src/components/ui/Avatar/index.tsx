@@ -17,12 +17,13 @@ type Props = {
   disableLink?: boolean
   status?: 'unread' | 'online'
   size?: 'small' | 'medium' | 'big'
+  withName?: boolean
 }
 
 const mapStateToProps = ({ team: { teamMap } }: State) => ({ teamMap })
 
 const avatar = (props: Props) => {
-  const { user, disableLink, status, size, teamMap } = props
+  const { user, disableLink, status, size, teamMap, withName } = props
 
   const userData = user instanceof api.User ? user : user && teamMap.get(user)
 
@@ -40,12 +41,19 @@ const avatar = (props: Props) => {
   }*/
 
   const body = (
-    <Tooltip content={title}>
-      <div className="avatar__image">
-        <span className={statusClasses.join(' ')}></span>
-        <img src={avatarSrc} alt={title}/>
-      </div>
-    </Tooltip>
+    <>
+      <Tooltip content={title}>
+        <div className="avatar__image">
+          <span className={statusClasses.join(' ')}></span>
+          <img src={avatarSrc} alt={title}/>
+        </div>
+      </Tooltip>
+      {
+        withName ?
+          <span className="avatar__name">{title}</span>
+        : null
+      }
+    </>
   )
 
   if (disableLink) {

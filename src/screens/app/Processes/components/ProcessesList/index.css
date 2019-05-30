@@ -1,0 +1,24 @@
+.processes__list {
+  display: flex;
+  justify-content: space-between;
+}
+
+.processes__col {
+  flex: 1;
+}
+
+.processes__list ul{
+  max-width: 400px;
+}
+
+.processes__name .input {
+  margin-bottom: 0;
+}
+
+.processes__name .input input {
+  font-size: 1rem;
+  color: var(--font-dark);
+  padding: 0;
+  background: transparent;
+  border: transparent;
+}

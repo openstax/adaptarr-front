@@ -1,7 +1,0 @@
-.modulesList .list__item {
-  flex-wrap: wrap;
-}
-
-.list__item.modulesList__book {
-  border-bottom: none;
-}

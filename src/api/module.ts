@@ -1,7 +1,7 @@
+import { AxiosResponse } from 'axios'
 import axios from 'src/config/axios'
 
 import Base from './base'
-import User from './user'
 import Draft from './draft'
 import { elevated } from './utils'
 
@@ -9,10 +9,19 @@ import { elevated } from './utils'
  * Module data as returned by the API.
  */
 export type Data = {
-  assignee?: number,
   id: string,
   title: string,
   language: string,
+  process: ModuleProcess | null
+}
+
+/**
+ * Short info about current process for module.
+ */
+export type ModuleProcess = {
+  process: number,
+  step: number,
+  version: number,
 }
 
 export type RefTargetType
@@ -60,15 +69,6 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * Fetch list of all modules assigned to a particular user.
-   */
-  static async assignedTo(user: User | string | number): Promise<Module[]> {
-    const userId = user instanceof User ? user.apiId : user
-    const modules = await axios.get(`modules/assigned/to/${userId}`)
-    return modules.data.map((data: Data) => new Module(data))
-  }
-
-  /**
    * Fetch all drafts owned by current user.
    */
   static async all(): Promise<Module[]> {
@@ -111,11 +111,6 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * ID of the {@link User} currently assigned to this module.`
-   */
-  assignee?: number
-
-  /**
    * ID of this module.
    */
   id: string
@@ -129,6 +124,11 @@ export default class Module extends Base<Data> {
    * Language of this document.
    */
   language: string
+
+  /**
+   * Short info about current process for this module.
+   */
+  process: ModuleProcess | null
 
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
@@ -152,16 +152,6 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * Assign a user to this module.
-   *
-   * This method requires elevated permissions.
-   */
-  async assign(user: User | null): Promise<void> {
-    const userId = user instanceof User ? user.id : user
-    await elevated(() => axios.put(`modules/${this.id}`, { assignee: userId }))
-  }
-
-  /**
    * Get an existing draft for this module, or {@code null}.
    */
   async draft(): Promise<Draft | null> {
@@ -173,13 +163,15 @@ export default class Module extends Base<Data> {
   }
 
   /**
-   * Create a new draft of this module.
+   * Begin process for this module.
    *
-   * This method will fail if current user is not assigned to this module.
+   * This method requires editing-process:manage permission.
+   * 
+   * @param process processId
+   * @param slots array of pairs [slotId, userId]
    */
-  async createDraft(): Promise<Draft> {
-    let data = await axios.post(`modules/${this.id}`)
-    return new Draft(data.data)
+  async beginProcess(data: { process: number, slots: [number, number][]}): Promise<AxiosResponse> {
+    return await elevated(() => axios.post(`modules/${this.id}`, data))
   }
 
   /**
