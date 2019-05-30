@@ -192,3 +192,11 @@ xref-label-table = { $case ->
   [locative]      Tabeli
   [vocative]      Tabelo
 } { $table }
+
+## Definitions
+
+definition-label = Definicja dla
+
+definition-example-label = Przykład
+
+definition-seealso-label = Zobacz również
