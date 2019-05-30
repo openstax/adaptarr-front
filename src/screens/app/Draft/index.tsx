@@ -220,8 +220,8 @@ class Draft extends React.Component<Props> {
   isEditorFocused = () => {
     const cE = this.contentEditor.current
     const gE = this.glossaryEditor.current
-    if (cE && cE.value.selection.isFocused) return true
     if (gE && gE.value.selection.isFocused) return true
+    if (cE && gE && !gE.value.selection.isFocused) return true
     return false
   }
 
@@ -232,6 +232,9 @@ class Draft extends React.Component<Props> {
     const { documentDbContent, documentDbGlossary, storage, draft } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
     const isEditorFocused = this.isEditorFocused()
+    const showGlossaryToolbox = this.glossaryEditor.current &&
+      this.glossaryEditor.current.value.selection.isFocused
+    const showDocumentToolbox = this.contentEditor.current && !showGlossaryToolbox
 
     return (
       <Section>
@@ -316,7 +319,7 @@ class Draft extends React.Component<Props> {
               <div className="document__ui">
                 <StorageContext storage={storage}>
                   {
-                    this.contentEditor.current ?
+                    showDocumentToolbox ?
                       <ToolboxDocument
                         editor={this.contentEditor.current as unknown as Editor_}
                         value={valueDocument}
@@ -324,7 +327,7 @@ class Draft extends React.Component<Props> {
                     : null
                   }
                   {
-                    this.glossaryEditor.current ?
+                    showGlossaryToolbox ?
                       <ToolboxGlossary
                         editor={this.glossaryEditor.current as unknown as Editor_}
                         value={valueGlossary}

@@ -46,8 +46,6 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
-    if (!selection.isFocused) return null
-
     if (selection.start.key !== selection.end.key) {
       <div className="toolbox">
         <Localized id="editor-toolbox-mulit-selection">
