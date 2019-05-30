@@ -13,8 +13,6 @@ import SectionTools from '../SectionTools'
 import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
-import SaveButton from '../SaveButton'
-import MergeButton from '../MergeButton'
 
 import './index.css'
 
@@ -48,16 +46,8 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
-    if (!selection.isSet) {
-      return (
-        <div className="toolbox">
-          <Localized id="editor-toolbox-no-selection">
-            No selection
-          </Localized>
-        </div>
-      )
-    }
-    
+    if (!selection.isFocused) return null
+
     if (selection.start.key !== selection.end.key) {
       <div className="toolbox">
         <Localized id="editor-toolbox-mulit-selection">
@@ -68,10 +58,6 @@ class Toolbox extends React.Component<Props> {
 
     return (
       <div className="toolbox" onMouseDown={this.onMouseDown}>
-        <div className="toolbox__group">
-          <SaveButton value={value} />
-          <MergeButton value={value} />
-        </div>
         <FormatTools editor={editor} value={value} selectionParent={selectionParent} />
         <InsertTools editor={editor} value={value} selectionParent={selectionParent} />
 

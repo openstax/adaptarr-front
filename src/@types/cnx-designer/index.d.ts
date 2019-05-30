@@ -1,34 +1,19 @@
 declare module 'cnx-designer' {
   import {
-    Inline,
     Block,
     Data,
-    Editor as SlateEditor,
-    Leaf,
     Node,
     Operation,
     Range,
-    Text,
     Value,
   } from 'slate'
   import { Plugin } from 'slate-react'
   import { List } from 'immutable'
 
-  type EditorProps = {
-    documentDb: DocumentDB,
-    storage: Storage,
-    value: Value,
-    prePlugins?: Plugin[],
-    postPlugins?: Plugin[],
-  }
-
-  export default class Editor extends React.Component<EditorProps> {
-  }
-
   export class CNXML {
-    constructor(rules: any[])
-    deserialize(html: string, options?: {}): Value
-    serialize(value: Value, title: string): string
+    constructor(args: {documentRules: any[], glossaryRules: any[]})
+    deserialize(html: string, options?: {}): {document: Value, glossary: Value}
+    serialize(documentValue: Value, glossaryValue: Value | null, title: string): string
   }
 
   export class APIError extends Error {
@@ -38,10 +23,10 @@ declare module 'cnx-designer' {
 
   export class Storage {
     static load(id: string): Promise<Storage>
-    read(): Promise<Value>
-    write(value: Value): Promise<void>
+    read(): Promise<{ document: Value, glossary: Value }>
+    write(document: Value, glossary: Value): Promise<void>
     writeFile(file: File): Promise<void>
-    current(value: Value): boolean
+    current(document: Value, glossary: Value): boolean
     mediaUrl(name: string): string
   }
 
@@ -71,14 +56,6 @@ declare module 'cnx-designer' {
     alt: string,
   }
 
-  export type Term = {
-    reference: string,
-    leaf: Leaf,
-    focusText: Text,
-    offsetStart: number,
-    offsetEnd: number,
-  }
-
   export interface EditorAug {
     // Commands
     insertSection(): EditorAug
@@ -94,6 +71,10 @@ declare module 'cnx-designer' {
     changeListType(type: string): EditorAug
     insertXref(target: string, document?: string): EditorAug
     removeMarks(): EditorAug
+    insertDefinition(postion?: 'before' | 'after'): EditorAug
+    addMeaningToDefinition(): EditorAug
+    addExampleToMeaning(): EditorAug
+    addSeeAlsoToDefinition(): EditorAug
 
     // Queries
     getActiveSection(value: Value): Block | null
@@ -101,6 +82,8 @@ declare module 'cnx-designer' {
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
+    getActiveDefinition(value: Value): Block | null
+    getActiveDefinitionMeaning(value: Value): Block | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean
@@ -119,4 +102,28 @@ declare module 'cnx-designer' {
     getPreviousItem(value: Value, block?: Block): Block | null
     isSelectionInList(value: Value): boolean
   }
+
+  export const uuid: {
+    v4: () => any
+  }
+
+  export function Persistence(options: {db: DocumentDB}): Plugin
+
+  export function StoragePlugin({storage}: {storage: Storage}): Plugin
+
+  export function TextContent(options?: {marks?: string[]}): Plugin[]
+
+  export function Document(options?: {
+    content?: string[],
+    document_content?: string[],
+    marks?: string[],
+    list?: any,
+  }): Plugin[]
+
+  export function Glossary(options?: {
+    content?: string[],
+    glossary_content?: string[],
+    marks?: string[],
+    list?: any,
+  }): Plugin[]
 }

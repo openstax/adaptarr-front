@@ -39,5 +39,5 @@ export default function AdmonitionTools({ editor, value }: Props) {
 }
 
 function OptionLabel(type: string) {
-  return <Localized id="editor-tools-admonition-type" $type={type} />
+  return <Localized id="editor-tools-admonition-type" $type={type}>{type}</Localized>
 }

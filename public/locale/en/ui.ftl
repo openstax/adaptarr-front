@@ -259,6 +259,15 @@ draft-style-switcher-info-box = This is experimental feature. There are visual d
 
 draft-loading-message = Loading draft. It may take a few minutes for bigger documents.
 
+draft-remove-glossary-dialog = Are you sure you want to remove glossary?
+
+draft-add-glossary = Add glossary
+
+draft-remove-glossary = Remove glossary
+
+draft-cancel = Cancel
+
+
 
 ## Screens - dashboard - draft deletion dialog
 
@@ -712,7 +721,7 @@ editor-document-title-save-alert-error = Couldn't update the title.
 
 ## Editor - toolboxes
 
-editor-toolbox-no-selection = No selection
+editor-toolbox-no-selection = Please select editor to show toolbox.
 
 editor-toolbox-multi-selection = Selection across elements is not yet supported
 
@@ -987,9 +996,8 @@ editor-tools-link-text = Provide text
 
 editor-tools-link-url = Provide link
 
-<<<<<<< HEAD
 editor-tools-link-remove = Remove link
-=======
+
 
 
 ## Editor toolboxes - terms
@@ -999,4 +1007,36 @@ editor-tools-term-title = Term
 editor-tools-term-label = Index form
 
 editor-tools-term-remove = Remove term
->>>>>>> terms-inlines
+
+
+
+## Editor toolboxes - definitions
+
+editor-tools-definition-title = Definition
+
+editor-tools-definition-insert-definition-before = Insert definition before
+
+editor-tools-definition-insert-definition-after = Insert definition after
+
+editor-tools-definition-remove-definition = Remove definition
+
+editor-tools-definition-insert-meaning = Add meaning
+
+editor-tools-definition-insert-seealso = Add "see also"
+
+
+
+## Editor toolboxes - meanings
+
+editor-tools-meaning-title = Meaning
+
+editor-tools-meaning-insert-example = Add example
+
+
+## Editor toolboxes - see also
+
+editor-tools-seealso-title = See also
+
+editor-tools-seealso-add-term = Add term
+
+editor-tools-seealso-remove-term = Remove term

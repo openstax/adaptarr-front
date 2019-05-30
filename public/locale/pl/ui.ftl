@@ -260,6 +260,15 @@ draft-style-switcher-info-box = To jest funkcja eksperymentalna. Istnieją wizua
 
 draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
 
+draft-remove-glossary-dialog = Jesteś pewien, że chcesz usunąć glosariusz?
+
+draft-add-glossary = Dodaj glosariusz
+
+draft-remove-glossary = Usuń glosariusz
+
+draft-cancel = Anuluj
+
+
 
 ## Screens - dashboard - draft deletion dialog
 
@@ -713,7 +722,7 @@ editor-document-title-save-alert-error = Nie udało się zmienić tytułu.
 
 ## Editor - toolboxes
 
-editor-toolbox-no-selection = Brak zaznaczenia
+editor-toolbox-no-selection = Proszę zaznaczyć edytor, aby wyświetlić narzędzia.
 
 editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze
   wspierane
@@ -992,7 +1001,6 @@ editor-tools-sections-title = Sekcja
 
 editor-tools-sections-increase-depth =  Zwiększ zagłębienie sekcji
 
-<<<<<<< HEAD
 editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji
 
 
@@ -1014,8 +1022,6 @@ editor-tools-link-text = Wprowadź tekst
 editor-tools-link-url = Wprowadź odnośnik
 
 editor-tools-link-remove = Usuń link
-=======
-editor-tools-sections-decrease-depth =  Zmniejsz zagłębienie sekcji 
 
 
 
@@ -1026,4 +1032,37 @@ editor-tools-term-title = Termin
 editor-tools-term-label = Forma indeksowa
 
 editor-tools-term-remove = Usuń termin
->>>>>>> terms-inlines
+
+
+
+## Editor toolboxes - definitions
+
+editor-tools-definition-title = Definicja
+
+editor-tools-definition-insert-definition-before = Dodaj definicję przed blokiem
+
+editor-tools-definition-insert-definition-after = Dodaj definicję za blokiem
+
+editor-tools-definition-remove-definition = Usuń definicję
+
+editor-tools-definition-insert-meaning = Dodaj znaczenie
+
+editor-tools-definition-insert-seealso = Dodaj "zobacz również"
+
+
+
+## Editor toolboxes - meanings
+
+editor-tools-meaning-title = Znaczenie
+
+editor-tools-meaning-insert-example = Dodaj przykład
+
+
+
+## Editor toolboxes - see also
+
+editor-tools-seealso-title = Zobacz również
+
+editor-tools-seealso-add-term = Dodaj termin
+
+editor-tools-seealso-remove-term = Usuń termin

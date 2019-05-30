@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Block, Inline, Document, Node } from 'slate'
+import { Editor, Value, Block, Inline, Document } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
 import * as api from 'src/api'

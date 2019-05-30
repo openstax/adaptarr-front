@@ -47,7 +47,8 @@ export default class Storage extends StorageBase {
   title: string
   files: FileDescription[]
   tag: string | null = null
-  value: Value | null = null
+  document: Value | null = null
+  glossary: Value | null = null
 
   /**
    * Load a document by ID.
@@ -62,7 +63,7 @@ export default class Storage extends StorageBase {
 
     self.id = id
     self.url = '/api/v1/drafts/' + id
-    self.value = null
+    self.document = null
 
     const [data, files] = await Promise.all([
       self._request('', 'json'),
@@ -78,20 +79,22 @@ export default class Storage extends StorageBase {
   /**
    * Read the document.
    *
-   * @return {Value}
+   * @return {document: Value, glossary: Value}
    */
   async read() {
     const index = await this._request('/files/index.cnxml')
     this.tag = index.headers.get('ETag')
-    this.value = this.serializer.deserialize(await index.text())
-    return this.value
+    const deserialize = this.serializer.deserialize(await index.text())
+    this.document = deserialize.document
+    this.glossary = deserialize.glossary
+    return { document: this.document, glossary: this.glossary }
   }
 
   /**
    * Write the document
    */
-  async write(value: Value) {   
-    const text = this.serializer.serialize(value, this.title)
+  async write(document: Value, glossary: Value | null) {
+    const text = this.serializer.serialize(document, glossary, this.title)
 
     const req = await fetch(this.url + '/files/index.cnxml', {
       method: 'PUT',
@@ -103,7 +106,8 @@ export default class Storage extends StorageBase {
       throw new APIError(req)
     }
 
-    this.value = value
+    this.document = document
+    this.glossary = glossary
   }
 
   /**
@@ -126,8 +130,8 @@ export default class Storage extends StorageBase {
   /**
    * Check if a {@link Value} is current.
    */
-  current(value: Value) {
-    return this.value !== null && this.value.document.equals(value.document)
+  current(document: Value, glossary: Value) {
+    return this.document !== null && this.document.document.equals(document.document) && this.glossary !== null && this.glossary.document.equals(glossary.document)
   }
 
   /**
@@ -149,5 +153,8 @@ export default class Storage extends StorageBase {
     return data ? req[data]() : req
   }
 
-  serializer = new CNXML([tablesDeserialize, tablesSerialize])
+  serializer = new CNXML({
+    documentRules: [tablesDeserialize, tablesSerialize],
+    glossaryRules: [],
+  })
 }

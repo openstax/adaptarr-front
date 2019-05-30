@@ -1,8 +1,8 @@
 .toolbox {
-  position: fixed;
+  position: sticky;
   top: 0;
   right: 0;
-  height: calc(100vh - 8px); /* 100vh - padding-bottom value */
+  height: calc(100vh - 18px); /* 100vh - padding-bottom and top value + borders */
   width: 260px;
   padding: 8px;
   border-left: 1px solid var(--dark-bg);

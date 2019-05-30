@@ -104,7 +104,7 @@ class AssignedToMe extends React.Component<Props> {
                     <strong>
                       { booksName
                         ? booksName
-                        : <Localized id="dashboard-assigned-section-not-assigned" />
+                        : <Localized id="dashboard-assigned-section-not-assigned">...</Localized>
                       }
                     </strong>
                     {

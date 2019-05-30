@@ -23,7 +23,7 @@ export default class ToolGroup extends React.Component<Props> {
     return <div className={"toolgroup" + (open ? ' open' : '')}>
       <div className="toolgroup--header" onClick={this.toggle}>
         <Icon size='small' name={open ? 'arrow-down' : 'arrow-right'} />
-        <Localized id={title} />
+        <Localized id={title}>{title}</Localized>
       </div>
       <div className="toolgroup--content">
         {children}

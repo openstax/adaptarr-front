@@ -30,6 +30,6 @@ export type Props = {
 }
 
 export default function Tooltip({ l10nId, children, ...props }: Props) {
-  const content = <Localized id={l10nId} />
+  const content = <Localized id={l10nId}>...</Localized>
   return <TooltipImpl content={content} {...props}>{ children }</TooltipImpl>
 }

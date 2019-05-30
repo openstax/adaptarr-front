@@ -1,5 +1,6 @@
 .style-switcher {
   position: fixed;
+  z-index: 1;
   top: 15px;
 }
 

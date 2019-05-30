@@ -170,7 +170,7 @@ class UserProfile extends React.Component<Props> {
         <div className="profile__update-dialog">
           {body}
           <Button clickHandler={this.confirmUpdateAction}>
-            <Localized id="user-profile-update-confirm" />
+            <Localized id="user-profile-update-confirm">Update</Localized>
           </Button>
         </div>
       </Dialog>

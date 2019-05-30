@@ -105,5 +105,5 @@ export default class XrefTools extends React.Component<Props> {
 }
 
 function OptionLabel(case_: string) {
-  return <Localized id="editor-tools-xref-grammatical-case" $case={case_} />
+  return <Localized id="editor-tools-xref-grammatical-case" $case={case_}>{case_}</Localized>
 }

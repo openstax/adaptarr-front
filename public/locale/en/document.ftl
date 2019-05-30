@@ -119,3 +119,11 @@ xref-label-figure = Figure { $figure }
 # Variables:
 # - $table (number): target table's number
 xref-label-table = Table { $table }
+
+## Definitions
+
+definition-label = Definition for
+
+definition-example-label = Example
+
+definition-seealso-label = See also
