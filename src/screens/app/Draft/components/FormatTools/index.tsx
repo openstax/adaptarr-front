@@ -11,6 +11,7 @@ export type Props = {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
+  showSwitchableTypes?: boolean,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
@@ -29,24 +30,28 @@ const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exerc
 
 export default class FormatTools extends React.Component<Props> {
   render() {
-    const { editor, value } = this.props
+    const { editor, value, showSwitchableTypes = true } = this.props
     const { startBlock } = value
     const code = startBlock && startBlock.type === 'code' ? startBlock : null
-    
-    if (editor.isVoid(startBlock) || code) {
+
+    if (!startBlock || editor.isVoid(startBlock) || code) {
       return null
     }
 
     return (
       <div className="toolbox-format">
-        <Select
-          className="toolbox__select"
-          value={startBlock.type}
-          onChange={this.changeTextType}
-          options={SWITCHABLE_TEXT_TYPES}
-          isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
-          formatOptionLabel={OptionLabel}
-        />
+        {
+          showSwitchableTypes ?
+            <Select
+              className="toolbox__select"
+              value={startBlock.type}
+              onChange={this.changeTextType}
+              options={SWITCHABLE_TEXT_TYPES}
+              isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
+              formatOptionLabel={OptionLabel}
+            />
+          : null
+        }
         {FORMATS.map(format => (
           <Localized key={format} id={`editor-tools-format-button-${format}`} attrs={{ title: true }}>
             <Button
