@@ -33,6 +33,7 @@ import StorageContext from './plugins/Storage'
 import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
+import SourceElements from './plugins/SourceElements'
 
 type Props = {
   documentDbContent: DocumentDB
@@ -115,8 +116,12 @@ class Draft extends React.Component<Props> {
     I10nPlugin,
     XrefPlugin,
     TablesPlugin,
+    SourceElements,
     Counters(),
-    ...Document({ document_content: ['table'] }),
+    ...Document({
+      document_content: ['table', 'source_element'],
+      content: ['source_element'],
+    }),
     Persistence({ db: this.props.documentDbContent }),
   ]
 
