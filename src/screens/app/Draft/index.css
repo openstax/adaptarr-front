@@ -136,6 +136,23 @@
   background-color: #e3e3e3;
 }
 
+.editor .source {
+  border-radius: 3px;
+  background-color: #ddd;
+  white-space: pre-wrap;
+}
+
+.editor .source--block {
+  display: block;
+  padding: 3px;
+}
+
+.editor .source--inline {
+  display: inline-block;
+  padding: 0 3px;
+  line-height: 1;
+}
+
 .editor figure {
   margin: 0;
   padding-left: 48q;
