@@ -1141,6 +1141,8 @@ editor-tools-insert-quotation = Cytat
 
 editor-tools-insert-link = Link
 
+editor-tools-insert-source = Kod źródłowy
+
 
 
 ## Editor toolboxes - lists
@@ -1349,3 +1351,20 @@ editor-tools-seealso-title = Zobacz również
 editor-tools-seealso-add-term = Dodaj termin
 
 editor-tools-seealso-remove-term = Usuń termin
+
+
+
+## Editor toolboxes - source elements
+
+editor-tools-source-title = Kod źródłowy
+
+editor-tools-source-type-label = Wyświetlaj element jako:
+
+# Entry on the list of possible source types.
+#
+# Variables:
+# - $type (string): source's type. Possible values are 'inline' and 'block'
+editor-tools-source-type = { $type ->
+ *[inline] Linia
+  [block] Blok
+}
