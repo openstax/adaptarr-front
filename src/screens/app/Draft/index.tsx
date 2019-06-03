@@ -231,6 +231,7 @@ class Draft extends React.Component<Props> {
   public render() {
     const { documentDbContent, documentDbGlossary, storage, draft } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
+    const viewPermission = draft && draft.permissions && draft.permissions.includes('view')
     const isEditorFocused = this.isEditorFocused()
     const showGlossaryToolbox = this.glossaryEditor.current &&
       this.glossaryEditor.current.value.selection.isFocused
@@ -279,6 +280,7 @@ class Draft extends React.Component<Props> {
                       value={valueDocument}
                       plugins={this.pluginsDocument}
                       onChange={this.onChangeDocument}
+                      readOnly={viewPermission}
                     />
                     {
                       isGlossaryEmpty ?
@@ -294,57 +296,68 @@ class Draft extends React.Component<Props> {
                         </div>
                       :
                         <>
-                          <div className="document__glossary-toggler">
-                            <Button
-                              color="red"
-                              clickHandler={this.showRemoveGlossaryDialog}
-                            >
-                              <Localized id="draft-remove-glossary">
-                                Remove glossary
-                              </Localized>
-                            </Button>
-                          </div>
+                          {
+                            viewPermission ?
+                              null
+                            :
+                              <div className="document__glossary-toggler">
+                                <Button
+                                  color="red"
+                                  clickHandler={this.showRemoveGlossaryDialog}
+                                >
+                                  <Localized id="draft-remove-glossary">
+                                    Remove glossary
+                                  </Localized>
+                                </Button>
+                              </div>
+                          }
                           <Editor
                             ref={this.glossaryEditor}
                             className="editor editor--glossary"
                             value={valueGlossary}
                             plugins={this.pluginsGlossary}
                             onChange={this.onChangeGlossary}
+                            readOnly={viewPermission}
                           />
                         </>
                     }
                   </StorageContext>
                 </LocalizationLoader>
               </div>
-              <div className="document__ui">
-                <StorageContext storage={storage}>
-                  {
-                    showDocumentToolbox ?
-                      <ToolboxDocument
-                        editor={this.contentEditor.current as unknown as Editor_}
-                        value={valueDocument}
-                      />
-                    : null
-                  }
-                  {
-                    showGlossaryToolbox ?
-                      <ToolboxGlossary
-                        editor={this.glossaryEditor.current as unknown as Editor_}
-                        value={valueGlossary}
-                      />
-                    : null
-                  }
-                  {
-                    !isEditorFocused ?
-                      <div className="toolbox">
-                        <Localized id="editor-toolbox-no-selection">
-                          Please select editor to show toolbox.
-                        </Localized>
-                      </div>
-                    : null
-                  }
-                </StorageContext>
-              </div>
+              {
+                viewPermission ?
+                  null
+                :
+                  <div className="document__ui">
+                    <StorageContext storage={storage}>
+                      {
+                        showDocumentToolbox ?
+                          <ToolboxDocument
+                            editor={this.contentEditor.current as unknown as Editor_}
+                            value={valueDocument}
+                          />
+                        : null
+                      }
+                      {
+                        showGlossaryToolbox ?
+                          <ToolboxGlossary
+                            editor={this.glossaryEditor.current as unknown as Editor_}
+                            value={valueGlossary}
+                          />
+                        : null
+                      }
+                      {
+                        !isEditorFocused ?
+                          <div className="toolbox">
+                            <Localized id="editor-toolbox-no-selection">
+                              Please select editor to show toolbox.
+                            </Localized>
+                          </div>
+                        : null
+                      }
+                    </StorageContext>
+                  </div>
+              }
             </div>
           </div>
         </div>
