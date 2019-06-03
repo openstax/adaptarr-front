@@ -21,14 +21,18 @@ function source(obj: Node, children: Element | Array<any>) {
   // Source inlines are created with text: " " and if user will forgot about this element
   // then we should still handle this instead throwing an error.
   if (!source) return null
-  const xmlDoc = parser.parseFromString(source, 'application/xml')
+
+  // Add xmlns="http://cnx.rice.edu/cnxml" as default namespace for elements.
+  const xmlDoc = parser.parseFromString(`<content xmlns="http://cnx.rice.edu/cnxml">${source}</content>`, 'application/xml')
 
   const error = xmlDoc.getElementsByTagName('parsererror')
   if (error.length) {
     throw new Error(`${error[0].textContent}, Content: ${obj.getText()}`)
   }
 
-  return <>{xmlDoc.documentElement}</>
+  const elements = xmlDoc.getElementsByTagName('content')[0].children
+
+  return <>{elements}</>
 }
 
 export default serializeRules
