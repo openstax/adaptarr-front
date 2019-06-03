@@ -16,6 +16,7 @@ type Props = {
   type?: string
   autoFocus?: boolean
   trim?: boolean
+  disabled?: boolean
   validation?: {
     minLength?: number
     maxLength?: number
@@ -125,7 +126,7 @@ class Input extends React.Component<Props> {
           this.setState({ inputVal: value.replace(leadingSpace, '') })
         } else {
           this.setState({ inputVal: value })
-        }  
+        }
       } else {
         this.setState({ inputVal: this.props.value })
       }
@@ -140,7 +141,7 @@ class Input extends React.Component<Props> {
           this.setState({ inputVal: value.replace(leadingSpace, '') })
         } else {
           this.setState({ inputVal: value })
-        }  
+        }
       } else {
         this.setState({ inputVal: this.props.value })
       }
@@ -149,7 +150,7 @@ class Input extends React.Component<Props> {
 
   public render() {
     const { touched, inputVal } = this.state
-    const { l10nId, errorMessage, type, autoFocus, trim } = this.props
+    const { l10nId, errorMessage, type, autoFocus, disabled = false } = this.props
 
     const classes = this.validateInput().classes
 
@@ -160,6 +161,7 @@ class Input extends React.Component<Props> {
       onChange={this.changeInputVal}
       onFocus={this.onFocus}
       onBlur={this.onBlur}
+      disabled={disabled}
     />
 
     if (l10nId) {
