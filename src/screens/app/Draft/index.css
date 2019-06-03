@@ -13,21 +13,6 @@
   justify-content: flex-end;
 }
 
-.draft__title {
-  display: block;
-  width: 80%;
-  margin: 20px auto;
-  font-size: 1.5rem;
-}
-
-.draft__title .input input {
-  font-size: 1.5rem;
-  color: var(--font-dark);
-  padding: 0;
-  background: transparent;
-  border: transparent;
-}
-
 .draft__editor {
   position: relative;
   display: flex;
