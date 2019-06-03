@@ -49,12 +49,10 @@ class LinkComp extends React.Component<SlotProps> {
     stepSlots.forEach(s => {
       temp[s.slot] = s
     })
-    console.log('temp', JSON.stringify(temp))
     let stepSlotsOptions = Object.values(temp).map(s => {
       return { value: s.slot, label: slots[s.slot].name }
     })
-    console.log('stepSlotsOptions', JSON.stringify(stepSlotsOptions))
-    
+
     this.setState({
       name: link.name,
       to: link.to,
@@ -67,7 +65,7 @@ class LinkComp extends React.Component<SlotProps> {
   componentDidUpdate(prevProps: SlotProps) {
     const { link: prevLink, steps: prevSteps } = prevProps
     const { link, steps } = this.props
-    
+
     if (JSON.stringify(prevLink) !== JSON.stringify(link)) {
       this.updateStateWithProps()
     } else if (JSON.stringify(prevSteps) !== JSON.stringify(steps)) {
