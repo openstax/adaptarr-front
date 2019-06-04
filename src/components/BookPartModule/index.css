@@ -8,3 +8,7 @@
   background: none;
   color: var(--font-dark);
 }
+
+.bookpart__item--module .begin-process-dialog .dialog__content {
+  overflow: visible;
+}

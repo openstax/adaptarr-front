@@ -117,15 +117,15 @@ class Module extends React.Component<Props> {
               size="medium"
               onClose={this.closeRemoveModuleDialog}
             >
-              <Button 
-                color="green" 
+              <Button
+                color="green"
                 clickHandler={this.removeModule}
               >
                 <Localized id="book-remove-module-confirm">
                   Delete
                 </Localized>
               </Button>
-              <Button 
+              <Button
                 color="red"
                 clickHandler={this.closeRemoveModuleDialog}
               >
@@ -142,6 +142,7 @@ class Module extends React.Component<Props> {
               l10nId="book-begin-process-title"
               placeholder="Configure and begin process."
               size="medium"
+              className="bookpart__item--module begin-process-dialog"
               onClose={this.closeBeginProcessDialog}
             >
               <BeginProcess
@@ -168,8 +169,8 @@ class Module extends React.Component<Props> {
             </Dialog>
           : null
         }
-        <span 
-          className="bookpart__title" 
+        <span
+          className="bookpart__title"
           onClick={() => this.props.onModuleClick(item)}
         >
           {item.title}
