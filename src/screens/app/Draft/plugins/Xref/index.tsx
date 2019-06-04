@@ -135,7 +135,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       .find(target => target.id === targetKey)
 
     let l10nKey
-    let args = { $case: node.data.get('case') }
+    let args = { case: node.data.get('case') }
     let localization
 
     if (!referenceTargets) {
@@ -143,7 +143,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       localization = uiL10n
     } else if (target) {
       l10nKey = 'xref-label-' + target.type
-      args['$' + target.type] = target.counter
+      args[target.type] = target.counter
       localization = l10n
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey} from document ${targetDocument}`)
