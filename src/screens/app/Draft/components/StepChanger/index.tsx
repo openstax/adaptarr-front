@@ -6,7 +6,8 @@ import { Value } from 'slate'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { Draft, Storage } from 'src/api'
+import { addModuleToMap } from 'src/store/actions/Modules'
+import { Draft, Storage, Module } from 'src/api'
 import { Link } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
@@ -166,11 +167,13 @@ class StepChanger extends React.Component<Props> {
     const link = this.state.link
     if (!link) return
     this.props.draft.advance({ target: link.to, slot: link.slot })
-      .then((res) => {
+      .then(async (res) => {
         store.dispatch(addAlert('success', 'step-changer-success', {
           code: res.code.replace(/:/g, '-'),
         }))
         this.props.onStepChange()
+        const mod = await Module.load(this.props.draft.module)
+        store.dispatch(addModuleToMap(mod))
       })
       .catch(e => {
         store.dispatch(addAlert('error', 'step-changer-error', {
