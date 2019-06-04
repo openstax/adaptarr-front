@@ -837,7 +837,13 @@ step-changer-cancel = Cancel
 
 step-changer-discard-advance = Discard changes and advance
 
-step-changer-discard-save-advance = Save and advance
+step-changer-save-advance = Save and advance
+
+# Alert displayed when there was an error while saving and advancing to the next step.
+#
+# Variables:
+# - $details (string): error details.
+step-changer-save-advance-error = Couldn't save and advance to the next step. Details: { $details }.
 
 
 

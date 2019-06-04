@@ -1,11 +1,12 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
-import { PersistDB } from 'cnx-designer'
+import { DocumentDB } from 'cnx-designer'
+import { Value } from 'slate'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { Draft } from 'src/api'
+import { Draft, Storage } from 'src/api'
 import { Link } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
@@ -16,6 +17,11 @@ import './index.css'
 type Props = {
   draft: Draft
   onStepChange: () => any
+  document: Value
+  glossary: Value
+  storage: Storage
+  documentDbContent: DocumentDB
+  documentDbGlossary: DocumentDB
 }
 
 class StepChanger extends React.Component<Props> {
@@ -92,7 +98,7 @@ class StepChanger extends React.Component<Props> {
                         color="green"
                         clickHandler={this.saveAndAdvance}
                       >
-                        <Localized id="step-changer-discard-save-advance">
+                        <Localized id="step-changer-save-advance">
                           Save and advance
                         </Localized>
                       </Button>
@@ -130,8 +136,8 @@ class StepChanger extends React.Component<Props> {
   }
 
   private showConfirmDialog = async () => {
-    const documentDb = await (PersistDB.load(this.props.draft.module))
-    const unsavedChanges = documentDb.dirty
+    const { storage, document, glossary } = this.props
+    const unsavedChanges = !storage.current(document, glossary)
     this.setState({ confirmDialog: true, unsavedChanges })
   }
 
@@ -139,9 +145,21 @@ class StepChanger extends React.Component<Props> {
     this.setState({ confirmDialog: false })
   }
 
-  private saveAndAdvance = () => {
-    // TODO: Add this when we will merge glossary PR where we have easier
-    // access to context
+  private saveAndAdvance = async () => {
+    const { storage, document, glossary, documentDbContent, documentDbGlossary } = this.props
+
+    try {
+      const isGlossaryEmpty = !this.props.glossary.document.nodes.has(0) ||
+        this.props.glossary.document.nodes.get(0).type !== 'definition'
+      await storage.write(document, isGlossaryEmpty ? null : glossary)
+      await documentDbContent.save(document, Date.now().toString())
+      await documentDbGlossary.save(glossary, Date.now().toString())
+      this.nextStep()
+    } catch (ex) {
+      store.dispatch(addAlert('error', 'step-changer-save-advance-error'))
+      console.error(ex)
+    }
+
   }
 
   private nextStep = () => {

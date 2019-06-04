@@ -242,6 +242,11 @@ class Draft extends React.Component<Props> {
           <StepChanger
             draft={draft}
             onStepChange={this.handleStepChange}
+            document={valueDocument}
+            glossary={valueGlossary}
+            storage={storage}
+            documentDbContent={documentDbContent}
+            documentDbGlossary={documentDbGlossary}
           />
           <div className="draft__controls">
             <StyleSwitcher onChange={this.handleStyleChange} />

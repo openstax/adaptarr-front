@@ -838,7 +838,13 @@ step-changer-cancel = Anuluj
 
 step-changer-discard-advance = Odrzuć zmiany i przenieś
 
-step-changer-discard-save-advance = Zapisz i przenieś
+step-changer-save-advance = Zapisz i przenieś
+
+# Alert displayed when there was an error while saving and advancing to the next step.
+#
+# Variables:
+# - $details (string): error details.
+step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu. Szczegóły: { $details }.
 
 
 
