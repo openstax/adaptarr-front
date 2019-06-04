@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Editor, Value, Operation } from 'slate'
+import { pick } from 'lodash'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
@@ -34,11 +35,13 @@ export default class DocumentTools extends React.Component<Props> {
   setLanguage = ({ code }: typeof LANGUAGES[0]) => {
     const { editor, value } = this.props
 
+    const newProperties = Value.createProperties({ data: value.data.set('language', code) })
+    const prevProperties = pick(value, Object.keys(newProperties))
+
     editor.applyOperation({
       type: 'set_value',
-      properties: {
-        data: value.data.set('language', code),
-      },
+      properties: prevProperties,
+      newProperties,
     } as unknown as Operation)
   }
 }
