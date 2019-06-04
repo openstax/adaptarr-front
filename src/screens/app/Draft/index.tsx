@@ -246,14 +246,18 @@ class Draft extends React.Component<Props> {
           />
           <div className="draft__controls">
             <StyleSwitcher onChange={this.handleStyleChange} />
-            <SaveButton
-              document={valueDocument}
-              glossary={valueGlossary}
-              isGlossaryEmpty={isGlossaryEmpty}
-              storage={storage}
-              documentDbContent={documentDbContent}
-              documentDbGlossary={documentDbGlossary}
-            />
+            {
+              !viewPermission ?
+                <SaveButton
+                  document={valueDocument}
+                  glossary={valueGlossary}
+                  isGlossaryEmpty={isGlossaryEmpty}
+                  storage={storage}
+                  documentDbContent={documentDbContent}
+                  documentDbGlossary={documentDbGlossary}
+                />
+              : null
+            }
           </div>
         </Header>
         <div className="section__content draft">
@@ -283,7 +287,7 @@ class Draft extends React.Component<Props> {
                       readOnly={viewPermission}
                     />
                     {
-                      isGlossaryEmpty ?
+                      isGlossaryEmpty && !viewPermission ?
                         <div className="document__glossary-toggler">
                           <Button
                             color="green"
