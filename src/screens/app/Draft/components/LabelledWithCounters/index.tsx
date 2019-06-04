@@ -1,7 +1,5 @@
 import * as React from 'react'
-import { InjectedProps, withLocalization } from 'fluent-react/compat'
 import { WithCounters, CounterProps } from 'slate-counters'
-import { RenderNodeProps } from 'slate-react'
 
 import Labelled, { Props as LabelledProps } from '../Labelled'
 

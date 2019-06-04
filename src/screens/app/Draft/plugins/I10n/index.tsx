@@ -9,7 +9,7 @@ import Caption from '../../components/Caption'
 const SOLUTION_COUNTERS = { solution: 'exercise_solution' }
 
 const I10nPlugin: Plugin = {
-  renderNode(props, _, next) {
+  renderBlock(props, _, next) {
     const { node } = props
 
     switch (node.type) {

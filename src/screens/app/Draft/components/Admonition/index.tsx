@@ -1,10 +1,10 @@
 import * as React from 'react'
 import { InjectedProps, withLocalization } from 'fluent-react/compat'
 import { Block, Node } from 'slate'
-import { RenderNodeProps } from 'slate-react'
+import { RenderBlockProps } from 'slate-react'
 import { List } from 'immutable';
 
-type Props = RenderNodeProps & InjectedProps
+type Props = RenderBlockProps & InjectedProps
 
 function Labelled({ children, attributes, getString, node }: Props) {
   const type = node.data.get('type')

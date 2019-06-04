@@ -1,6 +1,6 @@
 import { Plugin } from 'slate-react'
 
-import renderNode from './render'
+import renderBlock from './render'
 import schema from './schema'
 
 interface CustomPlugin extends Plugin {
@@ -9,7 +9,7 @@ interface CustomPlugin extends Plugin {
 
 const I18nPlugin: CustomPlugin = {
   schema,
-  renderNode,
+  renderBlock,
 }
 
 export default I18nPlugin

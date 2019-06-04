@@ -4,7 +4,7 @@ import { Localized, ReactLocalization } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { Block, Inline, Value } from 'slate'
-import { Plugin, RenderNodeProps } from 'slate-react'
+import { Plugin, RenderInlineProps } from 'slate-react'
 
 import capitalize from 'src/helpers/capitalize'
 
@@ -12,7 +12,7 @@ import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
 
 const XrefPlugin: Plugin = {
-  renderNode(props, _, next) {
+  renderInline(props, _, next) {
     if (props.node.type === 'xref') {
       return <Xref {...props} />
     }
@@ -23,11 +23,11 @@ const XrefPlugin: Plugin = {
 
 export default XrefPlugin
 
-type XrefProps = RenderNodeProps & {
+type XrefProps = RenderInlineProps & {
   referenceTargets?: ReferenceTarget[],
 }
 
-const mapStateTopProps = ({ modules: { referenceTargets } }: State, { node }: RenderNodeProps) => {
+const mapStateTopProps = ({ modules: { referenceTargets } }: State, { node }: RenderInlineProps) => {
   const document = node.data.get('document')
   if (document) {
     return {
