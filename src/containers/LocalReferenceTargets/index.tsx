@@ -1,12 +1,13 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { Block, Document, Editor, Node } from 'slate'
-import { Map } from 'immutable'
+import { connect } from 'react-redux'
 
 import * as api from 'src/api'
 import { ReferenceTarget, ReferenceTargetType } from 'src/store/types'
+import { State } from 'src/store/reducers'
 
-import { ReferenceTargetWithLabel } from 'src/components/ReferenceTarget'
+import LocalizationLoader from 'src/screens/app/Draft/components/LocalizationLoader'
+
 import ReferenceTargets from 'src/containers/ReferenceTargets'
 
 /**
@@ -27,30 +28,100 @@ export type Props = {
    * Function to call when user selects a reference target.
    */
   onSelect: (target: ReferenceTarget, source: api.Module | null) => void,
+  currentDraftLang: string,
 }
+
+const mapStateToProps = ({ draft: { currentDraftLang } }: State) => ({
+  currentDraftLang,
+})
 
 /**
  * Display list of reference targets in an editor session.
  */
-export default class LocalResourceTargets extends React.PureComponent<Props> {
-  static contextTypes = {
-    counters: PropTypes.instanceOf(Map as any),
+class LocalResourceTargets extends React.PureComponent<Props> {
+  state: {
+    countersMap: Map<string, Map<string, number>>
+  } = {
+    countersMap: new Map(),
+  }
+
+  private setCounters = () => {
+    const { countersMap } = this.state
+    const counters: Map<string, number> = new Map() // Map<type, counter>
+
+    const setCounterForElement = (e: Element, customCounter?: number) => {
+      const type = e.tagName.toLowerCase() === 'figure' ? 'figure' : e.className.replace(/-/g, '_')
+      const key = e.getAttribute('data-key') || ''
+
+      if (typeof customCounter !== 'number') {
+        if (counters.has(type)) {
+          counters.set(type, counters.get(type)! + 1)
+        } else {
+          counters.set(type, 1)
+        }
+      }
+
+      const counter = customCounter || counters.get(type)!
+
+      if (countersMap.has(key)) {
+        if (countersMap.get(key)!.has(type)) {
+          let newMap = countersMap.get(key)!
+          newMap.set(type, counter)
+          countersMap.set(key, newMap)
+        } else {
+          let newMap = countersMap.get(key)!
+          newMap.set(type, counter)
+          countersMap.set(key, newMap)
+        }
+      } else {
+        let newMap = new Map([[type, counter]])
+        countersMap.set(key, newMap)
+      }
+    }
+
+    const editor = document.getElementsByClassName('editor--document')[0]
+    const elements = editor.querySelectorAll('.admonition, figure, .exercise, .example')
+    elements.forEach(e => {
+      setCounterForElement(e)
+      if (e.className === 'exercise') {
+        const solutions = e.querySelectorAll('.exercise-solution, .exercise-commentary')
+        solutions.forEach((sol, i) => {
+          setCounterForElement(sol, i + 1)
+        })
+        const commentaries = e.querySelectorAll('.exercise-commentary')
+        commentaries.forEach((com, i) => {
+          setCounterForElement(com, i + 1)
+        })
+      }
+    })
+
+    this.setState({ countersMap })
+  }
+
+  componentWillMount() {
+    this.setCounters()
   }
 
   render() {
-    const { editor, onSelect } = this.props
+    const { editor, onSelect, currentDraftLang } = this.props
     const targets = Array.from(this.mapBlockToTargets(editor.value.document))
 
     return (
-      <ReferenceTargets
-        module={null}
-        targets={targets}
-        onSelect={onSelect}
-        />
+      targets.length ?
+        <LocalizationLoader
+          locale={currentDraftLang || 'en'}
+        >
+          <ReferenceTargets
+            module={null}
+            targets={targets}
+            onSelect={onSelect}
+          />
+        </LocalizationLoader>
+      : null
     )
   }
 
-  private *mapBlockToTargets(block: Block | Document): IterableIterator<ReferenceTargetWithLabel> {
+  private *mapBlockToTargets(block: Block | Document): IterableIterator<ReferenceTarget> {
     for (const child of block.nodes as unknown as Iterable<Node>) {
       if (child.object !== 'block') continue
 
@@ -69,7 +140,7 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
         break
 
       case 'figure':
-        if ((child.nodes.last() as Block).type === 'caption') {
+        if ((child.nodes.last() as Block).type === 'figure_caption') {
           description = child.nodes.last().text
         }
         break
@@ -86,14 +157,12 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
         continue
       }
 
-      const counters = this.context.counters.get(child.key)
-      const label = this.props.editor.run('renderXRef', child, counters) as unknown as string
+      const counters = this.state.countersMap.get(child.key) || new Map([[child.type, 0]])
 
-      const target: ReferenceTargetWithLabel = {
+      const target: ReferenceTarget = {
         id: child.key,
         type: type || TYPE_MAP[child.type] || child.type,
         description,
-        label,
         counter: counters.get(child.type) || 0,
         children: [],
       }
@@ -112,3 +181,5 @@ export default class LocalResourceTargets extends React.PureComponent<Props> {
     }
   }
 }
+
+export default connect(mapStateToProps)(LocalResourceTargets)

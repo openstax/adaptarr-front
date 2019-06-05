@@ -987,36 +987,6 @@ message-input-alert-select-user-error =
 
 
 
-## Reusable components - reference target
-
-# Variables:
-# - $label (string): string that would be used to refer to this target in text
-reference-target = { $label }
-
-# Variables:
-# - $label (string): string that would be used to refer to this target in text
-# - $description (string)
-reference-target-description = { $label }: { $description }
-
-
-
-## Reusable components - list of reference targets
-
-# Variables:
-# - $type (string)
-reference-targets-category = { $type ->
-  [example] Examples
-  [exercise] Exercises
-  [figure] Figures
-  [important] Important
-  [note] Notes
-  [tip] Tips
-  [warning] Warnings
- *[notavalidtype] { $type }
-}
-
-
-
 ## Reusable components - list of reference targets
 
 reference-target-list-go-back = Back

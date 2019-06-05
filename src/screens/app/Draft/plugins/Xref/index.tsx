@@ -1,12 +1,10 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Localized, ReactLocalization } from 'fluent-react/compat'
+import { ReactLocalization } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { Block, Inline, Value } from 'slate'
 import { Plugin, RenderInlineProps } from 'slate-react'
-
-import capitalize from 'src/helpers/capitalize'
 
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
@@ -131,8 +129,26 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
     const targetDocument = node.data.get('document')
     const targetKey = node.data.get('target')
-    const target = referenceTargets && referenceTargets
-      .find(target => target.id === targetKey)
+
+    const findTarget = (refs: ReferenceTarget[] = []): ReferenceTarget | undefined => {
+      let result = undefined
+      refs.some(target => {
+        if (target.id === targetKey) {
+          result = target
+          return true
+        }
+        if (target.children.length) {
+          const res = findTarget(target.children)
+          if (res) {
+            result = res
+            return true
+          }
+        }
+        return false
+      })
+      return result
+    }
+    const target = findTarget(referenceTargets)
 
     let l10nKey
     let args = { case: node.data.get('case') }

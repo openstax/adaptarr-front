@@ -5,6 +5,9 @@ import { pick } from 'lodash'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
+import store from 'src/store'
+import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+
 import ToolGroup from '../ToolGroup'
 
 export type Props = {
@@ -43,6 +46,8 @@ export default class DocumentTools extends React.Component<Props> {
       properties: prevProperties,
       newProperties,
     } as unknown as Operation)
+
+    store.dispatch(setCurrentDraftLang(code))
   }
 }
 

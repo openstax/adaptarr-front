@@ -84,3 +84,8 @@ export type SET_ROLES = typeof SET_ROLES
 
 export const SET_PROCESSES = 'SET_PROCESSES'
 export type SET_PROCESSES = typeof SET_PROCESSES
+
+
+
+export const SET_CURRENT_DRAFT_LANG = 'SET_CURRENT_DRAFT_LANG'
+export type SET_CURRENT_DRAFT_LANG = typeof SET_CURRENT_DRAFT_LANG
