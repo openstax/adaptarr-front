@@ -309,7 +309,12 @@ div.editor figure > figcaption::before {
   font-style: italic;
 }
 
-.editor .term, .editor .definition-term {
+.editor .term{
+  border: 1px solid var(--font-dark);
+  padding: 0 2px;
+}
+
+.editor .definition-term {
   display: inline-block;
   font-weight: 700;
 }
