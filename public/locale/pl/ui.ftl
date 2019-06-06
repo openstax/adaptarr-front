@@ -1169,7 +1169,7 @@ editor-tools-insert-section = Sekcja
 
 editor-tools-insert-quotation = Cytat
 
-editor-tools-insert-link = Odnośnik
+editor-tools-insert-link = Link
 
 
 
