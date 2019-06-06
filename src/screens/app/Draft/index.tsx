@@ -221,7 +221,9 @@ class Draft extends React.Component<Props> {
     const cE = this.contentEditor.current
     const gE = this.glossaryEditor.current
     if (gE && gE.value.selection.isFocused) return true
-    if (cE && gE && !gE.value.selection.isFocused) return true
+    // Return true even if cE is not focused because focus is moved when user click
+    // on Select or other Input element in Toolbox
+    if (cE) return true
     return false
   }
 
