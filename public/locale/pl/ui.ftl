@@ -1038,7 +1038,7 @@ editor-tools-save-alert-error = Nie udało się zapisać szkicu.
 
 ## Editor toolboxes - admonitions
 
-editor-tools-admonition-title = Admonition
+editor-tools-admonition-title = Notatka
 
 # Entry on the list of possible admonition types.
 #
@@ -1127,7 +1127,7 @@ editor-tools-insert-title = Wstaw
 
 editor-tools-insert-reference = Odnośnik
 
-editor-tools-insert-admonition = Admonition
+editor-tools-insert-admonition = Notatka
 
 editor-tools-insert-exercise = Ćwiczenie
 
