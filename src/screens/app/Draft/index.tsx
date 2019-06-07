@@ -287,23 +287,24 @@ class Draft extends React.Component<Props> {
                       readOnly={viewPermission}
                     />
                     {
-                      isGlossaryEmpty && !viewPermission ?
-                        <div className="document__glossary-toggler">
-                          <Button
-                            color="green"
-                            clickHandler={this.addGlossary}
-                          >
-                            <Localized id="draft-add-glossary">
-                              Add glossary
-                            </Localized>
-                          </Button>
-                        </div>
+                      isGlossaryEmpty ?
+                        viewPermission ?
+                          null
+                        :
+                          <div className="document__glossary-toggler">
+                            <Button
+                              color="green"
+                              clickHandler={this.addGlossary}
+                            >
+                              <Localized id="draft-add-glossary">
+                                Add glossary
+                              </Localized>
+                            </Button>
+                          </div>
                       :
                         <>
                           {
-                            viewPermission ?
-                              null
-                            :
+                            !viewPermission ?
                               <div className="document__glossary-toggler">
                                 <Button
                                   color="red"
@@ -314,6 +315,7 @@ class Draft extends React.Component<Props> {
                                   </Localized>
                                 </Button>
                               </div>
+                            : null
                           }
                           <Editor
                             ref={this.glossaryEditor}
