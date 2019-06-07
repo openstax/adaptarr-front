@@ -7,6 +7,8 @@ import store from 'src/store'
 
 import Input from 'src/components/ui/Input'
 
+import './index.css'
+
 type Props = {
   draft: Draft
 }
@@ -46,14 +48,17 @@ class Title extends React.Component<Props> {
 
   public render() {
     const { titleInput } = this.state
+    const { draft } = this.props
+    const viewPermission = draft && draft.permissions && draft.permissions.includes('view')
 
     return (
       <form onSubmit={this.changeTitle}>
-        <span className="draft__title">
+        <span className={`draft__title ${viewPermission ? 'draft__title--smaller' : ''}`}>
           <Input
             l10nId="editor-document-title-value"
             value={titleInput}
             onChange={this.updateTitleInput}
+            disabled={viewPermission}
           />
         </span>
       </form>
