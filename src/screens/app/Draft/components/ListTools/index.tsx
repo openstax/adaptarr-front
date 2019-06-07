@@ -27,9 +27,9 @@ export default class ListTools extends React.Component<Props> {
       <ToolGroup title="editor-tools-list-title">
         <Select
           className="toolbox__select"
-          value={list.type}
+          value={{value: list.type, label: list.type}}
           onChange={this.changeListStyle}
-          options={LIST_STYLES}
+          options={LIST_STYLES.map(t => {return {value: t, label: t}})}
           formatOptionLabel={OptionLabel}
         />
         <Button
@@ -55,7 +55,7 @@ export default class ListTools extends React.Component<Props> {
     )
   }
 
-  private changeListStyle = (value: string) => {
+  private changeListStyle = ({value}: {value: string, label: string}) => {
     this.props.editor.changeListType(value)
   }
 
@@ -70,6 +70,6 @@ export default class ListTools extends React.Component<Props> {
   }
 }
 
-function OptionLabel(style: string) {
+function OptionLabel({value: style}: {value: string, label: string}) {
   return <Localized id="editor-tools-list-style" $style={style}>{style}</Localized>
 }

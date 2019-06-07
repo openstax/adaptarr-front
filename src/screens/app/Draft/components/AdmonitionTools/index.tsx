@@ -18,19 +18,21 @@ export default function AdmonitionTools({ editor, value }: Props) {
 
   if (admonition === null) return null
 
-  function onChange(value: string) {
+  function onChange({value}: {value: string, label: string}) {
     editor.setNodeByKey(admonition!.key, {
       data: { type: value },
     } as unknown as BlockProperties)
   }
 
+  const admonitionType = admonition.data.get('type')
+
   return (
     <ToolGroup title="editor-tools-admonition-title">
       <Select
         className="toolbox__select"
-        value={admonition.data.get('type')}
+        value={{value: admonitionType, label: admonitionType}}
         onChange={onChange}
-        options={ADMONITIONS_TYPES}
+        options={ADMONITIONS_TYPES.map(t => {return {value: t, label: t}})}
         formatOptionLabel={OptionLabel}
       />
       <Classes editor={editor} block={admonition} />
@@ -38,6 +40,6 @@ export default function AdmonitionTools({ editor, value }: Props) {
   )
 }
 
-function OptionLabel(type: string) {
+function OptionLabel({value: type}: {value: string, label: string}) {
   return <Localized id="editor-tools-admonition-type" $type={type}>{type}</Localized>
 }

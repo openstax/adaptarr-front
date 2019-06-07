@@ -29,6 +29,8 @@ export default class XrefTools extends React.Component<Props> {
 
     if (!xref) return null
 
+    const xrefCase = xref.data.get('case') || CASES[0]
+
     return (
       <ToolGroup title="editor-tools-xref-title">
         <label className="toolbox__label">
@@ -38,8 +40,8 @@ export default class XrefTools extends React.Component<Props> {
           <Select
             className="toolbox__select"
             onChange={this.changeCase}
-            options={CASES}
-            value={xref.data.get('case') || CASES[0]}
+            options={CASES.map(c => {return {value: c, label: c}})}
+            value={{value: xrefCase, label: xrefCase}}
             formatOptionLabel={OptionLabel}
           />
         </label>
@@ -65,7 +67,7 @@ export default class XrefTools extends React.Component<Props> {
     return xref.type === 'xref' ? xref : null
   }
 
-  private changeCase = (value: string) => {
+  private changeCase = ({value}: {value: string, label: string}) => {
     const xref = this.getActiveXref()
     if (!xref) return
 
@@ -104,6 +106,6 @@ export default class XrefTools extends React.Component<Props> {
   }
 }
 
-function OptionLabel(case_: string) {
+function OptionLabel({value: case_}: {value: string, label: string}) {
   return <Localized id="editor-tools-xref-grammatical-case" $case={case_}>{case_}</Localized>
 }

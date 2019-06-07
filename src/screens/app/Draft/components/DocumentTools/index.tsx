@@ -26,16 +26,16 @@ export default class DocumentTools extends React.Component<Props> {
       <ToolGroup title="editor-tools-document-title">
         <Select
           className="toolbox__select"
-          value={language}
+          value={language ? {value: language.code, label: language.name} : null}
           onChange={this.setLanguage}
-          options={LANGUAGES}
+          options={LANGUAGES.map(l => {return {value: l.code, label: l.name}})}
           getOptionLabel={getOptionLabel}
           />
       </ToolGroup>
     )
   }
 
-  setLanguage = ({ code }: typeof LANGUAGES[0]) => {
+  setLanguage = ({ value: code }: {value: string, label: string}) => {
     const { editor, value } = this.props
 
     const newProperties = Value.createProperties({ data: value.data.set('language', code) })
@@ -51,6 +51,6 @@ export default class DocumentTools extends React.Component<Props> {
   }
 }
 
-function getOptionLabel({ name }: typeof LANGUAGES[0]) {
+function getOptionLabel({ label: name }: {value: string, label: string}) {
   return name
 }

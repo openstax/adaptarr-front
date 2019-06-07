@@ -44,10 +44,10 @@ export default class FormatTools extends React.Component<Props> {
           showSwitchableTypes ?
             <Select
               className="toolbox__select"
-              value={startBlock.type}
+              value={{ value: startBlock.type, label: startBlock.type}}
               onChange={this.changeTextType}
-              options={SWITCHABLE_TEXT_TYPES}
-              isDisabled={!SWITCHABLE_TEXT_TYPES.includes(startBlock.type)}
+              options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
+              isDisabled={!SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)}
               formatOptionLabel={OptionLabel}
             />
           : null
@@ -92,7 +92,7 @@ export default class FormatTools extends React.Component<Props> {
     return isMark || isInline
   }
 
-  private changeTextType = (blockType: string) => {
+  private changeTextType = ({value: blockType}: {value: string, label: string}) => {
     const { editor, value } = this.props
     editor.setNodeByKey(value.startBlock.key, { type: blockType })
   }
@@ -145,6 +145,6 @@ export default class FormatTools extends React.Component<Props> {
   }
 }
 
-function OptionLabel(type: string) {
+function OptionLabel({value: type}: {value: string, label: string}) {
   return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
 }
