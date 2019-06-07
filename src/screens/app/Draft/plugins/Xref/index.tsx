@@ -1,18 +1,16 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Localized, ReactLocalization } from 'fluent-react/compat'
+import { ReactLocalization } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 import { Map } from 'immutable'
 import { Block, Inline, Value } from 'slate'
-import { Plugin, RenderNodeProps } from 'slate-react'
-
-import capitalize from 'src/helpers/capitalize'
+import { Plugin, RenderInlineProps } from 'slate-react'
 
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
 
 const XrefPlugin: Plugin = {
-  renderNode(props, _, next) {
+  renderInline(props, _, next) {
     if (props.node.type === 'xref') {
       return <Xref {...props} />
     }
@@ -23,11 +21,11 @@ const XrefPlugin: Plugin = {
 
 export default XrefPlugin
 
-type XrefProps = RenderNodeProps & {
+type XrefProps = RenderInlineProps & {
   referenceTargets?: ReferenceTarget[],
 }
 
-const mapStateTopProps = ({ modules: { referenceTargets } }: State, { node }: RenderNodeProps) => {
+const mapStateTopProps = ({ modules: { referenceTargets } }: State, { node }: RenderInlineProps) => {
   const document = node.data.get('document')
   if (document) {
     return {
@@ -131,11 +129,29 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
     const targetDocument = node.data.get('document')
     const targetKey = node.data.get('target')
-    const target = referenceTargets && referenceTargets
-      .find(target => target.id === targetKey)
+
+    const findTarget = (refs: ReferenceTarget[] = []): ReferenceTarget | undefined => {
+      let result = undefined
+      refs.some(target => {
+        if (target.id === targetKey) {
+          result = target
+          return true
+        }
+        if (target.children.length) {
+          const res = findTarget(target.children)
+          if (res) {
+            result = res
+            return true
+          }
+        }
+        return false
+      })
+      return result
+    }
+    const target = findTarget(referenceTargets)
 
     let l10nKey
-    let args = { $case: node.data.get('case') }
+    let args = { case: node.data.get('case') }
     let localization
 
     if (!referenceTargets) {
@@ -143,7 +159,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       localization = uiL10n
     } else if (target) {
       l10nKey = 'xref-label-' + target.type
-      args['$' + target.type] = target.counter
+      args[target.type] = target.counter
       localization = l10n
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey} from document ${targetDocument}`)

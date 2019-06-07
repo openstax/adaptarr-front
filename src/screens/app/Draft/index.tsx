@@ -12,6 +12,7 @@ import { List } from 'immutable'
 import store from 'src/store'
 import * as api from 'src/api'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
+import { setCurrentDraftLang } from 'src/store/actions/Drafts'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
@@ -225,6 +226,10 @@ class Draft extends React.Component<Props> {
     // on Select or other Input element in Toolbox
     if (cE) return true
     return false
+  }
+
+  componentDidMount() {
+    store.dispatch(setCurrentDraftLang(this.state.valueDocument.data.get('language') || 'en'))
   }
 
   contentEditor: React.RefObject<Editor> = React.createRef()

@@ -1,7 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import { Localized, ReactLocalization } from 'fluent-react/compat'
-import { Map } from 'immutable'
 
 import * as api from 'src/api'
 import { ReferenceTarget as RefTarget } from 'src/store/types'
@@ -18,7 +17,7 @@ export type Props = {
   /**
    * Details about the reference target itself.
    */
-  target: ReferenceTargetWithLabel,
+  target: RefTarget,
   /**
    * Details about target's context.
    */
@@ -29,30 +28,21 @@ export type Props = {
   onSelect: (target: RefTarget, source: api.Module | null) => void,
 }
 
-export type ReferenceTargetWithLabel = RefTarget & {
-  label?: string,
-}
-
 /**
  * Component rendering a single (possibly compound) reference target.
  */
 export default class ReferenceTarget extends React.PureComponent<Props> {
   static contextTypes = {
-    counters: PropTypes.instanceOf(Map as any),
-    documentL10n: PropTypes.instanceOf(ReactLocalization),
+    l10n: PropTypes.instanceOf(ReactLocalization),
   }
 
   render() {
-    const { target, context, module, onSelect } = this.props
-    const { documentL10n } = this.context
+    const { target, module, onSelect } = this.props
+    const { l10n } = this.context
 
-    const counters = module == null
-      ? this.context.counters.get(target.id)
-      : [[target.type, target.counter]]
+    const counters: [string, number][] = [[target.type, target.counter]]
 
-    const label = target.label
-      ? target.label
-      : renderXref(documentL10n, { key: target.id, type: target.type }, counters)
+    const label = renderXref(l10n, { key: target.id, type: target.type }, counters)
 
     return (
       <div className="target" onClick={this.onClick}>

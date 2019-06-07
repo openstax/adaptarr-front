@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { InjectedProps, withLocalization } from 'fluent-react/compat'
-import { RenderNodeProps } from 'slate-react'
+import { RenderBlockProps } from 'slate-react'
 
-export type Props = RenderNodeProps & {
+export type Props = RenderBlockProps & {
   className: string,
   l10nKey: string,
   args?: object,

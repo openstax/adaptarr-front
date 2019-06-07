@@ -46,6 +46,36 @@ figure-label = Rysunek { $figure }:{ " " }
 
 
 
+## Reusable components - reference target
+
+# Variables:
+# - $label (string): string that would be used to refer to this target in text
+reference-target = { $label }
+
+# Variables:
+# - $label (string): string that would be used to refer to this target in text
+# - $description (string)
+reference-target-description = { $label }: { $description }
+
+
+
+## Reusable components - list of reference targets
+
+# Variables:
+# - $type (string)
+reference-targets-category = { $type ->
+  [example] Przykłady
+  [exercise] Ćwiczenia
+  [figure] Figury
+  [important] Ważne
+  [note] Notki
+  [tip] Uwagi
+  [warning] Ostrzeżenia
+ *[notavalidtype] { $type }
+}
+
+
+
 ## References
 ##
 ## References are small fragments of text that name other elements in
@@ -63,7 +93,7 @@ figure-label = Rysunek { $figure }:{ " " }
 # Target element is a note.
 #
 # Arguments:
-# - $admonition (number): target note's number
+# - $note (number): target note's number
 xref-label-note = { $case ->
  *[nominative]    Notka
   [genitive]      Notki
@@ -72,18 +102,18 @@ xref-label-note = { $case ->
   [instrumental]  Notką
   [locative]      Notce
   [vocative]      Notko
-} { $admonition }
+} { $note }
 
 # Target element is a type=important note.
 #
 # Arguments:
-# - $admonition (number): target note's number
-xref-label-important = Ważne { $admonition }
+# - $note (number): target note's number
+xref-label-important = Ważne { $note }
 
 # Target element is a type=warning note.
 #
 # Arguments:
-# - $admonition (number): target note's number
+# - $note (number): target note's number
 xref-label-warning = { $case ->
  *[nominative]    Ostrzeżenie
   [genitive]      Ostrzeżenia
@@ -92,12 +122,12 @@ xref-label-warning = { $case ->
   [instrumental]  Ostrzeżeniem
   [locative]      Ostrzeżeniu
   [vocative]      Ostrzeżenie
-} { $admonition }
+} { $note }
 
 # Target element is a type=tip note.
 #
 # Arguments:
-# - $admonition (number): target note's number
+# - $note (number): target note's number
 xref-label-tip = { $case ->
  *[nominative]    Uwaga
   [genitive]      Uwagi
@@ -106,7 +136,7 @@ xref-label-tip = { $case ->
   [instrumental]  Uwagą
   [locative]      Uwadze
   [vocative]      Uwago
-} { $admonition }
+} { $note }
 
 # Target element is an equation.
 #
@@ -154,7 +184,7 @@ xref-label-exercise = { $case ->
 #
 # Arguments:
 # - $exercise (number): target solution's parent exercise's number
-# - $solution (number): target solution's number
+# - $exercise_solution (number): target solution's number
 xref-label-exercise_solution = { $case ->
  *[nominative]    Rozwiązanie
   [genitive]      Rozwiązania
@@ -163,7 +193,35 @@ xref-label-exercise_solution = { $case ->
   [instrumental]  Rozwiązaniem
   [locative]      Rozwiązaniu
   [vocative]      Rozwiązanie
-} { $solution } ćwiczenia { $exercise }
+} { $exercise_solution } ćwiczenia { $exercise }
+
+# Target element is a solution of an exercise.
+#
+# Arguments:
+# - $solution (number): target solution's number
+xref-label-solution = { $case ->
+ *[nominative]    Rozwiązanie
+  [genitive]      Rozwiązania
+  [dative]        Rozwiązaniu
+  [accusative]    Rozwiązanie
+  [instrumental]  Rozwiązaniem
+  [locative]      Rozwiązaniu
+  [vocative]      Rozwiązanie
+} { $solution }
+
+# Target element is a commentary of an exercise.
+#
+# Variables:
+# - $commentary (number): target commentary's number
+xref-label-commentary = { $case ->
+ *[nominative]    Komentarz
+  [genitive]      Komentarza
+  [dative]        Komentarzu
+  [accusative]    Komentarz
+  [instrumental]  Komentarzem
+  [locative]      Komentarzu
+  [vocative]      Komentarz
+} { $commentary }
 
 # Target element is a standalone figure.
 #

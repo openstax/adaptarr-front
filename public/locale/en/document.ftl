@@ -45,6 +45,36 @@ figure-label = Figure { $figure }:{ " " }
 
 
 
+## Reusable components - reference target
+
+# Variables:
+# - $label (string): string that would be used to refer to this target in text
+reference-target = { $label }
+
+# Variables:
+# - $label (string): string that would be used to refer to this target in text
+# - $description (string)
+reference-target-description = { $label }: { $description }
+
+
+
+## Reusable components - list of reference targets
+
+# Variables:
+# - $type (string)
+reference-targets-category = { $type ->
+  [example] Examples
+  [exercise] Exercises
+  [figure] Figures
+  [important] Important
+  [note] Notes
+  [tip] Tips
+  [warning] Warnings
+ *[notavalidtype] { $type }
+}
+
+
+
 ## References
 ##
 ## References are small fragments of text that name other elements in
@@ -62,26 +92,26 @@ figure-label = Figure { $figure }:{ " " }
 # Target element is a note.
 #
 # Variables:
-# - $admonition (number): target note's number
-xref-label-note = Note { $admonition }
+# - $note (number): target note's number
+xref-label-note = Note { $note }
 
 # Target element is a type=important note.
 #
 # Variables:
-# - $admonition (number): target note's number
-xref-label-important = Important { $admonition }
+# - $note (number): target note's number
+xref-label-important = Important { $note }
 
 # Target element is a type=warning note.
 #
 # Variables:
-# - $admonition (number): target note's number
-xref-label-warning = Warning { $admonition }
+# - $note (number): target note's number
+xref-label-warning = Warning { $note }
 
 # Target element is a type=tip note.
 #
 # Variables:
-# - $admonition (number): target note's number
-xref-label-tip = Tip { $admonition }
+# - $note (number): target note's number
+xref-label-tip = Tip { $note }
 
 # Target element is an equation.
 #
@@ -104,9 +134,21 @@ xref-label-exercise = Exercise { $exercise }
 # Target element is a solution of an exercise.
 #
 # Variables:
-# - $exercise (number): target solution's parent exercise's number
 # - $solution (number): target solution's number
-xref-label-exercise_solution = Solution { $exercise }.{ $solution }
+xref-label-solution = Solution { $solution }
+
+# Target element is a solution of an exercise.
+#
+# Variables:
+# - $exercise (number): target solution's parent exercise's number
+# - $exercise_solution (number): target solution's number
+xref-label-exercise_solution = Solution { $exercise }.{ $exercise_solution }
+
+# Target element is a commentary of an exercise.
+#
+# Variables:
+# - $commentary (number): target commentary's number
+xref-label-commentary = Commentary { $commentary }
 
 # Target element is a standalone figure.
 #

@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Editor } from 'slate'
-import { RenderNodeProps } from 'slate-react'
+import { RenderBlockProps } from 'slate-react'
 
-export default function renderNode(props: RenderNodeProps, _: Editor, next: () => any) {
+export default function renderBlock(props: RenderBlockProps, _: Editor, next: () => any) {
   switch (props.node.type) {
     case 'table':
       return <TableNode name="adr-table" props={props} />
@@ -18,7 +18,7 @@ export default function renderNode(props: RenderNodeProps, _: Editor, next: () =
 
     case 'table_colspec':
       return <TableNode name="adr-colspec" props={props} />
-    
+
     case 'table_spanspec':
       return <TableNode name="adr-spanspec" props={props} />
 
@@ -33,7 +33,7 @@ export default function renderNode(props: RenderNodeProps, _: Editor, next: () =
 
     case 'table_row':
       return <TableNode name="adr-row" props={props} />
-    
+
     case 'table_entry':
       return <TableNode name="adr-entry" props={props} />
 
@@ -44,7 +44,7 @@ export default function renderNode(props: RenderNodeProps, _: Editor, next: () =
 
 type TableNodeProps = {
   name: string
-  props: RenderNodeProps
+  props: RenderBlockProps
 }
 
 const TableNode = ({ name, props: { node, attributes, children } }: TableNodeProps) => {

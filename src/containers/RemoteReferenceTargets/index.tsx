@@ -4,11 +4,13 @@ import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
-import { PartData } from 'src/api/bookpart' 
+import { PartData } from 'src/api/bookpart'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import RemoteSource from './components/RemoteSource'
+
+import LocalizationLoader from 'src/screens/app/Draft/components/LocalizationLoader'
 
 import RefTargets from 'src/containers/ReferenceTargets'
 
@@ -27,13 +29,18 @@ export type Props = {
    */
   onSelect: (target: ReferenceTarget, source: null) => void,
   fetchReferenceTargets: (module: api.Module) => void,
+  currentDraftLang: string,
 }
 
-const mapStateToProps = ({ modules: { modulesMap, referenceTargets }, booksMap: { booksMap } }: State) => ({
-  modules: modulesMap,
-  targets: referenceTargets,
-  booksMap,
-})
+const mapStateToProps = ({
+  modules: { modulesMap, referenceTargets },
+  booksMap: { booksMap },
+  draft: { currentDraftLang } }: State) => ({
+    modules: modulesMap,
+    targets: referenceTargets,
+    booksMap,
+    currentDraftLang,
+  })
 
 const mapDispatchToProps = { fetchReferenceTargets }
 
@@ -66,7 +73,7 @@ class RemoteReferenceTargets extends React.Component<Props> {
   }
 
   render() {
-    const { onSelect } = this.props
+    const { onSelect, currentDraftLang } = this.props
     const { selected, books } = this.state
     const targets = selected ? this.props.targets.get(selected.id) : null
     return (
@@ -77,18 +84,22 @@ class RemoteReferenceTargets extends React.Component<Props> {
               <Icon name="arrow-left" size="small" />
               <Localized id="reference-target-list-go-back">Back</Localized>
             </Button>
-            <RefTargets
-              module={selected}
-              targets={targets}
-              onSelect={onSelect}
-            />
+            <LocalizationLoader
+              locale={currentDraftLang || 'en'}
+            >
+              <RefTargets
+                module={selected}
+                targets={targets}
+                onSelect={onSelect}
+              />
+            </LocalizationLoader>
           </div>
         }
         <div className={`remote-reference-targets ${targets ? 'hide' : ''}`}>
           {
             books.map(parts => (
               <Nestable
-                key={parts.id}
+                key={parts.title + parts.number}
                 isDisabled={true}
                 items={[parts]}
                 className="book-collection"
@@ -138,7 +149,7 @@ class RemoteReferenceTargets extends React.Component<Props> {
                 {collapseIcon}
               </span>
             </>
-          : 
+          :
             <RemoteSource
               module={this.props.modules.get(item.id)!}
               onClick={this.selectRefSource}

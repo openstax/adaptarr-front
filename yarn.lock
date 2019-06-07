@@ -22,7 +22,13 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.2", "@babel/runtime@^7.1.5", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2":
+"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.5":
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2":
   version "7.4.4"
   resolved "https://npm.pkg.naukosfera.com:443/@babel%2fruntime/-/runtime-7.4.4.tgz#dc2e34982eb236803aa27a07fea6857af1b9171d"
   dependencies:
@@ -183,9 +189,9 @@
   dependencies:
     redux-thunk "*"
 
-"@types/slate-react@^0.20.3":
-  version "0.20.4"
-  resolved "https://npm.pkg.naukosfera.com:443/@types%2fslate-react/-/slate-react-0.20.4.tgz#5075a90fbad1ca9a72c38e890168d03fc082381c"
+"@types/slate-react@^0.22.0":
+  version "0.22.0"
+  resolved "https://npm.pkg.naukosfera.com:443/@types%2fslate-react/-/slate-react-0.22.0.tgz#fc88ef353d12d5105f2bc3a8aec33bdb80ffcaef"
   dependencies:
     "@types/react" "*"
     "@types/slate" "*"
@@ -1713,16 +1719,16 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#afad65e696183e227335b3e6ec4e4dc0696d1567"
+  resolved "https://github.com/katalysteducation/cnx-designer#8beda156af554dd84d250b1cb4a746fb121a856a"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
     react "^16.4.1"
-    slate "^0.44.0"
+    slate "^0.47.0"
     slate-counters "https://github.com/katalysteducation/slate-counters.git"
     slate-edit-list "https://github.com/katalysteducation/slate-edit-list.git#releases"
-    slate-html-serializer "^0.7.0"
-    slate-react "^0.21.0"
+    slate-html-serializer "^0.8.0"
+    slate-react "^0.22.0"
 
 co@^4.6.0:
   version "4.6.0"
@@ -2204,7 +2210,7 @@ debug@2.6.9, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.6, debug@^2.6.
 
 debug@^3.1.0, debug@^3.2.6:
   version "3.2.6"
-  resolved "https://npm.pkg.naukosfera.com:443/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
+  resolved "https://registry.yarnpkg.com/debug/-/debug-3.2.6.tgz#e83d17de16d8a7efb7717edbe5fb10135eee629b"
   dependencies:
     ms "^2.1.1"
 
@@ -2342,7 +2348,7 @@ diffie-hellman@^5.0.0:
 
 direction@^0.1.5:
   version "0.1.5"
-  resolved "https://npm.pkg.naukosfera.com:443/direction/-/direction-0.1.5.tgz#ce5d797f97e26f8be7beff53f7dc40e1c1a9ec4c"
+  resolved "https://registry.yarnpkg.com/direction/-/direction-0.1.5.tgz#ce5d797f97e26f8be7beff53f7dc40e1c1a9ec4c"
 
 dnd-core@^7.4.4:
   version "7.4.4"
@@ -2662,7 +2668,7 @@ esrecurse@^4.1.0:
 
 esrever@^0.2.0:
   version "0.2.0"
-  resolved "https://npm.pkg.naukosfera.com:443/esrever/-/esrever-0.2.0.tgz#96e9d28f4f1b1a76784cd5d490eaae010e7407b8"
+  resolved "https://registry.yarnpkg.com/esrever/-/esrever-0.2.0.tgz#96e9d28f4f1b1a76784cd5d490eaae010e7407b8"
 
 estraverse@^4.1.0, estraverse@^4.1.1, estraverse@^4.2.0:
   version "4.2.0"
@@ -3175,7 +3181,7 @@ get-caller-file@^1.0.1:
 
 get-document@1:
   version "1.0.0"
-  resolved "https://npm.pkg.naukosfera.com:443/get-document/-/get-document-1.0.0.tgz#4821bce66f1c24cb0331602be6cb6b12c4f01c4b"
+  resolved "https://registry.yarnpkg.com/get-document/-/get-document-1.0.0.tgz#4821bce66f1c24cb0331602be6cb6b12c4f01c4b"
 
 get-stdin@^4.0.1:
   version "4.0.1"
@@ -3191,7 +3197,7 @@ get-value@^2.0.3, get-value@^2.0.6:
 
 get-window@^1.1.1:
   version "1.1.2"
-  resolved "https://npm.pkg.naukosfera.com:443/get-window/-/get-window-1.1.2.tgz#65fbaa999fb87f86ea5d30770f4097707044f47f"
+  resolved "https://registry.yarnpkg.com/get-window/-/get-window-1.1.2.tgz#65fbaa999fb87f86ea5d30770f4097707044f47f"
   dependencies:
     get-document "1"
 
@@ -3865,11 +3871,11 @@ is-glob@^4.0.0:
 
 is-hotkey@0.1.4:
   version "0.1.4"
-  resolved "https://npm.pkg.naukosfera.com:443/is-hotkey/-/is-hotkey-0.1.4.tgz#c34d2c85d6ec8d09a871dcf71931c8067a824c7d"
+  resolved "https://registry.yarnpkg.com/is-hotkey/-/is-hotkey-0.1.4.tgz#c34d2c85d6ec8d09a871dcf71931c8067a824c7d"
 
 is-in-browser@^1.1.3:
   version "1.1.3"
-  resolved "https://npm.pkg.naukosfera.com:443/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
+  resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
 
 is-installed-globally@^0.1.0:
   version "0.1.0"
@@ -3924,7 +3930,7 @@ is-plain-obj@^1.0.0:
 
 is-plain-object@^2.0.1, is-plain-object@^2.0.3, is-plain-object@^2.0.4:
   version "2.0.4"
-  resolved "https://npm.pkg.naukosfera.com:443/is-plain-object/-/is-plain-object-2.0.4.tgz#2c163b3fafb1b606d9d17928f05c2a1c38e07677"
+  resolved "https://registry.yarnpkg.com/is-plain-object/-/is-plain-object-2.0.4.tgz#2c163b3fafb1b606d9d17928f05c2a1c38e07677"
   dependencies:
     isobject "^3.0.1"
 
@@ -3984,7 +3990,7 @@ is-utf8@^0.2.0:
 
 is-window@^1.0.2:
   version "1.0.2"
-  resolved "https://npm.pkg.naukosfera.com:443/is-window/-/is-window-1.0.2.tgz#2c896ca53db97de45d3c33133a65d8c9f563480d"
+  resolved "https://registry.yarnpkg.com/is-window/-/is-window-1.0.2.tgz#2c896ca53db97de45d3c33133a65d8c9f563480d"
 
 is-windows@^1.0.1, is-windows@^1.0.2:
   version "1.0.2"
@@ -4014,11 +4020,11 @@ isobject@^2.0.0:
 
 isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
-  resolved "https://npm.pkg.naukosfera.com:443/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
+  resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
 
 isomorphic-base64@^1.0.2:
   version "1.0.2"
-  resolved "https://npm.pkg.naukosfera.com:443/isomorphic-base64/-/isomorphic-base64-1.0.2.tgz#f426aae82569ba8a4ec5ca73ad21a44ab1ee7803"
+  resolved "https://registry.yarnpkg.com/isomorphic-base64/-/isomorphic-base64-1.0.2.tgz#f426aae82569ba8a4ec5ca73ad21a44ab1ee7803"
 
 isomorphic-fetch@^2.1.1:
   version "2.2.1"
@@ -4437,7 +4443,7 @@ js-base64@^2.1.9:
 
 "js-tokens@^3.0.0 || ^4.0.0", js-tokens@^4.0.0:
   version "4.0.0"
-  resolved "https://npm.pkg.naukosfera.com:443/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
+  resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-4.0.0.tgz#19203fb59991df98e3a287050d4647cdeaf32499"
 
 js-tokens@^3.0.2:
   version "3.0.2"
@@ -4762,7 +4768,7 @@ lodash.uniq@^4.5.0:
 
 lodash@4.17.11, "lodash@>=3.5 <5", lodash@^4.1.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.11"
-  resolved "https://npm.pkg.naukosfera.com:443/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 loglevel@^1.4.1:
   version "1.6.1"
@@ -4774,7 +4780,7 @@ longest@^1.0.1:
 
 loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.2.0, loose-envify@^1.3.1, loose-envify@^1.4.0:
   version "1.4.0"
-  resolved "https://npm.pkg.naukosfera.com:443/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
+  resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   dependencies:
     js-tokens "^3.0.0 || ^4.0.0"
 
@@ -4858,7 +4864,7 @@ memoize-one@5.0.0:
 
 memoize-one@^4.0.0:
   version "4.1.0"
-  resolved "https://npm.pkg.naukosfera.com:443/memoize-one/-/memoize-one-4.1.0.tgz#a2387c58c03fff27ca390c31b764a79addf3f906"
+  resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-4.1.0.tgz#a2387c58c03fff27ca390c31b764a79addf3f906"
 
 memoize-one@^5.0.0:
   version "5.0.4"
@@ -5047,9 +5053,13 @@ ms@2.0.0:
   version "2.0.0"
   resolved "https://npm.pkg.naukosfera.com:443/ms/-/ms-2.0.0.tgz#5608aeadfc00be6c2901df5f9861788de0d597c8"
 
-ms@2.1.1, ms@^2.1.1:
+ms@2.1.1:
   version "2.1.1"
   resolved "https://npm.pkg.naukosfera.com:443/ms/-/ms-2.1.1.tgz#30a5864eb3ebb0a66f2ebe6d727af06a09d86e0a"
+
+ms@^2.1.1:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
 
 multicast-dns-service-types@^1.1.0:
   version "1.1.0"
@@ -6191,7 +6201,7 @@ react-files@^2.4.8:
 
 react-immutable-proptypes@^2.1.0:
   version "2.1.0"
-  resolved "https://npm.pkg.naukosfera.com:443/react-immutable-proptypes/-/react-immutable-proptypes-2.1.0.tgz#023d6f39bb15c97c071e9e60d00d136eac5fa0b4"
+  resolved "https://registry.yarnpkg.com/react-immutable-proptypes/-/react-immutable-proptypes-2.1.0.tgz#023d6f39bb15c97c071e9e60d00d136eac5fa0b4"
 
 react-input-autosize@^2.2.1:
   version "2.2.1"
@@ -6207,7 +6217,7 @@ react-input-trigger@^1.1.2:
 
 react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
   version "16.8.6"
-  resolved "https://npm.pkg.naukosfera.com:443/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.6.tgz#5bbc1e2d29141c9fbdfed456343fe2bc430a6a16"
 
 react-lifecycles-compat@^3.0.4:
   version "3.0.4"
@@ -6426,7 +6436,7 @@ regenerator-runtime@^0.11.0:
 
 regenerator-runtime@^0.13.2:
   version "0.13.2"
-  resolved "https://npm.pkg.naukosfera.com:443/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
+  resolved "https://registry.yarnpkg.com/regenerator-runtime/-/regenerator-runtime-0.13.2.tgz#32e59c9a6fb9b1a4aff09b4930ca2d4477343447"
 
 regenerator-transform@^0.10.0:
   version "0.10.1"
@@ -6694,7 +6704,7 @@ sax@^1.2.1, sax@^1.2.4, sax@~1.2.1:
 
 scheduler@^0.13.6:
   version "0.13.6"
-  resolved "https://npm.pkg.naukosfera.com:443/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.13.6.tgz#466a4ec332467b31a91b9bf74e5347072e4cd889"
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -6718,7 +6728,7 @@ select-hose@^2.0.0:
 
 selection-is-backward@^1.0.0:
   version "1.0.0"
-  resolved "https://npm.pkg.naukosfera.com:443/selection-is-backward/-/selection-is-backward-1.0.0.tgz#97a54633188a511aba6419fc5c1fa91b467e6be1"
+  resolved "https://registry.yarnpkg.com/selection-is-backward/-/selection-is-backward-1.0.0.tgz#97a54633188a511aba6419fc5c1fa91b467e6be1"
 
 selfsigned@^1.9.1:
   version "1.10.4"
@@ -6859,22 +6869,22 @@ slash@^1.0.0:
   version "1.0.0"
   resolved "https://npm.pkg.naukosfera.com:443/slash/-/slash-1.0.0.tgz#c41f2f6c39fc16d1cd17ad4b5d896114ae470d55"
 
-slate-base64-serializer@^0.2.95:
-  version "0.2.95"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-base64-serializer/-/slate-base64-serializer-0.2.95.tgz#78075c5e17ed218c8c5989acd08799864fdd49f5"
+slate-base64-serializer@^0.2.106:
+  version "0.2.106"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-base64-serializer/-/slate-base64-serializer-0.2.106.tgz#2a347d0be2269a560ed92f8cdc1de6436fd840fe"
   dependencies:
     isomorphic-base64 "^1.0.2"
 
 "slate-counters@https://github.com/katalysteducation/slate-counters.git", "slate-counters@https://github.com/katalysteducation/slate-counters.git#use-onsetvalue":
-  version "0.5.0"
-  uid de8a8135830f2cc7db97715fde73bc6748408705
-  resolved "https://github.com/katalysteducation/slate-counters.git#de8a8135830f2cc7db97715fde73bc6748408705"
+  version "0.6.0"
+  uid "94bbadf46999796fa6535c8723666eca1afbb375"
+  resolved "https://github.com/katalysteducation/slate-counters.git#94bbadf46999796fa6535c8723666eca1afbb375"
   dependencies:
     "@babel/runtime" "^7.0.0"
 
-slate-dev-environment@^0.2.1:
-  version "0.2.1"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-dev-environment/-/slate-dev-environment-0.2.1.tgz#3b340a3e127bd9a2039999875d8bcb2e9626afbc"
+slate-dev-environment@^0.2.2:
+  version "0.2.2"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-dev-environment/-/slate-dev-environment-0.2.2.tgz#b045a80d805cb13d025c9180975f24c44717c409"
   dependencies:
     is-in-browser "^1.1.3"
 
@@ -6882,34 +6892,34 @@ slate-dev-environment@^0.2.1:
   version "0.16.0"
   resolved "https://github.com/katalysteducation/slate-edit-list.git#49d83462517288e101442a1ba0633fff8df00188"
 
-slate-hotkeys@^0.2.8:
-  version "0.2.8"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-hotkeys/-/slate-hotkeys-0.2.8.tgz#f30d65b4577c02bba2e990487b8eee73f59e77a5"
+slate-hotkeys@^0.2.9:
+  version "0.2.9"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-hotkeys/-/slate-hotkeys-0.2.9.tgz#1d1a4b74b4d54d8327399130fa9b016a659e0a22"
   dependencies:
     is-hotkey "0.1.4"
-    slate-dev-environment "^0.2.1"
+    slate-dev-environment "^0.2.2"
 
-slate-html-serializer@^0.7.0:
-  version "0.7.34"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-html-serializer/-/slate-html-serializer-0.7.34.tgz#f9eb637f81c4e9ddf25fd4bd366ee92bdaa02cce"
+slate-html-serializer@^0.8.0:
+  version "0.8.5"
+  resolved "https://registry.yarnpkg.com/slate-html-serializer/-/slate-html-serializer-0.8.5.tgz#9fe1ad9a87c6c159a59c15b4b26194bfaa0fbb0a"
   dependencies:
     type-of "^2.0.1"
 
-slate-plain-serializer@^0.6.34:
-  version "0.6.34"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-plain-serializer/-/slate-plain-serializer-0.6.34.tgz#8bde00c9ba925e5f22332d2ad0dc9820b556c0b1"
+slate-plain-serializer@^0.7.5:
+  version "0.7.5"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-plain-serializer/-/slate-plain-serializer-0.7.5.tgz#6a54b1e00bb1993d81fcfb5747ad16a3be6dbc35"
 
-slate-prop-types@^0.5.25:
-  version "0.5.25"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-prop-types/-/slate-prop-types-0.5.25.tgz#4b1b686e4f96ac0d54a64cd2a06834b9b7f6f483"
+slate-prop-types@^0.5.36:
+  version "0.5.36"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-prop-types/-/slate-prop-types-0.5.36.tgz#c585922b4fcf3b67589afb692086ea3398484a68"
 
-slate-react-placeholder@^0.1.13:
-  version "0.1.13"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-react-placeholder/-/slate-react-placeholder-0.1.13.tgz#bb3517a9addc7ee4567bb5c21fb6972bf24103a4"
+slate-react-placeholder@^0.2.3:
+  version "0.2.3"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-react-placeholder/-/slate-react-placeholder-0.2.3.tgz#03ac7d9badfcaaa081b35d67fb39dabbc2626946"
 
-slate-react@^0.21.0:
-  version "0.21.16"
-  resolved "https://npm.pkg.naukosfera.com:443/slate-react/-/slate-react-0.21.16.tgz#15987b25d4f71c9010bd676a6032fd64c234cee3"
+slate-react@^0.22.0, slate-react@^0.22.3:
+  version "0.22.3"
+  resolved "https://npm.pkg.naukosfera.com:443/slate-react/-/slate-react-0.22.3.tgz#365131997ae69a9d42c49cd7d9eba5d564a9f078"
   dependencies:
     debug "^3.1.0"
     get-window "^1.1.1"
@@ -6919,18 +6929,18 @@ slate-react@^0.21.0:
     prop-types "^15.5.8"
     react-immutable-proptypes "^2.1.0"
     selection-is-backward "^1.0.0"
-    slate-base64-serializer "^0.2.95"
-    slate-dev-environment "^0.2.1"
-    slate-hotkeys "^0.2.8"
-    slate-plain-serializer "^0.6.34"
-    slate-prop-types "^0.5.25"
-    slate-react-placeholder "^0.1.13"
+    slate-base64-serializer "^0.2.106"
+    slate-dev-environment "^0.2.2"
+    slate-hotkeys "^0.2.9"
+    slate-plain-serializer "^0.7.5"
+    slate-prop-types "^0.5.36"
+    slate-react-placeholder "^0.2.3"
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
 
-slate@^0.44.0, slate@^0.44.10:
-  version "0.44.10"
-  resolved "https://npm.pkg.naukosfera.com:443/slate/-/slate-0.44.10.tgz#ef835de3df88c92479ec8ff8d4f90b1421a54b5d"
+slate@^0.47.0:
+  version "0.47.3"
+  resolved "https://npm.pkg.naukosfera.com:443/slate/-/slate-0.47.3.tgz#d2950c08d58de044cccffa09bca1d9d73bc437d8"
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
@@ -7403,11 +7413,11 @@ timers-browserify@^2.0.4:
 
 tiny-invariant@^1.0.1, tiny-invariant@^1.0.2:
   version "1.0.4"
-  resolved "https://npm.pkg.naukosfera.com:443/tiny-invariant/-/tiny-invariant-1.0.4.tgz#346b5415fd93cb696b0c4e8a96697ff590f92463"
+  resolved "https://registry.yarnpkg.com/tiny-invariant/-/tiny-invariant-1.0.4.tgz#346b5415fd93cb696b0c4e8a96697ff590f92463"
 
 tiny-warning@^0.0.3:
   version "0.0.3"
-  resolved "https://npm.pkg.naukosfera.com:443/tiny-warning/-/tiny-warning-0.0.3.tgz#1807eb4c5f81784a6354d58ea1d5024f18c6c81f"
+  resolved "https://registry.yarnpkg.com/tiny-warning/-/tiny-warning-0.0.3.tgz#1807eb4c5f81784a6354d58ea1d5024f18c6c81f"
 
 tiny-warning@^1.0.0:
   version "1.0.2"
@@ -7612,7 +7622,7 @@ type-is@~1.6.17, type-is@~1.6.18:
 
 type-of@^2.0.1:
   version "2.0.1"
-  resolved "https://npm.pkg.naukosfera.com:443/type-of/-/type-of-2.0.1.tgz#e72a1741896568e9f628378d816d6912f7f23972"
+  resolved "https://registry.yarnpkg.com/type-of/-/type-of-2.0.1.tgz#e72a1741896568e9f628378d816d6912f7f23972"
 
 typedarray@^0.0.6:
   version "0.0.6"
