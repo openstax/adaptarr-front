@@ -128,12 +128,36 @@
   overflow: auto;
 }
 
+.editor pre {
+  margin: 10px 0;
+}
+
 .editor pre, .editor code {
   font-family: 'Source Code Pro', monospace;
   color: #222;
   padding: 0 3px;
   border-radius: 3px;
   background-color: #e3e3e3;
+}
+
+.editor .source {
+  font-family: 'Source Code Pro', monospace;
+  color: var(--font-light);
+  border-radius: 3px;
+  background-color: var(--dark-bg);
+  white-space: pre-wrap;
+}
+
+.editor .source--block {
+  display: block;
+  padding: 3px;
+  margin: 10px 0;
+}
+
+.editor .source--inline {
+  display: inline-block;
+  padding: 0 3px;
+  line-height: 1;
 }
 
 .editor figure {

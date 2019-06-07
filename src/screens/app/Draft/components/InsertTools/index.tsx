@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Block, Inline, Document } from 'slate'
+import { Editor, Value, Text, Block, Inline, Document } from 'slate'
 import { MediaDescription } from 'cnx-designer'
+import { List } from 'immutable'
 
 import * as api from 'src/api'
 import { FileDescription } from 'src/api/storage'
@@ -106,6 +107,16 @@ export default class InsertTools extends React.Component<Props> {
             Link
           </Localized>
         </Button>
+        <Button
+          clickHandler={this.insertSourceElement}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
+        >
+          <Icon name="file-code" />
+          <Localized id="editor-tools-insert-source">
+            Source element
+          </Localized>
+        </Button>
         <Modal
           ref={this.setFigureModal}
           content={this.renderFigureModal}
@@ -184,11 +195,11 @@ export default class InsertTools extends React.Component<Props> {
   private insertCode = () => {
     this.props.editor.insertBlock('code')
   }
-  
+
   private insertQuotation = () => {
     this.props.editor.wrapBlock('quotation')
   }
-  
+
   private handleInsertLink = () => {
     this.openLinkModal()
   }
@@ -203,6 +214,11 @@ export default class InsertTools extends React.Component<Props> {
     editor.insertText(text)
     editor.moveFocusBackward(text.length)
     editor.wrapInline(link)
+  }
+
+  private insertSourceElement = () => {
+    this.props.editor.insertInline({ type: 'source_element', nodes: List([Text.create(' ')]) })
+    this.props.editor.moveBackward()
   }
 
   private validateParents = (validParents: string[]): boolean => {

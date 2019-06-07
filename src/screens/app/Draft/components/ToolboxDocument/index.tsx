@@ -13,6 +13,7 @@ import SectionTools from '../SectionTools'
 import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
+import SourceTools from '../SourceTools'
 
 import './index.css'
 
@@ -67,6 +68,7 @@ class Toolbox extends React.Component<Props> {
         <XrefTools editor={editor} value={value} />
         <LinkTools editor={editor} value={value} />
         <TermTools editor={editor} value={value} />
+        <SourceTools editor={editor} value={value} />
         <DocumentTools editor={editor} value={value} />
       </div>
     )

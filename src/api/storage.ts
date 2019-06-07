@@ -1,5 +1,7 @@
 import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
 import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
+import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
+import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
 
@@ -154,7 +156,7 @@ export default class Storage extends StorageBase {
   }
 
   serializer = new CNXML({
-    documentRules: [tablesDeserialize, tablesSerialize],
+    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize],
     glossaryRules: [],
   })
 }
