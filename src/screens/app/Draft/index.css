@@ -128,6 +128,10 @@
   overflow: auto;
 }
 
+.editor pre {
+  margin: 10px 0;
+}
+
 .editor pre, .editor code {
   font-family: 'Source Code Pro', monospace;
   color: #222;
@@ -137,14 +141,17 @@
 }
 
 .editor .source {
+  font-family: 'Source Code Pro', monospace;
+  color: var(--font-light);
   border-radius: 3px;
-  background-color: #ddd;
+  background-color: var(--dark-bg);
   white-space: pre-wrap;
 }
 
 .editor .source--block {
   display: block;
   padding: 3px;
+  margin: 10px 0;
 }
 
 .editor .source--inline {
