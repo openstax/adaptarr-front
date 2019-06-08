@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Counters from 'slate-counters'
-import { Localized } from 'fluent-react/compat'
+import { Localized, ReactLocalization } from 'fluent-react/compat'
 import { PersistDB, DocumentDB, uuid, Document, Glossary, Persistence } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
@@ -110,6 +110,10 @@ class Draft extends React.Component<Props> {
     valueGlossary: this.props.glossary,
     isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || this.props.glossary.document.nodes.get(0).type !== 'definition',
     showRemoveGlossaryDialog: false,
+  }
+
+  static contextTypes = {
+    l10n: PropTypes.instanceOf(ReactLocalization),
   }
 
   pluginsDocument = [
@@ -248,6 +252,27 @@ class Draft extends React.Component<Props> {
     const showGlossaryToolbox = this.glossaryEditor.current &&
       this.glossaryEditor.current.value.selection.isFocused
     const showDocumentToolbox = this.contentEditor.current && !showGlossaryToolbox
+    const glossaryToggler = viewPermission ? null :
+      (
+        <div className="document__glossary-toggler">
+          {
+            isGlossaryEmpty ?
+              <Button
+                color="green"
+                clickHandler={this.addGlossary}
+              >
+                {this.context.l10n.getString('draft-add-glossary')}
+              </Button>
+            :
+              <Button
+                color="red"
+                clickHandler={this.showRemoveGlossaryDialog}
+              >
+                {this.context.l10n.getString('draft-remove-glossary')}
+              </Button>
+          }
+        </div>
+      )
 
     return (
       <Section>
@@ -305,35 +330,10 @@ class Draft extends React.Component<Props> {
                     />
                     {
                       isGlossaryEmpty ?
-                        viewPermission ?
-                          null
-                        :
-                          <div className="document__glossary-toggler">
-                            <Button
-                              color="green"
-                              clickHandler={this.addGlossary}
-                            >
-                              <Localized id="draft-add-glossary">
-                                Add glossary
-                              </Localized>
-                            </Button>
-                          </div>
+                        glossaryToggler
                       :
                         <>
-                          {
-                            !viewPermission ?
-                              <div className="document__glossary-toggler">
-                                <Button
-                                  color="red"
-                                  clickHandler={this.showRemoveGlossaryDialog}
-                                >
-                                  <Localized id="draft-remove-glossary">
-                                    Remove glossary
-                                  </Localized>
-                                </Button>
-                              </div>
-                            : null
-                          }
+                          { glossaryToggler }
                           <Editor
                             ref={this.glossaryEditor}
                             className="editor editor--glossary"
