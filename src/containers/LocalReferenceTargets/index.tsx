@@ -84,7 +84,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
     elements.forEach(e => {
       setCounterForElement(e)
       if (e.className === 'exercise') {
-        const solutions = e.querySelectorAll('.exercise-solution, .exercise-commentary')
+        const solutions = e.querySelectorAll('.exercise-solution')
         solutions.forEach((sol, i) => {
           setCounterForElement(sol, i + 1)
         })
