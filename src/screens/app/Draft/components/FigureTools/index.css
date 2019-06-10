@@ -2,3 +2,7 @@
   width: 100%;
   position: relative;
 }
+
+.figure__alt-text {
+  margin-top: 10px;
+}

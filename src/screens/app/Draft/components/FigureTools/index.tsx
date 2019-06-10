@@ -12,6 +12,7 @@ import AssetPreview from 'src/components/AssetPreview'
 import AssetList from 'src/containers/AssetList'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Input from 'src/components/ui/Input'
 
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
@@ -31,9 +32,11 @@ export default class FigureTools extends React.Component<Props> {
 
     if (figure === null) return null
 
-    const subfigure = editor.getActiveSubfigure(value)
-    const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
+    const subfigure = editor.getActiveSubfigure(value) // This will return figure if there is no subfigure
+    const image = (subfigure!.nodes.first() as Block).nodes.first() as Block
     const src = image.data.get('src')
+    const media = subfigure!.nodes.first() as Block
+    const altText = media.data.get('alt')
 
     return (
       <ToolGroup title="editor-tools-figure-title">
@@ -66,6 +69,17 @@ export default class FigureTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Classes editor={editor} block={figure} />
+        <label className="figure__alt-text">
+          <span>
+            <Localized id="editor-tools-figure-alt-text">
+              Alt text:
+            </Localized>
+          </span>
+          <Input
+            value={altText}
+            onChange={this.onAltChange}
+          />
+        </label>
         <Modal
           ref={this.setModal}
           content={this.renderModal}
@@ -114,5 +128,20 @@ export default class FigureTools extends React.Component<Props> {
     this.modal!.close()
     this.action!(asset as MediaDescription)
     this.action = null
+  }
+
+  private onAltChange = (text: string) => {
+    const { editor, value } = this.props
+    // getActiveSubfigure will return figure if there is no subfigure
+    const figure = editor.getActiveSubfigure(value)
+    if (!figure) return null
+
+    const media = figure.nodes.first() as Block
+
+    let newData = media.data.toJS()
+    newData.alt = text
+
+    editor.setNodeByKey(media.key, { type: media.type, data: newData })
+    return
   }
 }

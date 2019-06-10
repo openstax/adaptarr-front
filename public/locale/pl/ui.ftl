@@ -1119,6 +1119,8 @@ editor-tools-figure-remove-subfigure = Usuń podfigurę
 
 editor-tools-figure-add-caption = Dodaj opis
 
+editor-tools-figure-alt-text = Atrybut alt:
+
 
 
 ## Editor toolboxes - insertion tools
