@@ -39,8 +39,10 @@ export type AdvanceCode = 'draft:process:advanced' | 'draft:process:finished'
  * Data from ProcessStep but without slots and with links only for current user.
  */
 export type DraftStep = {
+  id: number,
   name: string,
   links: Link[],
+  process: [number, number], // [ProcessID, VersionID]
 }
 
 /**
@@ -80,7 +82,7 @@ export default class Draft extends Base<DraftData> {
 
   /**
    * Assign user to a slot.
-   * 
+   *
    * This function requires editing-process:manage permission.
    */
   static async assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
@@ -89,8 +91,8 @@ export default class Draft extends Base<DraftData> {
 
   /**
    * Get details about the process this draft follows.
-   * 
-   * This function requires editing-process:manage permission. 
+   *
+   * This function requires editing-process:manage permission.
    */
   static async details(draftId: string): Promise<ProcessDetails> {
     return (await elevated(() => axios.get(`drafts/${draftId}/process`))).data
@@ -131,7 +133,7 @@ export default class Draft extends Base<DraftData> {
 
   /**
    * Advance this draft to the next step.
-   * 
+   *
    * @param target and @param slot together must name one of the links returned in
    * GET /api/v1/drafts/:id.
    */
@@ -154,7 +156,7 @@ export default class Draft extends Base<DraftData> {
   }
 
   /**
-   * Update title of this draft. 
+   * Update title of this draft.
    */
   async updateTitle(title: string) {
     await axios.put(`drafts/${this.module}`, { title })
