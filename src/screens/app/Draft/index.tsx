@@ -248,7 +248,7 @@ class Draft extends React.Component<Props> {
     const { documentDbContent, documentDbGlossary, storage, draft } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
     const permissions = draft.permissions || []
-    const viewPermission = permissions.length === 1 && permissions[0] === 'view'
+    const viewPermission = permissions.every(p => p === 'view')
     const isEditorFocused = this.isEditorFocused()
     const showGlossaryToolbox = this.glossaryEditor.current &&
       this.glossaryEditor.current.value.selection.isFocused
