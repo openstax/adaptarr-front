@@ -9,6 +9,7 @@ import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
+import DraftInfo from 'src/components/DraftInfo'
 import Button from 'src/components/ui/Button'
 
 type Props = {
@@ -83,7 +84,7 @@ class DraftsList extends React.Component<Props> {
   componentDidMount = () => {
     this.sortDraftsByBooksName()
   }
-  
+
   public render() {
     const { booksWithDrafts } = this.state
 
@@ -109,18 +110,21 @@ class DraftsList extends React.Component<Props> {
                           {
                             data.drafts.map(draft => (
                               <li key={draft.module} className="list__item">
-                                <span className="list__title">
-                                  {draft.title}
+                                <span className="list__content">
+                                  <span className="list__title">
+                                    {draft.title}
+                                  </span>
+                                  <DraftInfo draft={draft} showPermissions={false} />
                                 </span>
                                 <span className="list__buttons">
-                                <Button 
-                                  to={`/drafts/${draft.module}`}
-                                >
-                                  <Localized id="dashboard-drafts-view">
-                                    View draft
-                                  </Localized>
-                                </Button>
-                              </span>
+                                  <Button
+                                    to={`/drafts/${draft.module}`}
+                                  >
+                                    <Localized id="dashboard-drafts-view">
+                                      View draft
+                                    </Localized>
+                                  </Button>
+                                </span>
                               </li>
                             ))
                           }
