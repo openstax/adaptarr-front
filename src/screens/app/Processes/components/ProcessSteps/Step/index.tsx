@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessStep, Link, ProcessSlot, SlotPermission } from 'src/api/process'
+import { ProcessStep, Link, ProcessSlot, SlotPermission, StepSlot } from 'src/api/process'
 
 import Slot from '../Slot'
 import LinkComp from '../Link'
@@ -117,9 +117,15 @@ class Step extends React.Component<StepProps> {
 
   private updateStateWithProps = () => {
     const step = this.props.step
+    // step.slots will be StepSlotWithId[] or StepSlot[] depends
+    // if we are editing exsiting process or creating new one.
+    // We need id to easier updating so we are just adding it.
+    const slots: StepSlotWithId[] = step.slots.map((s: StepSlotWithId, i) => {
+      return {...s, id: s.id || i}
+    })
     this.setState({
       name: step.name,
-      slots: step.slots,
+      slots: slots,
       links: step.links,
     })
   }
@@ -127,7 +133,7 @@ class Step extends React.Component<StepProps> {
   componentDidUpdate(prevProps: StepProps) {
     const prevStep = prevProps.step
     const step = this.props.step
-    
+
     if (JSON.stringify(prevStep) !== JSON.stringify(step)) {
       this.updateStateWithProps()
     }

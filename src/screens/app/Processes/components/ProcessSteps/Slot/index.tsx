@@ -19,9 +19,11 @@ type SlotProps = {
 
 class Slot extends React.Component<SlotProps> {
   state: {
+    id: number
     slot: number | null
     permission: SlotPermission | null
   } = {
+    id: this.props.slot.id,
     slot: null,
     permission: null,
   }
@@ -29,6 +31,7 @@ class Slot extends React.Component<SlotProps> {
   private updateStateWithProps = () => {
     const slot = this.props.slot
     this.setState({
+      id: slot.id,
       slot: slot.slot,
       permission: slot.permission,
     })
@@ -37,7 +40,7 @@ class Slot extends React.Component<SlotProps> {
   componentDidUpdate(prevProps: SlotProps) {
     const prevSlot = prevProps.slot
     const slot = this.props.slot
-    
+
     if (JSON.stringify(prevSlot) !== JSON.stringify(slot)) {
       this.updateStateWithProps()
     }
