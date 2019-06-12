@@ -22,9 +22,9 @@ admonition-label = { $type ->
 
 exercise-label = Exercise
 
-exercise-problem-label = Problem:
+exercise-problem-label = Problem { $exercise }:
 
-exercise-solution-label = Solution { $solution }:
+exercise-solution-label = Solution { $exercise }.{ $solution }:
 
 exercise-commentary-label = Commentary:
 

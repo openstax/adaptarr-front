@@ -6,7 +6,8 @@ import Labelled from '../../components/Labelled'
 import LabelledWithCounters from '../../components/LabelledWithCounters'
 import Caption from '../../components/Caption'
 
-const SOLUTION_COUNTERS = { solution: 'exercise_solution' }
+const EXERCISE_COUNTERS = { exercise: 'exercise' }
+const SOLUTION_COUNTERS = { exercise: 'exercise', solution: 'exercise_solution' }
 
 const I10nPlugin: Plugin = {
   renderBlock(props, _, next) {
@@ -24,7 +25,8 @@ const I10nPlugin: Plugin = {
         />
 
     case 'exercise_problem':
-      return <Labelled
+      return <LabelledWithCounters
+        counterMap={EXERCISE_COUNTERS}
         className="exercise-problem"
         l10nKey="exercise-problem-label"
         {...props}

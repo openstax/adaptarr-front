@@ -23,9 +23,9 @@ admonition-label = { $type ->
 
 exercise-label = Ćwiczenie
 
-exercise-problem-label = Problem:
+exercise-problem-label = Problem { $exercise }:
 
-exercise-solution-label = Rozwiązanie { $solution }:
+exercise-solution-label = Rozwiązanie { $exercise }.{ $solution }:
 
 exercise-commentary-label = Komentarz:
 
