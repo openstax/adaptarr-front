@@ -157,8 +157,9 @@ class StepChanger extends React.Component<Props> {
       await documentDbGlossary.save(glossary, Date.now().toString())
       this.nextStep()
     } catch (ex) {
-      store.dispatch(addAlert('error', 'step-changer-save-advance-error'))
-      console.error(ex)
+      store.dispatch(addAlert('error', 'step-changer-save-advance-error', {
+        details: ex.response.data.raw,
+      }))
     }
 
   }
@@ -177,7 +178,7 @@ class StepChanger extends React.Component<Props> {
       })
       .catch(e => {
         store.dispatch(addAlert('error', 'step-changer-error', {
-          details: e.response.data.error,
+          details: e.response.data.raw,
         }))
       })
   }
