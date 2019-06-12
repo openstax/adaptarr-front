@@ -1,0 +1,11 @@
+.draft-info__permission:first-child {
+  padding-left: 5px;
+}
+
+.draft-info__permission::after {
+  content: ', ';
+}
+
+.draft-info__permission:last-child::after {
+  content: none;
+}
