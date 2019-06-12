@@ -4,20 +4,27 @@ import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceEleme
 import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
+import { AxiosResponse } from 'axios'
+
+import axios from 'src/config/axios'
+import { DraftData } from './draft'
 
 /**
  * Exception thrown by methods of {@link Storage} on API errors.
  */
 export class APIError extends BaseError {
-  response: Response
+  _response: AxiosResponse
 
-  constructor(response: Response) {
+  constructor(response: AxiosResponse) {
     super(`${response.status} ${response.statusText}`)
-    this.response = response
+    this._response = response
+  }
 
-    // Required to make extends Error work with babel
-    ;(this as any).constructor = APIError
-    ;(this as any).__proto__ = APIError.prototype
+  /**
+   * Whole response for the failed request.
+   */
+  get response() {
+    return this._response
   }
 
   /**
@@ -67,13 +74,13 @@ export default class Storage extends StorageBase {
     self.url = '/api/v1/drafts/' + id
     self.document = null
 
-    const [data, files] = await Promise.all([
-      self._request('', 'json'),
-      self._request('/files', 'json'),
+    const [data, files]: [AxiosResponse<DraftData>, AxiosResponse<FileDescription[]>] = await Promise.all([
+      axios.get(`drafts/${id}`),
+      axios.get(`drafts/${id}/files`),
     ])
 
-    self.title = data.title
-    self.files = files
+    self.title = data.data.title
+    self.files = files.data
 
     return self
   }
@@ -84,9 +91,9 @@ export default class Storage extends StorageBase {
    * @return {document: Value, glossary: Value}
    */
   async read() {
-    const index = await this._request('/files/index.cnxml')
-    this.tag = index.headers.get('ETag')
-    const deserialize = this.serializer.deserialize(await index.text())
+    const index = await axios.get(`drafts/${this.id}/files/index.cnxml`)
+    this.tag = index.headers.etag
+    const deserialize = this.serializer.deserialize(await index.data)
     this.document = deserialize.document
     this.glossary = deserialize.glossary
     return { document: this.document, glossary: this.glossary }
@@ -96,37 +103,28 @@ export default class Storage extends StorageBase {
    * Write the document
    */
   async write(document: Value, glossary: Value | null) {
-    const text = this.serializer.serialize(document, glossary, this.title)
+    try {
+      const text = this.serializer.serialize(document, glossary, this.title)
 
-    const req = await fetch(this.url + '/files/index.cnxml', {
-      method: 'PUT',
-      credentials: 'same-origin',
-      body: text,
-    })
+      await axios.put(`drafts/${this.id}/files/index.cnxml`, text)
 
-    if (!req.ok) {
-      throw new APIError(req)
+      this.document = document
+      this.glossary = glossary
+    } catch (e) {
+      throw new APIError(e.response)
     }
-
-    this.document = document
-    this.glossary = glossary
   }
 
   /**
    * Write a file.
    */
   async writeFile(file: File) {
-    const req = await fetch(this.url + '/files/' + file.name, {
-      method: 'PUT',
-      credentials: 'same-origin',
-      body: file,
-    })
-
-    if (!req.ok) {
-      throw new APIError(req)
+    try {
+      await axios.put(`drafts/${this.id}/files/${file.name}`, file)
+      this.files.push({ name: file.name, mime: file.type })
+    } catch (e) {
+      throw new APIError(e.response)
     }
-
-    this.files.push({ name: file.name, mime: file.type })
   }
 
   /**
@@ -141,18 +139,6 @@ export default class Storage extends StorageBase {
    */
   mediaUrl(name: string) {
     return this.url + '/files/' + name
-  }
-
-  async _request(path: string, data?: string) {
-    const req = await fetch(this.url + path, {
-      credentials: 'same-origin',
-    })
-
-    if (!req.ok) {
-      throw new APIError(req)
-    }
-
-    return data ? req[data]() : req
   }
 
   serializer = new CNXML({
