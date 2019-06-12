@@ -903,6 +903,12 @@ navigation-processes = Procesy edycyjne
 # Button for adding new assets (files).
 asset-list-add-media = Dodaj
 
+# Alert for error when adding new media
+#
+# Variables:
+# - $details (string): error message.
+asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
+
 
 
 ## Reusable components - notifications

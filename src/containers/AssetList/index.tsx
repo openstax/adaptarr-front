@@ -4,6 +4,9 @@ import { Localized } from 'fluent-react/compat'
 
 import Storage, { FileDescription } from 'src/api/storage'
 
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/Alerts'
+
 import AssetPreview from 'src/components/AssetPreview'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -77,6 +80,9 @@ export default class AssetList extends React.Component<Props> {
       // in state to cause rerender, and thus we have to force it.
       this.forceUpdate()
     } catch (ex) {
+      store.dispatch(addAlert('error', 'asset-list-add-error', {
+        details: ex.response.data.raw,
+      }))
       console.error(ex)
     }
   }
