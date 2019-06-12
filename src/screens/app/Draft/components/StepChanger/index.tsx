@@ -41,7 +41,7 @@ class StepChanger extends React.Component<Props> {
     const { link, confirmDialog, unsavedChanges } = this.state
 
     return (
-      step && <div className="step-changer">
+      step && step.links.length > 0 && <div className="step-changer">
         <h3 className="step-changer__title">
           <Localized id="step-changer-choose">
             Choose link:
