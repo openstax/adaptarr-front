@@ -50,9 +50,8 @@ export default class AssetList extends React.Component<Props> {
         {storage.files
           .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
           .map((file: FileDescription) => (
-            <li className="assetList__item">
+            <li key={file.name} className="assetList__item">
               <AssetPreview
-                key={file.name}
                 asset={file}
                 onClick={this.onClickAsset}
               />
