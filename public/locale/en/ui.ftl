@@ -1117,7 +1117,7 @@ editor-tools-figure-remove-subfigure = Remove subfigure
 
 editor-tools-figure-add-caption = Add caption
 
-editor-tools-figure-alt-text = Alt attribute:
+editor-tools-figure-alt-text = Alternative text:
 
 
 

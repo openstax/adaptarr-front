@@ -1119,7 +1119,7 @@ editor-tools-figure-remove-subfigure = Usuń podfigurę
 
 editor-tools-figure-add-caption = Dodaj opis
 
-editor-tools-figure-alt-text = Atrybut alt:
+editor-tools-figure-alt-text = Alternatywny tekst:
 
 
 
