@@ -5,3 +5,20 @@
 .list__item.draftsList__book {
   border-bottom: none;
 }
+
+.draftsList .list__content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  line-height: 1.2;
+}
+
+.draftsList .list__title {
+  font-weight: 700;
+}
+
+.draftsList .draft-info {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+}

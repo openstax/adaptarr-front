@@ -780,6 +780,30 @@ update-slots-fetching-error = Coś poszło nie tak podczas pobierania informacji
 
 
 
+## Reusable components - draft info
+
+# Variables:
+# - $process (string): process name which this draft follows.
+draft-info-process = Proces: { $process }
+
+# Variables:
+# - $step (string): step name in current process.
+draft-info-step = Aktualny krok: { $step }
+
+draft-info-permissions = Twoje uprawnienia:
+
+# Variables:
+# - $permission (string): draft permission (view | edit | propose-changes accept-changes)
+draft-info-permission = { $permission ->
+  [view] oglądanie
+  [edit] edycja
+  [propose-changes] proponowanie zmian
+  [accept-changes] akceptowanie zmian
+ *[notavalidvalue] { $permission }
+}
+
+
+
 ## Reusable components - free slots
 
 free-slots-slot-name = Nazwa funkcji:

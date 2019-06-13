@@ -20,6 +20,7 @@ import InfoBox from 'src/components/InfoBox'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
+import DraftInfo from 'src/components/DraftInfo'
 import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
 import StepChanger from './components/StepChanger'
@@ -277,7 +278,8 @@ class Draft extends React.Component<Props> {
 
     return (
       <Section>
-        <Header l10nId="draft-title" title="Draft">
+        <Header>
+          <DraftInfo draft={draft}/>
           <StepChanger
             draft={draft}
             onStepChange={this.handleStepChange}

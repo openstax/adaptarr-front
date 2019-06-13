@@ -780,6 +780,30 @@ update-slots-fetching-error = Couldn't fetch details about slots in this process
 
 
 
+## Reusable components - draft info
+
+# Variables:
+# - $process (string): process name which this draft follows.
+draft-info-process = Process: { $process }
+
+# Variables:
+# - $step (string): step name in current process.
+draft-info-step = Current step: { $step }
+
+draft-info-permissions = Your permissions:
+
+# Variables:
+# - $permission (string): draft permission (view | edit | propose-changes accept-changes)
+draft-info-permission = { $permission ->
+  [view] view
+  [edit] edit
+  [propose-changes] propose changes
+  [accept-changes] accept changes
+ *[notavalidvalue] { $permission }
+}
+
+
+
 ## Reusable components - free slots
 
 free-slots-slot-name = Slot name:
