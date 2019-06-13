@@ -138,8 +138,7 @@ export default class FigureTools extends React.Component<Props> {
 
     const media = figure.nodes.first() as Block
 
-    let newData = media.data.toJS()
-    newData.alt = text
+    let newData = media.data.set('alt', text)
 
     editor.setNodeByKey(media.key, { type: media.type, data: newData })
     return
