@@ -1711,3 +1711,36 @@ editor-tools-source-type = { $type ->
  *[inline] Inline
   [block] Block
 }
+
+
+
+## Editor toolboxes - suggestions
+
+# Variables:
+# - $counter (number): total number of suggestions.
+editor-tools-suggestions-title = Suggestions ({ $counter })
+
+editor-tools-suggestion-undefined = Undefined suggestion
+
+# Variables:
+# - $insert (string): text to insert.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-insert = <action>Add</action> <content>{ $insert }</content>
+
+# Variables:
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-delete = <action>Remove</action> <content>{ $delete }</content>
+
+# Variables:
+# - $insert (string): text to insert.
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-change =
+  <action>Replace</action> <content>{ $delete }</content> with <content>{ $insert }</content>

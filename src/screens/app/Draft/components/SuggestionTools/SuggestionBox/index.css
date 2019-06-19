@@ -1,0 +1,56 @@
+.suggestion-box {
+  width: 100%;
+  max-width: 250px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--dark-bg);
+  margin: 10px 0;
+}
+
+button.suggestion-box__control {
+  padding: 5px 20px;
+}
+
+button.suggestion-box__control[disabled] {
+  border: none;
+}
+
+.suggestion-box.inactive {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.suggestion-box__info {
+  line-height: 1.3;
+}
+
+.suggestion-box__info strong {
+  font-weight: 700;
+}
+
+.suggestion-box__info span {
+  font-style: italic;
+  word-wrap: anywhere;
+  color: #909090;
+}
+
+.suggestion-box__info span::before {
+  content: "„";
+}
+
+.suggestion-box__info span::after {
+  content: "”";
+}
+
+.suggestion-box__buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 5px;
+}
+
+.suggestion-box__buttons button {
+  background-color: transparent;
+  color: var(--font-dark);
+  padding: 0 5px;
+  min-width: 0;
+}
