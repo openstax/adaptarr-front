@@ -1,11 +1,14 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import { Localized } from 'fluent-react/compat'
+import { connect } from 'react-redux'
 
 import Storage, { FileDescription } from 'src/api/storage'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers'
+import { SlotPermission } from 'src/api/process'
 
 import AssetPreview from 'src/components/AssetPreview'
 import Button from 'src/components/ui/Button'
@@ -18,9 +21,16 @@ import './index.css'
 export type Props = {
   filter?: string,
   onSelect?: (asset: FileDescription) => void,
+  draftPermissions: SlotPermission[],
 }
 
-export default class AssetList extends React.Component<Props> {
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
+  return {
+    draftPermissions: currentDraftPermissions,
+  }
+}
+
+class AssetList extends React.Component<Props> {
   static contextTypes = {
     storage: PropTypes.instanceOf(Storage),
   }
@@ -42,7 +52,10 @@ export default class AssetList extends React.Component<Props> {
     return (
       <ul className="assetList">
         <li className="assetList__item">
-          <Button clickHandler={this.onAddMedia}>
+          <Button
+            clickHandler={this.onAddMedia}
+            isDisabled={!this.props.draftPermissions.includes('edit')}
+          >
             <Icon size="medium" name="plus" />
             <Localized id="asset-list-add-media">Add media</Localized>
           </Button>
@@ -92,3 +105,5 @@ export default class AssetList extends React.Component<Props> {
     if (onSelect) onSelect(asset)
   }
 }
+
+export default connect(mapStateToProps)(AssetList)
