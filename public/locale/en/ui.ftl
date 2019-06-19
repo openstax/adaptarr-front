@@ -1046,6 +1046,18 @@ step-changer-save-advance = Save and advance
 # - $details (string): error details.
 step-changer-save-advance-error = Couldn't save and advance to the next step. Details: { $details }.
 
+step-changer-dialog-suggestions = Please resolve all suggestions.
+
+# Variables:
+# - $document (number): number of suggestions inside document.
+# - $glossary (number): number of suggestions inside glossary.
+step-changer-dialog-suggestions-info = You have { $document } unresolved { $document ->
+  [1] suggestion
+ *[more] suggestions
+} in document and { $glossary } in glossary. Please resolve all of them before changing step.
+
+step-changer-dialog-suggestions-ok = Ok
+
 
 
 ## Reusable components - permissions

@@ -3,15 +3,18 @@ import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { DocumentDB } from 'cnx-designer'
 import { Value } from 'slate'
+import { connect } from 'react-redux'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { addModuleToMap } from 'src/store/actions/Modules'
+import { State } from 'src/store/reducers'
 import { Draft, Storage, Module } from 'src/api'
-import { Link } from 'src/api/process'
+import { Link, SlotPermission } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
+import { SUGGESTION_TYPES } from '../../plugins/Suggestions/types'
 
 import './index.css'
 
@@ -23,6 +26,13 @@ type Props = {
   storage: Storage
   documentDbContent: DocumentDB
   documentDbGlossary: DocumentDB
+  draftPermissions: SlotPermission[],
+}
+
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
+  return {
+    draftPermissions: currentDraftPermissions,
+  }
 }
 
 class StepChanger extends React.Component<Props> {
@@ -31,16 +41,22 @@ class StepChanger extends React.Component<Props> {
     confirmDialog: boolean
     unsavedChanges: boolean
     detailsDialog: boolean
+    suggestionsDialog: boolean
+    documentSuggestions: number
+    glossarySuggestions: number
   } = {
     link: null,
     confirmDialog: false,
     unsavedChanges: false,
     detailsDialog: false,
+    suggestionsDialog: false,
+    documentSuggestions: 0,
+    glossarySuggestions: 0,
   }
 
   public render() {
     const { draft: { step } } = this.props
-    const { confirmDialog, unsavedChanges, detailsDialog } = this.state
+    const { link, confirmDialog, unsavedChanges, detailsDialog, suggestionsDialog, documentSuggestions, glossarySuggestions } = this.state
 
     return (
       step && step.links.length > 0 && <div className="step-changer">
@@ -78,6 +94,33 @@ class StepChanger extends React.Component<Props> {
                     })
                   }
                 </div>
+              </div>
+            </Dialog>
+          : null
+        }
+        {
+          suggestionsDialog ?
+            <Dialog
+              size="medium"
+              l10nId="step-changer-dialog-suggestions"
+              placeholder="Please resolve all suggestions."
+              onClose={this.closeSuggestionsDialog}
+            >
+              <div>
+                <Localized
+                  id="step-changer-dialog-suggestions-info"
+                  $document={documentSuggestions}
+                  $glossary={glossarySuggestions}
+                >
+                  You have unresolved suggestions in document or glossary. Please resolve all of them before changing step.
+                </Localized>
+              </div>
+              <div className="step-changer__dialog-controls">
+                <Button clickHandler={this.closeSuggestionsDialog}>
+                  <Localized id="step-changer-dialog-suggestions-ok">
+                    Ok
+                  </Localized>
+                </Button>
               </div>
             </Dialog>
           : null
@@ -151,7 +194,22 @@ class StepChanger extends React.Component<Props> {
   }
 
   private showConfirmDialog = async () => {
-    const { storage, document, glossary } = this.props
+    const { storage, document, glossary, draftPermissions } = this.props
+
+    if (draftPermissions.includes('accept-changes')) {
+      const documentSuggestions = document.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
+      const glossarySuggestions = glossary.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
+
+      if (documentSuggestions.size > 0 || glossarySuggestions.size > 0) {
+        this.setState({
+          suggestionsDialog: true,
+          documentSuggestions: documentSuggestions.size,
+          glossarySuggestions: glossarySuggestions.size,
+        })
+        return
+      }
+    }
+
     const unsavedChanges = !storage.current(document, glossary)
     this.setState({ confirmDialog: true, detailsDialog: false, unsavedChanges })
   }
@@ -196,6 +254,10 @@ class StepChanger extends React.Component<Props> {
         }))
       })
   }
+
+  private closeSuggestionsDialog = () => {
+    this.setState({ suggestionsDialog: false, documentSuggestions: 0, glossarySuggestions: 0 })
+  }
 }
 
-export default StepChanger
+export default connect(mapStateToProps)(StepChanger)

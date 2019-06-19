@@ -1048,6 +1048,15 @@ step-changer-save-advance = Zapisz i przenieś
 # - $details (string): error details.
 step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu. Szczegóły: { $details }.
 
+step-changer-dialog-suggestions = Proszę zaakceptować lub odrzucić wszystkie sugestie.
+
+# Variables:
+# - $document (number): number of suggestions inside document.
+# - $glossary (number): number of suggestions inside glossary.
+step-changer-dialog-suggestions-info = Liczba sugestii w dokumencie: { $document }. Liczba sugestii w glosariuszu { $glossary }. Proszę zaakceptować lub odrzucić wszystkie z nich.
+
+step-changer-dialog-suggestions-ok = Ok
+
 
 
 ## Reusable components - permissions
