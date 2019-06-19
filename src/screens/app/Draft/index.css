@@ -69,6 +69,43 @@
   font-size: 1.2rem;
 }
 
+.editor .suggestion {
+  position: relative;
+}
+
+.editor .suggestion::before, .editor .suggestion::after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 0;
+  display: block;
+  height: 1px;
+  width: 100%;
+  background-color: var(--blue);
+}
+
+.editor .suggestion::after {
+  top: auto;
+  bottom: 0;
+}
+
+.editor .suggestion--insert {
+  color: var(--green);
+}
+
+.editor .suggestion--insert::before, .editor .suggestion--insert::after {
+  background-color: var(--green)
+}
+
+.editor .suggestion--delete {
+  color: var(--red);
+  text-decoration: line-through;
+}
+
+.editor .suggestion--delete::before, .editor .suggestion--delete::after {
+  background-color: var(--red)
+}
+
 .editor p {
   margin-top: 0.6em;
   margin-bottom: 0.6em;
