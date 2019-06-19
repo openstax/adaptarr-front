@@ -95,8 +95,8 @@
     "@types/node": "^10.12.10",
     "@types/react": "^16.7.10",
     "@types/react-dom": "^16.0.11",
-    "@types/slate": "^0.44.0",
-    "@types/slate-react": "^0.22.0",
+    "@types/slate": "^0.44.10",
+    "@types/slate-react": "^0.22.1",
     "fluent-syntax": "^0.10.0",
     "typescript": "^3.2.1"
   },
