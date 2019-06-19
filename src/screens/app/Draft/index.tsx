@@ -13,6 +13,7 @@ import timeout from 'src/helpers/timeout'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import { SlotPermission } from 'src/api/process'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
 import { setCurrentDraftLang } from 'src/store/actions/Drafts'
 
@@ -37,6 +38,8 @@ import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
 import SourceElements from './plugins/SourceElements'
 import Shortcuts from './plugins/Shortcuts'
+import Suggestions from './plugins/Suggestions'
+import { SUGGESTION_TYPES } from './plugins/Suggestions/types'
 
 import PersistanceError from './PersistanceError'
 
@@ -128,15 +131,33 @@ class Draft extends React.Component<Props> {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }
 
+  draftPermissions = this.props.draft.permissions || []
+  stepPermissions = this.props.draft.step!.slots.reduce((acc, slot) => {
+    acc = new Set([...acc, ...slot.permissions])
+    return acc
+  }, new Set<SlotPermission>())
+
   pluginsDocument = [
     I10nPlugin,
     XrefPlugin,
     TablesPlugin,
-    SourceElements,
+    SourceElements({ inlines: SUGGESTION_TYPES }),
+    this.stepPermissions.has('propose-changes')
+    || this.stepPermissions.has('accept-changes') ?
+      Suggestions({ isActive: this.draftPermissions.includes('propose-changes') })
+      : {},
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
+      text: {
+        code: {
+          inlines: SUGGESTION_TYPES,
+        },
+        term: {
+          inlines: SUGGESTION_TYPES,
+        },
+      },
     }),
     Shortcuts(),
     Persistence({ db: this.props.documentDbContent }),
@@ -144,7 +165,17 @@ class Draft extends React.Component<Props> {
 
   pluginsGlossary = [
     I10nPlugin,
-    ...Glossary(),
+    this.stepPermissions.has('propose-changes')
+    || this.stepPermissions.has('accept-changes') ?
+      Suggestions({ isActive: this.draftPermissions.includes('propose-changes') })
+      : {},
+    ...Glossary({
+      text: {
+        term: {
+          inlines: SUGGESTION_TYPES,
+        },
+      },
+    }),
     Shortcuts(),
     Persistence({ db: this.props.documentDbGlossary }),
   ]
