@@ -15,7 +15,7 @@ import store from 'src/store'
 import * as api from 'src/api'
 import { SlotPermission } from 'src/api/process'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
-import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/Drafts'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
@@ -284,6 +284,11 @@ class Draft extends React.Component<Props> {
 
   componentDidMount() {
     store.dispatch(setCurrentDraftLang(this.state.valueDocument.data.get('language') || 'en'))
+    store.dispatch(setCurrentDraftPermissions(this.draftPermissions))
+  }
+
+  componentWillUnmount() {
+    store.dispatch(setCurrentDraftPermissions([]))
   }
 
   contentEditor: React.RefObject<Editor> = React.createRef()
