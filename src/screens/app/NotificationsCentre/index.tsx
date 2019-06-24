@@ -90,7 +90,7 @@ class NotificationsCentre extends React.Component<Props> {
     let detailsWho = details && details.who ? teamMap.get(details.who) : undefined
 
     return (
-      <div className="container container--splitted">
+      <div className="container">
         {
           !isLoading ?
             <React.Fragment>
@@ -124,7 +124,7 @@ class NotificationsCentre extends React.Component<Props> {
                   }
                 </div>
               </Section>
-              <Section>
+              {/* <Section>
                 {
                   showDetails ?
                     <React.Fragment>
@@ -156,7 +156,7 @@ class NotificationsCentre extends React.Component<Props> {
                       </div>
                     </React.Fragment>
                 }
-              </Section>
+              </Section> */}
             </React.Fragment>
           : <Spinner />
         }

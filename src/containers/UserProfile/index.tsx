@@ -303,25 +303,25 @@ class UserProfile extends React.Component<Props> {
               <div className="profile__top">
                 <div className="profile__avatar">
                   <Avatar size="big" disableLink user={user}/>
-                  <UserUI userId={user.id}>
+                  {/* <UserUI userId={user.id}>
                     <span
                       className="profile__update-avatar"
                       onClick={this.showUpdateAvatar}
                     >
                       <Icon name="pencil"/>
                     </span>
-                  </UserUI>
+                  </UserUI> */}
                 </div>
                 <h2 className="profile__name">
                   {decodeHtmlEntity(user.name)}
-                  <UserUI userId={user.id}>
+                  {/* <UserUI userId={user.id}>
                     <span
                       className="profile__update-name"
                       onClick={this.showUpdateName}
                     >
                       <Icon size="small" name="pencil"/>
                     </span>
-                  </UserUI>
+                  </UserUI> */}
                 </h2>
               </div>
               <div className="profile__info">
@@ -355,7 +355,7 @@ class UserProfile extends React.Component<Props> {
                     </Localized>
                   </Button>
                 </LimitedUI>
-                <h3 className="profile__title">
+                {/* <h3 className="profile__title">
                   <Localized id="user-profile-section-bio">Bio</Localized>
                 </h3>
                 <div className="profile__bio">
@@ -375,13 +375,13 @@ class UserProfile extends React.Component<Props> {
                   <Localized id="user-profile-section-contact">Contact</Localized>
                 </h3>
                 <span className="profile__email">
-                  {/*email: {user.email ? user.email : i18n.t("Unknown.email")}*/}
+                  {email: {user.email ? user.email : i18n.t("Unknown.email")}}
                   <UserUI userId={user.id}>
                     <span className="profile__update-email" onClick={this.showUpdateEmail}>
                       <Icon size="small" name="pencil"/>
                     </span>
                   </UserUI>
-                </span>
+                </span> */}
               </div>
             </div>
           </div>
