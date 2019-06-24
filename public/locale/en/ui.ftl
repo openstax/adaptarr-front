@@ -1029,6 +1029,31 @@ reference-target-list-tab-remote-not-assigned = Not assigned to any book
 
 
 
+## Reusable components - error boundary
+
+error-boundary-title = Something went wrong
+
+# Variables:
+# - $hasReport (string): true | false depends if Sentry received automatic report.
+# Fragments:
+# - <p> ... </p>: text in new paragraph
+error-boundary-info =
+  <p>It's not your fault, it should not have happened.</p>
+  <p>To prevent errors from corrupting your document we disabled editing until
+  you reload the page. Don't worry about your work; it has been auto-saved and
+  will be restored after reload.</p>
+  { $hasReport ->
+    [true] <p>We have received an automatic error report, but would appreciate if
+    you could spare some time and fill out a more detailed one.</p>
+   *[false] {""}
+  }
+
+error-boundary-button-reload = Reload page
+
+error-boundary-button-fill-report = Fill out a report
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title
