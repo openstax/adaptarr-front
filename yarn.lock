@@ -82,6 +82,52 @@
   version "0.8.2"
   resolved "https://npm.pkg.naukosfera.com:443/@emotion%2futils/-/utils-0.8.2.tgz#576ff7fb1230185b619a75d258cbc98f0867a8dc"
 
+"@sentry/browser@^5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@sentry/browser/-/browser-5.4.3.tgz#c9b56611c6b7de624962d2ea3fc0a9318f44a853"
+  dependencies:
+    "@sentry/core" "5.4.3"
+    "@sentry/types" "5.4.2"
+    "@sentry/utils" "5.4.2"
+    tslib "^1.9.3"
+
+"@sentry/core@5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@sentry/core/-/core-5.4.3.tgz#c9e3a6cc9f5e296c5a5e19a7a925d9ee9125a95f"
+  dependencies:
+    "@sentry/hub" "5.4.3"
+    "@sentry/minimal" "5.4.3"
+    "@sentry/types" "5.4.2"
+    "@sentry/utils" "5.4.2"
+    tslib "^1.9.3"
+
+"@sentry/hub@5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@sentry/hub/-/hub-5.4.3.tgz#d6936f976435dd552e06a6a3e9f8cd643e9b9b3f"
+  dependencies:
+    "@sentry/types" "5.4.2"
+    "@sentry/utils" "5.4.2"
+    tslib "^1.9.3"
+
+"@sentry/minimal@5.4.3":
+  version "5.4.3"
+  resolved "https://registry.yarnpkg.com/@sentry/minimal/-/minimal-5.4.3.tgz#afaa8f7a3b5074efa8d70a2edac920b2e0cdbe15"
+  dependencies:
+    "@sentry/hub" "5.4.3"
+    "@sentry/types" "5.4.2"
+    tslib "^1.9.3"
+
+"@sentry/types@5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@sentry/types/-/types-5.4.2.tgz#4ab327bced2cfd961dc7a29f0ff43398f913f6a6"
+
+"@sentry/utils@5.4.2":
+  version "5.4.2"
+  resolved "https://registry.yarnpkg.com/@sentry/utils/-/utils-5.4.2.tgz#c88c6c08d635e1744a443cfefe9e2ed7fa250e4e"
+  dependencies:
+    "@sentry/types" "5.4.2"
+    tslib "^1.9.3"
+
 "@types/fluent-langneg@^0.1.1":
   version "0.1.1"
   resolved "https://npm.pkg.naukosfera.com:443/@types%2ffluent-langneg/-/fluent-langneg-0.1.1.tgz#ec7f31c8e759e0206ac7a8367d2c92c913296dc9"
@@ -7562,6 +7608,10 @@ tsconfig-paths@^3.1.1:
 tslib@^1.8.0, tslib@^1.8.1:
   version "1.9.3"
   resolved "https://npm.pkg.naukosfera.com:443/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
+
+tslib@^1.9.3:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
 
 tslint-config-prettier@^1.10.0:
   version "1.18.0"
