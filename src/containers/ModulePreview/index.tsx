@@ -1,70 +1,150 @@
-import './index.css'
-
 import * as React from 'react'
-import { connect } from 'react-redux'
+import * as PropTypes from 'prop-types'
+import Counters from 'slate-counters'
+import { Value } from 'slate'
+import { Editor } from 'slate-react'
+import { CNXML, Document, Glossary } from 'cnx-designer'
 
 import * as api from 'src/api'
 
-import updateImgSrcs from 'src/helpers/updateImgSrcs'
+import Spinner from 'src/components/Spinner'
 
-import { RequestInfoKind } from 'src/store/types'
-import { addAlert } from 'src/store/actions/Alerts'
+import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
+import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
+import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
+import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
+import LocalizationLoader from 'src/screens/app/Draft/components/LocalizationLoader'
+import I10nPlugin from 'src/screens/app/Draft/plugins/I10n'
+import XrefPlugin from 'src/screens/app/Draft/plugins/Xref'
+import TablesPlugin from 'src/screens/app/Draft/plugins/Tables'
+import SourceElements from 'src/screens/app/Draft/plugins/SourceElements'
+
+import './index.css'
 
 type Props = {
   moduleId: string
-  addAlert: (kind: RequestInfoKind, message: string) => void
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
-  }
+type State = {
+  loading: boolean,
+  valueDocument: Value | null,
+  valueGlossary: Value | null,
 }
 
 class ModulePreview extends React.Component<Props> {
-
-  state: {
-    index: string
-    files: string[]
-  } = {
-    index: 'Loading...',
-    files: [],
+  state: State = {
+    loading: false,
+    valueDocument: null,
+    valueGlossary: null,
   }
 
-  private fetchModuleFiles = () => {
-    api.Module.load(this.props.moduleId)
-      .then(module => Promise.all([
-        module.files(),
-        module.read('index.cnxml'),
-      ]))
-      .then(([files, index]) => this.setState({ index, files }))
-      .catch(e => {
-        this.setState({ index: `There is no index.cnxml file for this module. Details: {e.message}` })
-        this.props.addAlert('error', e.message)
-      })
+  pluginsDocument = [
+    I10nPlugin,
+    XrefPlugin,
+    TablesPlugin,
+    SourceElements,
+    Counters(),
+    ...Document({
+      document_content: ['table', 'source_element'],
+      content: ['source_element'],
+    }),
+  ]
+
+  pluginsGlossary = [
+    I10nPlugin,
+    ...Glossary(),
+  ]
+
+  // This make sure that Counters() are correctly set.
+  onChangeDocument = ({ value }: { value: Value }) => {
+    this.setState({ valueDocument: value })
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  mediaUrl = (name: string) => `/api/v1/modules/${this.props.moduleId}/files/${name}`
+
+  componentDidUpdate = async (prevProps: Props) => {
     if (prevProps.moduleId !== this.props.moduleId) {
-      this.fetchModuleFiles()
+      this.setState({ loading: true })
+      const { document, glossary } = await this.loadContent(this.props.moduleId)
+      this.setState({ loading: false, valueDocument: document, valueGlossary: glossary })
     }
   }
 
-  componentDidMount = () => {
-    this.fetchModuleFiles()
+  componentWillMount = async () => {
+    const { document, glossary } = await this.loadContent(this.props.moduleId)
+    this.setState({ valueDocument: document, valueGlossary: glossary })
+  }
+
+  private loadContent = async (moduleId: string) => {
+    const module = await api.Module.load(moduleId)
+
+    const serializer = new CNXML({
+      documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize],
+      glossaryRules: [],
+    })
+
+    const content = await module.read('index.cnxml')
+    const { document, glossary } = serializer.deserialize(content)
+
+    return {
+      document,
+      glossary: glossary.document.nodes.get(0).type === 'definition' ? glossary : null,
+    }
   }
 
   public render() {
-    const { index } = this.state
+    const { loading, valueDocument, valueGlossary } = this.state
 
     return (
-      <div
-        className="modulePreview cnxml"
-        dangerouslySetInnerHTML={{__html: updateImgSrcs(index, this.props.moduleId)}}
-      >
+      <div className="modulePreview cnxml">
+        {
+          !loading && valueDocument ?
+            <LocalizationLoader
+              locale={valueDocument.data.get('language') || 'en'}
+            >
+              <MediaContext mediaUrl={this.mediaUrl}>
+                <Editor
+                  className="editor editor--document"
+                  value={valueDocument}
+                  plugins={this.pluginsDocument}
+                  onChange={this.onChangeDocument}
+                  readOnly={true}
+                />
+                {
+                  valueGlossary ?
+                    <Editor
+                      className="editor editor--glossary"
+                      value={valueGlossary}
+                      plugins={this.pluginsGlossary}
+                      readOnly={true}
+                    />
+                  : null
+                }
+              </MediaContext>
+            </LocalizationLoader>
+          : <Spinner />
+        }
       </div>
     )
   }
 }
 
-export default connect(mapDispatchToProps)(ModulePreview)
+export default ModulePreview
+
+class MediaContext extends React.Component<{mediaUrl: (name: string) => string}> {
+  static childContextTypes = {
+    mediaUrl: PropTypes.instanceOf(Function)
+  }
+
+  getChildContext() {
+    return {
+      mediaUrl: this.props.mediaUrl,
+    }
+  }
+
+  render() {
+    return <React.Fragment>
+      {this.props.children}
+    </React.Fragment>
+  }
+}
