@@ -30,7 +30,7 @@ import ToolboxGlossary from './components/ToolboxGlossary'
 import LocalizationLoader from './components/LocalizationLoader'
 
 import './index.css'
-import StorageContext from './plugins/Storage'
+import EditorContext from './plugins/EditorContext'
 import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
@@ -245,6 +245,8 @@ class Draft extends React.Component<Props> {
   contentEditor: React.RefObject<Editor> = React.createRef()
   glossaryEditor: React.RefObject<Editor> = React.createRef()
 
+  mediaUrl = (name: string) => `/api/v1/drafts/${this.props.draft.module}/files/${name}`
+
   public render() {
     const { documentDbContent, documentDbGlossary, storage, draft } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
@@ -322,7 +324,7 @@ class Draft extends React.Component<Props> {
                 <LocalizationLoader
                   locale={valueDocument.data.get('language') || 'en'}
                 >
-                  <StorageContext storage={storage}>
+                  <EditorContext storage={storage} mediaUrl={this.mediaUrl}>
                     <Editor
                       ref={this.contentEditor}
                       className="editor editor--document"
@@ -347,7 +349,7 @@ class Draft extends React.Component<Props> {
                           />
                         </>
                     }
-                  </StorageContext>
+                  </EditorContext>
                 </LocalizationLoader>
               </div>
               {
@@ -355,7 +357,7 @@ class Draft extends React.Component<Props> {
                   null
                 :
                   <div className="document__ui">
-                    <StorageContext storage={storage}>
+                    <EditorContext storage={storage} mediaUrl={this.mediaUrl}>
                       {
                         showDocumentToolbox ?
                           <ToolboxDocument
@@ -381,7 +383,7 @@ class Draft extends React.Component<Props> {
                           </div>
                         : null
                       }
-                    </StorageContext>
+                    </EditorContext>
                   </div>
               }
             </div>
