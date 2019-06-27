@@ -1057,6 +1057,16 @@ step-changer-dialog-suggestions-info = Liczba sugestii w dokumencie: { $document
 
 step-changer-dialog-suggestions-ok = Ok
 
+step-changer-dialog-wrong-target-title = Niepoprawny link
+
+step-changer-dialog-wrong-target = Nie znaleźliśmy wybranego celu. Spróbuj ponownie później
+  lub skontaktuj się z administratorem.
+
+step-changer-dialog-wrong-target-suggestions = Liczba sugestii w dokumencie: { $document }.
+  Liczba sugestii w glosariuszu { $glossary }. Możesz przenieść tę wersję roboczą do kroku,
+  który zawiera uprawnienie do akceptowania zmian lub musisz rozwiązać wszystkie
+  sugestie, aby przenieść szkic do innego kroku.
+
 
 
 ## Reusable components - permissions

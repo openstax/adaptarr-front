@@ -1058,6 +1058,16 @@ step-changer-dialog-suggestions-info = You have { $document } unresolved { $docu
 
 step-changer-dialog-suggestions-ok = Ok
 
+step-changer-dialog-wrong-target-title = Wrong target
+
+step-changer-dialog-wrong-target = We couldn't find target which you selected.
+  Please try again later or contact administrator.
+
+step-changer-dialog-wrong-target-suggestions = You have { $document } suggestions
+  in document and { $glossary } in glossary. You can either move this draft to the
+  step which contains permission for accepting changes or you have to resolve all
+  of them to move draft to other step.
+
 
 
 ## Reusable components - permissions

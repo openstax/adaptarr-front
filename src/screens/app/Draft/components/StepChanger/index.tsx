@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { DocumentDB } from 'cnx-designer'
 import { Value } from 'slate'
@@ -9,7 +8,9 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { addModuleToMap } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers'
-import { Draft, Storage, Module } from 'src/api'
+
+import ProcessVersion from 'src/api/processversion'
+import { Draft, Storage, Module, Process } from 'src/api'
 import { Link, SlotPermission } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
@@ -26,7 +27,7 @@ type Props = {
   storage: Storage
   documentDbContent: DocumentDB
   documentDbGlossary: DocumentDB
-  draftPermissions: SlotPermission[],
+  draftPermissions: SlotPermission[]
 }
 
 const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
@@ -44,6 +45,8 @@ class StepChanger extends React.Component<Props> {
     suggestionsDialog: boolean
     documentSuggestions: number
     glossarySuggestions: number
+    wrongTargetDialog: boolean
+    wrongTargetL10n: 'step-changer-dialog-wrong-target' | 'step-changer-dialog-wrong-target-suggestions'
   } = {
     link: null,
     confirmDialog: false,
@@ -52,11 +55,22 @@ class StepChanger extends React.Component<Props> {
     suggestionsDialog: false,
     documentSuggestions: 0,
     glossarySuggestions: 0,
+    wrongTargetDialog: false,
+    wrongTargetL10n: 'step-changer-dialog-wrong-target',
   }
 
   public render() {
     const { draft: { step } } = this.props
-    const { link, confirmDialog, unsavedChanges, detailsDialog, suggestionsDialog, documentSuggestions, glossarySuggestions } = this.state
+    const {
+      confirmDialog,
+      unsavedChanges,
+      detailsDialog,
+      suggestionsDialog,
+      documentSuggestions,
+      glossarySuggestions,
+      wrongTargetDialog,
+      wrongTargetL10n,
+    } = this.state
 
     return (
       step && step.links.length > 0 && <div className="step-changer">
@@ -117,6 +131,33 @@ class StepChanger extends React.Component<Props> {
               </div>
               <div className="step-changer__dialog-controls">
                 <Button clickHandler={this.closeSuggestionsDialog}>
+                  <Localized id="step-changer-dialog-suggestions-ok">
+                    Ok
+                  </Localized>
+                </Button>
+              </div>
+            </Dialog>
+          : null
+        }
+        {
+          wrongTargetDialog ?
+            <Dialog
+              size="medium"
+              l10nId="step-changer-dialog-wrong-target-title"
+              placeholder="Wrong target"
+              onClose={this.closeWrongTargetDialog}
+            >
+              <div>
+                <Localized
+                  id={wrongTargetL10n}
+                  $document={documentSuggestions}
+                  $glossary={glossarySuggestions}
+                >
+                  We couldn't find target which you selected. Please try again later or contact administrator.
+                </Localized>
+              </div>
+              <div className="step-changer__dialog-controls">
+                <Button clickHandler={this.closeWrongTargetDialog}>
                   <Localized id="step-changer-dialog-suggestions-ok">
                     Ok
                   </Localized>
@@ -194,19 +235,54 @@ class StepChanger extends React.Component<Props> {
   }
 
   private showConfirmDialog = async () => {
-    const { storage, document, glossary, draftPermissions } = this.props
+    const { storage, document, glossary, draftPermissions, draft } = this.props
 
-    if (draftPermissions.includes('accept-changes')) {
+    if (draftPermissions.some(p => ['accept-changes', 'propose-changes'].includes(p))) {
       const documentSuggestions = document.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
       const glossarySuggestions = glossary.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
 
-      if (documentSuggestions.size > 0 || glossarySuggestions.size > 0) {
-        this.setState({
-          suggestionsDialog: true,
-          documentSuggestions: documentSuggestions.size,
-          glossarySuggestions: glossarySuggestions.size,
-        })
-        return
+      // User with accept-changes permission have to accept / decline all of the suggestions.
+      if (draftPermissions.includes('accept-changes')) {
+        if (documentSuggestions.size > 0 || glossarySuggestions.size > 0) {
+          this.setState({
+            suggestionsDialog: true,
+            documentSuggestions: documentSuggestions.size,
+            glossarySuggestions: glossarySuggestions.size,
+          })
+          return
+        }
+      }
+
+      // User with propose-changes cannot move draft to step other than accept-changes
+      // if there are unresolved suggestions.
+      if (draftPermissions.includes('propose-changes')) {
+        let targetStep
+        try {
+          const [processId, versionId] = draft.step!.process
+          const process = await ProcessVersion.load(processId, versionId)
+          if (!process) throw new Error(`Couldn't find process version: id: ${processId}, version: ${versionId}`)
+          targetStep = await process.step(this.state.link!.to)
+          if (!targetStep) throw new Error(`Couldn't find step: ${this.state.link!.to}`)
+        } catch (e) {
+          this.setState({
+            wrongTargetDialog: true,
+            wrongTargetL10n: 'step-changer-dialog-wrong-target',
+          })
+          return
+        }
+
+        let isLinkingToAcceptChanges = targetStep.slots.some(sl => sl.permissions.includes('accept-changes'))
+        if (!isLinkingToAcceptChanges) {
+          if (documentSuggestions.size > 0 || glossarySuggestions.size > 0) {
+            this.setState({
+              wrongTargetDialog: true,
+              wrongTargetL10n: 'step-changer-dialog-wrong-target-suggestions',
+              documentSuggestions: documentSuggestions.size,
+              glossarySuggestions: glossarySuggestions.size,
+            })
+            return
+          }
+        }
       }
     }
 
@@ -256,7 +332,20 @@ class StepChanger extends React.Component<Props> {
   }
 
   private closeSuggestionsDialog = () => {
-    this.setState({ suggestionsDialog: false, documentSuggestions: 0, glossarySuggestions: 0 })
+    this.setState({
+      suggestionsDialog: false,
+      documentSuggestions: 0,
+      glossarySuggestions: 0,
+    })
+  }
+
+  private closeWrongTargetDialog = () => {
+    this.setState({
+      wrongTargetDialog: false,
+      wrongTargetL10n: 'step-changer-dialog-wrong-target',
+      documentSuggestions: 0,
+      glossarySuggestions: 0,
+    })
   }
 }
 
