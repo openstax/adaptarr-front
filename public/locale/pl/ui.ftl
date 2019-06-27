@@ -1138,6 +1138,10 @@ editor-tools-format-button-underline =
 editor-tools-format-button-code =
   .title = Kod
 
+editor-tools-format-button-term =
+  .title = Termin
+
+
 
 ## Editor toolboxes - figures
 

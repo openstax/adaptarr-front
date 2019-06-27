@@ -35,6 +35,7 @@ import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
 import SourceElements from './plugins/SourceElements'
+import Shortcuts from './plugins/Shortcuts'
 
 type Props = {
   documentDbContent: DocumentDB
@@ -127,12 +128,14 @@ class Draft extends React.Component<Props> {
       document_content: ['table', 'source_element'],
       content: ['source_element'],
     }),
+    Shortcuts(),
     Persistence({ db: this.props.documentDbContent }),
   ]
 
   pluginsGlossary = [
     I10nPlugin,
     ...Glossary(),
+    Shortcuts(),
     Persistence({ db: this.props.documentDbGlossary }),
   ]
 

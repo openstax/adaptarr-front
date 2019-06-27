@@ -1135,6 +1135,9 @@ editor-tools-format-button-underline =
 editor-tools-format-button-code =
   .title = Code
 
+editor-tools-format-button-term =
+  .title = Term
+
 
 
 ## Editor toolboxes - figures
