@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Text, Block, Inline, Document } from 'slate'
+import { Editor, Value, Text, Block, Inline, Document, Node } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 import { List } from 'immutable'
 
@@ -42,9 +42,9 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.insertAdmonition}
+          clickHandler={this.toggleAdmonition}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition'])}
         >
           <Icon name="sticky-note" />
           <Localized id="editor-tools-insert-admonition">
@@ -92,7 +92,7 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.insertQuotation}
+          clickHandler={this.toggleQuotation}
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
         >
@@ -165,10 +165,18 @@ export default class InsertTools extends React.Component<Props> {
 
   private openLinkModal = () => this.linkModal!.open()
 
-  private insertAdmonition = () => {
+  private toggleAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
     // choose which kind of admonition to insert.
-    this.props.editor.insertAdmonition('note')
+    const { editor, selectionParent } = this.props
+    if (
+      selectionParent
+      && selectionParent.type === 'admonition'
+      ) {
+      unwrapChildrenFromNode(editor, selectionParent)
+      return
+    }
+    editor.insertAdmonition('note')
   }
 
   private insertExercise = () => {
@@ -196,8 +204,20 @@ export default class InsertTools extends React.Component<Props> {
     this.props.editor.insertBlock('code')
   }
 
-  private insertQuotation = () => {
-    this.props.editor.wrapBlock('quotation')
+  private toggleQuotation = () => {
+    const { editor, value: { selection }, selectionParent } = this.props
+
+    const selectedAllNodes = selectionParent && selection.start.isInNode(selectionParent.nodes.first()) && selection.end.isInNode(selectionParent.nodes.last())
+
+    if (
+      selectionParent
+      && selectionParent.type === 'quotation'
+      && (selectionParent.nodes.size === 1 || selectedAllNodes)
+    ) {
+      unwrapChildrenFromNode(editor, selectionParent)
+      return
+    }
+    editor.wrapBlock('quotation')
   }
 
   private handleInsertLink = () => {
@@ -227,4 +247,15 @@ export default class InsertTools extends React.Component<Props> {
     if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
     return false
   }
+}
+
+const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
+  const path = editor.value.document.getPath(node.key)
+  if (node.object === 'text') return
+  node.nodes.forEach(n => {
+    if (n && n.object === 'block' && n.type === 'title') {
+      editor.setNodeByKey(n.key, { type: 'paragraph' })
+    }
+  })
+  editor.unwrapChildrenByPath(path)
 }
