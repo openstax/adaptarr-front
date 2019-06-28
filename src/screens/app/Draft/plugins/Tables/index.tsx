@@ -7,9 +7,9 @@ interface CustomPlugin extends Plugin {
   schema: object
 }
 
-const I18nPlugin: CustomPlugin = {
+const TablesPlugin: CustomPlugin = {
   schema,
   renderBlock,
 }
 
-export default I18nPlugin
+export default TablesPlugin
