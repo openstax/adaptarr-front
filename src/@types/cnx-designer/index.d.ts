@@ -6,6 +6,7 @@ declare module 'cnx-designer' {
     Operation,
     Range,
     Value,
+    Path,
   } from 'slate'
   import { Plugin } from 'slate-react'
   import { List } from 'immutable'
@@ -87,6 +88,7 @@ declare module 'cnx-designer' {
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean
+    unwrapChildrenByPath(path: Path): EditorAug
 
     // From slate-edit-list
     decreaseItemDepth(): EditorAug
