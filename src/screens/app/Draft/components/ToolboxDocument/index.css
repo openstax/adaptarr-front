@@ -50,6 +50,10 @@
   border-color: var(--dark-bg);
 }
 
+.toolbox__button--with-tooltip {
+  display: inline-block;
+}
+
 .toolbox__button--only-icon {
   padding: 5px;
   margin-right: 2px;
