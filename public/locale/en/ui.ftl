@@ -1111,29 +1111,23 @@ editor-tools-format-text-type = { $type ->
  *[notavalidtype] Text
 }
 
-editor-tools-format-button-clear =
-  .title = Clear formatting
+editor-tools-format-button-clear = Clear formatting
 
-editor-tools-format-button-emphasis =
-  .title = Emphasis
+editor-tools-format-button-emphasis = Emphasis (Ctrl+I)
 
-editor-tools-format-button-list =
-  .title = List
+editor-tools-format-button-list = List
 
-editor-tools-format-button-strong =
-  .title = Strong
+editor-tools-format-button-strong = Strong (Ctrl+B)
 
-editor-tools-format-button-subscript =
-  .title = Subscript
+editor-tools-format-button-subscript = Subscript
 
-editor-tools-format-button-superscript =
-  .title = Superscript
+editor-tools-format-button-superscript = Superscript
 
-editor-tools-format-button-underline =
-  .title = Underline
+editor-tools-format-button-underline = Underline (Ctrl+U)
 
-editor-tools-format-button-code =
-  .title = Code
+editor-tools-format-button-code = Code (Ctrl+`)
+
+editor-tools-format-button-term = Term (Ctrl+D)
 
 
 

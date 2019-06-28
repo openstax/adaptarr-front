@@ -6,6 +6,7 @@ import { List } from 'immutable'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Tooltip from 'src/components/ui/Tooltip'
 
 export type Props = {
   editor: Editor,
@@ -53,7 +54,11 @@ export default class FormatTools extends React.Component<Props> {
           : null
         }
         {FORMATS.map(format => (
-          <Localized key={format} id={`editor-tools-format-button-${format}`} attrs={{ title: true }}>
+          <Tooltip
+            l10nId={`editor-tools-format-button-${format}`}
+            direction="up"
+            className="toolbox__button--with-tooltip"
+          >
             <Button
               className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
               dataId={format}
@@ -61,9 +66,13 @@ export default class FormatTools extends React.Component<Props> {
             >
               <Icon name={format} />
             </Button>
-          </Localized>
+          </Tooltip>
         ))}
-        <Localized id="editor-tools-format-button-list" attrs={{ title: true }}>
+        <Tooltip
+          l10nId={'editor-tools-format-button-list'}
+          direction="up"
+          className="toolbox__button--with-tooltip"
+        >
           <Button
             className="toolbox__button--only-icon"
             isDisabled={!this.validateParents(VALID_LIST_PARENTS)}
@@ -71,8 +80,12 @@ export default class FormatTools extends React.Component<Props> {
           >
             <Icon name="list-ul" />
           </Button>
-        </Localized>
-        <Localized id="editor-tools-format-button-clear" attrs={{ title: true }}>
+        </Tooltip>
+        <Tooltip
+          l10nId={'editor-tools-format-button-clear'}
+          direction="up"
+          className="toolbox__button--with-tooltip"
+        >
           <Button
             className="toolbox__button--only-icon"
             isDisabled={value.activeMarks.isEmpty()}
@@ -80,7 +93,7 @@ export default class FormatTools extends React.Component<Props> {
           >
             <Icon name="close" />
           </Button>
-        </Localized>
+        </Tooltip>
       </div>
     )
   }

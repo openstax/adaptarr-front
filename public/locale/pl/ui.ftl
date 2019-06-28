@@ -1114,29 +1114,24 @@ editor-tools-format-text-type = { $type ->
  *[notavalidtype] Tekst
 }
 
-editor-tools-format-button-clear =
-  .title = Usuń formatowanie
+editor-tools-format-button-clear = Usuń formatowanie
 
-editor-tools-format-button-emphasis =
-  .title = Wyróżnienie
+editor-tools-format-button-emphasis = Wyróżnienie (Ctrl+I)
 
-editor-tools-format-button-list =
-  .title = Lista
+editor-tools-format-button-list = Lista
 
-editor-tools-format-button-strong =
-  .title = Wytłuszczenie
+editor-tools-format-button-strong = Wytłuszczenie (Ctrl+B)
 
-editor-tools-format-button-subscript =
-  .title = Indeks dolny
+editor-tools-format-button-subscript = Indeks dolny
 
-editor-tools-format-button-superscript =
-  .title = Indeks górny
+editor-tools-format-button-superscript = Indeks górny
 
-editor-tools-format-button-underline =
-  .title = Podkreślenie
+editor-tools-format-button-underline = Podkreślenie (Ctrl+U)
 
-editor-tools-format-button-code =
-  .title = Kod
+editor-tools-format-button-code = Kod (Ctrl+`)
+
+editor-tools-format-button-term = Termin (Ctrl+D)
+
 
 
 ## Editor toolboxes - figures
