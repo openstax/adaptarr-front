@@ -1106,6 +1106,12 @@ editor-tools-admonition-type = { $type ->
 
 
 
+## Editor toolboxes - quotations
+
+editor-tools-quotation-title = Quotation
+
+
+
 ## Editor toolboxes - document settings
 
 editor-tools-document-title = Document

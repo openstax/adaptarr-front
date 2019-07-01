@@ -14,6 +14,7 @@ import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SourceTools from '../SourceTools'
+import QuotationTools from '../QuotationTools'
 
 import './index.css'
 
@@ -22,7 +23,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools'
+type ToolName = 'insertTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -35,6 +36,7 @@ type State = {
   xrefTools: boolean
   sourceTools: boolean
   listTools: boolean
+  quotationTools: boolean
   admonitionTools: boolean
   exerciseTools: boolean
   figureTools: boolean
@@ -52,6 +54,7 @@ const DEFAULT_TOGGLERS = {
   xrefTools: true,
   sourceTools: true,
   listTools: false,
+  quotationTools: false,
   admonitionTools: false,
   exerciseTools: false,
   figureTools: false,
@@ -132,6 +135,12 @@ class Toolbox extends React.Component<Props> {
           editor={editor}
           value={value}
           toggleState={this.state.listTools}
+          onToggle={this.toggleTool}
+        />
+        <QuotationTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.quotationTools}
           onToggle={this.toggleTool}
         />
         <AdmonitionTools
@@ -255,14 +264,16 @@ class Toolbox extends React.Component<Props> {
         if (titleParent) {
           if (titleParent.type === 'admonition') {
             newState.admonitionTools = true
+          } else if (titleParent.type === 'quotation') {
+            newState.quotationTools = true
           } else if (titleParent.type === 'section') {
             newState.sectionTools = true
           }
         }
         break
       case 'quotation':
-        // We don't have quotation tools to toggle
-        return
+        newState.quotationTools = true
+        break
       default:
         newState.insertTools = true
         newState.documentTools = true
