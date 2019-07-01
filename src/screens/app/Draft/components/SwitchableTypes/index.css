@@ -1,0 +1,7 @@
+.switchable-types {
+  width: 100%;
+}
+
+.switchable-types .toolbox__select {
+  margin-top: 2px;
+}

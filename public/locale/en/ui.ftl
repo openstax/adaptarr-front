@@ -1345,6 +1345,12 @@ editor-tools-term-remove = Remove term
 
 
 
+## Editor toolboxes - switchable block types
+
+editor-tools-switchable-type-title = Block type:
+
+
+
 ## Editor toolboxes - definitions
 
 editor-tools-definition-title = Definition
