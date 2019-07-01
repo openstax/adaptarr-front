@@ -71,6 +71,7 @@ reference-targets-category = { $type ->
   [note] Notki
   [tip] Uwagi
   [warning] Ostrzeżenia
+  [table] Tabele
  *[notavalidtype] { $type }
 }
 

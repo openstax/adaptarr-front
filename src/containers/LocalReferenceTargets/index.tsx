@@ -50,7 +50,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
     const counters: Map<string, number> = new Map() // Map<type, counter>
 
     const setCounterForElement = (e: Element, customCounter?: number) => {
-      const type = e.tagName.toLowerCase() === 'figure' ? 'figure' : e.className.replace(/-/g, '_')
+      const type = e.tagName.toLowerCase() === 'figure' ? 'figure' : e.className.replace('adr-', '').replace(/-/g, '_')
       const key = e.getAttribute('data-key') || ''
 
       if (typeof customCounter !== 'number') {
@@ -80,7 +80,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
     }
 
     const editor = document.getElementsByClassName('editor--document')[0]
-    const elements = editor.querySelectorAll('.admonition, figure, .exercise, .example')
+    const elements = editor.querySelectorAll('.admonition, figure, .exercise, .example, .adr-table')
     elements.forEach(e => {
       setCounterForElement(e)
       if (e.className === 'exercise') {
@@ -130,7 +130,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
 
       switch (child.type) {
       case 'admonition':
-        type = child.data.get('type')
+        type = 'note'//child.data.get('type')
         // fall-through
 
       case 'example':
@@ -149,6 +149,17 @@ class LocalResourceTargets extends React.PureComponent<Props> {
         description = (child.nodes.first() as Block).nodes.first().text
         break
 
+      case 'table':
+        let tableDesc = child.nodes.find(n => {
+          if (!n || n.object !== 'block') return false
+          if (n.type === 'table_title' || n.type === 'table_caption') {
+            return true
+          }
+          return false
+        })
+        description = tableDesc ? tableDesc.text : null
+        break
+
       case 'section':
         yield* this.mapBlockToTargets(child)
         continue
@@ -161,7 +172,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
 
       const target: ReferenceTarget = {
         id: child.key,
-        type: type || TYPE_MAP[child.type] || child.type,
+        type: (type as ReferenceTargetType) || TYPE_MAP[child.type] || child.type,
         description,
         counter: counters.get(child.type) || 0,
         children: [],
