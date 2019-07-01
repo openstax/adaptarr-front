@@ -51,6 +51,26 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
+          clickHandler={this.handleInsertLink}
+          className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+        >
+          <Icon name="link" />
+          <Localized id="editor-tools-insert-link">
+            Link
+          </Localized>
+        </Button>
+        <Button
+          clickHandler={this.insertCode}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
+        >
+          <Icon name="code" />
+          <Localized id="editor-tools-insert-code">
+            Code
+          </Localized>
+        </Button>
+        <Button
           clickHandler={this.toggleAdmonition}
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition'])}
@@ -81,26 +101,6 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.insertCode}
-          className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
-        >
-          <Icon name="code" />
-          <Localized id="editor-tools-insert-code">
-            Code
-          </Localized>
-        </Button>
-        <Button
-          clickHandler={this.insertSection}
-          className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
-        >
-          <Icon name="plus" />
-          <Localized id="editor-tools-insert-section">
-            Section
-          </Localized>
-        </Button>
-        <Button
           clickHandler={this.toggleQuotation}
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
@@ -111,13 +111,13 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.handleInsertLink}
+          clickHandler={this.insertSection}
           className="toolbox__button--insert"
-          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+          isDisabled={!this.validateParents(['document', 'section'])}
         >
-          <Icon name="link" />
-          <Localized id="editor-tools-insert-link">
-            Link
+          <Icon name="plus" />
+          <Localized id="editor-tools-insert-section">
+            Section
           </Localized>
         </Button>
         <Button
