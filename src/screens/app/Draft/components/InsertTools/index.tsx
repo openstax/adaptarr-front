@@ -43,6 +43,7 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
         >
           <Icon name="link" />
           <Localized id="editor-tools-insert-reference">
@@ -109,7 +110,11 @@ export default class InsertTools extends React.Component<Props> {
             Quotation
           </Localized>
         </Button>
-        <Button clickHandler={this.handleInsertLink} className="toolbox__button--insert">
+        <Button
+          clickHandler={this.handleInsertLink}
+          className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+        >
           <Icon name="link" />
           <Localized id="editor-tools-insert-link">
             Link
