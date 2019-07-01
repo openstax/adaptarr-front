@@ -7,11 +7,16 @@ import Input from 'src/components/ui/Input'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
+import { OnToggle } from '../ToolboxDocument'
+import { OnToggle as OnToggleGlossary } from '../ToolboxGlossary'
+
 import './index.css'
 
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle | OnToggleGlossary,
 }
 
 type State = {
@@ -48,7 +53,11 @@ export default class TermTools extends React.Component<Props> {
     if (!term) return null
 
     return (
-      <ToolGroup title="editor-tools-term-title">
+      <ToolGroup
+        title="editor-tools-term-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('termTools')}
+      >
         <label className="terms__label">
           <Localized id="editor-tools-term-label">
             Index form

@@ -18,10 +18,14 @@ import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 import { ReferenceTarget } from 'src/store/types'
 
+import { OnToggle } from '../ToolboxDocument'
+
 export type Props = {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class InsertTools extends React.Component<Props> {
@@ -31,7 +35,11 @@ export default class InsertTools extends React.Component<Props> {
 
   render() {
     return (
-      <ToolGroup title="editor-tools-insert-title">
+      <ToolGroup
+        title="editor-tools-insert-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('insertTools')}
+      >
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"

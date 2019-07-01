@@ -8,9 +8,13 @@ import ToolGroup from '../ToolGroup'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
+import { OnToggle } from '../ToolboxGlossary'
+
 type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 class SeeAlsoTools extends React.Component<Props> {
@@ -18,7 +22,11 @@ class SeeAlsoTools extends React.Component<Props> {
     const seealso = this.getActiveSeeAlso()
 
     return seealso && (
-      <ToolGroup title="editor-tools-seealso-title">
+      <ToolGroup
+        title="editor-tools-seealso-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('seeAlsoTools')}
+      >
         <Button
           clickHandler={this.insertTerm}
           className="toolbox__button--insert"

@@ -14,11 +14,15 @@ import Icon from 'src/components/ui/Icon'
 
 import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
+import { OnToggle } from '../ToolboxDocument'
+
 const CASES: string[] = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'locative', 'vocative']
 
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class XrefTools extends React.Component<Props> {
@@ -32,7 +36,11 @@ export default class XrefTools extends React.Component<Props> {
     const xrefCase = xref.data.get('case') || CASES[0]
 
     return (
-      <ToolGroup title="editor-tools-xref-title">
+      <ToolGroup
+        title="editor-tools-xref-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('xrefTools')}
+      >
         <label className="toolbox__label">
           <Localized id="editor-tools-xref-case">
             Select case

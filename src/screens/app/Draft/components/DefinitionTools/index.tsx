@@ -6,9 +6,13 @@ import ToolGroup from '../ToolGroup'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
+import { OnToggle } from '../ToolboxGlossary'
+
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 class DefinitionTools extends React.Component<Props> {
@@ -17,7 +21,11 @@ class DefinitionTools extends React.Component<Props> {
     const definition = editor.getActiveDefinition(value)
 
     return definition && (
-      <ToolGroup title="editor-tools-definition-title">
+      <ToolGroup
+        title="editor-tools-definition-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('definitionTools')}
+      >
         <Button clickHandler={this.insertDefinitionBefore} className="toolbox__button--insert">
           <Icon name="plus" />
           <Localized id="editor-tools-definition-insert-definition-before">

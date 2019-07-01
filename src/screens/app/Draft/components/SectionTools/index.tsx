@@ -7,9 +7,13 @@ import Classes from '../Classes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
+import { OnToggle } from '../ToolboxDocument'
+
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class SectionTools extends React.Component<Props> {
@@ -20,7 +24,11 @@ export default class SectionTools extends React.Component<Props> {
     if (section === null) return null
 
     return (
-      <ToolGroup title="editor-tools-sections-title">
+      <ToolGroup
+        title="editor-tools-sections-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('sectionTools')}
+      >
         <Button
           clickHandler={this.decreaseSectionDepth}
           className="toolbox__button--insert"

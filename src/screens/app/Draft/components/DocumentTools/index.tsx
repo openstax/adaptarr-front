@@ -10,9 +10,13 @@ import { setCurrentDraftLang } from 'src/store/actions/Drafts'
 
 import ToolGroup from '../ToolGroup'
 
+import { OnToggle } from '../ToolboxDocument'
+
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class DocumentTools extends React.Component<Props> {
@@ -23,7 +27,11 @@ export default class DocumentTools extends React.Component<Props> {
     const language = LANGUAGES.find(lang => lang.code === code)
 
     return (
-      <ToolGroup title="editor-tools-document-title">
+      <ToolGroup
+        title="editor-tools-document-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('documentTools')}
+      >
         <Select
           className="toolbox__select"
           value={language ? {value: language.code, label: language.name} : null}

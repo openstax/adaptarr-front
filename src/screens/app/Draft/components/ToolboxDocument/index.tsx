@@ -22,20 +22,58 @@ export type Props = {
   editor: Editor,
 }
 
+type ToolName = 'insertTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools'
+
+export type OnToggle = (toolName: ToolName, state?: boolean) => void
+
+type State = {
+  selectionParent: Document | Block | Inline | null
+  // Togglers for components:
+  insertTools: boolean
+  termTools: boolean
+  linkTools: boolean
+  xrefTools: boolean
+  sourceTools: boolean
+  listTools: boolean
+  admonitionTools: boolean
+  exerciseTools: boolean
+  figureTools: boolean
+  sectionTools: boolean
+  documentTools: boolean
+}
+
+/**
+ * Default state for tools' togglers
+ */
+const DEFAULT_TOGGLERS = {
+  insertTools: false,
+  termTools: true,
+  linkTools: true,
+  xrefTools: true,
+  sourceTools: true,
+  listTools: false,
+  admonitionTools: false,
+  exerciseTools: false,
+  figureTools: false,
+  sectionTools: false,
+  documentTools: false,
+}
+
 class Toolbox extends React.Component<Props> {
-  state: {
-    selectionParent: Document | Block | Inline | null
-  } = {
-    selectionParent: null
+  state: State = {
+    selectionParent: null,
+    ...DEFAULT_TOGGLERS,
   }
 
-  componentDidUpdate(_: Props, prevState: {selectionParent: Document | Block | Inline | null}) {
+  componentDidUpdate(_: Props, prevState: State) {
     const prevSelPar = prevState.selectionParent
     const selPar = this.selectionParent()
-    if ((!prevSelPar && selPar) || (prevSelPar && !selPar)) {
+    if (
+      ((!prevSelPar && selPar) || (prevSelPar && !selPar))
+      || (prevSelPar && selPar && (prevSelPar.key !== selPar.key))
+    ) {
       this.setState({ selectionParent: selPar })
-    } else if (prevSelPar && selPar && !prevSelPar.equals(selPar)) {
-      this.setState({ selectionParent: selPar })
+      this.toggleDeepestTool(selPar as Document | Block | Inline | null)
     }
   }
 
@@ -58,18 +96,74 @@ class Toolbox extends React.Component<Props> {
     return (
       <div className="toolbox" onMouseDown={this.onMouseDown}>
         <FormatTools editor={editor} value={value} selectionParent={selectionParent} />
-        <InsertTools editor={editor} value={value} selectionParent={selectionParent} />
+        <InsertTools
+          editor={editor}
+          value={value}
+          selectionParent={selectionParent}
+          toggleState={this.state.insertTools}
+          onToggle={this.toggleTool}
+        />
 
-        <SectionTools editor={editor} value={value} />
-        <AdmonitionTools editor={editor} value={value} />
-        <ExerciseTools editor={editor} value={value} />
-        <FigureTools editor={editor} value={value} />
-        <ListTools editor={editor} value={value} />
-        <XrefTools editor={editor} value={value} />
-        <LinkTools editor={editor} value={value} />
-        <TermTools editor={editor} value={value} />
-        <SourceTools editor={editor} value={value} />
-        <DocumentTools editor={editor} value={value} />
+        <TermTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.termTools}
+          onToggle={this.toggleTool}
+        />
+        <LinkTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.linkTools}
+          onToggle={this.toggleTool}
+        />
+        <XrefTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.xrefTools}
+          onToggle={this.toggleTool}
+        />
+        <SourceTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.sourceTools}
+          onToggle={this.toggleTool}
+        />
+        <ListTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.listTools}
+          onToggle={this.toggleTool}
+        />
+        <AdmonitionTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.admonitionTools}
+          onToggle={this.toggleTool}
+        />
+        <ExerciseTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.exerciseTools}
+          onToggle={this.toggleTool}
+        />
+        <FigureTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.figureTools}
+          onToggle={this.toggleTool}
+        />
+        <SectionTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.sectionTools}
+          onToggle={this.toggleTool}
+        />
+        <DocumentTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.documentTools}
+          onToggle={this.toggleTool}
+        />
       </div>
     )
   }
@@ -99,6 +193,83 @@ class Toolbox extends React.Component<Props> {
       }
       return false
     }) || document
+  }
+
+  private toggleTool = (toolName: ToolName, state?: boolean) => {
+    if (typeof state === 'boolean') {
+      if (state !== this.state[toolName]) {
+        this.setState({ [toolName]: state })
+      }
+      return
+    }
+    this.setState({ [toolName]: !this.state[toolName] })
+  }
+
+  private toggleDeepestTool = (node: Document | Block | Inline | null) => {
+    if (!node) {
+      return
+    }
+
+    let newState = {...DEFAULT_TOGGLERS}
+    if (node.object === 'block') {
+      newState.insertTools = true
+    }
+
+    switch (node.type) {
+      case 'term':
+        newState.termTools = true
+        break
+      case 'link':
+        newState.linkTools = true
+        break
+      case 'xref':
+        newState.xrefTools = true
+        break
+      case 'source_element':
+        newState.sourceTools = true
+        break
+      case 'list':
+      case 'list_item':
+        newState.listTools = true
+        break
+      case 'admonition':
+        newState.admonitionTools = true
+        break
+      case 'exercise':
+      case 'exercise_problem':
+      case 'exercise_solution':
+        newState.exerciseTools = true
+        break
+      case 'figure':
+      case 'figure_caption':
+      case 'image':
+        newState.figureTools = true
+        break
+      case 'section':
+        newState.sectionTools = true
+        break
+      case 'title':
+        // Toggle depends on parent
+        const path = this.props.value.document.getPath(node.key)
+        const titleParent = this.props.value.document.getParent(path) as Block | null
+        if (titleParent) {
+          if (titleParent.type === 'admonition') {
+            newState.admonitionTools = true
+          } else if (titleParent.type === 'section') {
+            newState.sectionTools = true
+          }
+        }
+        break
+      case 'quotation':
+        // We don't have quotation tools to toggle
+        return
+      default:
+        newState.insertTools = true
+        newState.documentTools = true
+        break
+    }
+
+    this.setState(newState)
   }
 }
 

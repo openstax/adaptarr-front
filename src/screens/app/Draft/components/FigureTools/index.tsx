@@ -17,9 +17,13 @@ import Input from 'src/components/ui/Input'
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
 
+import { OnToggle } from '../ToolboxDocument'
+
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class FigureTools extends React.Component<Props> {
@@ -39,7 +43,11 @@ export default class FigureTools extends React.Component<Props> {
     const altText = media.data.get('alt')
 
     return (
-      <ToolGroup title="editor-tools-figure-title">
+      <ToolGroup
+        title="editor-tools-figure-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('figureTools')}
+      >
         <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}

@@ -9,11 +9,15 @@ import Icon from 'src/components/ui/Icon'
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
 
+import { OnToggle } from '../ToolboxDocument'
+
 const LIST_STYLES: string[] = ['ol_list','ul_list']
 
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class ListTools extends React.Component<Props> {
@@ -24,7 +28,11 @@ export default class ListTools extends React.Component<Props> {
     if (list === null) return null
 
     return (
-      <ToolGroup title="editor-tools-list-title">
+      <ToolGroup
+        title="editor-tools-list-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('listTools')}
+      >
         <Select
           className="toolbox__select"
           value={{value: list.type, label: list.type}}

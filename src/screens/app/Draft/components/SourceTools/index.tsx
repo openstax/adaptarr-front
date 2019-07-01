@@ -5,6 +5,8 @@ import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
 
+import { OnToggle } from '../ToolboxDocument'
+
 import './index.css'
 
 const SOURCE_TYPES: string[] = ['inline', 'block']
@@ -12,6 +14,8 @@ const SOURCE_TYPES: string[] = ['inline', 'block']
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 class SourceTools extends React.Component<Props> {
@@ -21,7 +25,11 @@ class SourceTools extends React.Component<Props> {
     if (source === null) return null
 
     return (
-      <ToolGroup title="editor-tools-source-title">
+      <ToolGroup
+        title="editor-tools-source-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('sourceTools')}
+      >
         <label className="toolbox__label">
           <Localized id="editor-tools-source-type-label">
             Show element as:

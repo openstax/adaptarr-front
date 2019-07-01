@@ -6,14 +6,18 @@ import { Localized } from 'fluent-react/compat'
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
 
+import { OnToggle } from '../ToolboxDocument'
+
 const ADMONITIONS_TYPES: string[] = ['note', 'warning', 'tip', 'important']
 
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
-export default function AdmonitionTools({ editor, value }: Props) {
+export default function AdmonitionTools({ editor, value, toggleState, onToggle }: Props) {
   const admonition = editor.getActiveAdmonition(value)
 
   if (admonition === null) return null
@@ -27,7 +31,11 @@ export default function AdmonitionTools({ editor, value }: Props) {
   const admonitionType = admonition.data.get('type')
 
   return (
-    <ToolGroup title="editor-tools-admonition-title">
+    <ToolGroup
+      title="editor-tools-admonition-title"
+      toggleState={toggleState}
+      onToggle={() => onToggle('admonitionTools')}
+    >
       <Select
         className="toolbox__select"
         value={{value: admonitionType, label: admonitionType}}

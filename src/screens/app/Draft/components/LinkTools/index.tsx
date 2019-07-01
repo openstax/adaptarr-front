@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Editor, Value } from 'slate'
+import { Editor, Value, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
@@ -7,15 +7,18 @@ import Input from 'src/components/ui/Input'
 import Icon from 'src/components/ui/Icon'
 import Button from 'src/components/ui/Button'
 
+import { OnToggle } from '../ToolboxDocument'
+
 import './index.css'
 
 export type Props = {
   editor: Editor,
   value: Value,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
-export default class DocumentTools extends React.Component<Props> {
-
+export default class LinkTools extends React.Component<Props> {
   state: {
     isUrlValid: boolean
   } = {
@@ -65,7 +68,11 @@ export default class DocumentTools extends React.Component<Props> {
     if (!link) return null
 
     return (
-      <ToolGroup title="editor-tools-link-title">
+      <ToolGroup
+        title="editor-tools-link-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('linkTools')}
+      >
         <Input
           l10nId="editor-tools-link-url"
           value={link.data.get('url')}
