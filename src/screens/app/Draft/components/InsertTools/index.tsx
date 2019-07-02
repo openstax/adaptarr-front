@@ -93,7 +93,7 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.openFigureModal}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'exercise_commentary'])}
         >
           <Icon name="image" />
           <Localized id="editor-tools-insert-figure">
