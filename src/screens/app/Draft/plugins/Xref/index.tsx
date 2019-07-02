@@ -112,7 +112,12 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
       const cnts = counters.get(targetKey) || Map()
       for (const [name, value] of cnts) {
-        args[name] = value
+        // Temporary solution until we will support all types of notes
+        if (name === 'admonition') {
+          args['note'] = value
+        } else {
+          args[name] = value
+        }
       }
     } else {
       console.warn(`Undefined target in ${node.key}: ${targetKey}`)

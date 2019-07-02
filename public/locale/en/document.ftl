@@ -70,6 +70,7 @@ reference-targets-category = { $type ->
   [note] Notes
   [tip] Tips
   [warning] Warnings
+  [table] Table
  *[notavalidtype] { $type }
 }
 
