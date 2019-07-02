@@ -1769,7 +1769,7 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#a332b6b0ec28547687d4432e4ec878a5bd463d57"
+  resolved "https://github.com/katalysteducation/cnx-designer#5e3332e12cb1faf53bcebdff3839c8c770c3ee35"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
@@ -6927,7 +6927,6 @@ slate-base64-serializer@^0.2.106:
 
 "slate-counters@https://github.com/katalysteducation/slate-counters.git", "slate-counters@https://github.com/katalysteducation/slate-counters.git#use-onsetvalue":
   version "0.6.0"
-  uid "94bbadf46999796fa6535c8723666eca1afbb375"
   resolved "https://github.com/katalysteducation/slate-counters.git#94bbadf46999796fa6535c8723666eca1afbb375"
   dependencies:
     "@babel/runtime" "^7.0.0"
