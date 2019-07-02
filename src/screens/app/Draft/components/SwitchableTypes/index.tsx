@@ -8,6 +8,7 @@ import './index.css'
 type Props = {
   editor: Editor,
   value: Value,
+  isDisabled?: boolean,
 }
 
 /**
@@ -26,7 +27,7 @@ export default class SwitchableTypes extends React.Component<Props> {
   }
 
   public render() {
-    const { value: { startBlock } } = this.props
+    const { value: { startBlock }, isDisabled = false } = this.props
 
     if (!startBlock) return null
 
@@ -42,7 +43,7 @@ export default class SwitchableTypes extends React.Component<Props> {
           value={{ value: startBlock.type, label: startBlock.type}}
           onChange={this.changeTextType}
           options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
-          isDisabled={!SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)}
+          isDisabled={isDisabled || !SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)}
           formatOptionLabel={OptionLabel}
         />
       </div>
