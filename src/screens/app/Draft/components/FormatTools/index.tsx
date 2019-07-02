@@ -35,6 +35,7 @@ export default class FormatTools extends React.Component<Props> {
             l10nId={`editor-tools-format-button-${format}`}
             direction="up"
             className="toolbox__button--with-tooltip"
+            key={format}
           >
             <Button
               className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
