@@ -18,13 +18,22 @@ export default function QuotationTools({ editor, value, toggleState, onToggle }:
 
   if (quotation === null) return null
 
+  // Allow switching types only for first node.
+  const { selection } = value
+  const first = quotation.nodes.first()
+  let isSelectionInFirstNode = selection.start.isInNode(first) && selection.end.isInNode(first)
+
   return (
     <ToolGroup
       title="editor-tools-quotation-title"
       toggleState={toggleState}
       onToggle={() => onToggle('quotationTools')}
     >
-      <SwitchableTypes editor={editor} value={value} />
+      {
+        isSelectionInFirstNode ?
+          <SwitchableTypes editor={editor} value={value} />
+        : null
+      }
     </ToolGroup>
   )
 }

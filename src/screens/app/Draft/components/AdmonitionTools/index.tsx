@@ -30,6 +30,10 @@ export default function AdmonitionTools({ editor, value, toggleState, onToggle }
   }
 
   const admonitionType = admonition.data.get('type')
+  // Allow switching types only for first node.
+  const { selection } = value
+  const first = admonition.nodes.first()
+  let isSelectionInFirstNode = selection.start.isInNode(first) && selection.end.isInNode(first)
 
   return (
     <ToolGroup
@@ -44,7 +48,11 @@ export default function AdmonitionTools({ editor, value, toggleState, onToggle }
         options={ADMONITIONS_TYPES.map(t => {return {value: t, label: t}})}
         formatOptionLabel={OptionLabel}
       />
-      <SwitchableTypes editor={editor} value={value} />
+      {
+        isSelectionInFirstNode ?
+          <SwitchableTypes editor={editor} value={value} />
+        : null
+      }
       <Classes editor={editor} block={admonition} />
     </ToolGroup>
   )
