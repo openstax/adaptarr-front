@@ -1,7 +1,5 @@
 import * as React from 'react'
-import Select from 'react-select'
 import { Editor, Value, Text, Document, Block, Inline } from 'slate'
-import { Localized } from 'fluent-react/compat'
 import { List } from 'immutable'
 
 import Button from 'src/components/ui/Button'
@@ -12,26 +10,17 @@ export type Props = {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
-  showSwitchableTypes?: boolean,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
 
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code', 'term']
 
-/**
- * Types of paragraph-like block that user can switch between.
- *
- * When selected node is not on this list, block type switching will
- * be disabled.
- */
-const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
-
 const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section']
 
 export default class FormatTools extends React.Component<Props> {
   render() {
-    const { editor, value, showSwitchableTypes = true } = this.props
+    const { editor, value } = this.props
     const { startBlock } = value
     const code = startBlock && startBlock.type === 'code' ? startBlock : null
 
@@ -41,23 +30,12 @@ export default class FormatTools extends React.Component<Props> {
 
     return (
       <div className="toolbox-format">
-        {
-          showSwitchableTypes ?
-            <Select
-              className="toolbox__select"
-              value={{ value: startBlock.type, label: startBlock.type}}
-              onChange={this.changeTextType}
-              options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
-              isDisabled={!SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)}
-              formatOptionLabel={OptionLabel}
-            />
-          : null
-        }
         {FORMATS.map(format => (
           <Tooltip
             l10nId={`editor-tools-format-button-${format}`}
             direction="up"
             className="toolbox__button--with-tooltip"
+            key={format}
           >
             <Button
               className={`toolbox__button--only-icon ${this.isActive(format) ? 'active' : ''}`}
@@ -103,11 +81,6 @@ export default class FormatTools extends React.Component<Props> {
     const inline = this.props.value.startInline
     const isInline = inline && inline.type === format ? true : false
     return isMark || isInline
-  }
-
-  private changeTextType = ({value: blockType}: {value: string, label: string}) => {
-    const { editor, value } = this.props
-    editor.setNodeByKey(value.startBlock.key, { type: blockType })
   }
 
   private applyFormat = (ev: React.MouseEvent<HTMLButtonElement>) => {
@@ -156,8 +129,4 @@ export default class FormatTools extends React.Component<Props> {
     if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
     return false
   }
-}
-
-function OptionLabel({value: type}: {value: string, label: string}) {
-  return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
 }

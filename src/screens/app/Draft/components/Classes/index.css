@@ -11,3 +11,12 @@
   padding: 0 3px;
   cursor: default;
 }
+
+.classes {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.classes .ReactTags__tagInput input {
+  width: 100%;
+}

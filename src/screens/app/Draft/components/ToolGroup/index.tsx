@@ -7,18 +7,13 @@ import './index.css'
 
 export type Props = {
   title: string,
+  toggleState: boolean,
+  onToggle: () => any,
 }
 
 export default class ToolGroup extends React.Component<Props> {
-  state: {
-    open: boolean,
-  } = {
-    open: true
-  }
-
   render() {
-    const { children, title } = this.props
-    const { open } = this.state
+    const { children, title, toggleState: open } = this.props
 
     return <div className={"toolgroup" + (open ? ' open' : '')}>
       <div className="toolgroup--header" onClick={this.toggle}>
@@ -33,6 +28,6 @@ export default class ToolGroup extends React.Component<Props> {
 
   toggle = (ev: React.MouseEvent) => {
     ev.preventDefault()
-    this.setState(({ open }: { open: boolean }) => ({ open: !open }))
+    this.props.onToggle()
   }
 }

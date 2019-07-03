@@ -18,10 +18,14 @@ import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 import { ReferenceTarget } from 'src/store/types'
 
+import { OnToggle } from '../ToolboxDocument'
+
 export type Props = {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
+  toggleState: boolean,
+  onToggle: OnToggle,
 }
 
 export default class InsertTools extends React.Component<Props> {
@@ -31,14 +35,39 @@ export default class InsertTools extends React.Component<Props> {
 
   render() {
     return (
-      <ToolGroup title="editor-tools-insert-title">
+      <ToolGroup
+        title="editor-tools-insert-title"
+        toggleState={this.props.toggleState}
+        onToggle={() => this.props.onToggle('insertTools')}
+      >
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
         >
           <Icon name="link" />
           <Localized id="editor-tools-insert-reference">
             Reference
+          </Localized>
+        </Button>
+        <Button
+          clickHandler={this.handleInsertLink}
+          className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+        >
+          <Icon name="link" />
+          <Localized id="editor-tools-insert-link">
+            Link
+          </Localized>
+        </Button>
+        <Button
+          clickHandler={this.insertCode}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
+        >
+          <Icon name="code" />
+          <Localized id="editor-tools-insert-code">
+            Code
           </Localized>
         </Button>
         <Button
@@ -64,31 +93,11 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.openFigureModal}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'exercise_commentary'])}
         >
           <Icon name="image" />
           <Localized id="editor-tools-insert-figure">
             Figure
-          </Localized>
-        </Button>
-        <Button
-          clickHandler={this.insertCode}
-          className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
-        >
-          <Icon name="code" />
-          <Localized id="editor-tools-insert-code">
-            Code
-          </Localized>
-        </Button>
-        <Button
-          clickHandler={this.insertSection}
-          className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
-        >
-          <Icon name="plus" />
-          <Localized id="editor-tools-insert-section">
-            Section
           </Localized>
         </Button>
         <Button
@@ -101,10 +110,14 @@ export default class InsertTools extends React.Component<Props> {
             Quotation
           </Localized>
         </Button>
-        <Button clickHandler={this.handleInsertLink} className="toolbox__button--insert">
-          <Icon name="link" />
-          <Localized id="editor-tools-insert-link">
-            Link
+        <Button
+          clickHandler={this.insertSection}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(['document', 'section'])}
+        >
+          <Icon name="plus" />
+          <Localized id="editor-tools-insert-section">
+            Section
           </Localized>
         </Button>
         <Button

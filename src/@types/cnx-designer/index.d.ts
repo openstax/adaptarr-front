@@ -85,6 +85,7 @@ declare module 'cnx-designer' {
     getActiveSubfigure(value: Value): Block | null
     getActiveDefinition(value: Value): Block | null
     getActiveDefinitionMeaning(value: Value): Block | null
+    getActiveQuotation(value: Value): Block | null
 
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean

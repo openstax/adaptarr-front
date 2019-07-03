@@ -1106,6 +1106,12 @@ editor-tools-admonition-type = { $type ->
 
 
 
+## Editor toolboxes - quotations
+
+editor-tools-quotation-title = Quotation
+
+
+
 ## Editor toolboxes - document settings
 
 editor-tools-document-title = Document
@@ -1342,6 +1348,14 @@ editor-tools-term-title = Term
 editor-tools-term-label = Index form
 
 editor-tools-term-remove = Remove term
+
+
+
+## Editor toolboxes - switchable block types
+
+editor-tools-switchable-type-to-paragraph = Change title to paragraph
+
+editor-tools-switchable-type-to-title = Change paragraph to title
 
 
 
