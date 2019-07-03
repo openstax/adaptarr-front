@@ -1353,7 +1353,9 @@ editor-tools-term-remove = Remove term
 
 ## Editor toolboxes - switchable block types
 
-editor-tools-switchable-type-title = Block type:
+editor-tools-switchable-type-to-paragraph = Change title to paragraph
+
+editor-tools-switchable-type-to-title = Change paragraph to title
 
 
 

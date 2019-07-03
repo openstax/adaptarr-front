@@ -1380,8 +1380,9 @@ editor-tools-term-remove = Usuń termin
 
 ## Editor toolboxes - switchable block types
 
-editor-tools-switchable-type-title = Typ bloku:
+editor-tools-switchable-type-to-paragraph = Zmień tytuł na akapit
 
+editor-tools-switchable-type-to-title = Zmień akapit na tytuł
 
 
 ## Editor toolboxes - definitions

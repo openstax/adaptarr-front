@@ -3,6 +3,8 @@ import Select from 'react-select'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
+import Button from 'src/components/ui/Button'
+
 import './index.css'
 
 type Props = {
@@ -14,43 +16,36 @@ type Props = {
 /**
  * Types of paragraph-like block that user can switch between.
  *
- * When selected node is not on this list, block type switching will
- * be disabled.
+ * If current type is paragraph then it should be changed to title, etc.
  */
-const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
+const SWITCHABLE_TYPES = {
+  paragraph: 'title',
+  title: 'paragraph',
+}
 
 export default class SwitchableTypes extends React.Component<Props> {
 
-  private changeTextType = ({value: blockType}: {value: string, label: string}) => {
-    const { editor, value } = this.props
-    editor.setNodeByKey(value.startBlock.key, { type: blockType })
+  private changeTextType = () => {
+    const { editor, value: { startBlock } } = this.props
+    editor.setNodeByKey(startBlock.key, { type: SWITCHABLE_TYPES[startBlock.type] })
   }
 
   public render() {
     const { value: { startBlock }, isDisabled = false } = this.props
 
-    if (!startBlock) return null
+    if (!startBlock || !SWITCHABLE_TYPES[startBlock.type]) return null
+
+    const newType = SWITCHABLE_TYPES[startBlock.type]
 
     return (
       <div className="switchable-types">
-        <span className="switchable-types__title">
-          <Localized id="editor-tools-switchable-type-title">
-            Block type
+        <Button clickHandler={this.changeTextType} isDisabled={isDisabled}>
+          <Localized id={`editor-tools-switchable-type-to-${newType}`}>
+            {`Change to ${newType}`}
           </Localized>
-        </span>
-        <Select
-          className="toolbox__select"
-          value={{ value: startBlock.type, label: startBlock.type}}
-          onChange={this.changeTextType}
-          options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
-          isDisabled={isDisabled || !SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)}
-          formatOptionLabel={OptionLabel}
-        />
+        </Button>
       </div>
     )
   }
 }
 
-function OptionLabel({value: type}: {value: string, label: string}) {
-  return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
-}
