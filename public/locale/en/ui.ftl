@@ -650,12 +650,14 @@ process-form-error-slots-min = Process must have at least one slot.
 process-form-error-steps-min = Process must have at least two steps.
 
 process-form-error-no-finish =
-  Process must have at lest one final step (a step from which there are
+  Process must have at least one final step (a step from which there are
   no outgoing links).
 
-process-form-error-propose-and-accept-changes =
-  A slot can only be granted the permission to propose changes if there is also
-  a slot (in the same step) which was granted the permission to accept changes.
+process-form-error-propose-and-no-accept =
+  Step with propose changes have to be linking to step with accept changes.
+
+process-form-error-accept-and-no-propose =
+  Step with accept changes have to be linked from step with propose changes.
 
 process-form-error-edit-and-changes =
   The permissions to edit and propose changes cannot both be granted in the same
@@ -665,7 +667,7 @@ process-form-error-step-slot-permission-or-slot =
   Each permission must have a slot assigned.
 
 process-form-error-step-link-to-or-slot =
-  Each link must have a target and a specify a slot which can use it.
+  Each link must have a target and specify a slot which can use it.
 
 
 
