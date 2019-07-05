@@ -651,10 +651,13 @@ process-form-error-no-finish =
   Proces musi zawierać przynajmniej jeden krok końcowy (taki, z którego nie
   wychodzą żadne linki).
 
-process-form-error-propose-and-accept-changes =
-  Funkcja może otrzymać w danym kroku uprawnienie do sugerowania zmian tylko
-  jeżeli w tym kroku jest również funkcja która otrzymała uprawnienie
-  do akceptowania zmian.
+process-form-error-propose-and-no-accept =
+  Krok z uprawnieniem do proponowania zmian musi linkować do kroku
+  z akceptowaniem zmian.
+
+process-form-error-accept-and-no-propose =
+  Krok z uprawnieniem do akceptowania zmian musi być podlinkowany przez
+  krok z uprawnieniem do proponowania zmian.
 
 process-form-error-edit-and-changes =
   Uprawnienia do edycji oraz do sugerowania zmian nie mogą być przyznane w tym

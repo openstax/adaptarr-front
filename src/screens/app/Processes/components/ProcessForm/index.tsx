@@ -235,7 +235,7 @@ class ProcessForm extends React.Component<Props> {
     // Validate steps
     // Validate if there is finish step...
     let stepsWithoutLinks = 0
-    steps.forEach(s => {
+    steps.forEach((s, i) => {
       // If there is propose-changes or accept-changes slot then the second one
       // is also required. Edit permission cannot exists with them.
       let permissions: Set<SlotPermission> = new Set()
@@ -247,9 +247,38 @@ class ProcessForm extends React.Component<Props> {
           errors.add('process-form-error-step-slot-permission-or-slot')
         }
       })
-      if (permissions.has('accept-changes') !== permissions.has('propose-changes')) {
-        errors.add('process-form-error-propose-and-accept-changes')
+
+      // Step with propose changes have to be linking to step with accept changes.
+      if (permissions.has('propose-changes')) {
+        const linkedSteps = s.links.map(l => l.to)
+        const permissionsInLS: Set<SlotPermission> = new Set()
+        linkedSteps.forEach(l => {
+          if (l) {
+            steps[l].slots.forEach(s => permissionsInLS.add(s.permission))
+          }
+        })
+        if (!permissionsInLS.has('accept-changes')) {
+          errors.add('process-form-error-propose-and-no-accept')
+        }
       }
+
+      // Step with accept changes have to be linked from step with propose changes.
+      if (permissions.has('accept-changes')) {
+        let isLinkedFromStepWithProposeChanges: boolean = false
+        steps.forEach((st, inx) => {
+          if (st.links.some(l => l.to === i)) {
+            // If this step is linking to step with accept-changes then check
+            // if it have slot with permission propose-changes
+            if (st.slots.some(sl => sl.permission === 'propose-changes')) {
+              isLinkedFromStepWithProposeChanges = true
+            }
+          }
+        })
+        if (!isLinkedFromStepWithProposeChanges) {
+          errors.add('process-form-error-accept-and-no-propose')
+        }
+      }
+
       if (permissions.has('edit') && (permissions.has('propose-changes') || permissions.has('accept-changes'))) {
         errors.add('process-form-error-edit-and-changes')
       }
