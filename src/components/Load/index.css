@@ -1,0 +1,24 @@
+.load-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  line-height: 1.4;
+}
+
+.load-error__message {
+  width: 100%;
+  max-width: 400px;
+}
+
+.load-error__content {
+  width: 100%;
+  max-width: calc(400px - 10px); /* max-width - (padding-left + padding-right) */
+  margin-top: 20px;
+  padding: 5px;
+  border-radius: 8px;
+  color: #fff;
+  background-color: var(--danger);
+}

@@ -1070,6 +1070,15 @@ error-boundary-button-fill-report = Fill out a report
 
 
 
+## Reusable components - load component
+
+load-error-message =
+  <p>There was an error while loading part of this page.</p>
+  <p>Please reload this page.</p>
+  <p>If error will still occurs please contact administrator.</p>
+
+
+
 ## Reusable components - book card
 
 book-card-edit = Edit

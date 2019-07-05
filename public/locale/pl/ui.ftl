@@ -1072,6 +1072,15 @@ error-boundary-button-fill-report = Wypełnij raport
 
 
 
+## Reusable components - load component
+
+load-error-message =
+  <p>Wystąpił błąd podczas ładowania części tej strony.</p>
+  <p>Odśwież tę stronę.</p>
+  <p>Jeśli błąd nadal występuje, skontaktuj się z administratorem.</p>
+
+
+
 ## Reusable components - book card
 
 book-card-edit = Edycja

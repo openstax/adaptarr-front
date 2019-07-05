@@ -1,6 +1,10 @@
 import * as React from 'react'
+import * as Sentry from '@sentry/browser'
+import { Localized } from 'fluent-react/compat'
 
 import Spinner from 'src/components/Spinner'
+
+import './index.css'
 
 /**
  * Function responsible for loading content.
@@ -49,6 +53,7 @@ export default <Args extends {}, Value extends {}> (
       this.setState({ value })
     } catch (error) {
       this.setState({ error })
+      Sentry.captureException(error)
     }
   }
 
@@ -81,7 +86,14 @@ export default <Args extends {}, Value extends {}> (
 }
 
 function DefaultHandler({ error }: { error: Error }) {
-  return <div className="load-error">
-    {error.toString()}
-  </div>
+  return (
+    <div className="load-error">
+      <Localized id="load-error-message" p={<p/>}>
+        <div className="load-error__message"></div>
+      </Localized>
+      <div className="load-error__content">
+        {error.toString()}
+      </div>
+    </div>
+  )
 }
