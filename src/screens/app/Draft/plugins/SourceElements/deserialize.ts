@@ -1,5 +1,3 @@
-import { Text } from 'slate'
-
 const deserializeRules = {
   deserialize(el: Element, next: (nodes: any) => any) {
     if (
@@ -12,7 +10,11 @@ const deserializeRules = {
       let data = {
         object: 'block',
         type: 'source_element',
-        nodes: [Text.create(new XMLSerializer().serializeToString(el))],
+        nodes: [{
+          object: 'text',
+          text: new XMLSerializer().serializeToString(el),
+          marks: [],
+        }],
       }
 
       const parent = el.parentElement
