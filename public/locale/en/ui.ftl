@@ -1064,6 +1064,8 @@ error-boundary-info =
    *[false] {""}
   }
 
+error-boundary-button-go-to-dashboard = Go to dashboard
+
 error-boundary-button-reload = Reload page
 
 error-boundary-button-fill-report = Fill out a report

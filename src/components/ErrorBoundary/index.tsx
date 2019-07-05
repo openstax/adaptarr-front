@@ -21,6 +21,11 @@ export default class ErrorBoundary extends React.Component {
     })
   }
 
+  private moveToDashboard = () => {
+    window.history.pushState(null, "", "/")
+    this.setState({ error: null, eventId: undefined })
+  }
+
   render() {
     const hasReport = this.state.eventId ? true : false
 
@@ -36,6 +41,11 @@ export default class ErrorBoundary extends React.Component {
             <div></div>
           </Localized>
           <div className="buttons">
+            <Button clickHandler={this.moveToDashboard}>
+              <Localized id="error-boundary-button-go-to-dashboard">
+                Go to dashboard
+              </Localized>
+            </Button>
             <Button clickHandler={() => window.location.reload()}>
               <Localized id="error-boundary-button-reload">
                 Reload page

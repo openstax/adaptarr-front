@@ -1066,6 +1066,8 @@ error-boundary-info =
    *[false] {""}
   }
 
+error-boundary-button-go-to-dashboard = Przejdź do panelu głównego
+
 error-boundary-button-reload = Przeładuj stronę
 
 error-boundary-button-fill-report = Wypełnij raport
