@@ -1,15 +1,29 @@
-.roles__title {
-  font-size: 1.2rem;
-  font-weight: 700;
-  margin: 20px 0;
+.roles form {
+  width: 100%;
+  background-color: #fff;
 }
 
-.roles__col {
-  flex: 1;
+.roles form input[type="submit"] {
+  float: right;
+  margin: 15px;
 }
 
-.roles__col--right {
-  padding: 0 0 0 20px;
+.roles__header {
+  display: flex;
+  align-items: center;
+  height: 46px;
+  padding:0 5px;
+  background-color: var(--light-bg);
+}
+
+.roles__header .input {
+  margin: 0;
+  width: 100%;
+}
+
+.roles__header .input input {
+  font-size: 16px;
+  text-align: left;
 }
 
 .permissions {
@@ -18,6 +32,12 @@
 
 .permissions__label {
   display: inline-block;
-  padding: 5px 10px 5px 0px;
+  width: 97%;
+  padding: 10px;
   cursor: pointer;
+}
+
+.roles__list {
+  width: 100%;
+  background-color: #fff;
 }

@@ -1,6 +1,5 @@
 .limitedui {
-  display: flex;
-  align-items: center;
+  display: contents;
 }
 
 .limitedui .input {

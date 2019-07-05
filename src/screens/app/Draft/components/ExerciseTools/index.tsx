@@ -29,7 +29,7 @@ export default class ExerciseTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('exerciseTools')}
       >
         <Button clickHandler={this.insertSolution} className="toolbox__button--insert">
-          <Icon name="check" />
+          <Icon size="small" name="check" />
           <Localized id="editor-tools-exercise-insert-solution">
             Add solution
           </Localized>
@@ -39,7 +39,7 @@ export default class ExerciseTools extends React.Component<Props> {
           isDisabled={(exercise.nodes.last() as Block).type === 'exercise_commentary'}
           className="toolbox__button--insert"
         >
-          <Icon name="comment" />
+          <Icon size="small" name="comment" />
           <Localized id="editor-tools-exercise-insert-commentary">
             Add commentary
           </Localized>

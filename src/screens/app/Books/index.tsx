@@ -55,11 +55,13 @@ class Books extends React.Component<Props> {
     showAddBook: boolean
     files: File[]
     uploading: boolean
+    isEditingUnlocked: boolean
   } = {
     titleInput: '',
     showAddBook: false,
     files: [],
     uploading: false,
+    isEditingUnlocked: false,
   }
 
   private addBook = (e: React.FormEvent) => {
@@ -103,20 +105,32 @@ class Books extends React.Component<Props> {
     store.dispatch(addAlert('error', error.message))
   }
 
+  private toggleEditing = () => {
+    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
+  }
+
   public render() {
     const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showAddBook, uploading } = this.state
+    const { titleInput, showAddBook, uploading, isEditingUnlocked } = this.state
 
     return (
       <Section>
         <Header l10nId="book-list-view-title" title="Books">
           <LimitedUI permissions="book:edit">
-            <Button
-              color="green"
-              clickHandler={this.showAddBookDialog}
-            >
-              <Icon name="plus"/>
+            <Button clickHandler={this.toggleEditing}>
+              {
+                isEditingUnlocked ?
+                  <Icon size="medium" name="unlock" />
+                : <Icon size="medium" name="lock" />
+              }
             </Button>
+            {
+              isEditingUnlocked ?
+                <Button clickHandler={this.showAddBookDialog}>
+                  <Icon size="medium" name="plus"/>
+                </Button>
+              : null
+            }
           </LimitedUI>
         </Header>
         {
@@ -143,9 +157,11 @@ class Books extends React.Component<Props> {
                       onFilesError={this.onFilesError}
                       accepts={['.zip', '.rar']}
                     />
-                    <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
-                      <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
-                    </Localized>
+                    <div className="dialog__buttons dialog__buttons--center">
+                      <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
+                        <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
+                      </Localized>
+                    </div>
                   </form>
               }
             </Dialog>
@@ -157,7 +173,7 @@ class Books extends React.Component<Props> {
               {
                 booksMap.size > 0 ?
                   Array.from(booksMap.values()).map((book: api.Book) => (
-                    <BookCard key={book.id} book={book}/>
+                    <BookCard key={book.id} book={book} isEditingUnlocked={isEditingUnlocked}/>
                   ))
                 : <Localized id="book-list-empty">
                   No books found.

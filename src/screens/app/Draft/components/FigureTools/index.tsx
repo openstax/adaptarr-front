@@ -54,14 +54,14 @@ export default class FigureTools extends React.Component<Props> {
             onClick={this.changeSubfigure}
           />
           {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
-            <Icon name="close" />
+            <Icon size="small" name="close" />
             <Localized id="editor-tools-remove-subfigure">
               Remove subfigure
             </Localized>
           </Button>}
         </div>
         <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
-          <Icon name="image" />
+          <Icon size="small" name="image" />
           <Localized id="editor-tools-figure-add-subfigure">
             Add subfigure
           </Localized>
@@ -71,7 +71,7 @@ export default class FigureTools extends React.Component<Props> {
           isDisabled={(figure.nodes.last() as Block).type === 'figure_caption'}
           className="toolbox__button--insert"
         >
-          <Icon name="comment" />
+          <Icon size="small" name="comment" />
           <Localized id="editor-tools-figure-add-caption">
             Add caption
           </Localized>

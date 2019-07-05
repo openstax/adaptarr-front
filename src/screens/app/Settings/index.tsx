@@ -137,22 +137,21 @@ class Settings extends React.Component<Props> {
               placeholder="Are you sure you want to change language?"
               onClose={this.closeChangeLanguage}
             >
-              <Button
-                color="green"
-                clickHandler={this.changeLanguage}
-              >
-                <Localized id="settings-language-dialog-confirm">
-                  Confirm
-                </Localized>
-              </Button>
-              <Button
-                color="red"
-                clickHandler={this.closeChangeLanguage}
-              >
-                <Localized id="settings-language-dialog-cancel">
-                  Cancel
-                </Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.changeLanguage}>
+                  <Localized id="settings-language-dialog-confirm">
+                    Confirm
+                  </Localized>
+                </Button>
+                <Button
+                  type="danger"
+                  clickHandler={this.closeChangeLanguage}
+                >
+                  <Localized id="settings-language-dialog-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
@@ -165,10 +164,10 @@ class Settings extends React.Component<Props> {
               </Localized>
             </h2>
             <Select
+              className="react-select"
               value={language}
               onChange={this.handleLanguageChange}
               options={languageOptions}
-              className="settings__select"
               getOptionLabel={getOptionLabel}
             />
             <h2 className="settings__title">

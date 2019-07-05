@@ -2,16 +2,20 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  fill: var(--dark-bg);
+}
+
+.button .icon {
+  fill: white;
 }
 
 .icon svg {
-  width: 20px;
-  height: 20px;
+  max-width: 60px;
 }
 
 .icon--small svg {
-  width: 15px;
-  height: 15px;
+  width: 20px;
+  height: 20px;
 }
 
 .icon--medium svg {

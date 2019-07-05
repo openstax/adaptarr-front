@@ -169,9 +169,11 @@ class UserProfile extends React.Component<Props> {
       >
         <div className="profile__update-dialog">
           {body}
-          <Button clickHandler={this.confirmUpdateAction}>
-            <Localized id="user-profile-update-confirm">Update</Localized>
-          </Button>
+          <div className="dialog__buttons dialog__buttons--center">
+            <Button clickHandler={this.confirmUpdateAction}>
+              <Localized id="user-profile-update-confirm">Update</Localized>
+            </Button>
+          </div>
         </div>
       </Dialog>
     )
@@ -312,50 +314,44 @@ class UserProfile extends React.Component<Props> {
                     </span>
                   </UserUI> */}
                 </div>
-                <h2 className="profile__name">
-                  {decodeHtmlEntity(user.name)}
-                  {/* <UserUI userId={user.id}>
-                    <span
-                      className="profile__update-name"
-                      onClick={this.showUpdateName}
-                    >
-                      <Icon size="small" name="pencil"/>
-                    </span>
-                  </UserUI> */}
-                </h2>
+                <div className="profile__main-info">
+                  <h2 className="profile__name">
+                    {decodeHtmlEntity(user.name)}
+                    {/* <UserUI userId={user.id}>
+                      <span
+                        className="profile__update-name"
+                        onClick={this.showUpdateName}
+                      >
+                        <Icon size="small" name="pencil"/>
+                      </span>
+                    </UserUI> */}
+                  </h2>
+                  <span className="profile__role">
+                    {user.role ? user.role.name : null}
+                    {
+                      <LimitedUI permissions="user:assign-role">
+                        <Select
+                          className="react-select"
+                          value={this.props.user.role}
+                          options={this.props.roles}
+                          formatOptionLabel={(role) => role.name}
+                          onChange={this.handleRoleChange}
+                        />
+                        <Button
+                          className="profile__button--unassign-role"
+                          clickHandler={this.handleRoleUnassign}
+                        >
+                          <Localized id="user-profile-section-role-unassign">
+                            Unassign user from role
+                          </Localized>
+                        </Button>
+                      </LimitedUI>
+                      }
+                  </span>
+                </div>
               </div>
-              <div className="profile__info">
+              {/* <div className="profile__info">
                 <h3 className="profile__title">
-                  <Localized id="user-profile-section-role">User's role:</Localized>
-                </h3>
-                <span className="profile__role">
-                  {
-                    user.role ?
-                      user.role.name
-                    :
-                      <Localized id="user-profile-role-unknown">
-                        Unknow role
-                      </Localized>
-                  }
-                </span>
-                <LimitedUI permissions="user:assign-role">
-                  <Select
-                    className="profile__select"
-                    value={this.props.user.role}
-                    options={this.props.roles}
-                    formatOptionLabel={(role) => role.name}
-                    onChange={this.handleRoleChange}
-                  />
-                  <Button
-                    className="profile__button--unassign-role"
-                    clickHandler={this.handleRoleUnassign}
-                  >
-                    <Localized id="user-profile-section-role-unassign">
-                      Unassign user from role
-                    </Localized>
-                  </Button>
-                </LimitedUI>
-                {/* <h3 className="profile__title">
                   <Localized id="user-profile-section-bio">Bio</Localized>
                 </h3>
                 <div className="profile__bio">
@@ -381,8 +377,8 @@ class UserProfile extends React.Component<Props> {
                       <Icon size="small" name="pencil"/>
                     </span>
                   </UserUI>
-                </span> */}
-              </div>
+                </span>
+              </div> */}
             </div>
           </div>
         </Section>

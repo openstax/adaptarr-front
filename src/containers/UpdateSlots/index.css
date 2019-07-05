@@ -12,6 +12,7 @@
 .update-slots__info {
   display: flex;
   align-items: center;
+  flex: 1;
 }
 
 .update-slots__info .update-slots__name {

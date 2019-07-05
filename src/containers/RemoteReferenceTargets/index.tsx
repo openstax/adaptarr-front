@@ -142,12 +142,12 @@ class RemoteReferenceTargets extends React.Component<Props> {
         {
           item.kind === 'group' ?
             <>
-              <div className="bookpart__title">
-                {item.title}
-              </div>
               <span className="bookpart__icon">
                 {collapseIcon}
               </span>
+              <div className="bookpart__title">
+                {item.title}
+              </div>
             </>
           :
             <RemoteSource

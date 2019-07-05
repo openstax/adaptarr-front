@@ -14,3 +14,7 @@
   padding: 5px;
   cursor: pointer;
 }
+
+.info-box__close .icon svg {
+  fill: var(--danger);
+}

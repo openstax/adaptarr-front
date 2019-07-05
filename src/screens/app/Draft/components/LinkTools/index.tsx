@@ -83,7 +83,6 @@ export default class LinkTools extends React.Component<Props> {
           className="link__button"
           clickHandler={this.removeLink}
         >
-          <Icon name="close" />
           <Localized id="editor-tools-link-remove">
             Remove link
           </Localized>

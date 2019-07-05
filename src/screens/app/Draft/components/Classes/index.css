@@ -19,4 +19,10 @@
 
 .classes .ReactTags__tagInput input {
   width: 100%;
+  background-color: var(--lighter-bg);
+}
+
+.classes__title {
+  display: block;
+  margin-bottom: 3px;
 }

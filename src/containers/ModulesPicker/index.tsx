@@ -147,12 +147,14 @@ class ModuleList extends React.Component<Props> {
               placeholder="Deleting module is permanent."
               onClose={this.closeRemoveModuleDialog}
             >
-              <Button color="green" clickHandler={this.removeModule}>
-                <Localized id="module-list-delete-module-confirm">Delete</Localized>
-              </Button>
-              <Button color="red" clickHandler={this.closeRemoveModuleDialog}>
-                <Localized id="module-list-delete-module-cancel">Cancel</Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.removeModule}>
+                  <Localized id="module-list-delete-module-confirm">Delete</Localized>
+                </Button>
+                <Button type="danger" clickHandler={this.closeRemoveModuleDialog}>
+                  <Localized id="module-list-delete-module-cancel">Cancel</Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
@@ -167,7 +169,7 @@ class ModuleList extends React.Component<Props> {
                   validation={{minLength: 3}}
                 />
                 <Select
-                  className="select"
+                  className="react-select"
                   value={moduleLanguage}
                   options={LANGUAGES}
                   onChange={this.updateModuleLanguage}

@@ -117,10 +117,8 @@ class ProcessForm extends React.Component<Props> {
         <div className="controls">
           <Button
             clickHandler={this.onSubmit}
-            color="green"
             isDisabled={errors.size > 0}
           >
-            <Icon name="save" />
             {
               !this.props.structure ?
                 <Localized id="process-form-create">
@@ -132,8 +130,7 @@ class ProcessForm extends React.Component<Props> {
                 </Localized>
             }
           </Button>
-          <Button clickHandler={this.props.onCancel} color="red">
-            <Icon name="close" />
+          <Button type="danger" clickHandler={this.props.onCancel}>
             <Localized id="process-form-cancel">
               Cancel
             </Localized>
@@ -151,11 +148,11 @@ class ProcessForm extends React.Component<Props> {
           : null
         }
         <label>
-          <span>
+          <h3>
             <Localized id="process-form-process-name">
               Process name
             </Localized>
-          </span>
+          </h3>
           <Input
             value={name}
             onChange={this.handleNameChange}
@@ -164,12 +161,13 @@ class ProcessForm extends React.Component<Props> {
           />
         </label>
         <label>
-          <span>
+          <h3>
             <Localized id="process-form-process-starting-step">
               Starting step
             </Localized>
-          </span>
+          </h3>
           <Select
+            className="react-select"
             value={startingStep >= 0 && steps[startingStep] ? {value: startingStep, label: steps[startingStep].name} : null}
             options={steps.map((s, i) => {
               return {

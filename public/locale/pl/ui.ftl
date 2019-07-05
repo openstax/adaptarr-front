@@ -15,15 +15,11 @@ book-view-title = { $title }
 # Alternative title for while book is still loading.
 book-view-title-loading = Ładowanie
 
-book-add-group = Grupa
+book-button-add-module = Dodaj moduł
 
-book-remove-group = Grupa
+book-button-add-group = Dodaj rozdział
 
-book-change-group-title = Edytuj
-
-book-add-module = Moduł
-
-book-remove-module = Moduł
+book-button-remove = Usuń
 
 # Variable:
 # - $name (string): process name.
@@ -88,7 +84,7 @@ book-unassign-user-alert-success = Użytkownik został usunięty z { $module }
 
 ## Screens - book view - “Edit book” dialog
 
-book-edit-dialog-title = Edytuj książkę.
+book-edit-dialog-title = Edycja książki.
 
 # Placeholder text for title field.
 book-edit-title =
@@ -128,13 +124,13 @@ book-add-group-confirm =
 
 book-add-group-cancel = Anuluj
 
-book-add-group-alert-success = Nowa grupa została dodana.
+book-add-group-alert-success = Nowy rozdział został dodany.
 
 
 
 ## Screens - book view - remove group dialog
 
-book-remove-group-dialog-title = Usunąć tę grupę wraz ze wszystkimi modułami?
+book-remove-group-dialog-title = Usunąć ten rozdział wraz ze wszystkimi jego modułami?
 
 book-remove-group-confirm = Usuń
 
@@ -144,7 +140,7 @@ book-remove-group-cancel = Anuluj
 #
 # Variables:
 # - $title (string): group's title
-book-remove-group-alert-success = Grupa { $title } została usunięta.
+book-remove-group-alert-success = Rozdział { $title } został usunięty.
 
 
 
@@ -167,7 +163,7 @@ book-group-change-title-cancel = Anuluj
 # - $from (string): old title
 # - $to (string): new title
 book-group-change-title-alert-success =
-  Nazwa grupy została zmieniona z { $from } na { $to }.
+  Nazwa rozdziału została zmieniona z { $from } na { $to }.
 
 
 
@@ -179,7 +175,7 @@ book-group-add-module-dialog-title = Wybierz moduł lub utwórz nowy.
 #
 # Variables:
 # - $title (string): module's title
-book-group-add-module-alert-success = { $title } został dodany do grupy.
+book-group-add-module-alert-success = { $title } został dodany do rozdziału.
 
 
 
@@ -187,7 +183,7 @@ book-group-add-module-alert-success = { $title } został dodany do grupy.
 
 book-list-view-title = Książki
 
-book-list-empty = Nie znaleziono żadnych książek.
+book-list-empty = Nie znaleziono książek.
 
 
 
@@ -197,7 +193,7 @@ book-list-empty = Nie znaleziono żadnych książek.
 #
 # Variables:
 # - $title (string): title of the book to be deleted
-book-delete-title = Na pewno chcesz usunąć { $title }?
+book-delete-title = Usunąć książkę "{ $title }"?
 
 book-delete-confirm = Potwierdź
 
@@ -236,11 +232,11 @@ dashboard-assigned-new-draft = Nowy szkic
 
 dashboard-assigned-view-module = Zobacz moduł
 
-dashboard-assigned-empty = Żaden moduł nie jest do Ciebie przypisany.
+dashboard-assigned-empty = Brak przypisanych tekstów
 
-dashboard-assigned-section-not-assigned = Nie przypisano do żadnej książki
+dashboard-assigned-section-not-assigned = Brak przypisanych książek
 
-dashboard-section-drafts = Twoje szkice:
+dashboard-section-drafts = Szybki dostęp do moich tekstów
 
 dashboard-drafts-section-not-assigned = Nie przypisano do żadnej książki
 
@@ -248,12 +244,12 @@ dashboard-drafts-view = Zobacz szkic
 
 dashboard-drafts-delete = Usuń
 
-dashboard-drafts-empty = Nie posiadasz żadnych szkiców.
+dashboard-drafts-empty = Brak tekstów do wyświetlenia
 
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 
-dashboard-section-free-slots = Wolne funkcje edycyjne:
+dashboard-section-free-slots = Wolne funkcje do podjęcia
 
 
 ## Screens - draft
@@ -266,15 +262,16 @@ draft-style-switcher = { $style ->
   [pdf] Style wersji PDF
 }
 
-draft-style-switcher-info-box = To jest funkcja eksperymentalna. Istnieją wizualne różnice między podglądem a oryginalnymi stylami.
+draft-style-switcher-info-box = Widok roboczy. Niektóre element w ostatecznej wersji
+  podręcznika będą wyświetlane inaczej.
 
-draft-loading-message = Trwa ładowanie wersji roboczej. W przypadku większych dokumentów może to potrwać kilka minut.
+draft-loading-message = Ładowanie wersji roboczej może potrwać nawet kilka minut.
 
-draft-remove-glossary-dialog = Jesteś pewien, że chcesz usunąć glosariusz?
+draft-remove-glossary-dialog = Usunąć skorowidz?
 
-draft-add-glossary = Dodaj glosariusz
+draft-add-glossary = Dodaj skorowidz
 
-draft-remove-glossary = Usuń glosariusz
+draft-remove-glossary = Usuń skorowidz
 
 draft-cancel = Anuluj
 
@@ -282,7 +279,7 @@ draft-cancel = Anuluj
 
 ## Screens - dashboard - draft deletion dialog
 
-dashboard-delete-draft-dialog-title = Jesteś pewien, że chcesz usunąć szkic { $title }?
+dashboard-delete-draft-dialog-title = Usunąć szkic "{ $title }"?
 
 dashboard-delete-draft-confirm = Usuń
 
@@ -348,14 +345,14 @@ module-create-draft-alert-success = Szkic został utworzony.
 
 notification-centre-view-title = Powiadomienia
 
-notification-centre-empty = Nie masz żadnych powiadomień.
+notification-centre-empty = Brak nowych powiadomień.
 
 
 
 ## Screens - user's profile
 
 # Title displayed when viewing user's own profile.
-user-profile-view-title-your = Twój profil
+user-profile-view-title-your = Mój profil
 
 # Title displayed when viewing another user's profile.
 #
@@ -363,7 +360,7 @@ user-profile-view-title-your = Twój profil
 # - $name (string): user's name
 user-profile-view-title-named = Profil { $name }
 
-user-profile-section-team = Twój zespół
+user-profile-section-team = Mój zespół
 
 user-profile-section-bio = Bio:
 
@@ -407,7 +404,7 @@ user-profile-team-list-no-results = Brak wyników dla określonych kryteriów.
 
 user-profile-update-avatar-title = Wgraj swoje zdjęcie.
 
-user-profile-update-name-title = Zaktualizuj swoją nazwę.
+user-profile-update-name-title = Zaktualizuj nazwę użytkownika.
 
 # Placeholder text for name input.
 user-profile-update-name =
@@ -416,13 +413,13 @@ user-profile-update-name =
 user-profile-update-confirm = Potwierdź
 
 # Message displayed below name input when it has fewer than three characters.
-user-profile-name-validation-error = Imię musi mieć minimum 3 znaki.
+user-profile-name-validation-error = Imię musi mieć co najmniej 3 znaki.
 
 
 
 ## Screens - resources
 
-resources-view-title = Zasoby
+resources-view-title = Pomocne dokumenty
 
 
 
@@ -466,7 +463,7 @@ settings-change-password-alert-error = Hasło nie zostało zmienione.
 
 ## Screens - settings - language change dialog
 
-settings-language-dialog-title = Jesteś pewien, że chcesz zmienić język?
+settings-language-dialog-title = Zmienić język?
 
 settings-language-dialog-confirm = Potwierdź
 
@@ -485,6 +482,10 @@ role-section-manage = Zarządzaj rolami
 role-name = Nazwa roli
 
 role-create = Utwórz rolę
+
+role-edit = Edycja
+
+role-remove = Usuń
 
 # Alert displayed when role has been created.
 #
@@ -540,11 +541,11 @@ role-update-cancel = Anuluj
 
 ## Screens - processes
 
-processes-view-title = Zarządzaj procesami
+processes-view-title = Zarządzanie procesami
 
 processes-view-add = Dodaj nowy proces
 
-processes-view-list = Obecne procesy:
+processes-view-preview = Podgląd procesu
 
 # Alert displayed when process has been created.
 #
@@ -589,6 +590,8 @@ process-form-new-version = Utwórz nową wersję
 
 process-form-cancel = Anuluj
 
+process-form-remove = Usuń
+
 process-form-process-name = Nazwa procesu
 
 process-form-slot-title = Lista funkcji:
@@ -611,7 +614,7 @@ process-form-step-remove = Usuń krok
 
 process-form-step-name = Nazwa kroku:
 
-process-form-step-slots = Sloty dla kroku:
+process-form-step-slots = Funkcje w kroku:
 
 process-form-step-slots-add = Dodaj funkcję
 
@@ -785,6 +788,10 @@ update-slots-fetching-error = Coś poszło nie tak podczas pobierania informacji
 
 ## Reusable components - draft info
 
+draft-info-main-button = Informacje o procesie
+
+draft-info-title = Informacje o procesie dla tego szkicu
+
 # Variables:
 # - $process (string): process name which this draft follows.
 draft-info-process = Proces: { $process }
@@ -809,13 +816,11 @@ draft-info-permission = { $permission ->
 
 ## Reusable components - free slots
 
-free-slots-slot-name = Nazwa funkcji:
-
-free-slots-draft-title = Tytuł szkicu:
+free-slots-view-draft = Pokaż tekst
 
 free-slots-not-avaible = Obecnie nie ma żadnych wolnych funkcji do objęcia.
 
-free-slots-take-slot = Obejmij funkcję
+free-slots-take-slot = Biorę to zadanie
 
 # Alert displayed when user assign himself to a free slot.
 #
@@ -833,6 +838,8 @@ free-slots-error = Nie udało się objąć funkcji. Szczegóły: { $details }.
 
 
 ## Reusable components - step changer
+
+step-changer-main-button = Przekazuję pracę do kolejnego etapu
 
 step-changer-choose = Wybierz link:
 
@@ -854,8 +861,9 @@ step-changer-success = { $code ->
 # - $details (string): error details.
 step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }.
 
-step-changer-dialog-title =
-  Czy na pewno chcesz przenieść szkic do następnego kroku?
+step-changer-details-dialog-title = Wybierz następny krok
+
+step-changer-confirm-dialog-title = Czy na pewno chcesz przenieść szkic do następnego kroku?
 
 step-changer-unsaved-changes = Masz niezapisane zmiany.
 
@@ -911,7 +919,7 @@ navigation-books = Książki
 
 navigation-resources = Zasoby
 
-navigation-profile = Twój profil
+navigation-profile = Mój profil
 
 navigation-settings = Ustawienia
 
@@ -921,7 +929,7 @@ navigation-invite = Zaproszenia
 
 navigation-roles = Role
 
-navigation-processes = Procesy edycyjne
+navigation-processes = Procesy
 
 
 
@@ -944,7 +952,7 @@ asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
 #
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
-#   'assigned'.
+#   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -954,8 +962,11 @@ asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
 # - <actor> ... </actor>: link to actor's profile
 # - <module> ... </module>: link to the assigned module
 notification = { $kind ->
-  [assigned]
-    <actor>{ $actor }</actor> przypisał/a Cię do <module>{ $module }</module>
+  [assigned] <actor>{ $actor }</actor> przypisał/a Cię do <module>{ $module }</module>
+  [process_ended] Proces edycyjny dla <module>{ $module }</module> zakończył się.
+  [slot_filled] Zostałeś/aś przypisany/a do funkcji w <module>{ $module }</module>.
+  [slot_vacated] Zostałeś/aś usunięta z funkcji w <module>{ $module }</module>.
+  [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
  *[notavalidkind] Nieznana akcja
 }
 
@@ -974,6 +985,8 @@ file-upload-remove-all = Usuń wszystkie pliki
 # Placeholder text for search box
 module-list-search-box =
   .placeholder = Szukaj modułu
+
+module-list-remove = Usuń
 
 
 
@@ -1059,6 +1072,14 @@ error-boundary-button-fill-report = Wypełnij raport
 
 
 
+## Reusable components - book card
+
+book-card-edit = Edycja
+
+book-card-remove = Usuń
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title
@@ -1075,7 +1096,7 @@ editor-document-title-save-alert-error = Nie udało się zmienić tytułu.
 
 ## Editor - toolboxes
 
-editor-toolbox-no-selection = Proszę zaznaczyć edytor, aby wyświetlić narzędzia.
+editor-toolbox-no-selection = Proszę kliknąć w tekst, wtedy wyświetlą się dostępne narzędzia.
 
 editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze
   wspierane
@@ -1170,11 +1191,11 @@ editor-tools-format-button-term = Termin (Ctrl+D)
 
 ## Editor toolboxes - figures
 
-editor-tools-figure-title = Figura
+editor-tools-figure-title = Ilustracja
 
-editor-tools-figure-add-subfigure = Dodaj podfigurę
+editor-tools-figure-add-subfigure = Dodaj ilustrację
 
-editor-tools-figure-remove-subfigure = Usuń podfigurę
+editor-tools-figure-remove-subfigure = Usuń ilustrację
 
 editor-tools-figure-add-caption = Dodaj opis
 
@@ -1186,13 +1207,13 @@ editor-tools-figure-alt-text = Alternatywny tekst:
 
 editor-tools-insert-title = Wstaw
 
-editor-tools-insert-reference = Odnośnik
+editor-tools-insert-reference = Połącz
 
 editor-tools-insert-admonition = Notatka
 
 editor-tools-insert-exercise = Ćwiczenie
 
-editor-tools-insert-figure = Figura
+editor-tools-insert-figure = Ilustracja
 
 editor-tools-insert-code = Kod
 
@@ -1200,7 +1221,7 @@ editor-tools-insert-section = Sekcja
 
 editor-tools-insert-quotation = Cytat
 
-editor-tools-insert-link = Link
+editor-tools-insert-link = WWW
 
 editor-tools-insert-source = Kod źródłowy
 

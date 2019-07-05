@@ -67,7 +67,7 @@ class FileUploader extends React.Component<Props> {
       {
         files.length ?
           <React.Fragment>
-            <Button color="red" clickHandler={() => this.filesRemoveAll()}>
+            <Button type="danger" clickHandler={() => this.filesRemoveAll()}>
               <Localized id="file-upload-remove-all">
                 Remove all files
               </Localized>

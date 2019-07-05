@@ -30,45 +30,48 @@ class StepChanger extends React.Component<Props> {
     link: Link | null
     confirmDialog: boolean
     unsavedChanges: boolean
+    detailsDialog: boolean
   } = {
     link: null,
     confirmDialog: false,
     unsavedChanges: false,
+    detailsDialog: false,
   }
 
   public render() {
     const { draft: { step } } = this.props
-    const { link, confirmDialog, unsavedChanges } = this.state
+    const { confirmDialog, unsavedChanges, detailsDialog } = this.state
 
     return (
       step && step.links.length > 0 && <div className="step-changer">
-        <h3 className="step-changer__title">
-          <Localized id="step-changer-choose">
-            Choose link:
+        <Button clickHandler={this.showDetailsDialog}>
+          <Localized id="step-changer-main-button">
+            I'm handing my work to the next step
           </Localized>
-        </h3>
-        <div className="step-changer__select-link">
-          <Select
-            value={link !== null ? {value: link, label: link.name} : null}
-            options={step.links.map(l => {return {value: l, label: l.name}})}
-            onChange={this.handleStepChange}
-          />
-        </div>
-        <div className="step-changer__controls">
-          <Button
-            clickHandler={this.showConfirmDialog}
-            isDisabled={!link}
-          >
-            <Localized id="step-changer-move">
-              Move using selected link
-            </Localized>
-          </Button>
-        </div>
+        </Button>
+        {
+          detailsDialog ?
+            <Dialog
+              size="medium"
+              l10nId="step-changer-details-dialog-title"
+              title="Choose next step"
+              onClose={this.closeDetailsDialog}
+            >
+              {
+                step.links.map(l => {
+                  return <Button clickHandler={() => this.handleStepChange(l)}>
+                    {l.name}
+                  </Button>
+                })
+              }
+            </Dialog>
+          : null
+        }
         {
           confirmDialog ?
             <Dialog
               size="medium"
-              l10nId="step-changer-dialog-title"
+              l10nId="step-changer-confirm-dialog-title"
               onClose={this.closeConfirmDialog}
             >
               {
@@ -79,26 +82,21 @@ class StepChanger extends React.Component<Props> {
                         You have unsaved changes.
                       </Localized>
                     </span>
-                    <div className="step-changer__dialog-controls">
+                    <div className="dialog__buttons">
                       <Button
-                        color="red"
+                        type="danger"
                         clickHandler={this.closeConfirmDialog}
                       >
                         <Localized id="step-changer-cancel">
                           Cancel
                         </Localized>
                       </Button>
-                      <Button
-                        clickHandler={this.nextStep}
-                      >
+                      <Button clickHandler={this.nextStep}>
                         <Localized id="step-changer-discard-advance">
                           Discard changes and advance
                         </Localized>
                       </Button>
-                      <Button
-                        color="green"
-                        clickHandler={this.saveAndAdvance}
-                      >
+                      <Button clickHandler={this.saveAndAdvance}>
                         <Localized id="step-changer-save-advance">
                           Save and advance
                         </Localized>
@@ -106,17 +104,14 @@ class StepChanger extends React.Component<Props> {
                     </div>
                   </>
                 :
-                  <div className="step-changer__dialog-controls">
-                    <Button
-                      color="green"
-                      clickHandler={this.nextStep}
-                    >
+                  <div className="dialog__buttons">
+                    <Button clickHandler={this.nextStep}>
                       <Localized id="step-changer-advance">
                         Advance
                       </Localized>
                     </Button>
                     <Button
-                      color="red"
+                      type="danger"
                       clickHandler={this.closeConfirmDialog}
                     >
                       <Localized id="step-changer-cancel">
@@ -132,14 +127,23 @@ class StepChanger extends React.Component<Props> {
     )
   }
 
-  private handleStepChange = ({ value: link }: {value: Link, label: string}) => {
+  private showDetailsDialog = () => {
+    this.setState({ detailsDialog: true })
+  }
+
+  private closeDetailsDialog = () => {
+    this.setState({ detailsDialog: false })
+  }
+
+  private handleStepChange = (link: Link) => {
     this.setState({ link })
+    this.showConfirmDialog()
   }
 
   private showConfirmDialog = async () => {
     const { storage, document, glossary } = this.props
     const unsavedChanges = !storage.current(document, glossary)
-    this.setState({ confirmDialog: true, unsavedChanges })
+    this.setState({ confirmDialog: true, detailsDialog: false, unsavedChanges })
   }
 
   private closeConfirmDialog = () => {

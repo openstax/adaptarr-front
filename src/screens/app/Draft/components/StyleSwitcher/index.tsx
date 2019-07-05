@@ -40,8 +40,8 @@ class StyleSwitcher extends React.Component<Props> {
 
     return (
       <div className={`style-switcher ${open ? 'open' : 'close'}`}>
-        <Button clickHandler={this.toggleSwitcher}>
-          <Icon name="cog" />
+        <Button clickHandler={this.toggleSwitcher} withBorder={true}>
+          <Icon size="small" name="cog" />
         </Button>
         <ul>
           {

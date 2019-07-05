@@ -262,15 +262,12 @@ class Draft extends React.Component<Props> {
         <div className="document__glossary-toggler">
           {
             isGlossaryEmpty ?
-              <Button
-                color="green"
-                clickHandler={this.addGlossary}
-              >
+              <Button clickHandler={this.addGlossary}>
                 {this.context.l10n.getString('draft-add-glossary')}
               </Button>
             :
               <Button
-                color="red"
+                type="danger"
                 clickHandler={this.showRemoveGlossaryDialog}
               >
                 {this.context.l10n.getString('draft-remove-glossary')}
@@ -282,7 +279,7 @@ class Draft extends React.Component<Props> {
     return (
       <Section>
         <Header>
-          <DraftInfo draft={draft}/>
+          <DraftInfo draft={draft} />
           <StepChanger
             draft={draft}
             onStepChange={this.handleStepChange}
@@ -397,19 +394,21 @@ class Draft extends React.Component<Props> {
               placeholder="Are you sure you want to remove glossary?"
               onClose={this.closeRemoveGlossaryDialog}
             >
-              <Button
-                color="red"
-                clickHandler={this.removeGlossary}
-              >
-                <Localized id="draft-remove-glossary">
-                  Remove glossary
-                </Localized>
-              </Button>
-              <Button
-                clickHandler={this.closeRemoveGlossaryDialog}
-              >
-                <Localized id="draft-cancel">Cancel</Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button
+                  type="danger"
+                  clickHandler={this.removeGlossary}
+                >
+                  <Localized id="draft-remove-glossary">
+                    Remove glossary
+                  </Localized>
+                </Button>
+                <Button
+                  clickHandler={this.closeRemoveGlossaryDialog}
+                >
+                  <Localized id="draft-cancel">Cancel</Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }

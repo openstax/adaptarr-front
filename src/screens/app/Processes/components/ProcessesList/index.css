@@ -1,14 +1,27 @@
 .processes__list {
   display: flex;
   justify-content: space-between;
+  flex-direction: column;
+  max-width: 800px;
+  background-color: #fff;
 }
 
-.processes__col {
-  flex: 1;
+.processes__item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
 }
 
-.processes__list ul{
-  max-width: 400px;
+.processes__item.active {
+  font-weight: 700;
+}
+
+.processes__controls .button {
+  min-width: 0;
+}
+
+.processes__controls .button .icon svg {
+  fill: var(--font-dark);
 }
 
 .processes__name .input {

@@ -11,6 +11,7 @@ import { BooksMap } from 'src/store/types'
 
 import DraftInfo from 'src/components/DraftInfo'
 import Button from 'src/components/ui/Button'
+import { Link } from 'react-router-dom';
 
 type Props = {
   booksMap: {
@@ -96,35 +97,26 @@ class DraftsList extends React.Component<Props> {
               {
                 Array.from(booksWithDrafts.entries()).map(([booksName, data]) => (
                   <li key={booksName || ''} className="list__item draftsList__book">
-                    <strong>
+                    <div className="draftsList__book-title">
                       { booksName
                         ? booksName
                         : <Localized id="dashboard-drafts-section-not-assigned">
                           Not assigned to any book
                         </Localized>
                       }
-                    </strong>
+                    </div>
                     {
                       data.drafts.length ?
                         <ul className="list">
                           {
                             data.drafts.map(draft => (
                               <li key={draft.module} className="list__item">
-                                <span className="list__content">
-                                  <span className="list__title">
-                                    {draft.title}
-                                  </span>
-                                  <DraftInfo draft={draft} showPermissions={false} />
-                                </span>
-                                <span className="list__buttons">
-                                  <Button
-                                    to={`/drafts/${draft.module}`}
-                                  >
-                                    <Localized id="dashboard-drafts-view">
-                                      View draft
-                                    </Localized>
-                                  </Button>
-                                </span>
+                                <Link
+                                  to={`/drafts/${draft.module}`}
+                                  className="draftsList__draft-title"
+                                >
+                                  {draft.title}
+                                </Link>
                               </li>
                             ))
                           }

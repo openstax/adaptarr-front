@@ -39,9 +39,9 @@ export default class SaveButton extends React.Component<Props> {
         className="save-button"
         clickHandler={this.onClick}
         isDisabled={saving || storage.current(document, glossary)}
-        size="medium"
+        withBorder={true}
       >
-        <Icon name="save" />
+        <Icon size="small" name="save" />
         <Localized id="editor-tools-save">Save</Localized>
         {saving && <Spinner />}
       </Button>

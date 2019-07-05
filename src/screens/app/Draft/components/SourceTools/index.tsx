@@ -36,7 +36,7 @@ class SourceTools extends React.Component<Props> {
           </Localized>
         </label>
         <Select
-          className="toolbox__select"
+          className="toolbox__select react-select"
           value={{value: source.object, label: source.object}}
           onChange={this.onChange}
           options={SOURCE_TYPES.map(t => {return {value: t, label: t}})}

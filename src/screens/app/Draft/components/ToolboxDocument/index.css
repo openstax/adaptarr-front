@@ -27,6 +27,10 @@
   font-size: 0.9rem;
 }
 
+.toolbox .button .icon svg {
+  fill: var(--font-dark);
+}
+
 .toolbox__button--insert {
   position: relative;
   display: inline-flex;
@@ -60,6 +64,7 @@
   background: transparent;
   border: 1px solid transparent;
   border-radius: 4px;
+  min-width: 0;
 }
 
 .toolbox__button--only-icon.active {
@@ -69,4 +74,8 @@
 
 .toolbox__button--only-icon:hover {
   border-color: var(--dark-bg);
+}
+
+.toolbox .input input, .toolbox .react-select > div {
+  background-color: var(--lighter-bg);
 }

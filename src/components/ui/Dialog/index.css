@@ -23,7 +23,7 @@
   overflow: auto;
   padding: 20px;
   background-color: var(--light-bg);
-  border-radius: 5px;
+  border-radius: 17px;
 }
 
 .dialog__container--small .dialog__content {
@@ -40,10 +40,43 @@
 
 .dialog__title {
   padding: 20px 0;
+  font-size: 22px;
+  color: #fff;
+  line-height: 1.4;
+  text-align: center;
 }
 
-.dialog__content button {
+.dialog__content {
+  color: #fff;
+}
+
+.dialog__buttons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.dialog__buttons .button, .dialog__buttons input {
+  margin: 0;
+}
+
+.dialog__buttons--center {
+  justify-content: center;
+}
+
+.dialog__buttons--start {
+  justify-content: flex-start;
+}
+
+.dialog__buttons--start .button, .dialog__buttons--start input[type="submit"] {
   margin-right: 10px;
+}
+
+.dialog__buttons--end {
+  justify-content: flex-end;
+}
+
+.dialog__buttons--end .button, .dialog__buttons--end input[type="submit"] {
+  margin-left: 10px;
 }
 
 .dialog__close {
@@ -53,4 +86,12 @@
   right: 0;
   padding: 10px;
   cursor: pointer;
+}
+
+.dialog__close .icon svg {
+  fill: var(--danger);
+}
+
+.dialog__content .avatar__name {
+  color: #fff;
 }

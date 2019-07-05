@@ -8,6 +8,7 @@ import { ProcessStructure } from 'src/api/process'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
+import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -25,6 +26,7 @@ type Props = {
   item: api.BookPart
   modulesMap: types.ModulesMap
   processes: Map<number, api.Process>
+  isEditingUnlocked: boolean
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
 }
@@ -99,7 +101,7 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const { item, processes } = this.props
+    const { item, processes, isEditingUnlocked } = this.props
     const {
       showRemoveModule,
       showBeginProcess,
@@ -108,7 +110,56 @@ class Module extends React.Component<Props> {
     } = this.state
 
     return (
-      <React.Fragment>
+      <>
+        <span
+          className="bookpart__title"
+          onClick={() => this.props.onModuleClick(item)}
+        >
+          {
+            // Currently only users with proper permissions in process can change module title.
+            /* isEditingUnlocked ?
+              <EditableText
+                text={item.title}
+                onAccept={this.updateModuleTitle}
+              />
+            : item.title */
+          }
+          {item.title}
+        </span>
+        <span className="bookpart__info">
+          {
+            isEditingUnlocked ?
+              <LimitedUI permissions="module:edit">
+                <Button
+                  type="danger"
+                  clickHandler={this.showRemoveModuleDialog}
+                >
+                  <Localized id="book-button-remove">Remove</Localized>
+                </Button>
+              </LimitedUI>
+            : null
+          }
+          <LimitedUI permissions="editing-process:manage">
+            {
+              mod && mod.process ?
+                <Button
+                  className="bookpart__process"
+                  clickHandler={this.showProcessDetails}
+                >
+                  <Localized
+                    id="book-in-process"
+                    $name={processes.get(mod.process.process)!.name}
+                  >
+                    Process: [process name]
+                  </Localized>
+                </Button>
+              :
+                <Button clickHandler={this.showBeginProcessDialog}>
+                  <Localized id="book-begin-process">Begin process</Localized>
+                </Button>
+            }
+          </LimitedUI>
+        </span>
         {
           showRemoveModule ?
             <Dialog
@@ -117,22 +168,21 @@ class Module extends React.Component<Props> {
               size="medium"
               onClose={this.closeRemoveModuleDialog}
             >
-              <Button
-                color="green"
-                clickHandler={this.removeModule}
-              >
-                <Localized id="book-remove-module-confirm">
-                  Delete
-                </Localized>
-              </Button>
-              <Button
-                color="red"
-                clickHandler={this.closeRemoveModuleDialog}
-              >
-                <Localized id="book-remove-module-cancel">
-                  Cancel
-                </Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.removeModule}>
+                  <Localized id="book-remove-module-confirm">
+                    Delete
+                  </Localized>
+                </Button>
+                <Button
+                  type="danger"
+                  clickHandler={this.closeRemoveModuleDialog}
+                >
+                  <Localized id="book-remove-module-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
@@ -169,42 +219,7 @@ class Module extends React.Component<Props> {
             </Dialog>
           : null
         }
-        <span
-          className="bookpart__title"
-          onClick={() => this.props.onModuleClick(item)}
-        >
-          {item.title}
-        </span>
-        <span className="bookpart__info">
-          <LimitedUI permissions="module:edit">
-            <Button
-              color="red"
-              clickHandler={this.showRemoveModuleDialog}
-            >
-              <Icon name="minus" />
-              <Localized id="book-remove-module">Module</Localized>
-            </Button>
-          </LimitedUI>
-          {
-            mod && mod.process ?
-                <Button
-                  className="bookpart__process"
-                  clickHandler={this.showProcessDetails}
-                >
-                  <Localized
-                    id="book-in-process"
-                    $name={processes.get(mod.process.process)!.name}
-                  >
-                    Process: [process name]
-                  </Localized>
-                </Button>
-              :
-                <Button clickHandler={this.showBeginProcessDialog}>
-                  <Localized id="book-begin-process">Begin process</Localized>
-                </Button>
-          }
-        </span>
-      </React.Fragment>
+      </>
     )
   }
 }

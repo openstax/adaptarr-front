@@ -53,6 +53,7 @@ class BeginProcess extends React.Component<Props> {
           </Localized>
         </h3>
         <Select
+          className="react-select"
           value={process !== null ? {value: process, label: process.name} : null}
           options={Array.from(processes.values()).map(p => {return {value: p, label: p.name}})}
           onChange={this.handleProcessChange}

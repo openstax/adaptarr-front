@@ -19,7 +19,7 @@ type Props = {
 }
 
 class RoleManager extends React.Component<Props> {
-  
+
   state: {
     isEditing: boolean
     roleName: string
@@ -65,7 +65,7 @@ class RoleManager extends React.Component<Props> {
 
   private updateRole = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     const { roleName, permissions } = this.state
 
     let data: {name?: string, permissions?: Permission[]} = {}
@@ -110,7 +110,7 @@ class RoleManager extends React.Component<Props> {
     const role = this.props.role
     this.setState({ roleName: role.name, permissions: role.permissions || [] })
   }
-  
+
   public render() {
     const { isEditing, roleName, permissions, showConfirmationDialog } = this.state
     const role = this.props.role
@@ -131,10 +131,14 @@ class RoleManager extends React.Component<Props> {
           </span>
           <span className="role-manager__controls">
             <Button clickHandler={this.toggleEditMode}>
-              <Icon name="pencil" />
+              <Localized id="role-edit">
+                Edit
+              </Localized>
             </Button>
-            <Button clickHandler={this.openRemoveRoleDialog} color="red">
-              <Icon name="close" />
+            <Button type="danger" clickHandler={this.openRemoveRoleDialog}>
+              <Localized id="role-remove">
+                Remove
+              </Localized>
             </Button>
           </span>
         </div>
@@ -149,7 +153,7 @@ class RoleManager extends React.Component<Props> {
             <Localized id="role-update-confirm" attrs={{ value: true }}>
               <input type="submit" value="Update role" disabled={!roleName} />
             </Localized>
-            <Button clickHandler={this.cancelEditing} color="red">
+            <Button type="danger" clickHandler={this.cancelEditing}>
               <Localized id="role-update-cancel">
                 Cancel
               </Localized>
@@ -164,18 +168,17 @@ class RoleManager extends React.Component<Props> {
               $name={role.name}
               onClose={this.closeDeleteRoleDialog}
             >
-              <Button 
-                color="green" 
-                clickHandler={this.removeRole}
-              >
-                <Localized id="role-delete-confirm">Confirm</Localized>
-              </Button>
-              <Button 
-                color="red" 
-                clickHandler={this.closeDeleteRoleDialog}
-              >
-                <Localized id="role-delete-cancel">Cancel</Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.removeRole}>
+                  <Localized id="role-delete-confirm">Confirm</Localized>
+                </Button>
+                <Button
+                  type="danger"
+                  clickHandler={this.closeDeleteRoleDialog}
+                >
+                  <Localized id="role-delete-cancel">Cancel</Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }

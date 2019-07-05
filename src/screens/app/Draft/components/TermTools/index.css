@@ -5,3 +5,8 @@
 .terms__button .icon {
   margin-right: 8px;
 }
+
+.terms__title {
+  display: block;
+  margin-bottom: 3px;
+}

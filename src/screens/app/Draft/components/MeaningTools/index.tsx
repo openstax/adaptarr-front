@@ -26,7 +26,7 @@ class DefinitionTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('meaningTools')}
       >
         <Button clickHandler={this.insertExample} className="toolbox__button--insert">
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-meaning-insert-example">
             Add example
           </Localized>

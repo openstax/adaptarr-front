@@ -1,10 +1,10 @@
 import * as React from 'react'
-import TooltipImpl, { TooltipProps } from 'react-tooltip-lite'
+import TooltipImpl from 'react-tooltip-lite'
 import { Localized } from 'fluent-react/compat'
 
 export type Props = {
   l10nId: string,
-  children: React.ReactNode,
+  children: JSX.Element,
   // From TooltipImpl
   arrow?: boolean,
   arrowSize?: number,
@@ -26,10 +26,11 @@ export type Props = {
   tipContentClassName?: string,
   useHover?: boolean,
   useDefaultStyles?: boolean,
-
+  isDisabled?: boolean
 }
 
-export default function Tooltip({ l10nId, children, ...props }: Props) {
+export default function Tooltip({ l10nId, children, isDisabled, ...props }: Props) {
+  if (isDisabled) return children
   const content = <Localized id={l10nId}>...</Localized>
   return <TooltipImpl content={content} {...props}>{ children }</TooltipImpl>
 }

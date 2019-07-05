@@ -27,31 +27,31 @@ class DefinitionTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('definitionTools')}
       >
         <Button clickHandler={this.insertDefinitionBefore} className="toolbox__button--insert">
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-definition-insert-definition-before">
             Insert definition before
           </Localized>
         </Button>
         <Button clickHandler={this.insertDefinitionAfter} className="toolbox__button--insert">
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-definition-insert-definition-after">
             Insert definition after
           </Localized>
         </Button>
         <Button clickHandler={this.removeDefinition} className="toolbox__button--insert">
-          <Icon name="close" />
+          <Icon size="small" name="close" />
           <Localized id="editor-tools-definition-remove-definition">
             Remove definition
           </Localized>
         </Button>
         <Button clickHandler={this.insertMeaning} className="toolbox__button--insert">
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-definition-insert-meaning">
             Add meaning
           </Localized>
         </Button>
         <Button clickHandler={this.insertSeeAlso} className="toolbox__button--insert">
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-definition-insert-seealso">
             Add see also
           </Localized>

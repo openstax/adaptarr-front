@@ -59,23 +59,27 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
   }
 
   public render() {
-    const sidebarClasses = `sidebar frame ${this.state.toggleSidebar ? 'small': null}`
+    const { toggleSidebar } = this.state
+    const sidebarClasses = `sidebar ${toggleSidebar ? 'small': null}`
     let { isLoading, unreadNotifications } = this.props.notifications
     unreadNotifications = [...unreadNotifications].reverse()
 
     return (
       <aside className={sidebarClasses}>
-        <Header l10nId="navigation-title" title="Menu">
+        <div className="menu-toggler">
           <Button
             className="sidebar__toggle"
             clickHandler={this.toggleSidebar}>
-            <Icon name={'menu'} />
+            <Icon name="menu" />
+            <Localized id="navigation-title">
+              Menu
+            </Localized>
           </Button>
-        </Header>
+        </div>
         <nav className="nav">
           <ul>
             <li className="nav__link">
-              <Tooltip l10nId="navigation-dashboard" direction="right">
+              <Tooltip l10nId="navigation-dashboard" direction="right" isDisabled={!toggleSidebar}>
                 <NavLink exact to="/" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="dashboard" />
@@ -89,7 +93,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip l10nId="navigation-notifications">
+              <Tooltip l10nId="navigation-notifications" isDisabled={!toggleSidebar}>
                 <NavLink to="/notifications" activeClassName="active">
                   <span className="nav__content">
                     <Icon name="bell" />
@@ -122,7 +126,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                               )
                             })
                           }
-                          <Link to="/notifications" className="show-more">
+                          <Link to="/notifications" className="nav__link show-more">
                             <Localized id="navigation-notifications-show-all">
                               Show all
                             </Localized>
@@ -135,14 +139,14 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               }
             </li>
             <li className="nav__link">
-              <Tooltip l10nId="navigation-books" direction="right">
+              <Tooltip l10nId="navigation-books" direction="right" isDisabled={!toggleSidebar}>
                 <NavLink
                   to="/books"
                   activeClassName="active"
                   isActive={(_, location) => isActive(location, ['books', 'modules'])}
                 >
                   <span className="nav__content">
-                    <Icon name="book" />
+                    <Icon name="books" />
                     <span className="nav__text">
                       <Localized id="navigation-books">
                         Books
@@ -153,10 +157,10 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip l10nId="navigation-resources" direction="right">
+              <Tooltip l10nId="navigation-resources" direction="right" isDisabled={!toggleSidebar}>
                 <NavLink to="/resources" activeClassName="active">
                   <span className="nav__content">
-                    <Icon name="info" />
+                    <Icon name="resources" />
                     <span className="nav__text">
                       <Localized id="navigation-resources">
                         Resources
@@ -167,14 +171,14 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               </Tooltip>
             </li>
             <li className="nav__link">
-              <Tooltip l10nId="navigation-profile">
+              <Tooltip l10nId="navigation-profile" isDisabled={!toggleSidebar}>
                 <NavLink
                   to="/users/me"
                   activeClassName="active"
                   isActive={(_, location) => isActive(location, ['users', 'settings'])}
                 >
                   <span className="nav__content">
-                    <Icon name="profile"/>
+                    <Icon name="user"/>
                     <span className="nav__text">
                       <Localized id="navigation-profile">
                         Your profile
@@ -206,10 +210,10 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </li>
             <LimitedUI permissions="user:invite">
               <li className="nav__link">
-                <Tooltip l10nId="navigation-invite" direction="right">
+                <Tooltip l10nId="navigation-invite" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/invitations" activeClassName="active">
                     <span className="nav__content">
-                      <Icon name="users" />
+                      <Icon name="user-plus" />
                       <span className="nav__text">
                         <Localized id="navigation-invite">
                           Invitations
@@ -222,7 +226,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </LimitedUI>
             <LimitedUI permissions="role:edit">
               <li className="nav__link">
-                <Tooltip l10nId="navigation-roles" direction="right">
+                <Tooltip l10nId="navigation-roles" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/roles" activeClassName="active">
                     <span className="nav__content">
                       <Icon name="users" />
@@ -238,10 +242,10 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </LimitedUI>
             <LimitedUI permissions="editing-process:edit">
               <li className="nav__link">
-                <Tooltip l10nId="navigation-processes" direction="right">
+                <Tooltip l10nId="navigation-processes" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/processes" activeClassName="active">
                     <span className="nav__content">
-                      <Icon name="users" />
+                      <Icon name="paper-pen" />
                       <span className="nav__text">
                         <Localized id="navigation-processes">
                           Editing processes

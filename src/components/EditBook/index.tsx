@@ -34,7 +34,7 @@ class EditBook extends React.Component<Props> {
 
   private editBook = (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     this.setState({ isLoading: true })
 
     const { titleInput: title, files } = this.state
@@ -95,13 +95,15 @@ class EditBook extends React.Component<Props> {
                   onFilesError={this.onFilesError}
                   accepts={['.zip', '.rar']}
                 />
-                <Localized id="book-edit-submit" attrs={{ value: true }}>
-                  <input
-                    type="submit"
-                    value="Confirm"
-                    disabled={titleInput.length === 0 && files.length === 0}
-                  />
-                </Localized>
+                <div className="dialog__buttons dialog__buttons--center">
+                  <Localized id="book-edit-submit" attrs={{ value: true }}>
+                    <input
+                      type="submit"
+                      value="Confirm"
+                      disabled={titleInput.length === 0 && files.length === 0}
+                    />
+                  </Localized>
+                </div>
               </form>
             : <Spinner/>
           }

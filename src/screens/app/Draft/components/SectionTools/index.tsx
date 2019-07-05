@@ -34,7 +34,7 @@ export default class SectionTools extends React.Component<Props> {
           clickHandler={this.decreaseSectionDepth}
           className="toolbox__button--insert"
         >
-          <Icon name="outdent" />
+          <Icon size="small" name="outdent" />
           <Localized id="editor-tools-sections-decrease-depth">
             Decrease level
           </Localized>
@@ -43,7 +43,7 @@ export default class SectionTools extends React.Component<Props> {
           clickHandler={this.increaseSectionDepth}
           className="toolbox__button--insert"
         >
-          <Icon name="indent" />
+          <Icon size="small" name="indent" />
           <Localized id="editor-tools-sections-increase-depth">
             Increase level
           </Localized>

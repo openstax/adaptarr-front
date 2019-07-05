@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
+import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
 
 import ModuleInfo from 'src/components/ModuleInfo'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 
 import { ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -51,8 +51,10 @@ const modulesList = (props: Props) => {
                     <span onClick={() => props.onModuleClick(mod)}>
                       <ModuleInfo mod={mod}/>
                     </span>
-                    <Button color="red" clickHandler={() => props.onModuleRemoveClick(mod)}>
-                      <Icon name="minus"/>
+                    <Button type="danger" clickHandler={() => props.onModuleRemoveClick(mod)}>
+                      <Localized id="module-list-remove">
+                        Remove
+                      </Localized>
                     </Button>
                   </li>
                 )

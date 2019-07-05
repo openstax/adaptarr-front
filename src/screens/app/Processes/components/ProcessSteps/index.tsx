@@ -101,7 +101,6 @@ class ProcessSteps extends React.Component<Props> {
           })
         }
         <Button clickHandler={this.addEmptyStep}>
-          <Icon name="plus" />
           <Localized id="process-form-step-add">
             Add step
           </Localized>

@@ -1,6 +1,7 @@
 .process-preview {
   display: flex;
   flex-wrap: wrap;
+  line-height: 1.4;
 }
 
 .process-preview > h2 {

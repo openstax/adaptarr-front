@@ -16,6 +16,8 @@ import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
 import { OnToggle } from '../ToolboxDocument'
 
+import './index.css'
+
 const CASES: string[] = ['nominative', 'genitive', 'dative', 'accusative', 'instrumental', 'locative', 'vocative']
 
 export type Props = {
@@ -42,11 +44,13 @@ export default class XrefTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('xrefTools')}
       >
         <label className="toolbox__label">
-          <Localized id="editor-tools-xref-case">
-            Select case
-          </Localized>
+          <span className="xref__title">
+            <Localized id="editor-tools-xref-case">
+              Select case
+            </Localized>
+          </span>
           <Select
-            className="toolbox__select"
+            className="toolbox__select react-select"
             onChange={this.changeCase}
             options={CASES.map(c => {return {value: c, label: c}})}
             value={{value: xrefCase, label: xrefCase}}
@@ -54,7 +58,7 @@ export default class XrefTools extends React.Component<Props> {
           />
         </label>
         <Button clickHandler={this.openXrefModal} className="toolbox__button--insert">
-          <Icon name="pencil" />
+          <Icon size="small" name="pencil" />
           <Localized id="editor-tools-xref-change">
             Change target
           </Localized>

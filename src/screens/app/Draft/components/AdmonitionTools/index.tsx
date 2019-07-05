@@ -42,7 +42,7 @@ export default function AdmonitionTools({ editor, value, toggleState, onToggle }
       onToggle={() => onToggle('admonitionTools')}
     >
       <Select
-        className="toolbox__select"
+        className="toolbox__select react-select"
         value={{value: admonitionType, label: admonitionType}}
         onChange={onChange}
         options={ADMONITIONS_TYPES.map(t => {return {value: t, label: t}})}

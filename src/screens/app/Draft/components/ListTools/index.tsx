@@ -34,7 +34,7 @@ export default class ListTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('listTools')}
       >
         <Select
-          className="toolbox__select"
+          className="toolbox__select react-select"
           value={{value: list.type, label: list.type}}
           onChange={this.changeListStyle}
           options={LIST_STYLES.map(t => {return {value: t, label: t}})}
@@ -44,7 +44,7 @@ export default class ListTools extends React.Component<Props> {
           clickHandler={this.decreaseItemDepth}
           className="toolbox__button--insert"
         >
-          <Icon name="outdent" />
+          <Icon size="small" name="outdent" />
           <Localized id="editor-tools-list-decrease-level">
             Decrease item level
           </Localized>
@@ -53,7 +53,7 @@ export default class ListTools extends React.Component<Props> {
           clickHandler={this.increaseItemDepth}
           className="toolbox__button--insert"
         >
-          <Icon name="indent" />
+          <Icon size="small" name="indent" />
           <Localized id="editor-tools-list-increase-level">
             Increase item level
           </Localized>

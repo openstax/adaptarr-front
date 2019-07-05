@@ -1,11 +1,17 @@
 .modulesList {
   width: 100%;
+  color: var(--font-dark);
+}
+
+.modulesList .limitedui {
+  display: contents;
 }
 
 .modulesList__new {
   display: flex;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 20px;
 }
 
 .modulesList__new .files-uploader {
@@ -15,9 +21,24 @@
 .modulesList__top-bar {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-.modulesList__new input, .modulesList__new .select {
+.modulesList__top-bar .input {
+  width: 100%;
+}
+
+.modulesList__top-bar .react-select {
+  max-width: 50%;
+  margin: 0;
+}
+
+.modulesList__top-bar input[type="submit"] {
+  flex: 1;
+  height: 38px;
+}
+
+.modulesList__new input, .modulesList__new .react-select {
   margin-right: 10px;
   min-width: 100px;
 }
@@ -52,4 +73,5 @@
   align-items: center;
   padding: 10px;
   cursor: pointer;
+  line-height: 1.2;
 }

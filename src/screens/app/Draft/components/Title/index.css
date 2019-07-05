@@ -1,6 +1,6 @@
 .draft__title {
   display: block;
-  width: 80%;
+  width: 70%;
   margin: 20px auto;
   font-size: 1.5rem;
 }
@@ -16,6 +16,7 @@
   padding: 0;
   background: transparent;
   border: transparent;
+  text-align: left;
 }
 
 .draft__title input[disabled] {

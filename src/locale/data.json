@@ -60,6 +60,10 @@
     "vocative"
   ],
   "languages": [
+    { "code": "en", "name": "English" },
+    { "code": "pl", "name": "Polski" }
+  ],
+  "allLanguages": [
     { "code": "aa", "name": "магIарул мацI" },
     { "code": "ab", "name": "бызшәа" },
     { "code": "af", "name": "Afrikaans" },
@@ -86,7 +90,6 @@
     { "code": "de", "name": "Deutsch" },
     { "code": "dz", "name": "རྫོང་ཁ" },
     { "code": "el", "name": "Ελληνικά" },
-    { "code": "en", "name": "English" },
     { "code": "eo", "name": "Esperanto" },
     { "code": "es", "name": "Español" },
     { "code": "et", "name": "Eesti" },
@@ -155,7 +158,6 @@
     { "code": "om", "name": "Oromo" },
     { "code": "or", "name": "ଓଡ଼ିଆ" },
     { "code": "pa", "name": "ਪੰਜਾਬੀ" },
-    { "code": "pl", "name": "Polski" },
     { "code": "ps", "name": "پښتو" },
     { "code": "pt", "name": "Português" },
     { "code": "qu", "name": "Quechua" },

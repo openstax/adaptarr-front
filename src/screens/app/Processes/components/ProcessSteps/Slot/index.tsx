@@ -63,13 +63,16 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </h3>
           <div className="process-form__title-controls">
-            <Button clickHandler={this.removeSlot} color="red">
-              <Icon name="minus" />
+            <Button type="danger" clickHandler={this.removeSlot}>
+              <Localized id="process-form-remove">
+                Remove
+              </Localized>
             </Button>
           </div>
         </div>
         <label>
           <Select
+            className="react-select"
             value={slot !== null && slots[slot] ? {value: slots[slot].id, label: slots[slot].name} : null}
             options={slots.map(s => {return {value: s.id, label: s.name}})}
             onChange={this.handleSlotChange}
@@ -82,6 +85,7 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
+            className="react-select"
             value={permission ? {value: permission, label: permission} : null}
             options={PERMISSIONS.map(p => {
               return {

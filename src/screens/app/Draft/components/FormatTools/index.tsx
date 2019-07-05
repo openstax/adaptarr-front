@@ -42,7 +42,7 @@ export default class FormatTools extends React.Component<Props> {
               dataId={format}
               clickHandler={this.applyFormat}
             >
-              <Icon name={format} />
+              <Icon size="small" name={format} />
             </Button>
           </Tooltip>
         ))}
@@ -56,7 +56,7 @@ export default class FormatTools extends React.Component<Props> {
             isDisabled={!this.validateParents(VALID_LIST_PARENTS)}
             clickHandler={this.formatList}
           >
-            <Icon name="list-ul" />
+            <Icon size="small" name="list-ul" />
           </Button>
         </Tooltip>
         <Tooltip
@@ -69,7 +69,7 @@ export default class FormatTools extends React.Component<Props> {
             isDisabled={value.activeMarks.isEmpty()}
             clickHandler={this.clear}
           >
-            <Icon name="close" />
+            <Icon size="small" name="close" />
           </Button>
         </Tooltip>
       </div>

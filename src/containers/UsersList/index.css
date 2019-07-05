@@ -1,5 +1,6 @@
 .usersList {
   width: 100%;
+  color: var(--font-dark);
 }
 
 .usersList__filter {

@@ -6,9 +6,9 @@ import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
+import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-import StackedBar from 'src/components/ui/StackedBar'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
@@ -20,6 +20,7 @@ type Props = {
   book: api.Book
   item: api.BookPart
   collapseIcon: any
+  isEditingUnlocked: boolean
   afterAction: () => any
 }
 
@@ -62,32 +63,25 @@ class Group extends React.Component<Props> {
     this.props.afterAction()
   }
 
-  private handleEditBook = (e: React.FormEvent) => {
-    e.preventDefault()
-    
-    const groupNameInput = this.state.groupNameInput
+  private updateGroupName = (name: string) => {
+    if (!name.length || name === this.props.item.title) return
 
-    if (!groupNameInput.length) {
-      throw new Error("groupNameInput or groupNumber is undefined")
-    }
-
-    this.props.item.update({ title: groupNameInput })
+    this.props.item.update({ title: name })
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', 'book-group-change-title-alert-success', {from: this.props.item.title, to: groupNameInput}))
+        store.dispatch(addAlert('success', 'book-group-change-title-alert-success', {from: this.props.item.title, to: name}))
       })
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
       })
-    this.closeEditGroupDialog()
   }
 
-  private showEditBookDialog = () => {
-    this.setState({ showEditGroup: true })
+  private cancelEditBookName = () => {
+    this.setState({ groupNameInput: this.props.item.title })
   }
 
-  private closeEditGroupDialog = () => {
-    this.setState({ showEditGroup: false })
+  private handleChangeGroupName = (value: string) => {
+    this.setState({ groupNameInput: value })
   }
 
   private handleAddGroup = (e: React.FormEvent) => {
@@ -128,7 +122,7 @@ class Group extends React.Component<Props> {
 
   private handleRemoveGroup = () => {
     const { item } = this.props
-    
+
     item.delete()
       .then(() => {
         this.updateBook()
@@ -184,54 +178,65 @@ class Group extends React.Component<Props> {
     this.setState({ showAddModule: false })
   }
 
+  componentDidUpdate(prevProps: Props) {
+    const prevTitle = prevProps.item.title
+    const title = this.props.item.title
+    if (prevTitle !== title) {
+      this.setState({ groupNameInput: this.props.item.title })
+    }
+  }
+
+  componentDidMount() {
+    this.setState({ groupNameInput: this.props.item.title })
+  }
+
   public render() {
     const {
-      showEditGroup,
       showAddGroup,
       showRemoveGroup,
       showAddModule,
       groupNameInput,
     } = this.state
-
-    const modStatuses = this.getModStatuses()
+    const { isEditingUnlocked, collapseIcon, item } = this.props
 
     return (
-      <React.Fragment>
-        {
-          showEditGroup ?
-            <Dialog
-              l10nId="book-group-change-title-dialog-title"
-              placeholder="Change chapter title."
-              size="medium"
-              onClose={this.closeEditGroupDialog}
-            >
-              <form onSubmit={this.handleEditBook}>
-                <Input
-                  l10nId="book-group-change-title-value"
-                  value={this.props.item.title}
-                  onChange={this.updateGroupNameInput}
-                  autoFocus
-                  validation={{minLength: 3}}
-                />
-                <Localized id="book-group-change-title-confirm" attrs={{ value: true }}>
-                  <input
-                    type="submit"
-                    value="Confirm"
-                    disabled={groupNameInput.length <= 2}
-                  />
-                </Localized>
-                <Button
-                  color="red"
-                  clickHandler={this.closeEditGroupDialog}
-                >
-                  <Localized id="book-group-change-title-cancel">
-                    Cancel
+      <>
+        <span className="bookpart__icon">
+          {collapseIcon}
+        </span>
+        <span className="bookpart__title">
+          {
+            isEditingUnlocked ?
+              <EditableText
+                text={item.title}
+                onAccept={this.updateGroupName}
+              />
+            : item.title
+          }
+        </span>
+        <span className="bookpart__info">
+          {
+            isEditingUnlocked ?
+              <LimitedUI permissions="book:edit">
+                <Button clickHandler={this.showAddModuleDialog}>
+                  <Localized id="book-button-add-module">
+                    Add module
                   </Localized>
                 </Button>
-              </form>
-            </Dialog>
-          : null
-        }
+                <Button clickHandler={this.showAddGroupDialog}>
+                  <Localized id="book-button-add-group">
+                    Add group
+                  </Localized>
+                </Button>
+                <Button type="danger" clickHandler={this.showRemoveGroupDialog}>
+                  <Localized id="book-button-remove">
+                    Remove
+                  </Localized>
+                </Button>
+              </LimitedUI>
+            : null
+          }
+        </span>
         {
           showAddGroup ?
             <Dialog
@@ -247,19 +252,21 @@ class Group extends React.Component<Props> {
                   autoFocus
                   validation={{minLength: 3}}
                 />
-                <Localized id="book-add-group-confirm" attrs={{ value: true }}>
-                  <input
-                    type="submit"
-                    value="Confirm"
-                    disabled={groupNameInput.length <= 2}
-                  />
-                </Localized>
-                <Button
-                  color="red"
-                  clickHandler={this.closeAddGroupDialog}
-                >
-                  <Localized id="book-add-group-cancel">Cancel</Localized>
-                </Button>
+                <div className="dialog__buttons">
+                  <Localized id="book-add-group-confirm" attrs={{ value: true }}>
+                    <input
+                      type="submit"
+                      value="Confirm"
+                      disabled={groupNameInput.length <= 2}
+                    />
+                  </Localized>
+                  <Button
+                    type="danger"
+                    clickHandler={this.closeAddGroupDialog}
+                  >
+                    <Localized id="book-add-group-cancel">Cancel</Localized>
+                  </Button>
+                </div>
               </form>
             </Dialog>
           : null
@@ -272,18 +279,17 @@ class Group extends React.Component<Props> {
               size="medium"
               onClose={this.closeRemoveGroupDialog}
             >
-              <Button 
-                color="green" 
-                clickHandler={this.handleRemoveGroup}
-              >
-                <Localized id="book-remove-group-confirm">Delete</Localized>
-              </Button>
-              <Button 
-                color="red"
-                clickHandler={this.closeRemoveGroupDialog}
-              >
-                <Localized id="book-remove-group-cancel">Cancel</Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.handleRemoveGroup}>
+                  <Localized id="book-remove-group-confirm">Delete</Localized>
+                </Button>
+                <Button
+                  type="danger"
+                  clickHandler={this.closeRemoveGroupDialog}
+                >
+                  <Localized id="book-remove-group-cancel">Cancel</Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
@@ -299,40 +305,7 @@ class Group extends React.Component<Props> {
             </Dialog>
           : null
         }
-        <span className="bookpart__title">
-          {this.props.item.title}
-        </span>
-        <span className="bookpart__info">
-          <LimitedUI permissions="book:edit">
-            <Button clickHandler={this.showEditBookDialog}>
-              <Icon name="pencil"/>
-              <Localized id="book-change-title">Edit</Localized>
-            </Button>
-            <Button color="green" clickHandler={this.showAddGroupDialog}>
-              <Icon name="plus"/>
-              <Localized id="book-add-group">Group</Localized>
-            </Button>
-            <Button color="red" clickHandler={this.showRemoveGroupDialog}>
-              <Icon name="minus"/>
-              <Localized id="book-remove-group">Group</Localized>
-            </Button>
-            <Button color="green" clickHandler={this.showAddModuleDialog}>
-              <Icon name="plus"/>
-              <Localized id="book-add-module">Module</Localized>
-            </Button>
-          </LimitedUI>
-          {
-            modStatuses.length ?
-              <span className="bookpart__status">
-                <StackedBar data={modStatuses}/>
-              </span>
-            : null
-          }
-          <span className="bookpart__icon">
-            {this.props.collapseIcon}
-          </span>
-        </span>
-      </React.Fragment>
+      </>
     )
   }
 }

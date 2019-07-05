@@ -4,8 +4,6 @@ import * as React from 'react'
 
 import { Module } from 'src/api'
 
-import Icon from 'src/components/ui/Icon'
-
 type Props = {
   module: Module,
   onClick: (ev: React.MouseEvent) => void,
@@ -19,7 +17,6 @@ const remoteSource = ({ module, onClick }: Props) => {
       onClick={onClick}
     >
       <span className="target-source__title">{module.title}</span>
-      <Icon name='arrow-right' size='small' />
     </div>
   )
 }

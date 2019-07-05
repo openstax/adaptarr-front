@@ -33,7 +33,7 @@ export default class DocumentTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('documentTools')}
       >
         <Select
-          className="toolbox__select"
+          className="toolbox__select react-select"
           value={language ? {value: language.code, label: language.name} : null}
           onChange={this.setLanguage}
           options={LANGUAGES.map(l => {return {value: l.code, label: l.name}})}

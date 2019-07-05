@@ -66,36 +66,32 @@ class Dashboard extends React.Component<Props> {
     const { drafts, isLoading } = this.state
 
     return (
-      <Section>
-        <Header l10nId="dashboard-view-title" title="Dashboard" />
-        {
-          isLoading ?
-            <Spinner />
-          :
+      <div className="container container--splitted">
+        <Section>
+          <Header l10nId="dashboard-section-drafts" title="Your drafts" />
           <div className="section__content">
-            <div className="section__half">
-              <h3 className="section__heading">
-                <Localized id="dashboard-section-drafts">
-                  Your drafts:
-                </Localized>
-              </h3>
-              <DraftsList
-                drafts={drafts}
-              />
-            </div>
-            <div className="section__half">
-              <h3 className="section__heading">
-                <Localized id="dashboard-section-free-slots">
-                  Free slots:
-                </Localized>
-              </h3>
-              <FreeSlots
-                onUpdate={this.fetchDrafts}
-              />
-            </div>
+            {
+              isLoading ?
+                <Spinner />
+              :
+                <DraftsList drafts={drafts} />
+            }
           </div>
-        }
-      </Section>
+        </Section>
+        <Section>
+          <Header l10nId="dashboard-section-free-slots" title="Free slots" />
+          <div className="section__content">
+            {
+              isLoading ?
+                <Spinner />
+              :
+                <FreeSlots
+                  onUpdate={this.fetchDrafts}
+                />
+            }
+          </div>
+        </Section>
+      </div>
     )
   }
 }

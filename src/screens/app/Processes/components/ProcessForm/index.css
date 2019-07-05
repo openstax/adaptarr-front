@@ -1,3 +1,8 @@
+.process-form {
+  padding: 20px;
+  background-color: #fff;
+}
+
 .process-form .controls {
   margin-bottom: 20px;
 }
@@ -27,10 +32,11 @@
 
 .process-form .process-form__split {
   display: flex;
+  margin-top: 20px;
 }
 
 .process-form h3 {
-  font-size: 1.2rem;
+  font-size: 18px;
   font-weight: 700;
   margin: 10px 0;
 }
@@ -47,5 +53,15 @@
 
 .process-form label {
   display: block;
-  margin-bottom: 10px;
+  padding: 5px;
+  background-color: var(--lighter-bg);
+}
+
+.process-form label h3 {
+  margin-top: 0;
+  margin-bottom: 5px;
+}
+
+.process-form label .input, .process-form label .react-select {
+  margin-bottom: 0;
 }

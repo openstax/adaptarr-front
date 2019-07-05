@@ -45,7 +45,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={this.validateParents(['image', 'figure', 'inline'])}
         >
-          <Icon name="link" />
+          <Icon size="small" name="link" />
           <Localized id="editor-tools-insert-reference">
             Reference
           </Localized>
@@ -55,7 +55,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={this.validateParents(['image', 'figure', 'inline'])}
         >
-          <Icon name="link" />
+          <Icon size="small" name="www" />
           <Localized id="editor-tools-insert-link">
             Link
           </Localized>
@@ -65,7 +65,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution'])}
         >
-          <Icon name="code" />
+          <Icon size="small" name="code" />
           <Localized id="editor-tools-insert-code">
             Code
           </Localized>
@@ -75,7 +75,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition'])}
         >
-          <Icon name="sticky-note" />
+          <Icon size="small" name="sticky-note" />
           <Localized id="editor-tools-insert-admonition">
             Admonition
           </Localized>
@@ -85,7 +85,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section'])}
         >
-          <Icon name="flask" />
+          <Icon size="small" name="flask" />
           <Localized id="editor-tools-insert-exercise">
             Exercise
           </Localized>
@@ -95,7 +95,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'exercise_commentary'])}
         >
-          <Icon name="image" />
+          <Icon size="small" name="image" />
           <Localized id="editor-tools-insert-figure">
             Figure
           </Localized>
@@ -105,7 +105,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
         >
-          <Icon name="quote" />
+          <Icon size="small" name="quote" />
           <Localized id="editor-tools-insert-quotation">
             Quotation
           </Localized>
@@ -115,7 +115,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section'])}
         >
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-insert-section">
             Section
           </Localized>
@@ -125,7 +125,7 @@ export default class InsertTools extends React.Component<Props> {
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
         >
-          <Icon name="file-code" />
+          <Icon size="small" name="file-code" />
           <Localized id="editor-tools-insert-source">
             Source element
           </Localized>

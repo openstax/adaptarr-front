@@ -92,8 +92,10 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </h3>
           <div className="process-form__title-controls">
-            <Button clickHandler={this.removeLink} color="red">
-              <Icon name="minus" />
+            <Button type="danger" clickHandler={this.removeLink}>
+              <Localized id="process-form-remove">
+                Remove
+              </Localized>
             </Button>
           </div>
         </div>
@@ -112,6 +114,7 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
+            className="react-select"
             value={to !== null && steps[to] ? {value: steps[to].id, label: steps[to].name} : null}
             options={stepsOptions}
             onChange={this.handleTargetStepChange}
@@ -124,6 +127,7 @@ class LinkComp extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
+            className="react-select"
             value={stepSlotValue}
             options={stepSlotsOptions}
             onChange={this.handleSlotChange}

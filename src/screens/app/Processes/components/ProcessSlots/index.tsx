@@ -100,7 +100,6 @@ export default class ProcessSlots extends React.Component<Props> {
           })
         }
         <Button clickHandler={this.addEmptySlot}>
-          <Icon name="plus" />
           <Localized id="process-form-slot-add">
             Add slot
           </Localized>

@@ -1,0 +1,14 @@
+.editable-text {
+  display: flex;
+  align-items: center;
+  cursor: text;
+}
+
+.editable-text__content {
+  margin-right: 15px;
+}
+
+.editable-text__controls .icon {
+  cursor: pointer;
+  margin-right: 6px;
+}

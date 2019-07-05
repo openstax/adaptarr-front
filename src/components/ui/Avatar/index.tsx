@@ -35,7 +35,7 @@ const avatar = (props: Props) => {
   const title = userData && userData.name ? decodeHtmlEntity(userData.name) : 'Unknow user'
   const linkToProfile = userData ? '/users/' + userData.id : '/settings'
 
-  let avatarSrc = /*user && user.avatarSmall ? user.avatarSmall :*/ '/images/unknow-user.png'
+  let avatarSrc = /*user && user.avatarSmall ? user.avatarSmall :*/ '/images/unknown-user.svg'
   /*if (size && size !== 'small' && user && user.avatar) {
     avatarSrc = user.avatar
   }*/

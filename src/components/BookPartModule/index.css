@@ -2,6 +2,7 @@
   padding: 10px;
   background-color: #fff;
   border-radius: 5px;
+  color: var(--font-dark);
 }
 
 .bookpart__item--module .bookpart__process {

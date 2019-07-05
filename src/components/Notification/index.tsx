@@ -78,7 +78,7 @@ class NotificationComp extends React.Component<Props> {
           <span className="notification__text">
             <Localized
               id="notification"
-              $kind={noti.kind}
+              $kind={noti.kind.replace('-', '_')}
               actor={<strong/>}
               $actor={who ? decodeHtmlEntity(who.name) : null}
               $module={mod && mod.title}

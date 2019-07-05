@@ -13,6 +13,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 import RoleManager from './components/RoleManager'
 import Header from 'src/components/Header'
 import Permissions from 'src/components/Permissions'
+import Section from 'src/components/Section'
 import Input from 'src/components/ui/Input'
 
 type Props = {
@@ -69,21 +70,18 @@ class Roles extends React.Component<Props> {
     const roles = this.props.roles
 
     return (
-      <section className="section--wrapper">
-        <Header l10nId="role-view-title" title="Manage roles" />
-        <div className="section__content roles">
-          <div className="roles__col">
-            <h2 className="roles__title">
-              <Localized id="role-section-add">
-                Add new role
-              </Localized>
-            </h2>
+      <div className="container container--splitted">
+        <Section>
+          <Header l10nId="role-section-add" title="Add new role" />
+          <div className="section__content roles">
             <form onSubmit={this.addRole}>
-              <Input
-                l10nId="role-name"
-                value={roleName}
-                onChange={this.onRoleNameChange}
-              />
+              <div className="roles__header">
+                <Input
+                  l10nId="role-name"
+                  value={roleName}
+                  onChange={this.onRoleNameChange}
+                />
+              </div>
               <Permissions
                 selected={permissions}
                 onChange={this.handlePermissionsChange}
@@ -93,18 +91,24 @@ class Roles extends React.Component<Props> {
               </Localized>
             </form>
           </div>
-          <div className="roles__col roles__col--right">
-            <h2 className="roles__title">
-              <Localized id="role-section-manage">
-                Manage all roles
-              </Localized>
-            </h2>
-            {
-              roles.map(r => <RoleManager key={r.id} role={r} afterAction={this.fetchRoles} />)
-            }
-          </div>
-        </div>
-      </section>
+        </Section>
+        <Section>
+          <Header l10nId="role-section-manage" title="Manage roles"/>
+            <div className="section__content">
+              <ul className="roles__list">
+                {
+                  roles.map(r => {
+                    return (
+                      <li key={r.id}>
+                        <RoleManager role={r} afterAction={this.fetchRoles} />
+                      </li>
+                    )
+                  })
+                }
+              </ul>
+            </div>
+        </Section>
+      </div>
     )
   }
 }

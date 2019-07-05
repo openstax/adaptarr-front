@@ -31,7 +31,7 @@ class SeeAlsoTools extends React.Component<Props> {
           clickHandler={this.insertTerm}
           className="toolbox__button--insert"
         >
-          <Icon name="plus" />
+          <Icon size="small" name="plus" />
           <Localized id="editor-tools-seealso-add-term">
             Add term
           </Localized>
@@ -40,7 +40,7 @@ class SeeAlsoTools extends React.Component<Props> {
           clickHandler={this.removeTerm}
           className="toolbox__button--insert"
         >
-          <Icon name="minus" />
+          <Icon size="small" name="minus" />
           <Localized id="editor-tools-seealso-remove-term">
             Remove term
           </Localized>

@@ -26,6 +26,7 @@ form.processes__name {
 }
 
 form.processes__name .process__controls {
+  display: flex;
   flex: 1;
   max-width: 60px;
 }

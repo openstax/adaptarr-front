@@ -1,14 +1,18 @@
 .teamList {
   width: 100%;
-  margin-top: -20px;
+  background-color: #fff;
+  padding: 20px 0;
 }
 
 .teamList__item {
   display: flex;
   align-items: center;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--light-bg);
+  padding: 20px;
   cursor: pointer;
+}
+
+.teamList__item:hover .teamList__username {
+  font-weight: 700;
 }
 
 .teamList__username {

@@ -1,14 +1,18 @@
 .notificationsList {
   width: 100%;
-  margin-top: -20px;
+  background-color: #fff;
+  padding: 20px 0;
 }
 
 .notificationsList__item {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 0;
-  border-bottom: 1px solid var(--light-bg);
+  padding: 20px;
+}
+
+.notificationsList__item:hover .notification__content{
+ font-weight: 700;
 }
 
 .notificationsList .notification {

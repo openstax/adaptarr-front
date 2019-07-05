@@ -6,13 +6,14 @@ import Process, { ProcessStructure } from 'src/api/process'
 import { State } from 'src/store/reducers'
 
 import ProcessInfo from './ProcessInfo'
-import ProcessPreview from 'src/containers/ProcessPreview'
 
 import './index.css'
 
 type Props = {
   processes: Map<number, Process>
-  onProcessEdit: (process: Process) => any
+  activePreview?: number
+  onProcessEdit: (process: Process) => void
+  onShowPreview: (process: Process) => void
 }
 
 const mapStateToProps = ({ app: { processes } }: State) => {
@@ -33,48 +34,28 @@ class ProcessesList extends React.Component<Props> {
   }
 
   private previewProcess = (p: Process) => {
-    p.structure()
-      .then(res => {
-        this.setState({ structure: res })
-      })
-      .catch(e => {
-        this.setState({ structure: null })
-      })
+   this.props.onShowPreview(p)
   }
 
   public render() {
+    const { activePreview } = this.props
+
     return (
-      <div className="processes__list">
-        <div className="processes__col">
-          <h2>
-            <Localized id="processes-view-list">
-              Current processes:
-            </Localized>
-          </h2>
-          <ul className="list">
-            {
-              Array.from(this.props.processes.values()).map(p => {
-                return (
-                  <li key={p.id} className="list__item processes__item">
-                    <ProcessInfo
-                      process={p}
-                      onProcessEdit={this.editProcess}
-                      onProcessPreview={this.previewProcess}
-                    />
-                  </li>
-                )
-              })
-            }
-          </ul>
-        </div>
+      <ul className="processes__list">
         {
-          this.state.structure ?
-            <div className="processes__col">
-              <ProcessPreview structure={this.state.structure} />
-            </div>
-          : null
+          Array.from(this.props.processes.values()).map(p => {
+            return (
+              <li key={p.id} className={`processes__item ${p.id === activePreview ? 'active' : ''}`}>
+                <ProcessInfo
+                  process={p}
+                  onProcessEdit={this.editProcess}
+                  onProcessPreview={this.previewProcess}
+                />
+              </li>
+            )
+          })
         }
-      </div>
+      </ul>
     )
   }
 }

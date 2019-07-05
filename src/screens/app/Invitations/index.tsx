@@ -77,7 +77,7 @@ class Invitations extends React.Component {
                   errorMessage="invitation-email-validation-invalid"
                 />
                 <Select
-                  className="invitations__select"
+                  className="react-select"
                   value={language}
                   onChange={this.setLanguage}
                   options={LANGUAGES}

@@ -23,7 +23,24 @@
 .profile__name {
   font-size: 1.4rem;
   font-weight: 700;
+}
+
+.profile__main-info {
+  display: flex;
+  flex-direction: column;
   margin-left: 30px;
+}
+
+.profile__role {
+  margin-top: 5px;
+}
+
+.profile__main-info .limitedui .react-select {
+  margin-top: 15px;
+}
+
+.profile__button--unassign-role {
+  margin-top: 15px;
 }
 
 .profile__title {
@@ -35,10 +52,6 @@
 
 .profile__select {
   min-width: 200px;
-}
-
-.profile__button--unassign-role {
-  margin-left: 20px; 
 }
 
 .profile__bio p {

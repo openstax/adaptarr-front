@@ -59,9 +59,11 @@ export default class TermTools extends React.Component<Props> {
         onToggle={() => this.props.onToggle('termTools')}
       >
         <label className="terms__label">
-          <Localized id="editor-tools-term-label">
-            Index form
-          </Localized>
+          <span className="terms__title">
+            <Localized id="editor-tools-term-label">
+              Index form
+            </Localized>
+          </span>
           <Input
             value={this.state.reference}
             onChange={this.onChange}
@@ -71,7 +73,6 @@ export default class TermTools extends React.Component<Props> {
           className="terms__button"
           clickHandler={this.removeTerm}
         >
-          <Icon name="close" />
           <Localized id="editor-tools-term-remove">
             Remove term
           </Localized>

@@ -24,6 +24,7 @@ type Props = {
     isLoading: IsLoading
     booksMap: BooksMap
   }
+  isEditingUnlocked: boolean
   fetchBooksMap: () => void
   addAlert: (kind: RequestInfoKind, message: string) => void
 }
@@ -70,23 +71,46 @@ class BookCard extends React.Component<Props> {
     this.setState({ showEditBook: true })
   }
 
+  private content = () => (
+    <>
+      <h2 className="card__title">{this.props.book.title}</h2>
+      {
+        this.props.isEditingUnlocked ?
+          <div className="card__buttons">
+            <LimitedUI permissions="book:edit">
+              <Button clickHandler={this.showEditBook}>
+                <Localized id="book-card-edit">
+                  Edit
+                </Localized>
+              </Button>
+              <Button type="danger" clickHandler={this.removeBook}>
+                <Localized id="book-card-remove">
+                  Remove
+                </Localized>
+              </Button>
+            </LimitedUI>
+          </div>
+        : null
+      }
+    </>
+  )
+
   public render() {
     const { showConfirmationDialog, showEditBook } = this.state
-    const { book } = this.props
+    const { book, isEditingUnlocked } = this.props
 
     return (
-      <div className="card">
-        <Link to={`books/${book.id}`}>
-          <h2 className="card__title">{book.title}</h2>
-        </Link>
-        <LimitedUI permissions="book:edit">
-          <Button clickHandler={this.showEditBook}>
-            <Icon name="pencil"/>
-          </Button>
-          <Button clickHandler={this.removeBook} color="red">
-            <Icon name="minus"/>
-          </Button>
-        </LimitedUI>
+      <div className={`card ${isEditingUnlocked ? 'card--editing' : ''}`}>
+        {
+          isEditingUnlocked ?
+            <div className="card__content">
+              {this.content()}
+            </div>
+          :
+            <Link to={`books/${book.id}`} className="card__content">
+              {this.content()}
+            </Link>
+        }
         {
           showConfirmationDialog ?
             <Dialog
@@ -95,18 +119,17 @@ class BookCard extends React.Component<Props> {
               $title={book.title}
               onClose={() => this.setState({ showConfirmationDialog: false })}
             >
-              <Button 
-                color="green" 
-                clickHandler={this.removeBookPermamently}
-              >
-                <Localized id="book-delete-confirm">Confirm</Localized>
-              </Button>
-              <Button 
-                color="red" 
-                clickHandler={() => this.setState({ showConfirmationDialog: false })}
-              >
-                <Localized id="book-delete-cancel">Cancel</Localized>
-              </Button>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.removeBookPermamently}>
+                  <Localized id="book-delete-confirm">Confirm</Localized>
+                </Button>
+                <Button
+                  type="danger"
+                  clickHandler={() => this.setState({ showConfirmationDialog: false })}
+                >
+                  <Localized id="book-delete-cancel">Cancel</Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }

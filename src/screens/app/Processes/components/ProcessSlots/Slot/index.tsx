@@ -72,8 +72,10 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </h3>
           <div className="process-form__title-controls">
-            <Button clickHandler={this.removeSlot} color="red">
-              <Icon name="minus" />
+            <Button type="danger" clickHandler={this.removeSlot}>
+              <Localized id="process-form-remove">
+                Remove
+              </Localized>
             </Button>
           </div>
         </div>
@@ -104,6 +106,7 @@ class Slot extends React.Component<SlotProps> {
             </Localized>
           </span>
           <Select
+            className="react-select"
             value={roles.find(r => r.id === role)}
             options={this.props.roles}
             onChange={this.handleRoleChange}

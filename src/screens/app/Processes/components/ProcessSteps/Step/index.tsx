@@ -156,8 +156,10 @@ class Step extends React.Component<StepProps> {
             </Localized>
           </h3>
           <div className="process-form__title-controls">
-            <Button clickHandler={this.removeStep} color="red">
-              <Icon name="minus" />
+            <Button type="danger" clickHandler={this.removeStep}>
+              <Localized id="process-form-remove">
+                Remove
+              </Localized>
             </Button>
           </div>
         </div>
@@ -187,7 +189,6 @@ class Step extends React.Component<StepProps> {
             })
           }
           <Button clickHandler={this.addEmptySlot}>
-            <Icon name="plus" />
             <Localized id="process-form-step-slots-add">
               Add slot
             </Localized>
@@ -214,7 +215,6 @@ class Step extends React.Component<StepProps> {
             })
           }
           <Button clickHandler={this.addEmptyLink}>
-            <Icon name="plus" />
             <Localized id="process-form-step-links-add">
               Add link
             </Localized>

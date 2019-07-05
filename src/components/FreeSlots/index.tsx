@@ -38,29 +38,26 @@ class FreeSlots extends React.Component<Props> {
                 this.state.freeSlots.map(slot => {
                   return (
                     <li key={`${slot.id}-${slot.draft.module}`} className="list__item free-slots__item">
-                      <div className="free-slots__info">
-                        <span className="free-slots__name">
-                          <strong>
-                            <Localized id="free-slots-slot-name">
-                              Slot name:
-                            </Localized>
-                          </strong>
-                          {slot.name}
-                        </span>
+                      <div className="free-slots__top-bar">
                         <span className="free-slots__draft">
-                          <strong>
-                            <Localized id="free-slots-draft-title">
-                              Draft title:
-                            </Localized>
-                          </strong>
                           {slot.draft.title}
                         </span>
+                        <Button to={`/modules/${slot.draft.module}`}>
+                          <Localized id="free-slots-view-draft">
+                            View draft
+                          </Localized>
+                        </Button>
                       </div>
-                      <Button clickHandler={() => this.takeSlot(slot)}>
-                        <Localized id="free-slots-take-slot">
-                          Take slot
-                        </Localized>
-                      </Button>
+                      <div className="free-slots__bottom-bar">
+                        <Button clickHandler={() => this.takeSlot(slot)}>
+                          <span className="free-slots__name">
+                            {slot.name}
+                          </span>
+                          <Localized id="free-slots-take-slot">
+                            Take slot
+                          </Localized>
+                        </Button>
+                      </div>
                     </li>
                   )
                 })

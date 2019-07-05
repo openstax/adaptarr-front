@@ -15,15 +15,11 @@ book-view-title = { $title }
 # Alternative title for while book is still loading.
 book-view-title-loading = Loading
 
-book-add-group = Group
+book-button-add-module = Add module
 
-book-remove-group = Group
+book-button-add-group = Add group
 
-book-change-group-title = Edit
-
-book-add-module = Module
-
-book-remove-module = Module
+book-button-remove = Remove
 
 # Variable:
 # - $name (string): process name.
@@ -488,6 +484,10 @@ role-name = Role name
 
 role-create = Create role
 
+role-edit = Edit
+
+role-remove = Remove
+
 # Alert displayed when role has been created.
 #
 # Variables:
@@ -546,7 +546,7 @@ processes-view-title = Manage processes
 
 processes-view-add = Add new process
 
-processes-view-list = Current processes:
+processes-view-preview = Process preview
 
 # Alert displayed when process has been created.
 #
@@ -590,6 +590,8 @@ process-form-create = Create process
 process-form-new-version = Create new version
 
 process-form-cancel = Cancel
+
+process-form-remove = Remove
 
 process-form-process-name = Process name
 
@@ -784,6 +786,10 @@ update-slots-fetching-error = Couldn't fetch details about slots in this process
 
 ## Reusable components - draft info
 
+draft-info-main-button = Informations about process
+
+draft-info-title = Informations about process for this draft
+
 # Variables:
 # - $process (string): process name which this draft follows.
 draft-info-process = Process: { $process }
@@ -808,9 +814,7 @@ draft-info-permission = { $permission ->
 
 ## Reusable components - free slots
 
-free-slots-slot-name = Slot name:
-
-free-slots-draft-title = Draft title:
+free-slots-view-draft = View draft
 
 free-slots-not-avaible = There are no free slots for you to take.
 
@@ -833,6 +837,8 @@ free-slots-error = Couldn't assign you to this slot. Details: { $details }.
 
 ## Reusable components - step changer
 
+step-changer-main-button = I'm handing my work to the next step
+
 step-changer-choose = Choose link:
 
 step-changer-move = Move using selected link
@@ -853,7 +859,9 @@ step-changer-success = { $code ->
 # - $details (string): error details.
 step-changer-error = Couldn't advance to the next step. Details: { $details }.
 
-step-changer-dialog-title = Do you want to move this draft to the next step?
+step-changer-details-dialog-title = Choose next step
+
+step-changer-confirm-dialog-title = Do you want to move this draft to the next step?
 
 step-changer-unsaved-changes = You have unsaved changes.
 
@@ -942,7 +950,7 @@ asset-list-add-error = Couldn't add media. Details: { $details }
 #
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
-#   'assigned'.
+#   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -953,6 +961,10 @@ asset-list-add-error = Couldn't add media. Details: { $details }
 # - <module> ... </module>: link to the assigned module
 notification = { $kind ->
   [assigned] <actor>{ $actor }</actor> assigned you to <module>{ $module }</module>
+  [process_ended] Editing process for <module>{ $module }</module> has ended.
+  [slot_filled] You were assigned to slot in <module>{ $module }</module>.
+  [slot_vacated] You were removed from slot in <module>{ $module }</module>.
+  [draft_advanced] Step in <module>{ $module }</module> has changed.
  *[notavalidkind] Unknown action
 }
 
@@ -971,6 +983,8 @@ file-upload-remove-all = Remove all files
 # Placeholder text for search box
 module-list-search-box =
   .placeholder = Search for a module
+
+module-list-remove = Remove
 
 
 
@@ -1053,6 +1067,14 @@ error-boundary-info =
 error-boundary-button-reload = Reload page
 
 error-boundary-button-fill-report = Fill out a report
+
+
+
+## Reusable components - book card
+
+book-card-edit = Edit
+
+book-card-remove = Remove
 
 
 

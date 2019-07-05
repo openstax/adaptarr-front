@@ -9,3 +9,12 @@
 .draft-info__permission:last-child::after {
   content: none;
 }
+
+.draft-info__content {
+  display: flex;
+  flex-direction: column;
+}
+
+.draft-info__content span {
+  margin-bottom: 5px;
+}

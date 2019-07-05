@@ -1,3 +1,9 @@
 .linkbox__text {
   margin-bottom: 10px;
 }
+
+.linkbox__label-text {
+  margin-bottom: 4px;
+  display: inline-block;
+  color: #fff;
+}

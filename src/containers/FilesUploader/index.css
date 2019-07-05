@@ -1,12 +1,14 @@
 .files-uploader {
   margin-top: 10px;
+  color: var(--font-dark);
 }
 
 .files-dropzone {
-  padding: 15px 10px;
+  padding: 30px;
   margin: 10px 0;
   background-color: #fff;
   border-radius: 3px;
+  text-align: center;
 }
 
 .files-dropzone-active {

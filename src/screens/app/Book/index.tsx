@@ -61,13 +61,13 @@ class Book extends React.Component<Props> {
     parts: api.BookPart[]
     showModuleDetails: api.Module | undefined
     showEditBook: boolean
-    disableDragging: boolean
+    isEditingUnlocked: boolean
   } = {
     isLoading: true,
     parts: [],
     showModuleDetails: undefined,
     showEditBook: false,
-    disableDragging: true,
+    isEditingUnlocked: false,
   }
 
   private showModuleDetails = (item: api.BookPart) => {
@@ -91,11 +91,13 @@ class Book extends React.Component<Props> {
               book={this.state.book!}
               collapseIcon={collapseIcon}
               afterAction={this.fetchBook}
+              isEditingUnlocked={this.state.isEditingUnlocked}
             />
           : <BookPartModule
               item={new api.BookPart((item as ModuleData), this.state.book!)}
               onModuleClick={this.showModuleDetails}
               afterAction={this.fetchBook}
+              isEditingUnlocked={this.state.isEditingUnlocked}
             />
         }
       </div>
@@ -104,10 +106,10 @@ class Book extends React.Component<Props> {
 
   private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
     if (isCollapsed) {
-      return <Icon name="arrow-right"/>
+      return <Icon size="medium" name="arrow-right"/>
     }
 
-    return <Icon name="arrow-down" />
+    return <Icon size="medium" name="arrow-down" />
   }
 
   private findParentWithinItems = (items: api.BookPart[], path: number[]) => {
@@ -236,8 +238,8 @@ class Book extends React.Component<Props> {
     this.fetchBook()
   }
 
-  private toggleDragging = () => {
-    this.setState({ disableDragging: !this.state.disableDragging })
+  private toggleEditing = () => {
+    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
   }
 
   componentDidMount () {
@@ -250,7 +252,7 @@ class Book extends React.Component<Props> {
       book,
       parts,
       showModuleDetails,
-      disableDragging,
+      isEditingUnlocked,
       showEditBook,
     } = this.state
 
@@ -271,44 +273,29 @@ class Book extends React.Component<Props> {
         <Section>
           <Header l10nId={titleKey} title={title}>
             <LimitedUI permissions="book:edit">
-              <Button
-                clickHandler={this.showEditBook}
-              >
-                <Icon name="pencil"/>
-              </Button>
-              <div className="lock-swiping">
+              <Button clickHandler={this.toggleEditing}>
                 {
-                  disableDragging ?
-                    <React.Fragment>
-                      <Localized id="book-part-moving-locked">
-                        Moving modules is locked.
-                      </Localized>
-                      <Button
-                        clickHandler={this.toggleDragging}
-                      >
-                        <Icon name="lock"/>
-                      </Button>
-                    </React.Fragment>
-                  :
-                    <React.Fragment>
-                      <Localized id="book-part-moving-unlocked">
-                        Now you can move modules.
-                      </Localized>
-                      <Button
-                        clickHandler={this.toggleDragging}
-                      >
-                        <Icon name="unlock"/>
-                      </Button>
-                    </React.Fragment>
+                  isEditingUnlocked ?
+                    <Icon size="medium" name="unlock" />
+                  : <Icon size="medium" name="lock" />
                 }
-              </div>
+              </Button>
+              {
+                isEditingUnlocked ?
+                  <Button
+                    clickHandler={this.showEditBook}
+                  >
+                    <Icon name="pencil"/>
+                  </Button>
+                : null
+              }
             </LimitedUI>
           </Header>
           {
             !isLoading ?
               <Nestable
-                isDisabled={disableDragging}
-                items={parts}
+                isDisabled={!isEditingUnlocked}
+                items={parts[0].parts as api.BookPart[]}
                 className="book-collection"
                 childrenProp="parts"
                 renderItem={this.renderItem}
@@ -323,13 +310,13 @@ class Book extends React.Component<Props> {
         {
           showModuleDetails ?
             <Section>
-              <Header l10nId="module-view-title" title={showModuleDetails.title}>
-                <Button to={`/modules/${showModuleDetails.id}`}>
+              <Header>
+                <Button to={`/modules/${showModuleDetails.id}`} withBorder={true}>
                   <Localized id="module-go-to">
                     Go to module
                   </Localized>
                 </Button>
-                <Button size="small" clickHandler={this.closeModuleDetails}>
+                <Button clickHandler={this.closeModuleDetails} className="close-button">
                   <Icon name="close" />
                 </Button>
               </Header>
