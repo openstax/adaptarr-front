@@ -34,6 +34,12 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.5.0":
+  version "7.5.0"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.0.tgz#49dcbcd637099a55d3a61e590a00d6861393b1b5"
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
 "@babel/types@^7.0.0":
   version "7.4.4"
   resolved "https://npm.pkg.naukosfera.com:443/@babel%2ftypes/-/types-7.4.4.tgz#8db9e9a629bb7c29370009b4b779ed93fe57d5f0"
@@ -1769,7 +1775,7 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#c032d2613923b2b439775f8e5f514c05b29ccf21"
+  resolved "https://github.com/katalysteducation/cnx-designer#f2536ababf1934502e09cb0af5648399e8ca18b4"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
