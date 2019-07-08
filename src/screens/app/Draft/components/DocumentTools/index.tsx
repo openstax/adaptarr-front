@@ -10,6 +10,7 @@ import store from 'src/store'
 import { setCurrentDraftLang } from 'src/store/actions/Drafts'
 
 import ToolGroup from '../ToolGroup'
+import CharactersCounter from '../CharactersCounter'
 
 import { OnToggle } from '../ToolboxDocument'
 
@@ -47,6 +48,7 @@ export default class DocumentTools extends React.Component<Props> {
             getOptionLabel={getOptionLabel}
           />
         </label>
+        <CharactersCounter value={value} />
       </ToolGroup>
     )
   }
