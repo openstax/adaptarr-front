@@ -55,7 +55,7 @@ export default class FigureTools extends React.Component<Props> {
           />
           {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
             <Icon size="small" name="close" />
-            <Localized id="editor-tools-remove-subfigure">
+            <Localized id="editor-tools-figure-remove-subfigure">
               Remove subfigure
             </Localized>
           </Button>}
