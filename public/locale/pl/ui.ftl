@@ -1147,6 +1147,12 @@ editor-tools-document-select-language = Język dokumentu:
 
 
 
+## Editor toolboxes - glossary settings
+
+editor-tools-glossary-title = Skorowidz
+
+
+
 ## Editor toolboxes - characters counter
 
 # Variables:

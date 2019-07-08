@@ -7,13 +7,14 @@ import DefinitionTools from '../DefinitionTools'
 import MeaningTools from '../MeaningTools'
 import SeeAlsoTools from '../SeeAlsoTools'
 import TermTools from '../TermTools'
+import GlossaryTools from '../GlossaryTools'
 
 export type Props = {
   value: Value,
   editor: Editor,
 }
 
-type ToolName = 'termTools' | 'meaningTools' | 'seeAlsoTools' | 'definitionTools'
+type ToolName = 'termTools' | 'meaningTools' | 'seeAlsoTools' | 'definitionTools' | 'glossaryTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -23,6 +24,7 @@ type State = {
   termTools: boolean
   meaningTools: boolean
   seeAlsoTools: boolean
+  glossaryTools: boolean
 }
 
 /**
@@ -33,6 +35,7 @@ const DEFAULT_TOGGLERS = {
   termTools: false,
   meaningTools: false,
   seeAlsoTools: false,
+  glossaryTools: false,
 }
 
 class Toolbox extends React.Component<Props> {
@@ -105,6 +108,12 @@ class Toolbox extends React.Component<Props> {
           toggleState={this.state.seeAlsoTools}
           onToggle={this.toggleTool}
         />
+        <GlossaryTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.glossaryTools}
+          onToggle={this.toggleTool}
+        />
       </div>
     )
   }
@@ -175,6 +184,7 @@ class Toolbox extends React.Component<Props> {
         break
       default:
         newState.definitionTools = true
+        newState.glossaryTools = true
         break
     }
 

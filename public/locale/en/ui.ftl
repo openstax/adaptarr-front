@@ -1144,6 +1144,12 @@ editor-tools-document-select-language = Document language:
 
 
 
+## Editor toolboxes - glossary settings
+
+editor-tools-glossary-title = Glossary
+
+
+
 ## Editor toolboxes - characters counter
 
 # Variables:
