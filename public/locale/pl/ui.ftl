@@ -1147,6 +1147,16 @@ editor-tools-document-select-language = Język dokumentu:
 
 
 
+## Editor toolboxes - characters counter
+
+# Variables:
+# - $value (number): number of characters in document.
+editor-tools-characters-counter-title = Liczba znaków: { $value }
+
+editor-tools-characters-counter-refresh = Odśwież
+
+
+
 ## Editor toolboxes - exercises
 
 editor-tools-exercise-title = Ćwiczenie
