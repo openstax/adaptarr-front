@@ -44,7 +44,7 @@ class StepChanger extends React.Component<Props> {
 
     return (
       step && step.links.length > 0 && <div className="step-changer">
-        <Button clickHandler={this.showDetailsDialog}>
+        <Button clickHandler={this.showDetailsDialog} withBorder={true}>
           <Localized id="step-changer-main-button">
             I'm handing my work to the next step
           </Localized>
