@@ -2,6 +2,7 @@ import * as React from 'react'
 import Select from 'react-select'
 import { Editor, Value, Operation } from 'slate'
 import { pick } from 'lodash'
+import { Localized } from 'fluent-react/compat'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
@@ -32,13 +33,20 @@ export default class DocumentTools extends React.Component<Props> {
         toggleState={this.props.toggleState}
         onToggle={() => this.props.onToggle('documentTools')}
       >
-        <Select
-          className="toolbox__select react-select"
-          value={language ? {value: language.code, label: language.name} : null}
-          onChange={this.setLanguage}
-          options={LANGUAGES.map(l => {return {value: l.code, label: l.name}})}
-          getOptionLabel={getOptionLabel}
+        <label className="toolbox__label">
+          <span className="toolbox__title">
+            <Localized id="editor-tools-document-select-language">
+              Select document language
+            </Localized>
+          </span>
+          <Select
+            className="toolbox__select react-select"
+            value={language ? {value: language.code, label: language.name} : null}
+            onChange={this.setLanguage}
+            options={LANGUAGES.map(l => {return {value: l.code, label: l.name}})}
+            getOptionLabel={getOptionLabel}
           />
+        </label>
       </ToolGroup>
     )
   }

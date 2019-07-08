@@ -21,6 +21,11 @@
   width: 100%;
 }
 
+.toolbox__title {
+  display: block;
+  margin-bottom: 3px;
+}
+
 .toolbox__select {
   width: 100%;
   margin: 10px 0;

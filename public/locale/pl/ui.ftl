@@ -1143,6 +1143,8 @@ editor-tools-quotation-title = Cytat
 
 editor-tools-document-title = Dokument
 
+editor-tools-document-select-language = Język dokumentu:
+
 
 
 ## Editor toolboxes - exercises
