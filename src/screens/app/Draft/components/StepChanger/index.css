@@ -11,3 +11,8 @@
 .step-changer__dialog-controls {
   margin-top: 20px;
 }
+
+.step-changer__dialog-content {
+  display: flex;
+  justify-content: center;
+}

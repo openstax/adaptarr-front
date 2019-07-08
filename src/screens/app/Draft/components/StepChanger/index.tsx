@@ -57,13 +57,15 @@ class StepChanger extends React.Component<Props> {
               title="Choose next step"
               onClose={this.closeDetailsDialog}
             >
-              {
-                step.links.map(l => {
-                  return <Button clickHandler={() => this.handleStepChange(l)}>
-                    {l.name}
-                  </Button>
-                })
-              }
+              <div className="step-changer__dialog-content">
+                {
+                  step.links.map(l => {
+                    return <Button clickHandler={() => this.handleStepChange(l)}>
+                      {l.name}
+                    </Button>
+                  })
+                }
+              </div>
             </Dialog>
           : null
         }
