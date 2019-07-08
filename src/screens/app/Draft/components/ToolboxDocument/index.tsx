@@ -247,6 +247,7 @@ class Toolbox extends React.Component<Props> {
       case 'exercise':
       case 'exercise_problem':
       case 'exercise_solution':
+      case 'exercise_commentary':
         newState.exerciseTools = true
         break
       case 'figure':
