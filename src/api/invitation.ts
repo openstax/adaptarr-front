@@ -8,7 +8,7 @@ export default class Invitation {
    *
    * This function requires elevated permissions.
    */
-  static async create(email: string, language: string): Promise<void> {
-    await elevated(() => axios.post('users/invite', { email, language }))
+  static async create({ email, role, language }: { email: string, role: number | null, language: string }): Promise<void> {
+    await elevated(() => axios.post('users/invite', { email, role, language }))
   }
 }
