@@ -1,3 +1,7 @@
+.invitations {
+  width: 300px;
+}
+
 .invitations .input, .react-select {
   margin-bottom: 10px;
 }

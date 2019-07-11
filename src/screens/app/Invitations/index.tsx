@@ -3,38 +3,52 @@ import './index.css'
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
+import { connect } from 'react-redux'
 
 import store from 'src/store'
-import { Invitation } from 'src/api'
+import { Invitation, Role } from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers/'
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Input from 'src/components/ui/Input'
 
-class Invitations extends React.Component {
+type Props = {
+  roles: Role[]
+}
+
+const mapStateToProps = ({ app: { roles } }: State) => {
+  return {
+    roles,
+  }
+}
+
+class Invitations extends React.Component<Props> {
 
   state: {
     emailValue: string
     isEmailVaild: boolean
     langCode: string
+    role: Role | null
   } = {
     emailValue: '',
     isEmailVaild: false,
     langCode: LANGUAGES[0].code,
+    role: null,
   }
 
   private sendInvitation = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { emailValue: email, isEmailVaild, langCode } = this.state
+    const { emailValue: email, isEmailVaild, langCode, role } = this.state
 
     if (!isEmailVaild) return
 
-    Invitation.create(email, langCode)
+    Invitation.create({ email, role: role ? role.id : null, language: langCode })
       .then(() => {
-        this.setState({ emailValue: '' })
+        this.setState({ emailValue: '', role: null })
         store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
       })
       .catch((e) => {
@@ -56,8 +70,12 @@ class Invitations extends React.Component {
     this.setState({ langCode: code })
   }
 
+  private handleRoleChange = (role: Role) => {
+    this.setState({ role })
+  }
+
   public render() {
-    const { emailValue, isEmailVaild, langCode } = this.state
+    const { emailValue, isEmailVaild, langCode, role } = this.state
     const language = LANGUAGES.find(lang => lang.code === langCode)
 
     return (
@@ -83,6 +101,13 @@ class Invitations extends React.Component {
                   options={LANGUAGES}
                   getOptionLabel={getOptionLabel}
                 />
+                <Select
+                  className="react-select"
+                  value={role}
+                  options={this.props.roles}
+                  formatOptionLabel={(role) => role.name}
+                  onChange={this.handleRoleChange}
+                />
                 <Localized id="invitation-send" attrs={{ value: true }}>
                   <input type="submit" value="Send invitation" disabled={!isEmailVaild || !emailValue} />
                 </Localized>
@@ -99,4 +124,4 @@ function getOptionLabel({ name }: typeof LANGUAGES[0]) {
   return name
 }
 
-export default Invitations
+export default connect(mapStateToProps)(Invitations)
