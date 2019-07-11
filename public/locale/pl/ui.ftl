@@ -398,6 +398,8 @@ user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi.
 # - $details (string): error details.
 user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }.
 
+user-profile-users-drafts = Teksty użytkownika
+
 # Placeholder text for team search box.
 user-profile-team-list-search =
   .placeholder = Szukaj użytkownika

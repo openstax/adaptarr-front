@@ -398,6 +398,8 @@ user-profile-unassign-role-success = Successfully unassigned user from role.
 # - $details (string): error details.
 user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 
+user-profile-users-drafts = User's drafts
+
 # Placeholder text for team search box.
 user-profile-team-list-search =
   .placeholder = Search for user

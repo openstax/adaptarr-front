@@ -19,6 +19,7 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import UserUI from 'src/components/UserUI'
 import Load from 'src/components/Load'
+import DraftsList from 'src/components/DraftsList'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -55,6 +56,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
     nameInput: string
+    drafts: api.Draft[]
     // bioInput: string
     // emailInput: string
   } = {
@@ -62,6 +64,7 @@ class UserProfile extends React.Component<Props> {
     updateAction: null,
     files: [],
     nameInput: this.props.user.name,
+    drafts: [],
     // bioInput: '',
     // emailInput: '',
   }
@@ -277,8 +280,22 @@ class UserProfile extends React.Component<Props> {
       })
   }
 
+  async componentDidUpdate(prevProps: Props) {
+    if (prevProps.user.id !== this.props.user.id) {
+      const usersDrafts: api.Draft[] = await this.props.user.drafts()
+      this.setState({ drafts: usersDrafts })
+    }
+  }
+
+  async componentDidMount() {
+    if (this.props.currentUser.permissions.has('editing-process:manage')) {
+      const usersDrafts: api.Draft[] = await this.props.user.drafts()
+      this.setState({ drafts: usersDrafts })
+    }
+  }
+
   public render() {
-    const showDialog = this.state.showDialog
+    const { showDialog, drafts } = this.state
     const user = this.props.user
     let header
     if (this.props.user.apiId === 'me') {
@@ -349,6 +366,14 @@ class UserProfile extends React.Component<Props> {
                       }
                   </span>
                 </div>
+              </div>
+              <div className="profile__info">
+                <LimitedUI permissions="editing-process:manage">
+                  <h3 className="profile__title">
+                    <Localized id="user-profile-users-drafts">User's drafts</Localized>
+                  </h3>
+                  <DraftsList drafts={drafts} />
+                </LimitedUI>
               </div>
               {/* <div className="profile__info">
                 <h3 className="profile__title">
