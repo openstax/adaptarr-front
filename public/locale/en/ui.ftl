@@ -1121,6 +1121,25 @@ editor-tools-save-alert-success = Draft has been saved successfully.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Draft couldn't be saved.
 
+editor-tools-save-error-title = We couldn't save this document
+
+# Variables:
+# - $error (string): error message
+# Fragments:
+# - <p> ... </p>: paragraph
+editor-tools-save-error-content =
+  <p>There was an error while saving this document. It's not your fault, it
+  should not have happened.</p>
+  <p>Please export document and send it to the administrator so he can fix it.</p>
+  <p>Error details: { $error }</p>
+
+editor-tools-save-error-export = Export document
+
+editor-tools-save-export-title = Please send downloaded file to the administrator
+  so he can fix your problem.
+
+editor-tools-save-export-ok = Ok
+
 
 
 ## Editor toolboxes - admonitions

@@ -1124,6 +1124,24 @@ editor-tools-save-alert-success = Szkic został zapisany.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Nie udało się zapisać szkicu.
 
+editor-tools-save-error-title = Nie udało się zapisać dokumentu
+
+# Variables:
+# - $error (string): error message
+# Fragments:
+# - <p> ... </p>: paragraph
+editor-tools-save-error-content =
+  <p>Wystąpił błąd podczas zapisywania. To nie Twoja wina, ten błąd nie powinien wystąpić.</p>
+  <p>Proszę wyeksportować dokument i wysłać go do administratora, aby mógł go naprawić.</p>
+  <p>Szczegóły błędu: { $error }</p>
+
+editor-tools-save-error-export = Wyeksportuj dokument
+
+editor-tools-save-export-title = Wyślij pobrany plik do administratora
+  aby mógł rozwiązać problem.
+
+editor-tools-save-export-ok = Ok
+
 
 
 ## Editor toolboxes - admonitions

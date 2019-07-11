@@ -6,3 +6,8 @@
 .save-button .icon {
   margin-right: 8px;
 }
+
+.save-button__dialog-content {
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
