@@ -4,6 +4,8 @@ import { Localized } from 'fluent-react/compat'
 
 import Spinner from 'src/components/Spinner'
 
+import PersistanceError from 'src/screens/app/Draft/PersistanceError'
+
 import './index.css'
 
 /**
@@ -92,7 +94,13 @@ function DefaultHandler({ error }: { error: Error }) {
         <div className="load-error__message"></div>
       </Localized>
       <div className="load-error__content">
-        {error.toString()}
+        {
+          error instanceof PersistanceError ?
+            <Localized id="load-error-persistance">
+              {error.toString()}
+            </Localized>
+          : error.toString()
+        }
       </div>
     </div>
   )

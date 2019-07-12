@@ -1191,6 +1191,9 @@ load-error-message =
   <p>Please reload this page.</p>
   <p>If error will still occurs please contact administrator.</p>
 
+load-error-persistance = If you are using incognito mode, please be aware that
+  editor will not work in this case.
+
 
 
 ## Reusable components - book card

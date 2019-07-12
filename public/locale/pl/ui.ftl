@@ -1193,6 +1193,9 @@ load-error-message =
   <p>Odśwież tę stronę.</p>
   <p>Jeśli błąd nadal występuje, skontaktuj się z administratorem.</p>
 
+load-error-persistance = Jeżeli używasz trybu prywatnego (incognito), edytor
+  nie będzie w nim działał.
+
 
 
 ## Reusable components - book card
