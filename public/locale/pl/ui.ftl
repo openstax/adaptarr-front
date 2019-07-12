@@ -376,6 +376,18 @@ user-profile-section-role = Rola użytkownika
 
 user-profile-role-unknown = Nieznana rola
 
+## Variables
+# $role: (string) - new role name
+user-profile-role-change = Zmienić rolę użytkownikowi na: { $role }?
+
+user-profile-role-remove = Usunąć rolę użytkownikowi?
+
+user-profile-role-button-cancel = Anuluj
+
+user-profile-role-button-change = Zmień
+
+user-profile-role-button-remove = Usuń
+
 user-profile-section-role-unassign =  Usuń rolę użytkownikowi
 
 # Alert displayed when user's role has been changed successfully.

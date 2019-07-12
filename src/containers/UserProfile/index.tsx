@@ -57,6 +57,9 @@ class UserProfile extends React.Component<Props> {
     files: File[]
     nameInput: string
     drafts: api.Draft[]
+    currentRole: api.Role | null
+    newRole: api.Role | null
+    showChangeRoleDialog: boolean
     // bioInput: string
     // emailInput: string
   } = {
@@ -65,6 +68,9 @@ class UserProfile extends React.Component<Props> {
     files: [],
     nameInput: this.props.user.name,
     drafts: [],
+    currentRole: this.props.user.role,
+    newRole: null,
+    showChangeRoleDialog: false,
     // bioInput: '',
     // emailInput: '',
   }
@@ -259,43 +265,59 @@ class UserProfile extends React.Component<Props> {
   }
 
   private handleRoleChange = (role: api.Role) => {
-    this.props.user.changeRole(role.id)
-      .then(() => {
-        store.dispatch(fetchUser())
-        store.dispatch(addAlert('success', 'user-profile-change-role-success', {name: role.name}))
-      })
-      .catch((e) => {
-        store.dispatch(addAlert('error', 'user-profile-change-role-error', {details: e.response.data.error}))
-      })
+    this.setState({ showChangeRoleDialog: true, newRole: role })
   }
 
   private handleRoleUnassign = () => {
-    this.props.user.changeRole(null)
+    this.setState({ showChangeRoleDialog: true,  newRole: null })
+  }
+
+  private changeRole = () => {
+    const { newRole } = this.state
+    this.props.user.changeRole(newRole ? newRole.id : null)
       .then(() => {
         store.dispatch(fetchUser())
-        store.dispatch(addAlert('success', 'user-profile-unassign-role-success'))
+        if (newRole) {
+          store.dispatch(addAlert('success', 'user-profile-change-role-success', {
+            name: newRole.name
+          }))
+        } else {
+          store.dispatch(addAlert('success', 'user-profile-unassign-role-success'))
+        }
       })
       .catch((e) => {
-        store.dispatch(addAlert('error', 'user-profile-unassign-role-error', {details: e.response.data.error}))
+        if (newRole) {
+          store.dispatch(addAlert('error', 'user-profile-change-role-error', {
+            details: e.response.data.error
+          }))
+        } else {
+          store.dispatch(addAlert('error', 'user-profile-unassign-role-error', {
+            details: e.response.data.error
+          }))
+        }
       })
+  }
+
+  private closeChangeRoleDialog = () => {
+    this.setState({ showChangeRoleDialog: false, currentRole: this.props.user.role })
   }
 
   async componentDidUpdate(prevProps: Props) {
     if (prevProps.user.id !== this.props.user.id) {
       const usersDrafts: api.Draft[] = await this.props.user.drafts()
-      this.setState({ drafts: usersDrafts })
+      this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
     }
   }
 
   async componentDidMount() {
     if (this.props.currentUser.permissions.has('editing-process:manage')) {
       const usersDrafts: api.Draft[] = await this.props.user.drafts()
-      this.setState({ drafts: usersDrafts })
+      this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
     }
   }
 
   public render() {
-    const { showDialog, drafts } = this.state
+    const { showDialog, drafts, showChangeRoleDialog, currentRole, newRole } = this.state
     const user = this.props.user
     let header
     if (this.props.user.apiId === 'me') {
@@ -349,7 +371,7 @@ class UserProfile extends React.Component<Props> {
                       <LimitedUI permissions="user:assign-role">
                         <Select
                           className="react-select"
-                          value={this.props.user.role}
+                          value={currentRole}
                           options={this.props.roles}
                           formatOptionLabel={(role) => role.name}
                           onChange={this.handleRoleChange}
@@ -406,6 +428,38 @@ class UserProfile extends React.Component<Props> {
               </div> */}
             </div>
           </div>
+          {
+            showChangeRoleDialog ?
+              <Dialog
+                l10nId={`user-profile-role-${newRole ? 'change' : 'remove'}`}
+                placeholder="Change role?"
+                $role={newRole ? newRole.name : ''}
+                onClose={this.closeChangeRoleDialog}
+              >
+                <div className="dialog__buttons">
+                  <Button clickHandler={this.closeChangeRoleDialog}>
+                    <Localized id="user-profile-role-button-cancel">
+                      Cancel
+                    </Localized>
+                  </Button>
+                  {
+                    newRole ?
+                      <Button clickHandler={this.changeRole}>
+                        <Localized id="user-profile-role-button-change">
+                          Change
+                        </Localized>
+                      </Button>
+                    :
+                      <Button type="danger" clickHandler={this.changeRole}>
+                        <Localized id="user-profile-role-button-remove">
+                          Remove
+                        </Localized>
+                      </Button>
+                  }
+                </div>
+              </Dialog>
+            : null
+          }
         </Section>
       </React.Fragment>
     )
