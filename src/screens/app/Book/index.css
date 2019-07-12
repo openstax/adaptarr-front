@@ -127,3 +127,13 @@
 .bookpart__info .stacked {
   width: 170px;
 }
+
+.book__controls {
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 10px;
+}
+
+.book__controls .button {
+  margin-left: 10px;
+}

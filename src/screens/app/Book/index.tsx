@@ -6,6 +6,7 @@ import { History } from 'history'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
+
 import * as api from 'src/api'
 import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
 
@@ -18,8 +19,11 @@ import BookPartGroup from 'src/components/BookPartGroup'
 import BookPartModule from 'src/components/BookPartModule'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Dialog from 'src/components/ui/Dialog'
+import Input from 'src/components/ui/Input'
 
 import ModulePreview from 'src/containers/ModulePreview'
+import ModulesPicker from 'src/containers/ModulesPicker'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
@@ -62,12 +66,18 @@ class Book extends React.Component<Props> {
     showModuleDetails: api.Module | undefined
     showEditBook: boolean
     isEditingUnlocked: boolean
+    groupNameInput: string
+    showAddGroup: boolean
+    showAddModule: boolean
   } = {
     isLoading: true,
     parts: [],
     showModuleDetails: undefined,
     showEditBook: false,
     isEditingUnlocked: false,
+    groupNameInput: '',
+    showAddGroup: false,
+    showAddModule: false,
   }
 
   private showModuleDetails = (item: api.BookPart) => {
@@ -243,6 +253,85 @@ class Book extends React.Component<Props> {
     this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
   }
 
+  private handleAddGroup = (e: React.FormEvent) => {
+    e.preventDefault()
+
+    const { book, groupNameInput, parts } = this.state
+    const targetGroup = parts[0]
+
+    if (!groupNameInput.length) {
+      throw new Error("groupNameInput is undefined")
+    }
+
+    const payload = {
+      title: groupNameInput,
+      parent: targetGroup.number,
+      index: targetGroup.parts ? targetGroup.parts.length : 0,
+      parts: [],
+    }
+
+    book!.createPart(payload)
+      .then(() => {
+        this.fetchBook()
+        this.props.addAlert('success', 'book-add-group-alert-success')
+      })
+      .catch((e) => {
+        this.props.addAlert('error', e.message)
+      })
+    this.closeAddGroupDialog()
+  }
+
+  private showAddGroupDialog = () => {
+    this.setState({ showAddGroup: true })
+  }
+
+  private closeAddGroupDialog = () => {
+    this.setState({ showAddGroup: false })
+  }
+
+  private updateGroupNameInput = (val: string) => {
+    this.setState({ groupNameInput: val })
+  }
+
+  private handleAddModule = (selectedModule: api.Module) => {
+    const { book, parts } = this.state
+    const targetGroup = parts[0]
+
+    if (!selectedModule) {
+      throw new Error("selectedModule is undefined")
+    }
+
+    const payload = {
+      module: selectedModule.id,
+      parent: targetGroup.number,
+      index: targetGroup.parts ? targetGroup.parts.length : 0,
+    }
+
+    book!.createPart(payload)
+      .then(() => {
+        this.fetchBook()
+        this.props.addAlert('success', 'book-group-add-module-alert-success', {
+          title: selectedModule.title
+        })
+      })
+      .catch((e) => {
+        this.props.addAlert('error', e.message)
+      })
+    this.closeAddModuleDialog()
+  }
+
+  private handleModuleClick = (mod: api.Module) => {
+    this.handleAddModule(mod)
+  }
+
+  private showAddModuleDialog = () => {
+    this.setState({ showAddModule: true })
+  }
+
+  private closeAddModuleDialog = () => {
+    this.setState({ showAddModule: false })
+  }
+
   componentDidMount () {
     this.fetchBook()
   }
@@ -255,6 +344,9 @@ class Book extends React.Component<Props> {
       showModuleDetails,
       isEditingUnlocked,
       showEditBook,
+      showAddGroup,
+      showAddModule,
+      groupNameInput,
     } = this.state
 
     const title = book ? book.title : 'Loading'
@@ -294,17 +386,37 @@ class Book extends React.Component<Props> {
           </Header>
           {
             !isLoading ?
-              <Nestable
-                isDisabled={!isEditingUnlocked}
-                items={parts[0].parts as api.BookPart[]}
-                className="book-collection"
-                childrenProp="parts"
-                renderItem={this.renderItem}
-                renderCollapseIcon={this.renderCollapseIcon}
-                onMove={this.handleOnMove}
-                onChange={this.handlePositionChange}
-                collapsed
-              />
+              <>
+                <Nestable
+                  isDisabled={!isEditingUnlocked}
+                  items={parts[0].parts as api.BookPart[]}
+                  className="book-collection"
+                  childrenProp="parts"
+                  renderItem={this.renderItem}
+                  renderCollapseIcon={this.renderCollapseIcon}
+                  onMove={this.handleOnMove}
+                  onChange={this.handlePositionChange}
+                  collapsed
+                />
+                {
+                  isEditingUnlocked ?
+                    <div className="book__controls">
+                      <LimitedUI permissions="book:edit">
+                        <Button clickHandler={this.showAddModuleDialog}>
+                          <Localized id="book-button-add-module">
+                            Add module
+                          </Localized>
+                        </Button>
+                        <Button clickHandler={this.showAddGroupDialog}>
+                          <Localized id="book-button-add-group">
+                            Add group
+                          </Localized>
+                        </Button>
+                      </LimitedUI>
+                    </div>
+                  : null
+                }
+              </>
             : <Spinner />
           }
         </Section>
@@ -325,6 +437,49 @@ class Book extends React.Component<Props> {
                 <ModulePreview moduleId={showModuleDetails.id}/>
               </div>
             </Section>
+          : null
+        }
+        {
+          showAddGroup ?
+            <Dialog
+              l10nId="book-add-group-dialog-title"
+              placeholder="Provide chapter title."
+              size="medium"
+              onClose={this.closeAddGroupDialog}
+            >
+              <form onSubmit={this.handleAddGroup}>
+                <Input
+                  l10nId="book-add-group-title"
+                  onChange={this.updateGroupNameInput}
+                  autoFocus
+                  validation={{minLength: 3}}
+                />
+                <div className="dialog__buttons">
+                  <Button clickHandler={this.closeAddGroupDialog}>
+                    <Localized id="book-add-group-cancel">Cancel</Localized>
+                  </Button>
+                  <Localized id="book-add-group-confirm" attrs={{ value: true }}>
+                    <input
+                      type="submit"
+                      value="Confirm"
+                      disabled={groupNameInput.length <= 2}
+                    />
+                  </Localized>
+                </div>
+              </form>
+            </Dialog>
+          : null
+        }
+        {
+          showAddModule ?
+            <Dialog
+              l10nId="book-group-add-module-dialog-title"
+              placeholder="Select module or create a new one."
+              size="medium"
+              onClose={this.closeAddModuleDialog}
+            >
+              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+            </Dialog>
           : null
         }
       </div>
