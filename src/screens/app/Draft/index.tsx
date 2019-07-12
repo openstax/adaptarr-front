@@ -31,13 +31,16 @@ import ToolboxDocument from './components/ToolboxDocument'
 import ToolboxGlossary from './components/ToolboxGlossary'
 import LocalizationLoader from './components/LocalizationLoader'
 
-import './index.css'
 import StorageContext from './plugins/Storage'
 import I10nPlugin from './plugins/I10n'
 import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
 import TablesPlugin from './plugins/Tables'
 import SourceElements from './plugins/SourceElements'
 import Shortcuts from './plugins/Shortcuts'
+
+import PersistanceError from './PersistanceError'
+
+import './index.css'
 
 type Props = {
   documentDbContent: DocumentDB
@@ -58,7 +61,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
       Promise.all([
         PersistDB.load(`${id}-document`),
         PersistDB.load(`${id}-glossary`),
-      ]),
+      ]).catch(() => { throw new PersistanceError() }),
       timeout(10000),
     ]),
     api.Storage.load(id),
