@@ -33,8 +33,8 @@ export default class FormatTools extends React.Component<Props> {
       return null
     }
 
-    const undosNumber = value.data.get('undos').size
-    const redosNumber = value.data.get('redos').size
+    const undosNumber = value.data.has('undos') ? value.data.get('undos').size : 0
+    const redosNumber = value.data.has('redos') ? value.data.get('redos').size : 0
 
     return (
       <div className="toolbox-format">
