@@ -3,6 +3,7 @@ import axios from 'src/config/axios'
 import Base from './base'
 import { elevated } from './utils'
 import Role, { Permission } from './role'
+import Draft, { DraftData } from './draft'
 
 /**
  * User data as returned by the API.
@@ -67,7 +68,7 @@ export default class User extends Base<UserData> {
       new: newPass,
       new2: newPass2,
     }
-    
+
     return await axios.put('users/me/password', payload)
   }
 
@@ -125,10 +126,10 @@ export default class User extends Base<UserData> {
   async changePermissions(permissions: Permission[]): Promise<any> {
     return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
   }
-  
+
   /**
    * Change language.
-   * 
+   *
    * @param language ISO code of language
    */
   async changeLanguage(language: string) {
@@ -137,5 +138,13 @@ export default class User extends Base<UserData> {
     } else {
       return await elevated(() => axios.put(`users/${this.apiId}`, { language }))
     }
+  }
+
+  /**
+   * User's drafts.
+   */
+  async drafts(): Promise<Draft[]> {
+    const drafts = await axios.get(`/users/${this.apiId}/drafts`)
+    return drafts.data.map((data: DraftData) => new Draft(data))
   }
 }
