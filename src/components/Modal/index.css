@@ -13,20 +13,35 @@
 
 .modal__close {
   position: absolute;
+  z-index: 2;
+  min-width: 0;
   top: 0;
   right: 0;
-  padding: 20px;
-  background: transparent;
+  padding: 10px;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.modal__close .icon {
+  background-color: var(--light-bg);
+  border-radius: 50%;
+}
+
+.modal__close .icon svg {
+  fill: var(--danger);
 }
 
 .modal__content {
+  position: relative;
   padding: 20px;
   margin-top: 30px;
   max-width: 80%;
   max-height: calc(100vh - 80px); /* 100vh - (mTop * 2 + padding * 2) */
-  overflow: auto;
-  overflow-x: hidden;
   font-size: 1rem;
   background-color: var(--light-bg);
   border-radius: 17px;
+}
+
+.modal__content.overflow-auto {
+  overflow: auto;
 }

@@ -8,7 +8,6 @@ import ProcessSlots from '../ProcessSlots'
 import ProcessSteps from '../ProcessSteps'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
-import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
@@ -130,7 +129,7 @@ class ProcessForm extends React.Component<Props> {
                 </Localized>
             }
           </Button>
-          <Button type="danger" clickHandler={this.props.onCancel}>
+          <Button clickHandler={this.props.onCancel}>
             <Localized id="process-form-cancel">
               Cancel
             </Localized>

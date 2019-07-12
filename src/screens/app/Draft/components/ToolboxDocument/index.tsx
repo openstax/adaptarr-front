@@ -14,7 +14,7 @@ import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SourceTools from '../SourceTools'
-import QuotationTools from '../QuotationTools'
+//import QuotationTools from '../QuotationTools'
 
 import './index.css'
 
@@ -137,12 +137,12 @@ class Toolbox extends React.Component<Props> {
           toggleState={this.state.listTools}
           onToggle={this.toggleTool}
         />
-        <QuotationTools
+        {/* <QuotationTools
           editor={editor}
           value={value}
           toggleState={this.state.quotationTools}
           onToggle={this.toggleTool}
-        />
+        /> */}
         <AdmonitionTools
           editor={editor}
           value={value}

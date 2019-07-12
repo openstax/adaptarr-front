@@ -136,19 +136,17 @@ class Settings extends React.Component<Props> {
               l10nId="settings-language-dialog-title"
               placeholder="Are you sure you want to change language?"
               onClose={this.closeChangeLanguage}
+              showCloseButton={false}
             >
               <div className="dialog__buttons">
+                <Button clickHandler={this.closeChangeLanguage}>
+                  <Localized id="settings-language-dialog-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
                 <Button clickHandler={this.changeLanguage}>
                   <Localized id="settings-language-dialog-confirm">
                     Confirm
-                  </Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.closeChangeLanguage}
-                >
-                  <Localized id="settings-language-dialog-cancel">
-                    Cancel
                   </Localized>
                 </Button>
               </div>

@@ -170,5 +170,9 @@ nav .notifications__counter {
   font-size: 14px;
   color: var(--font-light);
   border-radius: 50%;
-  background-color: var(--status-unread);
+  background-color: var(--danger);
+}
+
+nav .notifications__counter > span {
+  margin-top: -2px;
 }

@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Text, Block, Inline, Document, Node } from 'slate'
+import { Editor, Value, Text, Block, Inline, Document, Node, Range, Selection } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 import { List } from 'immutable'
 
@@ -111,13 +111,13 @@ export default class InsertTools extends React.Component<Props> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.insertSection}
+          clickHandler={this.insertTitle}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section'])}
+          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'quotation'])}
         >
           <Icon size="small" name="plus" />
-          <Localized id="editor-tools-insert-section">
-            Section
+          <Localized id="editor-tools-insert-title">
+            Title
           </Localized>
         </Button>
         <Button
@@ -137,10 +137,12 @@ export default class InsertTools extends React.Component<Props> {
         <Modal
           ref={this.setXrefModal}
           content={this.renderXrefModal}
+          overflowAuto={true}
         />
         <Modal
           ref={this.setLinkModal}
           content={this.renderLinkModal}
+          showCloseButton={false}
         />
       </ToolGroup>
     )
@@ -160,11 +162,23 @@ export default class InsertTools extends React.Component<Props> {
     />
   )
 
-  private renderLinkModal = () => (
-    <LinkBox
-      onAccept={this.insertLink}
-    />
-  )
+  private renderLinkModal = () => {
+    const { value: { document, selection, selection: { anchor, focus } } } = this.props
+    let text = ''
+    if (selection.isExpanded) {
+      text = document.getFragmentAtRange(Range.create({ anchor, focus })).text
+    }
+    const closeModal = () => {
+      this.linkModal!.close()
+    }
+    return (
+      <LinkBox
+        text={text}
+        onAccept={this.insertLink}
+        onCancel={closeModal}
+      />
+    )
+  }
 
   private setFigureModal = (el: Modal | null) => el && (this.figureModal = el)
 
@@ -181,7 +195,7 @@ export default class InsertTools extends React.Component<Props> {
   private toggleAdmonition = () => {
     // TODO: clicking insert admonition should expand a menu where the user can
     // choose which kind of admonition to insert.
-    const { editor, selectionParent } = this.props
+    const { editor, selectionParent, value: { document, selection } } = this.props
     if (
       selectionParent
       && selectionParent.type === 'admonition'
@@ -189,7 +203,26 @@ export default class InsertTools extends React.Component<Props> {
       unwrapChildrenFromNode(editor, selectionParent)
       return
     }
-    editor.insertAdmonition('note')
+
+    if (selection.isCollapsed) {
+      editor.wrapBlock({
+        type: 'admonition',
+        data: {
+          type: 'note',
+        },
+      })
+    } else {
+      const fragment = document.getFragmentAtRange(Range.create({
+        anchor: selection.anchor, focus: selection.focus
+      }))
+      editor.insertBlock(Block.create({
+        type: 'admonition',
+        data: {
+          type: 'note',
+        },
+        nodes: fragment.nodes,
+      }))
+    }
   }
 
   private insertExercise = () => {
@@ -204,8 +237,22 @@ export default class InsertTools extends React.Component<Props> {
     this.props.editor.insertFigure(asset as MediaDescription)
   }
 
-  private insertSection = () => {
-    this.props.editor.insertSection()
+  private insertTitle = () => {
+    const { editor, selectionParent: sp } = this.props
+    if (sp) {
+      if (sp.object === 'document' || sp.type === 'section') {
+        editor.insertSection()
+      } else if (sp.type === 'admonition' || sp.type === 'quotation') {
+        const first = sp.nodes.first() as Block
+        if (first.type === 'title') {
+          editor.moveTo(first.key, 0)
+        } else {
+          const title = Block.create('title')
+          editor.insertNodeByKey(sp.key, 0, title)
+          editor.moveTo(title.key, 0)
+        }
+      }
+    }
   }
 
   private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
@@ -218,7 +265,7 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private toggleQuotation = () => {
-    const { editor, value: { selection }, selectionParent } = this.props
+    const { editor, value: { document, selection }, selectionParent } = this.props
 
     const selectedAllNodes = selectionParent && selection.start.isInNode(selectionParent.nodes.first()) && selection.end.isInNode(selectionParent.nodes.last())
 
@@ -230,7 +277,18 @@ export default class InsertTools extends React.Component<Props> {
       unwrapChildrenFromNode(editor, selectionParent)
       return
     }
-    editor.wrapBlock('quotation')
+
+    if (selection.isCollapsed) {
+      editor.wrapBlock('quotation')
+    } else {
+      const fragment = document.getFragmentAtRange(Range.create({
+        anchor: selection.anchor, focus: selection.focus
+      }))
+      editor.insertBlock(Block.create({
+        type: 'quotation',
+        nodes: fragment.nodes,
+      }))
+    }
   }
 
   private handleInsertLink = () => {
@@ -240,13 +298,13 @@ export default class InsertTools extends React.Component<Props> {
   private insertLink = (text: string, url: string) => {
     this.linkModal!.close()
     const editor = this.props.editor
-    const link = {
+    editor.insertInline(Inline.create({
       type: 'link',
-      data: { url },
-    }
-    editor.insertText(text)
-    editor.moveFocusBackward(text.length)
-    editor.wrapInline(link)
+      data: {
+        url: url,
+      },
+      nodes: List([Text.create(text)])
+    }))
   }
 
   private insertSourceElement = () => {
@@ -255,9 +313,14 @@ export default class InsertTools extends React.Component<Props> {
   }
 
   private validateParents = (validParents: string[]): boolean => {
-    const sp = this.props.selectionParent
+    const { selectionParent: sp, value: { selection, anchorInline, focusInline } } = this.props
     if (!sp) return false
     if (validParents.includes(sp.type) || validParents.includes(sp.object)) return true
+    if (selection.isExpanded) {
+      if (validParents.includes('inline')) {
+        if (anchorInline || focusInline) return true
+      }
+    }
     return false
   }
 }

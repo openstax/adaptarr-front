@@ -27,6 +27,8 @@ book-in-process = Process: { $name }
 
 book-begin-process = Begin process
 
+book-begin-process-title = Configure and begin process
+
 book-process-preview-title = Process details:
 
 book-assign-user = Assign user
@@ -214,6 +216,8 @@ book-list-add-book-title =
 book-list-add-book-confirm =
   .value = Confirm
 
+book-list-add-book-cancel = Cancel
+
 # Alert displayed when a book was created.
 book-list-add-book-alert-success = Book was added successfully.
 
@@ -255,6 +259,8 @@ dashboard-section-free-slots = Free slots:
 
 draft-title = Draft
 
+draft-style-switcher-title = Choose style in which you want to display this document
+
 # Variables:
 # - $style (string): version of styles.
 draft-style-switcher = { $style ->
@@ -271,7 +277,7 @@ draft-remove-glossary-dialog = Are you sure you want to remove glossary?
 
 draft-add-glossary = Add glossary
 
-draft-remove-glossary = Remove glossary
+draft-remove-glossary = Remove
 
 draft-cancel = Cancel
 
@@ -831,7 +837,10 @@ free-slots-success = You've been assigned to “{ $draft }” with slot: { $slot
 #
 # Variables:
 # - $details (string): error details.
-free-slots-error = Couldn't assign you to this slot. Details: { $details }.
+free-slots-error = Couldn't assign you to this slot. { $details ->
+ *[string] Details: { $details }
+  [none] {""}
+}
 
 
 
@@ -966,6 +975,33 @@ notification = { $kind ->
   [slot_vacated] You were removed from slot in <module>{ $module }</module>.
   [draft_advanced] Step in <module>{ $module }</module> has changed.
  *[notavalidkind] Unknown action
+}
+
+
+
+## Reusable components - date differences
+
+date-diff-now = just now
+
+# Variables:
+# - $minutes (number): numbers of minutes between from and current date
+date-diff-minutes = { $minutes ->
+  [1] 1 minute ago
+ *[more] { $minutes } minutes ago
+}
+
+# Variables:
+# - $hours (number): numbers of hours between from and current date
+date-diff-hours = { $hours ->
+  [1] 1 hour ago
+ *[more] { $hours } hours ago
+}
+
+# Variables:
+# - $days (number): numbers of days between from and current date
+date-diff-days = { $days ->
+  [1] 1 day ago
+ *[more] { $days } days ago
 }
 
 
@@ -1214,6 +1250,10 @@ editor-tools-format-text-type = { $type ->
  *[notavalidtype] Text
 }
 
+editor-tools-format-button-undo = Undo (Ctrl+Z)
+
+editor-tools-format-button-redo = Redo (Ctrl+Y)
+
 editor-tools-format-button-clear = Clear formatting
 
 editor-tools-format-button-emphasis = Emphasis (Ctrl+I)
@@ -1230,7 +1270,7 @@ editor-tools-format-button-underline = Underline (Ctrl+U)
 
 editor-tools-format-button-code = Code (Ctrl+`)
 
-editor-tools-format-button-term = Term (Ctrl+D)
+editor-tools-format-button-term = Term (Ctrl+K)
 
 
 
@@ -1262,7 +1302,7 @@ editor-tools-insert-figure = Figure
 
 editor-tools-insert-code = Code
 
-editor-tools-insert-section = Section
+editor-tools-insert-title = Title
 
 editor-tools-insert-quotation = Quotation
 
@@ -1411,6 +1451,10 @@ editor-tools-link-url = Provide link
 
 editor-tools-link-remove = Remove link
 
+editor-tools-link-cancel = Cancel
+
+editor-tools-link-confirm = Confirm
+
 
 
 ## Editor toolboxes - terms
@@ -1420,14 +1464,6 @@ editor-tools-term-title = Term
 editor-tools-term-label = Index form
 
 editor-tools-term-remove = Remove term
-
-
-
-## Editor toolboxes - switchable block types
-
-editor-tools-switchable-type-to-paragraph = Change title to paragraph
-
-editor-tools-switchable-type-to-title = Change paragraph to title
 
 
 

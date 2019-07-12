@@ -50,7 +50,7 @@ const mapStateToProps = ({ team, modules }: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addAlert: (kind: types.RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: types.RequestInfoKind, message: string, args: Object) => dispatch(addAlert(kind, message, args)),
   }
 }
 
@@ -199,6 +199,7 @@ class Book extends React.Component<Props> {
     changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
+        console.log({item: changedItem.title, target: targetParent.title})
         this.props.addAlert('success', 'book-part-moving-alert-success', {item: changedItem.title, target: targetParent.title})
       })
       .catch(e => {

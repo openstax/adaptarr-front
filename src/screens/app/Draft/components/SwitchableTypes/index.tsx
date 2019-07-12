@@ -1,51 +1,84 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value } from 'slate'
+import { Editor, Value, Block, Document, Range } from 'slate'
 import { Localized } from 'fluent-react/compat'
-
-import Button from 'src/components/ui/Button'
 
 import './index.css'
 
 type Props = {
   editor: Editor,
   value: Value,
-  isDisabled?: boolean,
 }
 
 /**
  * Types of paragraph-like block that user can switch between.
  *
- * If current type is paragraph then it should be changed to title, etc.
+ * When selected node is not on this list, block type switching will
+ * be disabled.
  */
-const SWITCHABLE_TYPES = {
-  paragraph: 'title',
-  title: 'paragraph',
-}
+const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
 
 export default class SwitchableTypes extends React.Component<Props> {
 
-  private changeTextType = () => {
-    const { editor, value: { startBlock } } = this.props
-    editor.setNodeByKey(startBlock.key, { type: SWITCHABLE_TYPES[startBlock.type] })
+  private changeTextType = ({value: blockType}: {value: string, label: string}) => {
+    const { editor, value: { startBlock, document } } = this.props
+    const parent = document.getParent(startBlock.key) as Block | Document
+
+    editor.withoutNormalizing(() => {
+      editor.setNodeByKey(startBlock.key, { type: blockType })
+
+      if (parent.object === 'document' && blockType === 'title') {
+        const index = parent.nodes.findIndex(n => n!.key === startBlock.key)
+        const last = parent.nodes.findLast(
+          (node, inx) => node!.type !== 'section' && inx! >= index)
+
+        editor.moveStartToStartOfNode(startBlock)
+        editor.moveEndToEndOfNode(last)
+        const { anchor, focus } = editor.value.selection
+        const range = Range.create({ anchor, focus })
+        editor.wrapBlockAtRange(range, 'section')
+      }
+    })
+  }
+
+  private isDisabled = () => {
+    const { value: { startBlock, document } } = this.props
+    if (!startBlock) return true
+
+    if (SWITCHABLE_TEXT_TYPES.find(t => t === startBlock.type)) {
+      const parent = document.getParent(startBlock.key) as Block | Document
+
+      // Allow switching type only for frist element in notes and quotations
+      if (parent.type === 'admonition' || parent.type === 'quotation') {
+        if (startBlock.key !== parent.nodes.first().key) return true
+      }
+
+      return false
+    }
+
+    return true
   }
 
   public render() {
-    const { value: { startBlock }, isDisabled = false } = this.props
-
-    if (!startBlock || !SWITCHABLE_TYPES[startBlock.type]) return null
-
-    const newType = SWITCHABLE_TYPES[startBlock.type]
+    const { value: { startBlock } } = this.props
+    const isDisabled = this.isDisabled()
 
     return (
-      <div className="switchable-types">
-        <Button clickHandler={this.changeTextType} isDisabled={isDisabled}>
-          <Localized id={`editor-tools-switchable-type-to-${newType}`}>
-            {`Change to ${newType}`}
-          </Localized>
-        </Button>
+      <div className={`switchable-types ${isDisabled ? 'disabled' : ''}`}>
+        <Select
+          className="toolbox__select react-select"
+          value={{ value: startBlock.type, label: startBlock.type}}
+          onChange={this.changeTextType}
+          options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
+          isDisabled={isDisabled}
+          formatOptionLabel={OptionLabel}
+          isSearchable={false}
+        />
       </div>
     )
   }
 }
 
+function OptionLabel({value: type}: {value: string, label: string}) {
+  return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
+}

@@ -106,7 +106,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   {
                     unreadNotifications.length ?
                       <span className="notifications__counter">
-                        {unreadNotifications.length}
+                        <span>{unreadNotifications.length}</span>
                       </span>
                     : null
                   }

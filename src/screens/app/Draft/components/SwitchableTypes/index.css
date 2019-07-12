@@ -1,4 +1,3 @@
-.switchable-types {
-  width: 100%;
-  margin: 10px 0;
+.switchable-types.disabled {
+  cursor: not-allowed;
 }

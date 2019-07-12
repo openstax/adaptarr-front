@@ -22,15 +22,21 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.0.0", "@babel/runtime@^7.1.5":
-  version "7.4.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
+"@babel/runtime@^7.0.0":
+  version "7.5.4"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.5.4.tgz#cb7d1ad7c6d65676e66b47186577930465b5271b"
   dependencies:
     regenerator-runtime "^0.13.2"
 
 "@babel/runtime@^7.1.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.4.2":
   version "7.4.4"
   resolved "https://npm.pkg.naukosfera.com:443/@babel%2fruntime/-/runtime-7.4.4.tgz#dc2e34982eb236803aa27a07fea6857af1b9171d"
+  dependencies:
+    regenerator-runtime "^0.13.2"
+
+"@babel/runtime@^7.1.5":
+  version "7.4.5"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.4.5.tgz#582bb531f5f9dc67d2fcb682979894f75e253f12"
   dependencies:
     regenerator-runtime "^0.13.2"
 
@@ -1775,7 +1781,7 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#f2536ababf1934502e09cb0af5648399e8ca18b4"
+  resolved "https://github.com/katalysteducation/cnx-designer#acaeed966c0b9e246dc4ae3648378aec8e9d2eb2"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
@@ -6933,7 +6939,8 @@ slate-base64-serializer@^0.2.106:
 
 "slate-counters@https://github.com/katalysteducation/slate-counters.git", "slate-counters@https://github.com/katalysteducation/slate-counters.git#use-onsetvalue":
   version "0.6.0"
-  resolved "https://github.com/katalysteducation/slate-counters.git#94bbadf46999796fa6535c8723666eca1afbb375"
+  uid "47abee33d6303cea4161f2395b79ba6c34ea4707"
+  resolved "https://github.com/katalysteducation/slate-counters.git#47abee33d6303cea4161f2395b79ba6c34ea4707"
   dependencies:
     "@babel/runtime" "^7.0.0"
 

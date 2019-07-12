@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
-import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import * as api from 'src/api'
 
+import DateDiff from 'src/components/DateDiff'
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
@@ -130,7 +130,7 @@ class NotificationsCentre extends React.Component<Props> {
                     <React.Fragment>
                       <Header l10nId="xxx-no-translation" title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
                         <span className="date">
-                          { details ? dateDiff(details.timestamp) : null }
+                          { details ? <DateDiff dateString={details.timestamp} /> : null }
                         </span>
                         <Button size="small" clickHandler={this.closeDetails}>
                           <Icon name="close" />

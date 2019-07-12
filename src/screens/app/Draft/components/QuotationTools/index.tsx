@@ -2,7 +2,6 @@ import * as React from 'react'
 import { Editor, Value } from 'slate'
 
 import ToolGroup from '../ToolGroup'
-import SwitchableTypes from '../SwitchableTypes'
 
 import { OnToggle } from '../ToolboxDocument'
 
@@ -29,11 +28,7 @@ export default function QuotationTools({ editor, value, toggleState, onToggle }:
       toggleState={toggleState}
       onToggle={() => onToggle('quotationTools')}
     >
-      {
-        isSelectionInFirstNode ?
-          <SwitchableTypes editor={editor} value={value} />
-        : null
-      }
+
     </ToolGroup>
   )
 }

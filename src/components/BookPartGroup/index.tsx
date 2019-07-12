@@ -8,7 +8,6 @@ import { addAlert } from 'src/store/actions/Alerts'
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
@@ -253,6 +252,9 @@ class Group extends React.Component<Props> {
                   validation={{minLength: 3}}
                 />
                 <div className="dialog__buttons">
+                  <Button clickHandler={this.closeAddGroupDialog}>
+                    <Localized id="book-add-group-cancel">Cancel</Localized>
+                  </Button>
                   <Localized id="book-add-group-confirm" attrs={{ value: true }}>
                     <input
                       type="submit"
@@ -260,12 +262,6 @@ class Group extends React.Component<Props> {
                       disabled={groupNameInput.length <= 2}
                     />
                   </Localized>
-                  <Button
-                    type="danger"
-                    clickHandler={this.closeAddGroupDialog}
-                  >
-                    <Localized id="book-add-group-cancel">Cancel</Localized>
-                  </Button>
                 </div>
               </form>
             </Dialog>
@@ -278,16 +274,17 @@ class Group extends React.Component<Props> {
               placeholder="Remove this group and all its contents?"
               size="medium"
               onClose={this.closeRemoveGroupDialog}
+              showCloseButton={false}
             >
               <div className="dialog__buttons">
-                <Button clickHandler={this.handleRemoveGroup}>
-                  <Localized id="book-remove-group-confirm">Delete</Localized>
+                <Button clickHandler={this.closeRemoveGroupDialog}>
+                  <Localized id="book-remove-group-cancel">Cancel</Localized>
                 </Button>
                 <Button
                   type="danger"
-                  clickHandler={this.closeRemoveGroupDialog}
+                  clickHandler={this.handleRemoveGroup}
                 >
-                  <Localized id="book-remove-group-cancel">Cancel</Localized>
+                  <Localized id="book-remove-group-confirm">Delete</Localized>
                 </Button>
               </div>
             </Dialog>

@@ -27,6 +27,8 @@ book-in-process = Proces: { $name }
 
 book-begin-process = Rozpocznij proces
 
+book-begin-process-title = Skonfiguruj i rozpocznij proces
+
 book-process-preview-title = Szczegóły procesu:
 
 book-assign-user = Przypisz użytkownika
@@ -47,7 +49,7 @@ book-fetch-error =
 
 ## Screens - book view - module removal dialog
 
-book-remove-module-title = Jesteś pewien, że chcesz usunąć ten moduł?
+book-remove-module-title = Usunąć ten moduł?
 
 book-remove-module-confirm = Usuń
 
@@ -84,7 +86,7 @@ book-unassign-user-alert-success = Użytkownik został usunięty z { $module }
 
 ## Screens - book view - “Edit book” dialog
 
-book-edit-dialog-title = Edycja książki.
+book-edit-dialog-title = Modyfikuj książkę
 
 # Placeholder text for title field.
 book-edit-title =
@@ -215,6 +217,8 @@ book-list-add-book-title =
 book-list-add-book-confirm =
   .value = Potwierdź
 
+book-list-add-book-cancel = Anuluj
+
 # Alert displayed when a book was created.
 book-list-add-book-alert-success = Książka została dodana.
 
@@ -254,6 +258,8 @@ dashboard-section-free-slots = Wolne funkcje do podjęcia
 
 ## Screens - draft
 
+draft-style-switcher-title = Wybierz styl, w którym chcesz wyświetlić ten dokument
+
 # Variables:
 # - $style (string): version of styles.
 draft-style-switcher = { $style ->
@@ -271,7 +277,7 @@ draft-remove-glossary-dialog = Usunąć skorowidz?
 
 draft-add-glossary = Dodaj skorowidz
 
-draft-remove-glossary = Usuń skorowidz
+draft-remove-glossary = Usuń
 
 draft-cancel = Anuluj
 
@@ -503,7 +509,7 @@ role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
-role-delete-title = Na pewno chcesz usunąć rolę "{ $name }"?
+role-delete-title = Usunąć rolę "{ $name }"?
 
 role-delete-confirm = Potwierdź
 
@@ -833,7 +839,10 @@ free-slots-success = Zostałeś przypisany do „{ $draft }” w funkcji { $slot
 #
 # Variables:
 # - $details (string): error details.
-free-slots-error = Nie udało się objąć funkcji. Szczegóły: { $details }.
+free-slots-error = Nie udało się objąć funkcji. { $details ->
+ *[string] Szczegóły: { $details }.
+  [none] {""}
+}
 
 
 
@@ -863,7 +872,7 @@ step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details
 
 step-changer-details-dialog-title = Wybierz następny krok
 
-step-changer-confirm-dialog-title = Czy na pewno chcesz przenieść szkic do następnego kroku?
+step-changer-confirm-dialog-title = Przenieść szkic do następnego kroku?
 
 step-changer-unsaved-changes = Masz niezapisane zmiany.
 
@@ -968,6 +977,33 @@ notification = { $kind ->
   [slot_vacated] Zostałeś/aś usunięta z funkcji w <module>{ $module }</module>.
   [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
  *[notavalidkind] Nieznana akcja
+}
+
+
+
+## Reusable components - date differences
+
+date-diff-now = przed chwilą
+
+# Variables:
+# - $minutes (number): numbers of minutes between from and current date
+date-diff-minutes = { $minutes ->
+  [1] minutę temu
+ *[more] { $minutes } min temu
+}
+
+# Variables:
+# - $hours (number): numbers of hours between from and current date
+date-diff-hours = { $hours ->
+  [1] godzinę temu
+ *[more] { $hours } godz. temu
+}
+
+# Variables:
+# - $days (number): numbers of days between from and current date
+date-diff-days = { $days ->
+  [1] dzień temu
+ *[more] { $days } dni temu
 }
 
 
@@ -1146,7 +1182,7 @@ editor-tools-save-export-ok = Ok
 
 ## Editor toolboxes - admonitions
 
-editor-tools-admonition-title = Notatka
+editor-tools-admonition-title = Notka
 
 # Entry on the list of possible admonition types.
 #
@@ -1211,10 +1247,14 @@ editor-tools-exercise-insert-commentary = Dodaj komentarz
 #   and 'figure_caption', but other values are also allowed.
 editor-tools-format-text-type = { $type ->
   [paragraph] Akapit
-  [title] Tytuł
+  [title] Nagłówek
   [figure_caption] Opis figury
  *[notavalidtype] Tekst
 }
+
+editor-tools-format-button-undo = Cofnij (Ctrl+Z)
+
+editor-tools-format-button-redo = Ponów (Ctrl+Y)
 
 editor-tools-format-button-clear = Usuń formatowanie
 
@@ -1232,7 +1272,7 @@ editor-tools-format-button-underline = Podkreślenie (Ctrl+U)
 
 editor-tools-format-button-code = Kod (Ctrl+`)
 
-editor-tools-format-button-term = Termin (Ctrl+D)
+editor-tools-format-button-term = Termin (Ctrl+K)
 
 
 
@@ -1256,7 +1296,7 @@ editor-tools-insert-title = Wstaw
 
 editor-tools-insert-reference = Połącz
 
-editor-tools-insert-admonition = Notatka
+editor-tools-insert-admonition = Notka
 
 editor-tools-insert-exercise = Ćwiczenie
 
@@ -1264,7 +1304,7 @@ editor-tools-insert-figure = Ilustracja
 
 editor-tools-insert-code = Kod
 
-editor-tools-insert-section = Sekcja
+editor-tools-insert-title = Nagłówek
 
 editor-tools-insert-quotation = Cytat
 
@@ -1437,6 +1477,9 @@ editor-tools-link-url = Wprowadź odnośnik
 
 editor-tools-link-remove = Usuń link
 
+editor-tools-link-cancel = Anuluj
+
+editor-tools-link-confirm = Potwierdź
 
 
 ## Editor toolboxes - terms
@@ -1447,13 +1490,6 @@ editor-tools-term-label = Forma indeksowa
 
 editor-tools-term-remove = Usuń termin
 
-
-
-## Editor toolboxes - switchable block types
-
-editor-tools-switchable-type-to-paragraph = Zmień tytuł na akapit
-
-editor-tools-switchable-type-to-title = Zmień akapit na tytuł
 
 
 ## Editor toolboxes - definitions

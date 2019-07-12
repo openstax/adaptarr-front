@@ -41,7 +41,7 @@ export const addAlert = (kind: RequestInfoKind, message: string, args: object = 
     dispatch(pushAlert(alert))
     setTimeout(() => {
       dispatch(removeAlert(alert))
-    }, 5000)
+    }, 7000)
   }
 }
 

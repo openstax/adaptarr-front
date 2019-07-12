@@ -12,7 +12,10 @@
   margin-top: 20px;
 }
 
-.step-changer__dialog-content {
-  display: flex;
-  justify-content: center;
+.step-changer__dialog-content .button {
+  margin-left: 5px;
+}
+
+.step-changer__info {
+  margin-bottom: 20px;
 }

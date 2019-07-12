@@ -1,13 +1,13 @@
 .draft__title {
   display: block;
-  width: 70%;
-  margin: 20px auto;
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto 0 auto;
   font-size: 1.5rem;
 }
 
-.draft__title--smaller {
-  width: 90%;
-  max-width: 900px;
+.draft__title .editable-text__content {
+  width: 100%;
 }
 
 .draft__title .input input {

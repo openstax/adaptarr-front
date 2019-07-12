@@ -1,38 +1,4 @@
-.style-switcher {
-  position: relative;
-}
-
-.style-switcher .button {
-  padding: 8px 12px;
-  min-width: 0;
-}
-
-.style-switcher ul {
-  display: none;
-  width: 160px;
-  background-color: #fff;
-  border-radius: 5px;
-}
-
-.style-switcher.open ul {
-  display: block;
-  box-shadow: 5px 7px 12px rgba(0,0,0,0.15);
-  position: absolute;
-  z-index: 1;
-}
-
-.style-switcher__choice {
-  cursor: pointer;
-  padding: 5px;
-  border-radius: 3px;
-}
-
-.style-switcher__choice:hover,
-.style-switcher__choice:focus {
-  background-color: var(--light-bg);
-}
-
-.style-switcher__choice.active {
-  color: var(--font-light);
-  background-color: var(--dark-bg);
+.style-switcher > .button {
+  display: flex;
+  justify-content: center;
 }

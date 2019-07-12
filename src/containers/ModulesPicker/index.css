@@ -67,6 +67,14 @@
   background-color: var(--dark-bg);
 }
 
+.modulesList__item > span {
+  flex: 1;
+}
+
+.modulesList__item > .button {
+  margin-right: 10px;
+}
+
 .modulesList__info {
   display: flex;
   justify-content: space-between;

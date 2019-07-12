@@ -59,7 +59,7 @@ export default class SaveButton extends React.Component<Props> {
             <Dialog
               size="medium"
               l10nId="editor-tools-save-error-title"
-              title="We couldn't save this document"
+              placeholder="We couldn't save this document"
               onClose={this.closeErrorDialog}
             >
               <Localized id="editor-tools-save-error-content" p={<p/>} $error={error}>
@@ -80,7 +80,7 @@ export default class SaveButton extends React.Component<Props> {
             <Dialog
               size="medium"
               l10nId="editor-tools-save-export-title"
-              title="Please send downloaded file to the administrator so he can fix your problem."
+              placeholder="Please send downloaded file to the administrator so he can fix your problem."
               onClose={this.closeAfterExportDialog}
             >
               <div className="dialog__buttons dialog__buttons--center">
@@ -107,7 +107,7 @@ export default class SaveButton extends React.Component<Props> {
       // TODO: get version from API
       await documentDbContent.save(document, Date.now().toString())
       await documentDbGlossary.save(glossary, Date.now().toString())
-      store.dispatch(addAlert('error', 'editor-tools-save-alert-success'))
+      store.dispatch(addAlert('success', 'editor-tools-save-alert-success'))
     } catch (ex) {
       this.setState({ showErrorDialog: true, error: ex.toString() })
     }

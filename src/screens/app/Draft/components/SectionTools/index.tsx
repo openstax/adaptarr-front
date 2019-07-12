@@ -4,7 +4,6 @@ import { Editor, Value } from 'slate'
 
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
-import SwitchableTypes from '../SwitchableTypes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -48,7 +47,6 @@ export default class SectionTools extends React.Component<Props> {
             Increase level
           </Localized>
         </Button>
-        <SwitchableTypes editor={editor} value={value} />
         <Classes editor={editor} block={section} />
       </ToolGroup>
     )

@@ -49,6 +49,7 @@ class Invitations extends React.Component<Props> {
     Invitation.create({ email, role: role ? role.id : null, language: langCode })
       .then(() => {
         this.setState({ emailValue: '', role: null })
+        this.input!.unTouch()
         store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
       })
       .catch((e) => {
@@ -58,6 +59,9 @@ class Invitations extends React.Component<Props> {
 
   private hanleInputChange = (val: string) => {
     this.setState({ emailValue: val })
+    if (val.length === 0) {
+      this.input!.unTouch()
+    }
   }
 
   private handleInputValidation = (status: boolean) => {
@@ -74,6 +78,10 @@ class Invitations extends React.Component<Props> {
     this.setState({ role })
   }
 
+  input: Input | null
+
+  private setInputRef = (el: Input | null) => el && (this.input = el)
+
   public render() {
     const { emailValue, isEmailVaild, langCode, role } = this.state
     const language = LANGUAGES.find(lang => lang.code === langCode)
@@ -86,6 +94,7 @@ class Invitations extends React.Component<Props> {
             <div className="invitations">
               <form onSubmit={this.sendInvitation}>
                 <Input
+                  ref={this.setInputRef}
                   type="email"
                   l10nId="invitation-email"
                   value={emailValue}

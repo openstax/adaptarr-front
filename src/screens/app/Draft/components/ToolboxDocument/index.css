@@ -1,8 +1,8 @@
 .toolbox {
   position: sticky;
-  top: 0;
+  top: 46px;
   right: 0;
-  height: calc(100vh - 18px); /* 100vh - padding-bottom and top value + borders */
+  height: calc(100vh - 18px - 46px); /* 100vh - padding-bottom and top value + borders - top */
   width: 260px;
   padding: 8px;
   border-left: 1px solid var(--dark-bg);
@@ -75,6 +75,10 @@
 .toolbox__button--only-icon.active {
   color: var(--font-light);
   background-color: var(--dark-bg);
+}
+
+.toolbox__button--only-icon.active .icon svg {
+  fill: var(--font-light);
 }
 
 .toolbox__button--only-icon:hover {

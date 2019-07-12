@@ -110,7 +110,11 @@ export default class Book extends Base<BookData> {
    * This method requires elevated permissions.
    */
   async replaceContent(file: File): Promise<void> {
-    await elevated(() => axios.put(`books/${this.id}`, file))
+    await elevated(() => axios.put(`books/${this.id}`, file, {
+      headers: {
+        'Content-Type': 'application/zip',
+      },
+    }))
   }
 
   /**

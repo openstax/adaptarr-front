@@ -5,7 +5,7 @@ import Draft from 'src/api/draft'
 import { addAlert } from 'src/store/actions/Alerts'
 import store from 'src/store'
 
-import Input from 'src/components/ui/Input'
+import EditableText from 'src/components/EditableText'
 
 import './index.css'
 
@@ -17,21 +17,17 @@ class Title extends React.Component<Props> {
   state: {
     titleInput: string
   } = {
-    titleInput: '',
+    titleInput: this.props.draft.title,
   }
 
-  private updateTitleInput = (val: string) => {
-    this.setState({ titleInput: val })
-  }
-
-  private changeTitle = async (e: React.FormEvent) => {
-    e.preventDefault()
+  private changeTitle = async (newTitle: string) => {
+    this.setState({ titleInput: newTitle })
 
     try {
-      await this.props.draft.updateTitle(this.state.titleInput)
-      store.dispatch(addAlert('success', 'editor-document-title-alert-save-success'))
+      await this.props.draft.updateTitle(newTitle)
+      store.dispatch(addAlert('success', 'editor-document-title-save-alert-success'))
     } catch (e) {
-      store.dispatch(addAlert('error', 'editor-document-title-alert-save-error'))
+      store.dispatch(addAlert('error', 'editor-document-title-save-alert-error'))
       console.error(e)
     }
   }
@@ -49,19 +45,17 @@ class Title extends React.Component<Props> {
   public render() {
     const { titleInput } = this.state
     const { draft } = this.props
-    const viewPermission = draft && draft.permissions && draft.permissions.includes('view')
+    const permissions = draft.permissions || []
+    const viewPermission = permissions.length === 0 || permissions.every(p => p === 'view')
 
     return (
-      <form onSubmit={this.changeTitle}>
-        <span className={`draft__title ${viewPermission ? 'draft__title--smaller' : ''}`}>
-          <Input
-            l10nId="editor-document-title-value"
-            value={titleInput}
-            onChange={this.updateTitleInput}
-            disabled={viewPermission}
-          />
-        </span>
-      </form>
+      <div className="draft__title">
+        {
+          viewPermission ?
+            titleInput
+          : <EditableText text={titleInput} onAccept={this.changeTitle} />
+        }
+      </div>
     )
   }
 }

@@ -167,19 +167,20 @@ class Module extends React.Component<Props> {
               placeholder="Are you sure?"
               size="medium"
               onClose={this.closeRemoveModuleDialog}
+              showCloseButton={false}
             >
               <div className="dialog__buttons">
-                <Button clickHandler={this.removeModule}>
-                  <Localized id="book-remove-module-confirm">
-                    Delete
+                <Button clickHandler={this.closeRemoveModuleDialog}>
+                  <Localized id="book-remove-module-cancel">
+                    Cancel
                   </Localized>
                 </Button>
                 <Button
                   type="danger"
-                  clickHandler={this.closeRemoveModuleDialog}
+                  clickHandler={this.removeModule}
                 >
-                  <Localized id="book-remove-module-cancel">
-                    Cancel
+                  <Localized id="book-remove-module-confirm">
+                    Delete
                   </Localized>
                 </Button>
               </div>
@@ -190,7 +191,7 @@ class Module extends React.Component<Props> {
           showBeginProcess && mod ?
             <Dialog
               l10nId="book-begin-process-title"
-              placeholder="Configure and begin process."
+              placeholder="Configure and begin process"
               size="medium"
               className="bookpart__item--module begin-process-dialog"
               onClose={this.closeBeginProcessDialog}

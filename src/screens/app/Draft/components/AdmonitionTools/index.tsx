@@ -5,7 +5,6 @@ import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
 import Classes from '../Classes'
-import SwitchableTypes from '../SwitchableTypes'
 
 import { OnToggle } from '../ToolboxDocument'
 
@@ -48,11 +47,6 @@ export default function AdmonitionTools({ editor, value, toggleState, onToggle }
         options={ADMONITIONS_TYPES.map(t => {return {value: t, label: t}})}
         formatOptionLabel={OptionLabel}
       />
-      {
-        isSelectionInFirstNode ?
-          <SwitchableTypes editor={editor} value={value} />
-        : null
-      }
       <Classes editor={editor} block={admonition} />
     </ToolGroup>
   )

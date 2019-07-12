@@ -157,7 +157,12 @@ class Books extends React.Component<Props> {
                       onFilesError={this.onFilesError}
                       accepts={['.zip', '.rar']}
                     />
-                    <div className="dialog__buttons dialog__buttons--center">
+                    <div className="dialog__buttons">
+                      <Button clickHandler={this.closeAddBookDialog}>
+                        <Localized id="book-list-add-book-cancel">
+                          Cancel
+                        </Localized>
+                      </Button>
                       <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
                         <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
                       </Localized>

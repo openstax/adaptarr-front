@@ -8,6 +8,8 @@ import Icon from 'src/components/ui/Icon'
 
 export type Props = {
   target?: string,
+  overflowAuto?: boolean,
+  showCloseButton?: boolean,
   content?: () => React.ReactNode,
   onClose?: () => void,
 }
@@ -38,7 +40,7 @@ export default class Modal extends React.Component<Props> {
   render() {
     if (!this.state.open) return null
 
-    const { content, children, target } = this.props
+    const { content, children, target, overflowAuto = false, showCloseButton = true } = this.props
     const c = content ? content() : children
 
     return (
@@ -50,13 +52,17 @@ export default class Modal extends React.Component<Props> {
           onKeyDown={this.onKeyDown}
           ref={el => el && (this.back = el)}
         >
-          <Button
-            className="modal__close"
-            clickHandler={this.onClose}
-          >
-            <Icon name="close" />
-          </Button>
-          <div className="modal__content">
+          <div className={`modal__content ${overflowAuto ? 'overflow-auto' : ''}`}>
+            {
+              showCloseButton ?
+                <Button
+                  className="modal__close"
+                  clickHandler={this.onClose}
+                >
+                  <Icon name="close" />
+                </Button>
+              : null
+            }
             {c}
           </div>
         </div>

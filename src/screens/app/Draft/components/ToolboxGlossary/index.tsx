@@ -82,6 +82,7 @@ class Toolbox extends React.Component<Props> {
           editor={editor}
           value={value}
           selectionParent={selectionParent}
+          showSwitchableTypes={false}
         />
 
         <DefinitionTools

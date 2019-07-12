@@ -18,6 +18,7 @@ export type DraftData = {
   language: string,
   permissions?: SlotPermission[],
   step?: DraftStep,
+  books: string[],
 }
 
 /**
@@ -73,7 +74,7 @@ export default class Draft extends Base<DraftData> {
   }
 
   /**
-   * Fetch all drafts owned by current user.
+   * Fetch all drafts which are in process in which user have a slot.
    */
   static async all(): Promise<Draft[]> {
     const drafts = await axios.get('drafts')
@@ -96,14 +97,6 @@ export default class Draft extends Base<DraftData> {
    */
   static async details(draftId: string): Promise<ProcessDetails> {
     return (await elevated(() => axios.get(`drafts/${draftId}/process`))).data
-  }
-
-  /**
-   * Fetch all books ids in which this draft occurs.
-   */
-  async books(): Promise<string[]> {
-    const books = await axios.get(`drafts/${this.module}/books`)
-    return books.data
   }
 
   /**
@@ -130,6 +123,11 @@ export default class Draft extends Base<DraftData> {
    * Information about the step this draft is currently in.
    */
   step?: DraftStep
+
+  /**
+   * All books ids in which this draft occurs.
+   */
+  books: string[]
 
   /**
    * Advance this draft to the next step.

@@ -137,17 +137,15 @@ class App extends React.Component<Props> {
                     <ul className="alerts__list">
                       {
                         alerts.map((alert: types.Alert) => {
-                          
+
                           switch(alert.kind) {
                             case 'alert':
                               return (
-                                <li key={alert.id} className={`alerts__alert alert--${alert.data.kind}`}>
-                                  <span 
-                                    className="alerts__close" 
-                                    onClick={() => this.props.removeAlert(alert)}
-                                  >
-                                    <Icon name="close"/>
-                                  </span>
+                                <li
+                                  key={alert.id}
+                                  className={`alerts__alert alert--${alert.data.kind}`}
+                                  onClick={() => this.props.removeAlert(alert)}
+                                >
                                   <Localized id={alert.data.message} {...alert.data.arguments}>
                                     Unknow alert
                                   </Localized>
@@ -155,13 +153,11 @@ class App extends React.Component<Props> {
                               )
                             case 'notification':
                               return (
-                                <li key={alert.id} className="alerts__alert alert--notification">
-                                  <span 
-                                    className="alerts__close" 
-                                    onClick={() => this.props.removeAlert(alert)}
-                                  >
-                                    <Icon name="close"/>
-                                  </span>
+                                <li
+                                  key={alert.id}
+                                  className="alerts__alert alert--notification"
+                                  onClick={() => this.props.removeAlert(alert)}
+                                >
                                   <Notification
                                     notification={alert.data}
                                   />

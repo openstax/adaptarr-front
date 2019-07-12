@@ -252,7 +252,7 @@ class Draft extends React.Component<Props> {
     const { documentDbContent, documentDbGlossary, storage, draft } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
     const permissions = draft.permissions || []
-    const viewPermission = permissions.every(p => p === 'view')
+    const viewPermission = permissions.length === 0 || permissions.every(p => p === 'view')
     const isEditorFocused = this.isEditorFocused()
     const showGlossaryToolbox = this.glossaryEditor.current &&
       this.glossaryEditor.current.value.selection.isFocused
@@ -278,7 +278,7 @@ class Draft extends React.Component<Props> {
 
     return (
       <Section>
-        <Header>
+        <Header fixed={true}>
           <DraftInfo draft={draft} />
           <StepChanger
             draft={draft}
@@ -393,20 +393,19 @@ class Draft extends React.Component<Props> {
               l10nId="draft-remove-glossary-dialog"
               placeholder="Are you sure you want to remove glossary?"
               onClose={this.closeRemoveGlossaryDialog}
+              showCloseButton={false}
             >
               <div className="dialog__buttons">
+                <Button clickHandler={this.closeRemoveGlossaryDialog}>
+                  <Localized id="draft-cancel">Cancel</Localized>
+                </Button>
                 <Button
                   type="danger"
                   clickHandler={this.removeGlossary}
                 >
                   <Localized id="draft-remove-glossary">
-                    Remove glossary
+                    Remove
                   </Localized>
-                </Button>
-                <Button
-                  clickHandler={this.closeRemoveGlossaryDialog}
-                >
-                  <Localized id="draft-cancel">Cancel</Localized>
                 </Button>
               </div>
             </Dialog>

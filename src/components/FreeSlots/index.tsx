@@ -42,7 +42,7 @@ class FreeSlots extends React.Component<Props> {
                         <span className="free-slots__draft">
                           {slot.draft.title}
                         </span>
-                        <Button to={`/modules/${slot.draft.module}`}>
+                        <Button to={`/drafts/${slot.draft.module}`}>
                           <Localized id="free-slots-view-draft">
                             View draft
                           </Localized>
@@ -88,7 +88,8 @@ class FreeSlots extends React.Component<Props> {
         this.props.onUpdate(freeSlots)
       })
       .catch(e => {
-        store.dispatch(addAlert('error', 'free-slots-error', {details: e.response.data.error}))
+        const details = e.response.data.error
+        store.dispatch(addAlert('error', 'free-slots-error', {details: details ? details : 'none'}))
       })
   }
 }

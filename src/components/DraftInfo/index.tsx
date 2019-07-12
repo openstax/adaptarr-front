@@ -60,7 +60,7 @@ class DraftInfo extends React.Component<Props> {
             <Dialog
               size="medium"
               l10nId="draft-info-title"
-              title="Informations about process for this draft"
+              placeholder="Informations about process for this draft"
               onClose={this.closeDraftInfo}
             >
               <div className="draft-info__content">

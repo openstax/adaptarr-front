@@ -5,6 +5,7 @@ import { Localized } from 'fluent-react/compat'
 
 import Icon from 'src/components/ui/Icon'
 import Button from 'src/components/ui/Button'
+import Dialog from 'src/components/ui/Dialog'
 
 type Props = {
   onChange: (style: string) => any
@@ -25,13 +26,13 @@ class StyleSwitcher extends React.Component<Props> {
     this.setState({ open: !this.state.open })
   }
 
-  private onClick = (e: React.MouseEvent<HTMLLIElement>) => {
-    const choice = (e.target as HTMLUListElement).dataset.choice
+  private onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const style = (e.target as HTMLButtonElement).dataset.id
 
-    if (!choice) return
+    if (!style) return
 
-    this.setState({ style: choice })
-    this.props.onChange('editor--' + choice)
+    this.setState({ style })
+    this.props.onChange('editor--' + style)
     this.setState({ open: false })
   }
 
@@ -39,26 +40,37 @@ class StyleSwitcher extends React.Component<Props> {
     const { style, open } = this.state
 
     return (
-      <div className={`style-switcher ${open ? 'open' : 'close'}`}>
+      <div className="style-switcher">
         <Button clickHandler={this.toggleSwitcher} withBorder={true}>
           <Icon size="small" name="cog" />
         </Button>
-        <ul>
-          {
-            this.styles.map(choice => (
-              <li
-                key={choice}
-                className={`style-switcher__choice ${style === choice ? 'active' : ''}`}
-                data-choice={choice}
-                onClick={this.onClick}
-              >
-                <Localized id="draft-style-switcher" $style={choice}>
-                  {choice}
-                </Localized>
-              </li>
-            ))
-          }
-        </ul>
+        {
+          open ?
+            <Dialog
+              size="medium"
+              l10nId="draft-style-switcher-title"
+              placeholder="Choose style in which you want to display this document"
+              onClose={this.toggleSwitcher}
+            >
+              <div className="dialog__buttons">
+                {
+                  this.styles.map(s => (
+                    <Button
+                      key={s}
+                      dataId={s}
+                      clickHandler={this.onClick}
+                      className={s === style ? 'active' : undefined}
+                    >
+                      <Localized id="draft-style-switcher" $style={s}>
+                        {s}
+                      </Localized>
+                    </Button>
+                  ))
+                }
+              </div>
+            </Dialog>
+          : null
+        }
       </div>
     )
   }

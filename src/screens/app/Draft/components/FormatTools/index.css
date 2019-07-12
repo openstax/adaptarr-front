@@ -1,0 +1,8 @@
+.toolbox-format__special-tools {
+  display: flex;
+  align-items: center;
+}
+
+.toolbox-format__special-tools .switchable-types {
+  flex: 1;
+}

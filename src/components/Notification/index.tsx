@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
 
-import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import { Notification, User, Module } from 'src/api'
 
+import DateDiff from 'src/components/DateDiff'
 import Avatar from 'src/components/ui/Avatar'
 
 import { TeamMap, ModulesMap, NotificationStatus } from 'src/store/types'
@@ -94,7 +94,7 @@ class NotificationComp extends React.Component<Props> {
               : null*/
              }
             <span className="notification__date">
-              { dateDiff(noti.timestamp) }
+              <DateDiff dateString={noti.timestamp} />
             </span>
           </span>
         </span>

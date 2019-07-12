@@ -167,16 +167,17 @@ class RoleManager extends React.Component<Props> {
               placeholder="Are you sure you want to delete this role?"
               $name={role.name}
               onClose={this.closeDeleteRoleDialog}
+              showCloseButton={false}
             >
               <div className="dialog__buttons">
-                <Button clickHandler={this.removeRole}>
-                  <Localized id="role-delete-confirm">Confirm</Localized>
+                <Button clickHandler={this.closeDeleteRoleDialog}>
+                  <Localized id="role-delete-cancel">Cancel</Localized>
                 </Button>
                 <Button
                   type="danger"
-                  clickHandler={this.closeDeleteRoleDialog}
+                  clickHandler={this.removeRole}
                 >
-                  <Localized id="role-delete-cancel">Cancel</Localized>
+                  <Localized id="role-remove">Remove</Localized>
                 </Button>
               </div>
             </Dialog>

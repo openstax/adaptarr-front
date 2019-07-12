@@ -25,30 +25,9 @@
   margin: 10px auto 0 auto;
 }
 
-.draft__save-buttons {
-  position: fixed;
-  top: 50px;
-  display: flex;
-  flex-direction: column;
-  z-index: 1;
-}
-
-.draft__save-buttons > button {
-  margin-bottom: 5px;
-}
-
 .document, .glossary {
   position: relative;
   display: flex;
-}
-
-.document .editor--document {
-  margin-top: 60px;
-}
-
-.document form {
-  position: absolute;
-  width: 100%;
 }
 
 .document {

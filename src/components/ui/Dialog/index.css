@@ -20,21 +20,19 @@
   width: 300px;
   width: 600px;
   max-height: 80%;
-  overflow: auto;
-  padding: 20px;
   background-color: var(--light-bg);
   border-radius: 17px;
 }
 
-.dialog__container--small .dialog__content {
+.dialog__content--small {
   width: 300px;
 }
 
-.dialog__container--medium .dialog__content {
+.dialog__content--medium {
   width: 600px;
 }
 
-.dialog__container--big .dialog__content {
+.dialog__content--big {
   width: 900px;
 }
 
@@ -77,19 +75,6 @@
 
 .dialog__buttons--end .button, .dialog__buttons--end input[type="submit"] {
   margin-left: 10px;
-}
-
-.dialog__close {
-  font-size: 14px;
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 10px;
-  cursor: pointer;
-}
-
-.dialog__close .icon svg {
-  fill: var(--danger);
 }
 
 .dialog__content .avatar__name {

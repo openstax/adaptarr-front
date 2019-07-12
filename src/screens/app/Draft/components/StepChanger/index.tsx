@@ -54,17 +54,30 @@ class StepChanger extends React.Component<Props> {
             <Dialog
               size="medium"
               l10nId="step-changer-details-dialog-title"
-              title="Choose next step"
+              placeholder="Choose next step"
               onClose={this.closeDetailsDialog}
+              showCloseButton={false}
             >
-              <div className="step-changer__dialog-content">
-                {
-                  step.links.map(l => {
-                    return <Button clickHandler={() => this.handleStepChange(l)}>
-                      {l.name}
-                    </Button>
-                  })
-                }
+              <div className="dialog__buttons">
+                <Button clickHandler={this.closeDetailsDialog}>
+                  <Localized id="step-changer-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
+                <div className="step-changer__dialog-content">
+                  {
+                    step.links.map(l => {
+                      return (
+                        <Button
+                          key={l.to}
+                          clickHandler={() => this.handleStepChange(l)}
+                        >
+                          {l.name}
+                        </Button>
+                      )
+                    })
+                  }
+                </div>
               </div>
             </Dialog>
           : null
@@ -75,20 +88,18 @@ class StepChanger extends React.Component<Props> {
               size="medium"
               l10nId="step-changer-confirm-dialog-title"
               onClose={this.closeConfirmDialog}
+              showCloseButton={false}
             >
               {
                 unsavedChanges ?
                   <>
-                    <span className="step-changer__info">
+                    <p className="step-changer__info">
                       <Localized id="step-changer-unsaved-changes">
                         You have unsaved changes.
                       </Localized>
-                    </span>
+                    </p>
                     <div className="dialog__buttons">
-                      <Button
-                        type="danger"
-                        clickHandler={this.closeConfirmDialog}
-                      >
+                      <Button clickHandler={this.closeConfirmDialog}>
                         <Localized id="step-changer-cancel">
                           Cancel
                         </Localized>
@@ -107,17 +118,14 @@ class StepChanger extends React.Component<Props> {
                   </>
                 :
                   <div className="dialog__buttons">
+                    <Button clickHandler={this.closeConfirmDialog}>
+                      <Localized id="step-changer-cancel">
+                        Cancel
+                      </Localized>
+                    </Button>
                     <Button clickHandler={this.nextStep}>
                       <Localized id="step-changer-advance">
                         Advance
-                      </Localized>
-                    </Button>
-                    <Button
-                      type="danger"
-                      clickHandler={this.closeConfirmDialog}
-                    >
-                      <Localized id="step-changer-cancel">
-                        Cancel
                       </Localized>
                     </Button>
                   </div>

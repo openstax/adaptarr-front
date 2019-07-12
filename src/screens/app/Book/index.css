@@ -86,7 +86,6 @@
   display: inline-flex;
   align-items: center;
   white-space: nowrap;
-  overflow: hidden;
 }
 
 .bookpart__item--module .bookpart__title {

@@ -45,7 +45,10 @@ class DraftsList extends React.Component<Props> {
     let draftsByBooks: Map<string | null, BooksWithDrafts> = new Map()
 
     for (const draft of drafts) {
-      const booksIds = await draft.books()
+      // Do not show drafts for which user doesn't have permissions
+      if (!draft.permissions || draft.permissions.length === 0) continue
+
+      const booksIds = draft.books
       const books = booksIds.map(bookId => booksMap.get(bookId)!)
 
       let booksName = books.length ? '' : null

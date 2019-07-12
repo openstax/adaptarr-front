@@ -5,8 +5,10 @@ const instance = axios.create({
 })
 
 instance.interceptors.request.use((config) => {
-  config.headers = {
-    'Content-Type': 'application/json',
+  if (!config.headers) {
+    config.headers = {
+      'Content-Type': 'application/json',
+    }
   }
 
   return config

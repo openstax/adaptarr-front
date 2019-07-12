@@ -3,9 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import validateL20nArgs from 'src/helpers/validateL20nArgs'
-
-import Icon from 'src/components/ui/Icon'
+import Modal from 'src/components/Modal'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
@@ -14,24 +12,20 @@ type Props = {
   className?: string
   onClose: () => void
   children: React.ReactNode
+  showCloseButton?: boolean
   [localizationProps: string]: any
 }
 
-const dialog = ({ size, l10nId, placeholder = "...", className, onClose, children, ...args }: Props) => {
-  const clickOnOverlay = (e: React.MouseEvent<HTMLElement>) => {
-    const element = e.target as HTMLElement
-    if (/dialog__container/.test(element.className)) onClose()
-  }
+class Dialog extends React.Component<Props> {
+  modal: Modal | null = null
 
-  return (
-    <div
-      className={`dialog__container dialog__container--${size ? size : 'small'} ${className ? className : null}`}
-      onClick={clickOnOverlay}
-    >
-      <div className="dialog__content">
-        <span className="dialog__close" onClick={onClose}>
-          <Icon name="close" />
-        </span>
+  private setModal = (el: Modal | null) => el && (this.modal = el)
+
+  private renderModal = () => {
+    const { size, l10nId, placeholder = "...", className, onClose, children, showCloseButton, ...args } = this.props
+
+    return (
+      <div className={`dialog__content dialog__content--${size ? size : 'small'} ${className ? className : ''}`}>
         <h2 className="dialog__title">
           <Localized id={l10nId} {...args}>
             {placeholder}
@@ -39,8 +33,24 @@ const dialog = ({ size, l10nId, placeholder = "...", className, onClose, childre
         </h2>
         {children}
       </div>
-    </div>
-  )
+    )
+  }
+
+  componentDidMount() {
+    this.modal!.open()
+  }
+
+  public render() {
+    const { onClose, showCloseButton = true } = this.props
+    return (
+      <Modal
+        ref={this.setModal}
+        content={this.renderModal}
+        onClose={onClose}
+        showCloseButton={showCloseButton}
+      />
+    )
+  }
 }
 
-export default dialog
+export default Dialog

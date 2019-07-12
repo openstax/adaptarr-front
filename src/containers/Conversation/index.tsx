@@ -3,10 +3,10 @@ import './index.css'
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import dateDiff from 'src/helpers/dateDiff'
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import * as api from 'src/api'
 
+import DateDiff from 'src/components/DateDiff'
 import Avatar from 'src/components/ui/Avatar'
 import MessageInput from 'src/components/MessageInput'
 
@@ -64,7 +64,7 @@ class Conversation extends React.Component<Props> {
               dangerouslySetInnerHTML={{__html: this.parseMessageText(msg.message)}}
             ></div>
             <div className="conv__date">
-              {dateDiff(msg.timestamp)}
+              <DateDiff dateString={msg.timestamp} />
             </div>
           </div>
         </div>

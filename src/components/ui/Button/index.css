@@ -1,6 +1,7 @@
 .button {
   /* reset button styling */
   display: inline-flex;
+  justify-content: center;
   border: none;
   margin: 0;
   padding: 0;
@@ -23,6 +24,10 @@
   cursor: pointer;
   border-radius: 17px;
   outline: none !important;
+}
+
+.button.active {
+  background-color: var(--darkest-bg);
 }
 
 .button--borderd {

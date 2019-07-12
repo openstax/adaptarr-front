@@ -185,30 +185,23 @@ form input[type="submit"] {
   border: 1px solid var(--light-bg);
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.95);
-}
-
-.alerts__close {
-  position: absolute;
-  top: 5px;
-  right: 5px;
-  padding: 5px;
   cursor: pointer;
 }
 
 .alert--success {
-  border-color: var(--green);
+  border-color: var(--dark-bg);
 }
 
 .alert--warning {
-  border-color: var(--orange);
+  border-color: var(--danger);
 }
 
 .alert--info {
-  border-color: var(--blue);
+  border-color: var(--dark-bg);
 }
 
 .alert--error {
-  border-color: var(--red);
+  border-color: var(--danger);
 }
 
 .cnxml title {

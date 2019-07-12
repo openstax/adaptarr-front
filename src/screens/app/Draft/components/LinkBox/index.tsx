@@ -3,10 +3,13 @@ import './index.css'
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 type Props = {
-  onAccept: (text: string, url: string) => any
+  text?: string
+  onAccept: (text: string, url: string) => void
+  onCancel: () => void
 }
 
 class LinkBox extends React.Component<Props> {
@@ -15,7 +18,7 @@ class LinkBox extends React.Component<Props> {
     url: string
     isUrlValid: boolean
   } = {
-    text: '',
+    text: this.props.text || '',
     url: '',
     isUrlValid: false,
   }
@@ -75,7 +78,14 @@ class LinkBox extends React.Component<Props> {
               validation={{custom: () => isUrlValid}}
             />
           </label>
-          <input className="button" type="submit" value="Accept" disabled={!isUrlValid} />
+          <div className="dialog__buttons dialog__buttons">
+            <Button clickHandler={this.props.onCancel}>
+              <Localized id="editor-tools-link-cancel">Cancel</Localized>
+            </Button>
+            <Localized id="editor-tools-link-confirm" attrs={{value: true}}>
+              <input className="button" type="submit" value="Confirm" disabled={!isUrlValid} />
+            </Localized>
+          </div>
         </form>
       </div>
     )

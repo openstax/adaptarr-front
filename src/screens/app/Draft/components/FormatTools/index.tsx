@@ -2,34 +2,75 @@ import * as React from 'react'
 import { Editor, Value, Text, Document, Block, Inline } from 'slate'
 import { List } from 'immutable'
 
+import SwitchableTypes from '../SwitchableTypes'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Tooltip from 'src/components/ui/Tooltip'
+
+import './index.css'
 
 export type Props = {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
+  showSwitchableTypes?: boolean,
 }
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
 
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code', 'term']
 
-const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section']
+const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section', 'ul_list', 'ol_list', 'list_item']
 
 export default class FormatTools extends React.Component<Props> {
   render() {
-    const { editor, value } = this.props
+    const { editor, value, showSwitchableTypes = true } = this.props
     const { startBlock } = value
     const code = startBlock && startBlock.type === 'code' ? startBlock : null
+    const sourceElement = startBlock && startBlock.type === 'source_element' ? startBlock : null
 
-    if (!startBlock || editor.isVoid(startBlock) || code) {
+    if (!startBlock || editor.isVoid(startBlock) || code || sourceElement) {
       return null
     }
 
+    const undosNumber = value.data.get('undos').size
+    const redosNumber = value.data.get('redos').size
+
     return (
       <div className="toolbox-format">
+        <div className="toolbox-format__special-tools">
+          <Tooltip
+            l10nId="editor-tools-format-button-undo"
+            direction="up"
+            className="toolbox__button--with-tooltip"
+          >
+            <Button
+              clickHandler={this.undo}
+              isDisabled={!undosNumber}
+              className="toolbox__button--only-icon"
+            >
+              <Icon size="small" name="undo" />
+            </Button>
+          </Tooltip>
+          <Tooltip
+            l10nId="editor-tools-format-button-redo"
+            direction="up"
+            className="toolbox__button--with-tooltip"
+          >
+            <Button
+              clickHandler={this.redo}
+              isDisabled={!redosNumber}
+              className="toolbox__button--only-icon"
+            >
+              <Icon size="small" name="redo" />
+            </Button>
+          </Tooltip>
+          {
+            showSwitchableTypes ?
+              <SwitchableTypes editor={editor} value={value} />
+            : null
+          }
+        </div>
         {FORMATS.map(format => (
           <Tooltip
             l10nId={`editor-tools-format-button-${format}`}
@@ -76,6 +117,14 @@ export default class FormatTools extends React.Component<Props> {
     )
   }
 
+  private undo = () => {
+    this.props.editor.undo()
+  }
+
+  private redo = () => {
+    this.props.editor.redo()
+  }
+
   private isActive = (format: Format) => {
     const isMark = this.props.value.marks.some(mark => mark ? mark.type === format : false)
     const inline = this.props.value.startInline
@@ -120,7 +169,12 @@ export default class FormatTools extends React.Component<Props> {
   }
 
   private formatList = () => {
-    this.props.editor.wrapInList('ul_list')
+    const { editor, value } = this.props
+    if (editor.isSelectionInList(value)) {
+      editor.unwrapList()
+    } else {
+      editor.wrapInList('ul_list')
+    }
   }
 
   private validateParents = (validParents: string[]): boolean => {

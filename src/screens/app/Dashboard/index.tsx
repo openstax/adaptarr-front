@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Localized } from 'fluent-react/compat'
 import { History } from 'history'
 
 import store from 'src/store'

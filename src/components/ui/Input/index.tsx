@@ -37,6 +37,10 @@ class Input extends React.Component<Props> {
     focused: false,
   }
 
+  unTouch = () => {
+    this.setState({ touched: false })
+  }
+
   private changeInputVal = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!this.state.touched) {
       this.setState({ touched: true })
