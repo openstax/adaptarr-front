@@ -1,3 +1,9 @@
+.dialog__content .process-preview {
+  max-height: 400px;
+  overflow: auto;
+  margin-bottom: 20px;
+}
+
 .process-preview {
   display: flex;
   flex-wrap: wrap;

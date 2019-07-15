@@ -170,7 +170,7 @@ form input[type="submit"] {
 
 .alerts {
   position: fixed;
-  z-index: 99;
+  z-index: 9999;
   bottom: 20px;
   right: 20px;
 }
