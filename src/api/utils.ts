@@ -26,7 +26,7 @@ export async function elevated<T>(action: () => Promise<T>): Promise<T> {
  * will resolve once user has authenticated, and reject should user cancel
  * authentication.
  */
-function elevate(): Promise<void> {
+export function elevate(): Promise<void> {
   return new Promise((resolve, reject) => {
     const url = `${location.origin}/elevate?action=message`
     const left = screen.width / 2 - 210
