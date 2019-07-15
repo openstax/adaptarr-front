@@ -65,7 +65,7 @@ export default class BookPart extends Base<PartData> {
   /**
    * ID of the book this is a part of.
    */
-  private book: string
+  book: string
 
   constructor(data: PartData, book: Book | string) {
     super(data)
