@@ -1,17 +1,19 @@
-import './index.css'
-
 import * as React from 'react'
+import Nestable from 'react-nestable'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
+import { Link } from 'react-router-dom'
+
 
 import * as api from 'src/api'
-import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
+import { PartData, GroupData } from 'src/api/bookpart'
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
-import DraftInfo from 'src/components/DraftInfo'
-import Button from 'src/components/ui/Button'
-import { Link } from 'react-router-dom';
+import Spinner from 'src/components/Spinner'
+import Icon from 'src/components/ui/Icon'
+
+import './index.css'
 
 type Props = {
   booksMap: {
@@ -20,9 +22,11 @@ type Props = {
   drafts: api.Draft[]
 }
 
-type BooksWithDrafts = {
-  books: api.Book[]
-  drafts: api.Draft[]
+type BookWithPartsAndDrafts = {
+  id: string,
+  name: string,
+  parts: api.BookPart[],
+  drafts: api.Draft[],
 }
 
 const mapStateToProps = ({ booksMap }: State) => {
@@ -32,110 +36,212 @@ const mapStateToProps = ({ booksMap }: State) => {
 }
 
 class DraftsList extends React.Component<Props> {
-
   state: {
-    booksWithDrafts: Map<string | null, BooksWithDrafts> | undefined
+    isLoading: boolean
+    books: Map<string, BookWithPartsAndDrafts>
   } = {
-    booksWithDrafts: undefined,
-  }
-
-  private sortDraftsByBooksName = async () => {
-    const { drafts, booksMap: { booksMap } } = this.props
-
-    let draftsByBooks: Map<string | null, BooksWithDrafts> = new Map()
-
-    for (const draft of drafts) {
-      // Do not show drafts for which user doesn't have permissions
-      if (!draft.permissions || draft.permissions.length === 0) continue
-
-      const booksIds = draft.books
-      const books = booksIds.map(bookId => booksMap.get(bookId)!)
-
-      let booksName = books.length ? '' : null
-      books.forEach((b, i) => {
-        if (i === books.length - 1) {
-          booksName += b.title
-        } else {
-          booksName += b.title + ', '
-        }
-      })
-
-      const booksWithDrafts = draftsByBooks.get(booksName)
-
-      if (booksWithDrafts) {
-        // Update drafts list for this books
-        let drfts = booksWithDrafts.drafts
-        if (!drfts.some(d => d.module === draft.module)) {
-          // If this draft is not on the list for this books then add it
-          drfts.push(draft)
-        }
-        draftsByBooks.set(booksName, {books: booksWithDrafts.books, drafts: drfts.sort(sortArrayByTitle)})
-      } else {
-        // Create entry for this books
-        draftsByBooks.set(booksName, {books, drafts: [draft]})
-      }
-    }
-
-    this.setState({ booksWithDrafts: draftsByBooks })
+    isLoading: true,
+    books: new Map(),
   }
 
   componentDidUpdate = (prevProps: Props) => {
     if (prevProps.drafts !== this.props.drafts) {
-      this.sortDraftsByBooksName()
+      this.setState({ isLoading: true })
+      this.fetchBooks()
     }
   }
 
+  private fetchBooks = async () => {
+    const { drafts, booksMap: { booksMap } } = this.props
+    let books: Map<string, BookWithPartsAndDrafts> = new Map()
+
+    for (let draft of drafts) {
+      if (draft.books.length === 0) {
+        if (books.has('empty')) {
+          const entry = books.get('empty')!
+          books.set('empty', {
+            id: 'empty',
+            name: '',
+            parts: [],
+            drafts: [...entry.drafts, draft],
+          })
+        } else {
+          books.set('empty', {
+            id: 'empty',
+            name: '',
+            parts: [],
+            drafts: [draft],
+          })
+        }
+      }
+
+      for (let bookId of draft.books) {
+        const book = booksMap.get(bookId)
+        const bookParts = book ? (await book.parts()).parts! : []
+
+        if (books.has(bookId)) {
+          const entry = books.get(bookId)!
+          books.set(bookId, {
+            ...entry,
+            drafts: [...entry.drafts, draft],
+          })
+        } else {
+          books.set(bookId, {
+            id: bookId,
+            name: book ? book.title : "...",
+            parts: bookParts,
+            drafts: [draft],
+          })
+        }
+      }
+    }
+
+    // Remove bookparts on which user can't work
+    for (let data of books.values()) {
+      let { id, parts, drafts } = data
+      let trimmedParts: api.BookPart[] = []
+      parts.forEach(part => {
+        if (part.kind === 'module') {
+          if (drafts.findIndex(d => d.module === part.id) >= 0) {
+            trimmedParts.push(part)
+          }
+        } else if (part.kind === 'group') {
+          const trimmedGroup = this.trimDraftsFromGroup(part, drafts)
+          if (trimmedGroup) {
+            trimmedParts.push(trimmedGroup)
+          }
+        }
+      })
+      books.set(id, {
+        ...data,
+        parts: trimmedParts,
+      })
+    }
+
+    this.setState({ isLoading: false, books })
+  }
+
+  private trimDraftsFromGroup = (group: api.BookPart, drafts: api.Draft[]): api.BookPart | null => {
+    let parts: api.BookPart[] = []
+    group.parts!.forEach(p => {
+      if (p.kind === 'module') {
+        if (drafts.findIndex(d => d.module === p.id) >= 0) {
+          parts.push(p)
+        }
+      } else if (p.kind === 'group') {
+        const trimmedGroup = this.trimDraftsFromGroup(p, drafts)
+        if (trimmedGroup) {
+          parts.push(trimmedGroup)
+        }
+      }
+    })
+    return parts.length ? new api.BookPart({...group, parts: parts} as GroupData, group.book) : null
+  }
+
   componentDidMount = () => {
-    this.sortDraftsByBooksName()
+    this.setState({ isLoading: true })
+    this.fetchBooks()
   }
 
   public render() {
-    const { booksWithDrafts } = this.state
+    const { isLoading, books } = this.state
 
     return (
       <div className="draftsList">
         {
-          booksWithDrafts ?
-            <ul className="list">
-              {
-                Array.from(booksWithDrafts.entries()).map(([booksName, data]) => (
-                  <li key={booksName || ''} className="list__item draftsList__book">
-                    <div className="draftsList__book-title">
-                      { booksName
-                        ? booksName
-                        : <Localized id="dashboard-drafts-section-not-assigned">
-                          Not assigned to any book
-                        </Localized>
+          isLoading ?
+            <Spinner />
+          :
+            books.size ?
+              <ul className="list">
+                {
+                  Array.from(books.values()).map(b => (
+                    <li key={b.id} className="list__item draftsList__book">
+                      {
+                        b.name ?
+                          <>
+                            <div className="draftsList__book-title">
+                              {b.name}
+                            </div>
+                            <ul className="list">
+                              <Nestable
+                                isDisabled={true}
+                                items={b.parts}
+                                className="book-collection"
+                                childrenProp="parts"
+                                renderItem={this.renderItem}
+                                renderCollapseIcon={this.renderCollapseIcon}
+                                collapsed
+                              />
+                            </ul>
+                          </>
+                        :
+                          <>
+                            <div className="draftsList__book-title">
+                              <Localized id="dashboard-drafts-section-not-assigned">
+                                Not assigned to any book
+                              </Localized>
+                            </div>
+                            <ul className="list">
+                              {
+                                b.drafts.map(d => (
+                                  <li key={d.module} className="list__item">
+                                    <Link
+                                      to={`/drafts/${d.module}`}
+                                      className="draftsList__draft-title"
+                                    >
+                                      {d.title}
+                                    </Link>
+                                  </li>
+                                ))
+                              }
+                            </ul>
+                          </>
                       }
-                    </div>
-                    {
-                      data.drafts.length ?
-                        <ul className="list">
-                          {
-                            data.drafts.map(draft => (
-                              <li key={draft.module} className="list__item">
-                                <Link
-                                  to={`/drafts/${draft.module}`}
-                                  className="draftsList__draft-title"
-                                >
-                                  {draft.title}
-                                </Link>
-                              </li>
-                            ))
-                          }
-                        </ul>
-                      : null
-                    }
-                  </li>
-                ))
-              }
-            </ul>
-          : <Localized id="dashboard-drafts-empty">
-            You don't have any drafts.
-          </Localized>
+                    </li>
+                  ))
+                }
+              </ul>
+            :
+              <Localized id="dashboard-drafts-empty">
+                You don't have any drafts.
+              </Localized>
         }
       </div>
     )
+  }
+
+  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+  return (
+      <div className={`bookpart__item bookpart__item--${item.kind}`}>
+        {
+          item.kind === 'group' ?
+            <>
+              <span className="bookpart__icon">
+                {collapseIcon}
+              </span>
+              <div className="bookpart__title">
+                {item.title}
+              </div>
+            </>
+          :
+            <Link
+              to={`/drafts/${item.id}`}
+              className="draftsList__draft-title"
+            >
+              {item.title}
+            </Link>
+        }
+      </div>
+    )
+  }
+
+  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+    if (isCollapsed) {
+      return <Icon name="arrow-right"/>
+    }
+
+    return <Icon name="arrow-down" />
   }
 }
 
