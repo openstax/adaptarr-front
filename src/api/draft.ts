@@ -87,7 +87,11 @@ export default class Draft extends Base<DraftData> {
    * This function requires editing-process:manage permission.
    */
   static async assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId))
+    return await elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId, {
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    }))
   }
 
   /**
