@@ -1781,7 +1781,7 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#62dd77617c45c4da4bf0ffadcb70e6bf4d3c40d6"
+  resolved "https://github.com/katalysteducation/cnx-designer#0063a9d2b25238c3df67570d52e27fbf328507ef"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
