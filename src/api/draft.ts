@@ -163,4 +163,13 @@ export default class Draft extends Base<DraftData> {
   async updateTitle(title: string) {
     await axios.put(`drafts/${this.module}`, { title })
   }
+
+  /**
+   * Cancel process for this draft.
+   *
+   * All changes will be lost.
+   */
+  async cancelProcess(): Promise<any> {
+    await await elevated(() => axios.delete(`drafts/${this.module}`))
+  }
 }
