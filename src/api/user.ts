@@ -16,6 +16,15 @@ export type UserData = {
   language: string,
 }
 
+/**
+ * Session details
+ */
+export type SessionInfo = {
+  expires: string,
+  is_elevated: boolean,
+  permission: Permission[],
+}
+
 export default class User extends Base<UserData> {
   /**
    * Fetch a user by their ID.
@@ -70,6 +79,13 @@ export default class User extends Base<UserData> {
     }
 
     return await axios.put('users/me/password', payload)
+  }
+
+  /**
+   * Current session details.
+   */
+  static async session(): Promise<SessionInfo> {
+    return (await axios.get(`/users/me/session`)).data
   }
 
   /**
