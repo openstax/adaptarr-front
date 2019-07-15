@@ -2,7 +2,8 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import BookPart from './bookpart'
-import { elevated } from './utils'
+import User from './user'
+import { elevated, elevate } from './utils'
 
 export type BookData = {
   id: string,
@@ -72,6 +73,11 @@ export default class Book extends Base<BookData> {
    * compatible with Connexion's ZIP export
    */
   static async create(title: string, content?: File): Promise<Book> {
+    const session = await User.session()
+    if (!session.is_elevated) {
+      await elevate()
+    }
+
     let data: FormData | { title: string }
 
     if (content) {
@@ -82,7 +88,7 @@ export default class Book extends Base<BookData> {
       data = { title }
     }
 
-    let res = await elevated(() => axios.post('books', data))
+    let res = await axios.post('books', data)
     return new Book(res.data)
   }
 
@@ -110,11 +116,16 @@ export default class Book extends Base<BookData> {
    * This method requires elevated permissions.
    */
   async replaceContent(file: File): Promise<void> {
-    await elevated(() => axios.put(`books/${this.id}`, file, {
+    const session = await User.session()
+    if (!session.is_elevated) {
+      await elevate()
+    }
+
+    await axios.put(`books/${this.id}`, file, {
       headers: {
         'Content-Type': 'application/zip',
       },
-    }))
+    })
   }
 
   /**

@@ -7,6 +7,7 @@ import { FilesError } from 'react-files'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import { elevate } from 'src/api/utils'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
@@ -64,7 +65,7 @@ class Books extends React.Component<Props> {
     isEditingUnlocked: false,
   }
 
-  private addBook = (e: React.FormEvent) => {
+  private addBook = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const { titleInput: title, files } = this.state

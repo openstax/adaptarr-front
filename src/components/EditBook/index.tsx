@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
 import * as api from 'src/api'
+import { elevate } from 'src/api/utils'
 
 import Spinner from 'src/components/Spinner'
 import Dialog from 'src/components/ui/Dialog'
