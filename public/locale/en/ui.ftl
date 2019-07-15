@@ -31,6 +31,21 @@ book-begin-process-title = Configure and begin process
 
 book-process-preview-title = Process details:
 
+book-process-cancel-title = Cancel process without saving changes
+
+book-process-cancel-button = Cancel process
+
+book-process-cancel-button-cancel = Cancel
+
+# Alert displayed when process has been finished.
+book-process-cancel-success = Successfully canceled process.
+
+# Alert displayed when process could not be finished.
+#
+# Variables:
+# - $error (string): error details.
+book-process-cancel-error = Something went wrong. Details: { $error }
+
 book-assign-user = Assign user
 
 book-assign-different-user = Assign other user

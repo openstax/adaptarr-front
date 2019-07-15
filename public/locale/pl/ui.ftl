@@ -31,6 +31,21 @@ book-begin-process-title = Skonfiguruj i rozpocznij proces
 
 book-process-preview-title = Szczegóły procesu:
 
+book-process-cancel-title = Przerwij proces bez zapisywania zmian
+
+book-process-cancel-button = Przerwij proces
+
+book-process-cancel-button-cancel = Anuluj
+
+# Alert displayed when process has been finished.
+book-process-cancel-success = Pomyślnie przerwano proces.
+
+# Alert displayed when process could not be finished.
+#
+# Variables:
+# - $error (string): error details.
+book-process-cancel-error = Coś poszło nie tak. Szczegóły: { $error }
+
 book-assign-user = Przypisz użytkownika
 
 book-assign-different-user = Przypisz innego użytkownika

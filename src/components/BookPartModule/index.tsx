@@ -10,7 +10,6 @@ import { addAlert } from 'src/store/actions/Alerts'
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 
 import BeginProcess from 'src/containers/BeginProcess'
@@ -40,11 +39,13 @@ class Module extends React.Component<Props> {
   state: {
     showRemoveModule: boolean
     showBeginProcess: boolean
+    showCancelProcess: boolean
     processStructure: ProcessStructure | null
     module: api.Module | undefined
   } = {
     showRemoveModule: false,
     showBeginProcess: false,
+    showCancelProcess: false,
     processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
   }
@@ -94,6 +95,32 @@ class Module extends React.Component<Props> {
     this.setState({ processStructure: null })
   }
 
+  private showCancelProcess = () => {
+    this.setState({ showCancelProcess: true })
+  }
+
+  private closeCancelProcess = () => {
+    this.setState({ showCancelProcess: false })
+  }
+
+  private cancelProcess = async () => {
+    try {
+      const { item } = this.props
+      const { module: mod } = this.state
+
+      const draft = await api.Draft.load(item.id!)
+      await draft.cancelProcess()
+
+      this.props.modulesMap.set(mod!.id, new api.Module({...mod!, process: null}))
+      store.dispatch(addAlert('success', 'book-process-cancel-success'))
+      this.closeProcessDetails()
+    } catch (e) {
+      console.error(e)
+      store.dispatch(addAlert('success', 'book-process-cancel-error', {details: e.toString()}))
+    }
+    this.closeCancelProcess()
+  }
+
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
@@ -107,6 +134,7 @@ class Module extends React.Component<Props> {
       showBeginProcess,
       processStructure,
       module: mod,
+      showCancelProcess,
     } = this.state
 
     return (
@@ -217,6 +245,36 @@ class Module extends React.Component<Props> {
               <ProcessPreview
                 structure={processStructure}
               />
+              <div className="dialog__buttons dialog__buttons--center">
+                <Button clickHandler={this.showCancelProcess}>
+                  <Localized id="book-process-cancel-button">
+                    Cancel process
+                  </Localized>
+                </Button>
+              </div>
+            </Dialog>
+          : null
+        }
+        {
+          showCancelProcess ?
+            <Dialog
+              l10nId="book-process-cancel-title"
+              placeholder="Cancel process without saving changes"
+              size="medium"
+              onClose={this.closeCancelProcess}
+            >
+              <div className="dialog__buttons">
+                <Button clickHandler={this.closeCancelProcess}>
+                  <Localized id="book-process-cancel-button-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
+                <Button clickHandler={this.cancelProcess}>
+                  <Localized id="book-process-cancel-button">
+                    Cancel process
+                  </Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
