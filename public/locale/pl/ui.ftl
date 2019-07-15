@@ -614,6 +614,8 @@ process-form-remove = Usuń
 
 process-form-process-name = Nazwa procesu
 
+process-form-process-starting-step = Krok początkowy
+
 process-form-slot-title = Lista funkcji:
 
 process-form-slot-add = Dodaj funkcję

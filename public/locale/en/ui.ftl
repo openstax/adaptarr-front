@@ -615,6 +615,8 @@ process-form-remove = Remove
 
 process-form-process-name = Process name
 
+process-form-process-starting-step = Starting step
+
 process-form-slot-title = List of slots:
 
 process-form-slot-add = Add slot
