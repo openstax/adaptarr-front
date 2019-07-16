@@ -120,14 +120,13 @@ class BookCard extends React.Component<Props> {
               onClose={() => this.setState({ showConfirmationDialog: false })}
             >
               <div className="dialog__buttons">
-                <Button clickHandler={this.removeBookPermamently}>
-                  <Localized id="book-delete-confirm">Confirm</Localized>
-                </Button>
                 <Button
-                  type="danger"
                   clickHandler={() => this.setState({ showConfirmationDialog: false })}
                 >
                   <Localized id="book-delete-cancel">Cancel</Localized>
+                </Button>
+                <Button clickHandler={this.removeBookPermamently}>
+                  <Localized id="book-delete-confirm">Confirm</Localized>
                 </Button>
               </div>
             </Dialog>
