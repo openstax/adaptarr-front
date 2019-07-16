@@ -122,7 +122,8 @@ class App extends React.Component<Props> {
                   <Route path="/books/:id" component={Book}/>
                   <Route path="/modules/:id" component={Module}/>
                   <Route path="/drafts/:id" component={Draft}/>
-                  <Route path="/resources" component={Resources}/>
+                  <Route exact path="/resources" component={Resources}/>
+                  <Route path="/resources/:id" component={Resources}/>
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
                   <Route path="/invitations" component={Invitations}/>
