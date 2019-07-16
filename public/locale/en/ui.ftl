@@ -957,6 +957,7 @@ step-changer-save-advance-error = Couldn't save and advance to the next step. De
 permission-label = { $name ->
   [user-invite] Invite users
   [user-delete] Delete users
+  [user-edit] Edit user's profiles
   [user-edit-permissions] Edit user's permissions
   [user-assign-role] Assign roles to users
   [book-edit] Create, delete and edit book content

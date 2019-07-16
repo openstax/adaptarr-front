@@ -959,6 +959,7 @@ step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu.
 permission-label = { $name ->
   [user-invite] Zapraszanie użytkowników
   [user-delete] Usuwanie użytkowników
+  [user-edit] Edytuj profile użytkowników
   [user-edit-permissions] Edycja uprawnień użytkowników
   [user-assign-role] Przypisywanie ról do użytkowników
   [book-edit] Tworzenie, usuwanie i edycja książek

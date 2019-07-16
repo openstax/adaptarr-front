@@ -19,6 +19,7 @@ class Permissions extends React.Component<Props> {
     permissions: [
       'user:invite',
       'user:delete',
+      'user:edit',
       'user:edit-permissions',
       'user:assign-role',
       'book:edit',

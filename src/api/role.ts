@@ -13,7 +13,7 @@ export type RoleData = {
   permissions?: Permission[], // only user with role:edit can see this field
 }
 
-export type Permission = 'user:invite' | 'user:delete' | 'user:edit-permissions' | 'user:assign-role' | 'book:edit' | 'module:edit' | 'role:edit' | 'editing-process:edit' | 'editing-process:manage' | 'resources:manage'
+export type Permission = 'user:invite' | 'user:delete' | 'user:edit' | 'user:edit-permissions' | 'user:assign-role' | 'book:edit' | 'module:edit' | 'role:edit' | 'editing-process:edit' | 'editing-process:manage' | 'resources:manage'
 
 export default class Role extends Base<RoleData> {
   /**
