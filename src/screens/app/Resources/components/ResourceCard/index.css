@@ -1,0 +1,29 @@
+.resource__card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 300px;
+  padding: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  background-color: var(--light-bg);
+  border-radius: 17px;
+}
+
+.resource__content {
+  display: flex;
+  flex-direction: column;
+  color: var(--font-dark);
+}
+
+.resource__name {
+  margin-top: 20px;
+  font-size: 18px;
+  text-align: center;
+}
+
+.resource__buttons {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}

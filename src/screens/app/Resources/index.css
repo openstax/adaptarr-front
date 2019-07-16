@@ -1,0 +1,7 @@
+.resources {
+  flex-wrap: wrap;
+}
+
+.resources__dialog-content .input, .resources__dialog-content .files-uploader {
+  margin-bottom: 20px;
+}

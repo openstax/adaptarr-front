@@ -441,6 +441,35 @@ user-profile-name-validation-error = Name has to be at least 3 characters long.
 
 resources-view-title = Resources
 
+resources-add-title = Add new resource
+
+resources-add-folder = Add folder
+
+resources-add-file = Add file
+
+resources-name-placeholder =
+  .placeholder = Name
+
+resources-add-cancel = Cancel
+
+resources-add-confirm = Confirm
+
+resources-add-success = Successfully added new resource
+
+resources-add-error = We couldn't add this resource
+
+resources-card-edit = Edit
+
+resources-card-edit-title = Edit this resource
+
+resources-edit-cancel = Cancel
+
+resources-edit-update = Update
+
+resources-edit-success = Successfully updated resource
+
+resources-edit-error = We couldn't update this resource
+
 
 
 ## Screens - settings

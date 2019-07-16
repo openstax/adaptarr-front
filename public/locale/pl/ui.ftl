@@ -441,6 +441,35 @@ user-profile-name-validation-error = Imię musi mieć co najmniej 3 znaki.
 
 resources-view-title = Pomocne dokumenty
 
+resources-add-title = Dodaj nowy zasób
+
+resources-add-folder = Dodaj folder
+
+resources-add-file = Dodaj plik
+
+resources-name-placeholder =
+  .placeholder = Nazwa
+
+resources-add-cancel = Anuluj
+
+resources-add-confirm = Potwierdź
+
+resources-add-success = Pomyślnie dodano nowy zasób
+
+resources-add-error = Nie udało się dodać zasobu
+
+resources-card-edit = Edytuj
+
+resources-card-edit-title = Zaktualizuj ten zasób
+
+resources-edit-cancel = Anuluj
+
+resources-edit-update = Zaktualizuj
+
+resources-edit-success = Pomyślnie zaktualizowano zasób
+
+resources-edit-error = Nie udało się zaktualizować zasobu
+
 
 
 ## Screens - settings
