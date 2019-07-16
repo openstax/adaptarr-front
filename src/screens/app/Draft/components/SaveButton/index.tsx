@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { Value } from 'slate'
 import { DocumentDB } from 'cnx-designer'
+import { isKeyHotkey } from 'is-hotkey'
 
 import Storage from 'src/api/storage'
 import saveAsFile from 'src/helpers/saveAsFile'
@@ -25,6 +26,9 @@ export type Props = {
   documentDbGlossary: DocumentDB,
 }
 
+// Ctrl / Command (MacOS) + S
+const isSaveHotkey = isKeyHotkey('mod+s')
+
 export default class SaveButton extends React.Component<Props> {
   state: {
     saving: boolean,
@@ -36,6 +40,21 @@ export default class SaveButton extends React.Component<Props> {
     showErrorDialog: false,
     error: '',
     showAfterExportDialog: false,
+  }
+
+  private handleSaveWithShortcut = (e: KeyboardEvent) => {
+    if(isSaveHotkey(e)){
+      e.preventDefault()
+      this.onClick()
+    }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleSaveWithShortcut)
+  }
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleSaveWithShortcut)
   }
 
   render() {
