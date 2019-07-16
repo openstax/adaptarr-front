@@ -26,6 +26,7 @@ class Permissions extends React.Component<Props> {
       'role:edit',
       'editing-process:edit',
       'editing-process:manage',
+      'resources:manage',
     ],
   }
 

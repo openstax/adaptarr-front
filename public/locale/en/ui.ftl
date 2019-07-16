@@ -949,6 +949,7 @@ permission-label = { $name ->
   [role-edit] Create, delete and edit roles
   [editing-process-edit] Create and edit processes
   [editing-process-manage] Assign modules to processes
+  [resources-manage] Managing resources
  *[unknown] Unknown permission
 }
 
