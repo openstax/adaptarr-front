@@ -77,7 +77,6 @@ class DraftsList extends React.Component<Props> {
 
       for (let bookId of draft.books) {
         const book = booksMap.get(bookId)
-        const bookParts = book ? (await book.parts()).parts! : []
 
         if (books.has(bookId)) {
           const entry = books.get(bookId)!
@@ -86,6 +85,7 @@ class DraftsList extends React.Component<Props> {
             drafts: [...entry.drafts, draft],
           })
         } else {
+          const bookParts = book ? (await book.parts()).parts! : []
           books.set(bookId, {
             id: bookId,
             name: book ? book.title : "...",
