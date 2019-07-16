@@ -4,7 +4,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'arrow-down' | 'arrow-left' | 'arrow-right' |'bell' | 'book' | 'books' | 'menu' | 'check' | 'code' | 'cog' | 'close' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file-code' | 'flask' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'minus' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'outdent' | 'quote' | 'www',
+  name: 'arrow-down' | 'arrow-left' | 'arrow-right' |'bell' | 'book' | 'books' | 'menu' | 'check' | 'code' | 'cog' | 'close' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file' | 'file-code' | 'flask' | 'folder' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'minus' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'outdent' | 'quote' | 'www',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -174,9 +174,19 @@ const icon = ({ size, name }: Props) => {
         return (
           <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="code" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M234.8 511.7L196 500.4c-4.2-1.2-6.7-5.7-5.5-9.9L331.3 5.8c1.2-4.2 5.7-6.7 9.9-5.5L380 11.6c4.2 1.2 6.7 5.7 5.5 9.9L244.7 506.2c-1.2 4.3-5.6 6.7-9.9 5.5zm-83.2-121.1l27.2-29c3.1-3.3 2.8-8.5-.5-11.5L72.2 256l106.1-94.1c3.4-3 3.6-8.2.5-11.5l-27.2-29c-3-3.2-8.1-3.4-11.3-.4L2.5 250.2c-3.4 3.2-3.4 8.5 0 11.7L140.3 391c3.2 3 8.2 2.8 11.3-.4zm284.1.4l137.7-129.1c3.4-3.2 3.4-8.5 0-11.7L435.7 121c-3.2-3-8.3-2.9-11.3.4l-27.2 29c-3.1 3.3-2.8 8.5.5 11.5L503.8 256l-106.1 94.1c-3.4 3-3.6 8.2-.5 11.5l27.2 29c3.1 3.2 8.1 3.4 11.3.4z"></path></svg>
         )
+      case 'file':
+        return (
+          <svg width="20" height="25.5" version="1.1" viewBox="0 0 5.2917 6.7469" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -290.25)"><g transform="matrix(.1085 0 0 .10856 -2.8794 290.37)"><g><path d="m30.656-1.0878c-2.0693 0-4.1157 2.0585-4.1156 4.117v53.922c0 2.0588 2.0577 4.1174 4.1156 4.1171 15.051-0.01443 40.519 0 40.519 0 2.0599 0 4.1157-2.0583 4.1157-4.1171 0 0 0.04208-28.66-7e-3 -43.18l-14.644-14.858c-9.8102 0.053297-19.871 0.00405-29.983 0zm0 4.117 26.987 0.048874s0.04837 4.8565 0.04837 9.838c-0.02791 2.1033 2.0298 4.1619 4.0877 4.162l9.3956 0.0011v39.872h-40.519zm31.143 2.9903 6.9594 6.9411-6.9594-0.0388z"/></g></g></g></svg>
+
+        )
       case 'file-code':
         return (
           <svg aria-hidden="true" focusable="false" data-prefix="far" data-icon="file-code" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M149.9 349.1l-.2-.2-32.8-28.9 32.8-28.9c3.6-3.2 4-8.8.8-12.4l-.2-.2-17.4-18.6c-3.4-3.6-9-3.7-12.4-.4l-57.7 54.1c-3.7 3.5-3.7 9.4 0 12.8l57.7 54.1c1.6 1.5 3.8 2.4 6 2.4 2.4 0 4.8-1 6.4-2.8l17.4-18.6c3.3-3.5 3.1-9.1-.4-12.4zm220-251.2L286 14C277 5 264.8-.1 252.1-.1H48C21.5 0 0 21.5 0 48v416c0 26.5 21.5 48 48 48h288c26.5 0 48-21.5 48-48V131.9c0-12.7-5.1-25-14.1-34zM256 51.9l76.1 76.1H256zM336 464H48V48h160v104c0 13.3 10.7 24 24 24h104zM209.6 214c-4.7-1.4-9.5 1.3-10.9 6L144 408.1c-1.4 4.7 1.3 9.6 6 10.9l24.4 7.1c4.7 1.4 9.6-1.4 10.9-6L240 231.9c1.4-4.7-1.3-9.6-6-10.9zm24.5 76.9l.2.2 32.8 28.9-32.8 28.9c-3.6 3.2-4 8.8-.8 12.4l.2.2 17.4 18.6c3.3 3.5 8.9 3.7 12.4.4l57.7-54.1c3.7-3.5 3.7-9.4 0-12.8l-57.7-54.1c-3.5-3.3-9.1-3.2-12.4.4l-17.4 18.6c-3.3 3.5-3.1 9.1.4 12.4z"></path></svg>
+        )
+      case 'folder':
+        return (
+          <svg width="20" height="18.058" version="1.1" viewBox="0 0 5.2917 4.7778" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -292.22)"><g transform="matrix(.098899 0 0 .098899 -.40056 291.81)"><path d="m8.568 4.2071c-2.2691 0-4.5278 2.2476-4.5278 4.513l-4.599e-4 39.257c0 2.2597 2.2593 4.5191 4.5377 4.537 11.384 0.01393 32.64-0.02211 34.161-0.0209 3.371 0.0027 4.5113-2.2567 5.7094-4.5161 4.0327-8.2781 9.1182-22.708 9.1182-22.708 1.16e-4 -3.4008-1.1741-4.5203-3.4389-4.5155-0.90788 0.0019-2.7654-0.0036-2.7654-0.0036l3.37e-4 -4.4624c1.71e-4 -2.266-2.2596-4.5341-4.5236-4.5549 0 0-12.557-0.02566-18.822 0.0209l-7.5343-7.5468c-4.3001 0-7.9507 0.00699-11.914 1.5e-6zm-0.00944 4.5267 10.053-0.00802c2.0462 2.0355 7.5297 7.5495 7.5297 7.5495 5e-5 1.8e-5 20.702-0.0025 20.702-0.0025l-1e-6 4.4926c-9.9887 0.03925-27.993-0.01481-27.993-0.01481-1.6819-1e-6 -3.4443 1.1179-4.1133 2.6477l-6.1782 13.62zm10.292 16.536s34.197-5e-6 34.197 5e-6c-3.6225 7.9403-10.316 22.679-10.316 22.708h-34.173z"/></g></g></svg>
+
         )
       case 'quote':
         return (
