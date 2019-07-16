@@ -9,6 +9,8 @@ import { Block, Value, Text, KeyUtils, Editor as Editor_ } from 'slate'
 import { Editor } from 'slate-react'
 import { List } from 'immutable'
 
+import timeout from 'src/helpers/timeout'
+
 import store from 'src/store'
 import * as api from 'src/api'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
@@ -51,9 +53,14 @@ type Props = {
 KeyUtils.setGenerator(() => uuid.v4())
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
-  const [documentDbContent, documentDbGlossary, storage, draft] = await Promise.all([
-    PersistDB.load(`${id}-document`),
-    PersistDB.load(`${id}-glossary`),
+  const [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
+    Promise.race([
+      Promise.all([
+        PersistDB.load(`${id}-document`),
+        PersistDB.load(`${id}-glossary`),
+      ]),
+      timeout(10000),
+    ]),
     api.Storage.load(id),
     api.Draft.load(id),
   ])
