@@ -13,7 +13,7 @@ export type RoleData = {
   permissions?: Permission[], // only user with role:edit can see this field
 }
 
-export type Permission = 'user:invite' | 'user:delete' | 'user:edit-permissions' | 'user:assign-role' | 'book:edit' | 'module:edit' | 'role:edit' | 'editing-process:edit' | 'editing-process:manage'
+export type Permission = 'user:invite' | 'user:delete' | 'user:edit-permissions' | 'user:assign-role' | 'book:edit' | 'module:edit' | 'role:edit' | 'editing-process:edit' | 'editing-process:manage' | 'resources:manage'
 
 export default class Role extends Base<RoleData> {
   /**
@@ -34,9 +34,9 @@ export default class Role extends Base<RoleData> {
 
   /**
    * Create a new role.
-   * 
+   *
    * This function requires role:edit permission.
-   * 
+   *
    * @param name
    * @param permissions - Permission[]
    */
@@ -62,9 +62,9 @@ export default class Role extends Base<RoleData> {
 
   /**
    * Update a role.
-   * 
+   *
    * This function requires role:edit permission.
-   * 
+   *
    * @param data - object with data to update
    */
   async update(data: {name?: string, permissions?: Permission[]}): Promise<Role> {
