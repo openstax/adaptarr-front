@@ -1,4 +1,5 @@
 import axios from 'src/config/axios'
+import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import { elevated } from './utils'
@@ -127,6 +128,16 @@ export default class User extends Base<UserData> {
     super(data)
 
     this.apiId = apiId || data.id.toString()
+  }
+
+  /**
+   * Change name
+   *
+   * Require 'users:edit' permission to change other users name.
+   * No permissions required to change own name.
+   */
+  async changeName(name: string): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`users/${this.apiId}`, { name }))
   }
 
   /**
