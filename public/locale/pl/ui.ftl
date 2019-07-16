@@ -1030,6 +1030,16 @@ file-upload-select-files = Upuść pliki lub kliknij, aby dodać (opcjonalnie).
 
 file-upload-remove-all = Usuń wszystkie pliki
 
+# Variables:
+# - $code (number): error code for react-files component
+file-upload-error = { $code ->
+  [1] Niepoprawny typ pliku
+  [2] Plik jest zbyt duży
+  [3] Plik jest zbyt mały
+  [4] Nie można już wgrać więcej plików
+ *[unknowncode] Wystąpił nieznany błąd podczas ładowania pliku
+}
+
 
 
 ## Reusable components - list of modules

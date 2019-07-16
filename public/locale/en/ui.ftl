@@ -1028,6 +1028,16 @@ file-upload-select-files = Drop files here or click to upload (optional).
 
 file-upload-remove-all = Remove all files
 
+# Variables:
+# - $code (number): error code for react-files component
+file-upload-error = { $code ->
+  [1] Invalid file type
+  [2] File too large
+  [3] File too small
+  [4] Maximum file count reached
+ *[unknowncode] Unknown error occurred while loading file
+}
+
 
 
 ## Reusable components - list of modules
