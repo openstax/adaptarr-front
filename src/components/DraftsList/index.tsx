@@ -171,7 +171,6 @@ class DraftsList extends React.Component<Props> {
                                 childrenProp="parts"
                                 renderItem={this.renderItem}
                                 renderCollapseIcon={this.renderCollapseIcon}
-                                collapsed
                               />
                             </ul>
                           </>
