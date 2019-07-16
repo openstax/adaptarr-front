@@ -79,16 +79,18 @@ export default class Book extends Base<BookData> {
     }
 
     let data: FormData | { title: string }
-
+    let config: { headers: { 'Content-Type': string } }
     if (content) {
       data = new FormData()
       data.append('title', title)
       data.append('file', content)
+      config = { headers: { 'Content-Type': 'multipart' } }
     } else {
       data = { title }
+      config = { headers: { 'Content-Type': 'application/json' } }
     }
 
-    let res = await axios.post('books', data)
+    let res = await axios.post('books', data, config)
     return new Book(res.data)
   }
 
