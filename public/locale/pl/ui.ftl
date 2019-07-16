@@ -437,9 +437,13 @@ user-profile-team-list-no-results = Brak wyników dla określonych kryteriów.
 
 ## Screens - user's profile - update dialog
 
+user-profile-update-name-success = Imię zostało zmienione.
+
+user-profile-update-name-error = Nie udało się zmienić imienia.
+
 user-profile-update-avatar-title = Wgraj swoje zdjęcie.
 
-user-profile-update-name-title = Zaktualizuj nazwę użytkownika.
+user-profile-update-name-title = Zmień imię.
 
 # Placeholder text for name input.
 user-profile-update-name =

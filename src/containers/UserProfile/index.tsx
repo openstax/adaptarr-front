@@ -20,6 +20,7 @@ import Header from 'src/components/Header'
 import UserUI from 'src/components/UserUI'
 import Load from 'src/components/Load'
 import DraftsList from 'src/components/DraftsList'
+import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -55,7 +56,7 @@ class UserProfile extends React.Component<Props> {
     showDialog: boolean
     updateAction: 'avatar' | 'bio' | 'name' | 'email' | null
     files: File[]
-    nameInput: string
+    userName: string
     drafts: api.Draft[]
     currentRole: api.Role | null
     newRole: api.Role | null
@@ -66,7 +67,7 @@ class UserProfile extends React.Component<Props> {
     showDialog: false,
     updateAction: null,
     files: [],
-    nameInput: this.props.user.name,
+    userName: this.props.user.name,
     drafts: [],
     currentRole: this.props.user.role,
     newRole: null,
@@ -113,7 +114,7 @@ class UserProfile extends React.Component<Props> {
   }
 
   private showDialogWithAction = () => {
-    const { updateAction, nameInput/*, bioInput, emailInput*/ } = this.state
+    const { updateAction, /*nameInput, bioInput, emailInput*/ } = this.state
     let l10nId
     let placeholder
     let body
@@ -131,7 +132,7 @@ class UserProfile extends React.Component<Props> {
           />
         )
         break
-      case 'name':
+      /* case 'name':
         l10nId = 'user-profile-update-name-title'
         placeholder = 'Update your name.'
         body = (
@@ -143,7 +144,7 @@ class UserProfile extends React.Component<Props> {
             errorMessage="user-profile-name-validation-error"
           />
         )
-        break
+        break */
       /*case 'bio':
         titlei18nKey = 'Profile.updateBio'
         body = (
@@ -264,6 +265,18 @@ class UserProfile extends React.Component<Props> {
     this.closeDialog()
   }
 
+  private handleNameChange = (name: string) => {
+    const { user, currentUser } = this.props
+    const usr = user.id === currentUser.id ? currentUser : user
+    usr.changeName(name).then(() => {
+      store.dispatch(addAlert('success', 'user-profile-update-name-success'))
+      this.setState({ userName: name })
+    }).catch(() => {
+      store.dispatch(addAlert('success', 'user-profile-update-name-error'))
+      this.setState({ userName: this.props.user.name })
+    })
+  }
+
   private handleRoleChange = (role: api.Role) => {
     this.setState({ showChangeRoleDialog: true, newRole: role })
   }
@@ -303,12 +316,12 @@ class UserProfile extends React.Component<Props> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    if (
-      prevProps.user.id !== this.props.user.id
-      && this.props.currentUser.permissions.has('editing-process:manage')
-    ) {
-      const usersDrafts: api.Draft[] = await this.props.user.drafts()
-      this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
+    if (prevProps.user.id !== this.props.user.id) {
+      this.setState({ userName: this.props.user.name })
+      if (this.props.currentUser.permissions.has('editing-process:manage')) {
+        const usersDrafts: api.Draft[] = await this.props.user.drafts()
+        this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
+      }
     }
   }
 
@@ -320,8 +333,9 @@ class UserProfile extends React.Component<Props> {
   }
 
   public render() {
-    const { showDialog, drafts, showChangeRoleDialog, currentRole, newRole } = this.state
-    const user = this.props.user
+    const { showDialog, drafts, showChangeRoleDialog, currentRole, newRole, userName } = this.state
+    const { user, currentUser } = this.props
+
     let header
     if (this.props.user.apiId === 'me') {
       header = <Header l10nId="user-profile-view-title-your" title="Your profile" />
@@ -358,7 +372,11 @@ class UserProfile extends React.Component<Props> {
                 </div>
                 <div className="profile__main-info">
                   <h2 className="profile__name">
-                    {decodeHtmlEntity(user.name)}
+                    {
+                      user.id === currentUser.id || currentUser.permissions.has('user:edit') ?
+                        <EditableText text={userName} onAccept={this.handleNameChange} />
+                      : decodeHtmlEntity(user.name)
+                    }
                     {/* <UserUI userId={user.id}>
                       <span
                         className="profile__update-name"

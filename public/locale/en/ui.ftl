@@ -437,6 +437,10 @@ user-profile-team-list-no-results = There are no users with specified criteria.
 
 ## Screens - user's profile - update dialog
 
+user-profile-update-name-success = Name has been changed.
+
+user-profile-update-name-error = Couldn't change name.
+
 user-profile-update-avatar-title = Upload file for your avatar.
 
 user-profile-update-name-title = Update your name.
