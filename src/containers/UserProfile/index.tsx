@@ -303,7 +303,10 @@ class UserProfile extends React.Component<Props> {
   }
 
   async componentDidUpdate(prevProps: Props) {
-    if (prevProps.user.id !== this.props.user.id) {
+    if (
+      prevProps.user.id !== this.props.user.id
+      && this.props.currentUser.permissions.has('editing-process:manage')
+    ) {
       const usersDrafts: api.Draft[] = await this.props.user.drafts()
       this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
     }
