@@ -1038,7 +1038,7 @@ asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
 # - <module> ... </module>: link to the assigned module
 notification = { $kind ->
   [assigned] <actor>{ $actor }</actor> przypisał/a Cię do <module>{ $module }</module>
-  [process_ended] Proces edycyjny dla <module>{ $module }</module> zakończył się.
+  [process_ended] Proces redakcyjny dla <module>{ $module }</module> zakończył się.
   [slot_filled] Zostałeś/aś przypisany/a do funkcji w <module>{ $module }</module>.
   [slot_vacated] Zostałeś/aś usunięta z funkcji w <module>{ $module }</module>.
   [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
