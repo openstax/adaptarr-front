@@ -376,7 +376,12 @@ class UserProfile extends React.Component<Props> {
                   <h2 className="profile__name">
                     {
                       user.id === currentUser.id || currentUser.permissions.has('user:edit') ?
-                        <EditableText text={userName} onAccept={this.handleNameChange} />
+                        <EditableText
+                          text={userName}
+                          onAccept={this.handleNameChange}
+                          minLength={3}
+                          maxLength={30}
+                        />
                       : decodeHtmlEntity(user.name)
                     }
                     {/* <UserUI userId={user.id}>
