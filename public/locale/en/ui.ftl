@@ -1201,6 +1201,18 @@ book-card-remove = Remove
 
 
 
+## Reusable components - editable text
+
+# Variables:
+# - $min (numner): number of minimum required character
+editable-text-error-min-length = Minimum { $min } characters required.
+
+# Variables:
+# - $max (number): number of maximum allowed charaters
+editable-text-error-max-length = Maximum { $max } characters allowed.
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title

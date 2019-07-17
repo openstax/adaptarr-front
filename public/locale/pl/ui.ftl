@@ -1203,6 +1203,18 @@ book-card-remove = Usuń
 
 
 
+## Reusable components - editable text
+
+# Variables:
+# - $min (numner): number of minimum required character
+editable-text-error-min-length = Liczba znaków musi wynosić przynajmniej { $min }.
+
+# Variables:
+# - $max (number): number of maximum allowed charaters
+editable-text-error-max-length = Liczba znaków może wynosić maksymalnie { $max }.
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title
