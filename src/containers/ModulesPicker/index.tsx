@@ -90,7 +90,7 @@ class ModuleList extends React.Component<Props> {
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
-        this.props.addAlert('success', 'module-list-add-module-alert-success', {title: this.state.moduleTitleValue})
+        this.props.addAlert('success', 'module-list-add-module-alert-success', { title })
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
