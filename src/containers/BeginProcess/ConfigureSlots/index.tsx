@@ -42,7 +42,7 @@ class ConfigureSlots extends React.Component<Props> {
               onClose={this.closeAssignUserDialog}
             >
               <UsersList
-                allowedRole={currentSlot.role}
+                allowedRoles={currentSlot.roles}
                 onUserClick={this.handleUserClick}
               />
             </Dialog>

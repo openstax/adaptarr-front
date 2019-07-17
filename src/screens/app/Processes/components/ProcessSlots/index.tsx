@@ -5,7 +5,6 @@ import { ProcessSlot } from 'src/api/process'
 
 import Slot from './Slot'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
@@ -50,7 +49,7 @@ export default class ProcessSlots extends React.Component<Props> {
         id: this.state.slots.length,
         name: '',
         autofill: false,
-        role: null,
+        roles: [],
       }
     ]
     this.setState({ slots })

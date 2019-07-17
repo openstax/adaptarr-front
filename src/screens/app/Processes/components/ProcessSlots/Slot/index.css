@@ -16,3 +16,16 @@
 .process-slot:hover > .process-form__title .process-form__title-controls {
   opacity: 1;
 }
+
+.process-slot__roles {
+  margin-top: 10px;
+}
+
+.process-slot__role {
+  opacity: 0.6;
+  margin-right: 10px;
+}
+
+.process-slot__role.selected {
+  opacity: 1;
+}

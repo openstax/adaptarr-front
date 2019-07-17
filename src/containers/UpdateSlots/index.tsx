@@ -71,7 +71,7 @@ class UpdateSlots extends React.Component<Props> {
       draftDetails,
     } = this.state
     const { roles } = this.props
-    const currentRole = currentSlot && currentSlot.role && roles.has(currentSlot.role) ? roles.get(currentSlot.role)!.name : 'undefined'
+    const slotRoles = currentSlot ? currentSlot.roles : []
 
     if (!draftDetails) return (
       <div className="update-slots">
@@ -88,13 +88,13 @@ class UpdateSlots extends React.Component<Props> {
             <Dialog
               l10nId="update-slots-assign-user-title"
               $slot={currentSlot.name}
-              $role={currentRole}
-              placeholder="Select user with [role] for current slot."
+              $roles={slotRoles.length ? slotRoles.join(', ') : 'undefined'}
+              placeholder="Select user with [roles] for current slot."
               size="medium"
               onClose={this.closeAssignUserDialog}
             >
               <UsersList
-                allowedRole={currentSlot.role}
+                allowedRoles={currentSlot.roles}
                 onUserClick={this.handleUserClick}
               />
             </Dialog>
@@ -107,8 +107,12 @@ class UpdateSlots extends React.Component<Props> {
         </h3>
         {
           Array.from(processSlots.values()).map(s => {
-            const role = s.role ? roles.get(s.role) : null
-            const roleName = role ? role.name : 'undefined'
+            let roleNames: string[] = []
+            s.roles.forEach(rId => {
+              if (roles.has(rId)) {
+                roleNames.push(roles.get(rId)!.name)
+              }
+            })
             return (
               <div key={s.id} className="update-slots__slot">
                 <div className="update-slots__info">
@@ -116,7 +120,7 @@ class UpdateSlots extends React.Component<Props> {
                     <Localized
                       id="update-slots-name"
                       $name={s.name}
-                      $role={roleName}
+                      $roles={roleNames.length ? roleNames.join(', ') : 'undefined'}
                     >
                       [slot name] for role: [role name]
                     </Localized>

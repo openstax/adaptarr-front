@@ -670,7 +670,7 @@ process-form-slot-name = Nazwa funkcji:
 
 process-form-slot-autofill = Automatycznie przypisz użytkownika:
 
-process-form-slot-role = Rola:
+process-form-slot-role = Role:
 
 process-form-step-title = Lista kroków:
 
@@ -763,8 +763,8 @@ process-preview-slot-autofill = Automatyczne przypisywanie użytkowników { $val
 }
 
 # Variables:
-# - $name (string): role name for this slot.
-process-preview-role = Rola: { $name }
+# - $roles (string): role names for this slot.
+process-preview-roles = Role: { $roles }
 
 # Variables:
 # - $name (string): name of the step.
@@ -829,10 +829,10 @@ update-slots-title = Zarządzaj funkcjami w procesie:
 
 # Variables:
 # - $name (string): slot name.
-# - $role (string): role name for this slot.
-update-slots-name = { $role ->
+# - $roles (string): role names for this slot.
+update-slots-name = { $roles ->
   [undefined] { $name }
- *[role] { $name } dla użytkowników z rolą: { $role }
+ *[roles] { $name } dla użytkowników z rolami: { $roles }
 }
 
 update-slots-assign-user = Wybierz użytkownika
@@ -841,10 +841,10 @@ update-slots-unassign-user = Cofnij przypisanie
 
 # Variables:
 # - $slot (string): slot name.
-# - $role (string): role name for this slot.
-update-slots-assign-user-title = Wybierz użytkownika { $role ->
+# - $roles (string): role names for this slot.
+update-slots-assign-user-title = Wybierz użytkownika { $roles ->
   [undefined] dla funkcji: { $slot }
- *[role] z rolą: { $role } dla funkcji: { $slot }
+ *[roles] posiadajacego jedną z roli: { $roles } dla funkcji: { $slot }
 }
 
 # Alert displayed when there was an error while fetching data.

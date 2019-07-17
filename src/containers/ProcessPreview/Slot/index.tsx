@@ -21,15 +21,20 @@ const mapStateToProps = ({ app: { roles } }: State) => {
 
 class Slot extends React.Component<SlotProps> {
   state: {
-    role: string
+    rolesNames: string[]
   } = {
-    role: 'undefined',
+    rolesNames: [],
   }
 
   private updateStateWithProps = () => {
     const { slot, roles } = this.props
-    const role = roles.find(r => r.id === slot.role)
-    this.setState({ role: role ? role.name : 'undefined' })
+    let rolesNames: string[] = []
+    roles.forEach(r => {
+      if (slot.roles.includes(r.id)) {
+        rolesNames.push(r.name)
+      }
+    })
+    this.setState({ rolesNames })
   }
 
   componentDidMount() {
@@ -37,7 +42,7 @@ class Slot extends React.Component<SlotProps> {
   }
 
   public render() {
-    const { role } = this.state
+    const { rolesNames } = this.state
     const { slot } = this.props
 
     return (
@@ -53,8 +58,8 @@ class Slot extends React.Component<SlotProps> {
           </Localized>
         </span>
         <span>
-          <Localized id="process-preview-role" $name={role}>
-            Role:
+          <Localized id="process-preview-roles" $roles={rolesNames.join(', ')}>
+            {`Roles: ${rolesNames}`}
           </Localized>
         </span>
       </div>

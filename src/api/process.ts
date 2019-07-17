@@ -32,7 +32,7 @@ export type ProcessSlot = {
   id: number,
   name: string,
   autofill: boolean,
-  role: number | null,
+  roles: number[],
 }
 
 /**
@@ -98,7 +98,7 @@ export default class Process extends Base<ProcessData> {
 
   /**
    * Create a new process.
-   * 
+   *
    * This function requires editing-process:edit permission.
    */
   static async create(structure: ProcessStructure): Promise<Process> {
@@ -140,7 +140,7 @@ export default class Process extends Base<ProcessData> {
    * Structure of process.
    */
   structureData?: ProcessStructure
-  
+
   /**
    * Fetch list of all versions of processes.
    */
@@ -162,7 +162,7 @@ export default class Process extends Base<ProcessData> {
 
   /**
    * Update name of process.
-   * 
+   *
    * This function requires editing-process:edit permission.
    */
   async update(name: string): Promise<Process> {
@@ -172,7 +172,7 @@ export default class Process extends Base<ProcessData> {
 
   /**
    * Create new version of this process with updated structure.
-   * 
+   *
    * This function requires editing-process:edit permission.
    */
   async createVersion(structure: ProcessStructure): Promise<ProcessVersion> {

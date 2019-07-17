@@ -1,5 +1,4 @@
 import * as React from 'react'
-import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
@@ -8,7 +7,6 @@ import Role from 'src/api/role'
 import { State } from 'src/store/reducers'
 
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
@@ -30,11 +28,11 @@ class Slot extends React.Component<SlotProps> {
   state: {
     name: string
     autofill: boolean
-    role: number | null
+    selectedRoles: Set<number>
   } = {
     name: '',
     autofill: false,
-    role: null,
+    selectedRoles: new Set(),
   }
 
   private updateStateWithProps = () => {
@@ -42,7 +40,7 @@ class Slot extends React.Component<SlotProps> {
     this.setState({
       name: slot.name,
       autofill: slot.autofill,
-      role: slot.role,
+      selectedRoles: new Set(slot.roles),
     })
   }
 
@@ -60,7 +58,7 @@ class Slot extends React.Component<SlotProps> {
   }
 
   public render() {
-    const { name, autofill, role } = this.state
+    const { name, autofill, selectedRoles } = this.state
     const { roles } = this.props
 
     return (
@@ -102,16 +100,23 @@ class Slot extends React.Component<SlotProps> {
         <label>
           <span>
             <Localized id="process-form-slot-role">
-              Role:
+              Roles:
             </Localized>
           </span>
-          <Select
-            className="react-select"
-            value={roles.find(r => r.id === role)}
-            options={this.props.roles}
-            onChange={this.handleRoleChange}
-            getOptionLabel={getOptionLabel}
-          />
+          <div className="process-slot__roles">
+            {
+              roles.map(r => (
+                <Button
+                  key={r.id}
+                  clickHandler={this.handleRoleClick}
+                  dataId={r.id.toString()}
+                  className={`process-slot__role ${selectedRoles.has(r.id) ? 'selected' : ''}`}
+                >
+                  {r.name}
+                </Button>
+              ))
+            }
+          </div>
         </label>
       </div>
     )
@@ -137,17 +142,21 @@ class Slot extends React.Component<SlotProps> {
     })
   }
 
-  private handleRoleChange = ({ id }: Role) => {
-    this.setState({ role: id })
+  private handleRoleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const roleId = Number(e.currentTarget.dataset.id)
+    if (!roleId) return
+    let selectedRoles = this.state.selectedRoles
+    if (selectedRoles.has(roleId)) {
+      selectedRoles.delete(roleId)
+    } else {
+      selectedRoles.add(roleId)
+    }
+    this.setState({ selectedRoles })
     this.props.onChange({
       ...this.props.slot,
-      role: id,
+      roles: Array.from(selectedRoles),
     })
   }
 }
 
 export default connect(mapStateToProps)(Slot)
-
-function getOptionLabel({ name }: Role) {
-  return name
-}

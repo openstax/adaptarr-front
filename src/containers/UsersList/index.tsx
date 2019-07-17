@@ -14,7 +14,7 @@ import { TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 type Props = {
-  allowedRole?: number | null,
+  allowedRoles?: number[],
   team: {
     teamMap: TeamMap
   }
@@ -39,15 +39,15 @@ class UsersList extends React.Component<Props> {
   }
 
   private listOfUsers = (teamMap: TeamMap) => {
-    const allowedRole = this.props.allowedRole
+    const allowedRoles = this.props.allowedRoles
     const filterReg = new RegExp('^' + this.state.filterInput, 'i')
     let users: User[] = []
 
     teamMap.forEach(user => {
       if (this.state.filterInput) {
         if (filterReg.test(user.name)) {
-          if (allowedRole) {
-            if (user.role && user.role.id === allowedRole) {
+          if (allowedRoles && allowedRoles.length) {
+            if (user.role && allowedRoles.includes(user.role.id)) {
               users.push(user)
             }
           } else {
@@ -55,8 +55,8 @@ class UsersList extends React.Component<Props> {
           }
         }
       } else {
-        if (allowedRole) {
-          if (user.role && user.role.id === allowedRole) {
+        if (allowedRoles && allowedRoles.length) {
+          if (user.role && allowedRoles.includes(user.role.id)) {
             users.push(user)
           }
         } else {

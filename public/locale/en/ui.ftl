@@ -671,7 +671,7 @@ process-form-slot-name = Slot name:
 
 process-form-slot-autofill = Automatically assign users:
 
-process-form-slot-role = Role:
+process-form-slot-role = Roles:
 
 process-form-step-title = List of steps:
 
@@ -761,8 +761,8 @@ process-preview-slot-autofill = Automatic assignment of users { $value ->
 }
 
 # Variables:
-# - $name (string): role name for this slot.
-process-preview-role = Role: { $name }
+# - $roles (string): role names for this slot.
+process-preview-roles = Roles: { $roles }
 
 # Variables:
 # - $name (string): name of the step.
@@ -827,10 +827,10 @@ update-slots-title = Manage slots assignments:
 
 # Variables:
 # - $name (string): slot name.
-# - $role (string): role name for this slot.
-update-slots-name = { $role ->
+# - $roles (string): role names for this slot.
+update-slots-name = { $roles ->
   [undefined] { $name }
- *[role] { $name } for users with role: { $role }
+ *[roles] { $name } for users with roles: { $roles }
 }
 
 update-slots-assign-user = Select user
@@ -839,10 +839,10 @@ update-slots-unassign-user = Unassign user
 
 # Variables:
 # - $slot (string): slot name.
-# - $role (string): role name for this slot.
-update-slots-assign-user-title = Select user { $role ->
+# - $roles (string): role names for this slot.
+update-slots-assign-user-title = Select user { $roles ->
   [undefined] for slot: { $slot }
- *[role] with role: { $role } for slot: { $slot }
+ *[roles] with one of those roles: { $roles } for slot: { $slot }
 }
 
 # Alert displayed when there was an error while fetching data.

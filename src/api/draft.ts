@@ -59,7 +59,7 @@ export type ProcessDetails = {
 export type SlotDetails = {
   id: number,
   name: string,
-  role: number | null,
+  roles: number[],
   user: UserData | null,
 }
 
