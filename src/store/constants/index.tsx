@@ -13,6 +13,10 @@ export type CLEAR_USER_DATA = typeof CLEAR_USER_DATA
 export const SET_TEAM_MAP = 'SET_TEAM_MAP'
 export type SET_TEAM_MAP = typeof SET_TEAM_MAP
 
+export const SET_USER_IN_TEAM_MAP = 'SET_USER_IN_TEAM_MAP'
+export type SET_USER_IN_TEAM_MAP = typeof SET_USER_IN_TEAM_MAP
+
+
 
 export const FETCH_BOOKS_MAP_BEGIN = 'FETCH_BOOKS_MAP_BEGIN'
 export type FETCH_BOOKS_MAP_BEGIN = typeof FETCH_BOOKS_MAP_BEGIN

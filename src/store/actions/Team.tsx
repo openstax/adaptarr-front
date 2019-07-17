@@ -1,4 +1,4 @@
-import { User } from 'src/api'
+import User, { UserData } from 'src/api/user'
 
 import * as constants from 'src/store/constants'
 import { TeamMap } from 'src/store/types'
@@ -12,7 +12,16 @@ export interface SetTeamMap {
   data: TeamMap,
 }
 
-export type TeamAction = SetTeamMap
+export interface SetUserInTeamMap {
+  type: constants.SET_USER_IN_TEAM_MAP,
+  data: UserData,
+}
+
+export interface UpdateUserInTeamMap {
+  (dispatch: any): void
+}
+
+export type TeamAction = SetTeamMap | SetUserInTeamMap
 
 export const setTeamMap = (payload: TeamMap): SetTeamMap => {
   return {
@@ -31,5 +40,18 @@ export const fetchTeamMap = (): FetchTeamMap => {
         console.log('fetchTeamMap():', e.message)
         throw new Error(e.message)
       })
+  }
+}
+
+export const setUserInTeamMap = (payload: UserData): SetUserInTeamMap => {
+  return {
+    type: constants.SET_USER_IN_TEAM_MAP,
+    data: payload,
+  }
+}
+
+export const updateUserInTeamMap = (userData: UserData): UpdateUserInTeamMap => {
+  return (dispatch: React.Dispatch<TeamAction>) => {
+    dispatch(setUserInTeamMap(userData))
   }
 }

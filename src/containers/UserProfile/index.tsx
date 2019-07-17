@@ -14,6 +14,7 @@ import * as api from 'src/api'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchUser } from 'src/store/actions/User'
+import { updateUserInTeamMap } from 'src/store/actions/Team'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -268,8 +269,9 @@ class UserProfile extends React.Component<Props> {
   private handleNameChange = (name: string) => {
     const { user, currentUser } = this.props
     const usr = user.id === currentUser.id ? currentUser : user
-    usr.changeName(name).then(() => {
+    usr.changeName(name).then((res) => {
       store.dispatch(addAlert('success', 'user-profile-update-name-success'))
+      store.dispatch(updateUserInTeamMap({...res.data}))
       this.setState({ userName: name })
     }).catch(() => {
       store.dispatch(addAlert('success', 'user-profile-update-name-error'))
