@@ -48,6 +48,7 @@ class Resources extends React.Component<Props> {
     resourceType: ResourceKind | null
     resourceName: string
     files: File[]
+    isUploading: boolean
   } = {
     isLoading: true,
     resources: [],
@@ -57,6 +58,7 @@ class Resources extends React.Component<Props> {
     resourceType: null,
     resourceName: '',
     files: [],
+    isUploading: false,
   }
 
   private toggleEditing = () => {
@@ -92,6 +94,7 @@ class Resources extends React.Component<Props> {
   }
 
   private addResource = async () => {
+    this.setState({ isUploading: true })
     const { resourceName, resourceType, files, currentFolder } = this.state
 
     let data: { name: string, parent?: string, file?: File } = {
@@ -113,7 +116,13 @@ class Resources extends React.Component<Props> {
       store.dispatch(addAlert('error', 'resources-add-error'))
     })
 
-    this.setState({ showAddResource: false, resourceName: '', resourceType: null, files: [] })
+    this.setState({
+      showAddResource: false,
+      resourceName: '',
+      resourceType: null,
+      files: [],
+      isUploading: false,
+    })
   }
 
   private fetchResources = async (parentId?: string) => {
@@ -150,6 +159,7 @@ class Resources extends React.Component<Props> {
       resourceType,
       resourceName,
       files,
+      isUploading,
     } = this.state
 
     return (
@@ -209,38 +219,41 @@ class Resources extends React.Component<Props> {
                       </Button>
                     </div>
                   :
-                    <div className="resources__dialog-content">
-                      <Input
-                        l10nId="resources-name-placeholder"
-                        value={resourceName}
-                        onChange={this.handleResourceNameChange}
-                        validation={{ minLength: 2 }}
-                      />
-                      {
-                        resourceType === 'file' ?
-                          <FileUploader
-                            onFilesChange={this.onFilesChange}
-                            onFilesError={this.onFilesError}
-                            multiple={false}
-                            accepts={ACCEPTED_FILE_TYPES}
-                          />
-                        : null
-                      }
-                      <div className="dialog__buttons">
-                        <Button clickHandler={this.closeAddResource}>
-                          <Localized id="resources-add-cancel">
-                            Cancel
-                          </Localized>
-                        </Button>
-                        <Button
-                          clickHandler={this.addResource}
-                          isDisabled={resourceName.length < 3 || (resourceType === 'file' && !files[0])}
-                        >
-                          <Localized id="resources-add-confirm">
-                            Confirm
-                          </Localized>
-                        </Button>
-                      </div>
+                    isUploading ?
+                      <Spinner />
+                    :
+                      <div className="resources__dialog-content">
+                        <Input
+                          l10nId="resources-name-placeholder"
+                          value={resourceName}
+                          onChange={this.handleResourceNameChange}
+                          validation={{ minLength: 2 }}
+                        />
+                        {
+                          resourceType === 'file' ?
+                            <FileUploader
+                              onFilesChange={this.onFilesChange}
+                              onFilesError={this.onFilesError}
+                              multiple={false}
+                              accepts={ACCEPTED_FILE_TYPES}
+                            />
+                          : null
+                        }
+                        <div className="dialog__buttons">
+                          <Button clickHandler={this.closeAddResource}>
+                            <Localized id="resources-add-cancel">
+                              Cancel
+                            </Localized>
+                          </Button>
+                          <Button
+                            clickHandler={this.addResource}
+                            isDisabled={resourceName.length < 3 || (resourceType === 'file' && !files[0])}
+                          >
+                            <Localized id="resources-add-confirm">
+                              Confirm
+                            </Localized>
+                          </Button>
+                        </div>
                     </div>
                 }
               </Dialog>

@@ -9,6 +9,7 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
+import Spinner from 'src/components/Spinner'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Icon from 'src/components/ui/Icon'
@@ -30,10 +31,12 @@ class ResourceCard extends React.Component<Props> {
     showEditResource: boolean
     resourceName: string
     files: File[]
+    isUploading: boolean
   } = {
     showEditResource: false,
     resourceName: this.props.resource.name,
     files: [],
+    isUploading: false,
   }
 
   private showEditResource = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -46,6 +49,7 @@ class ResourceCard extends React.Component<Props> {
   }
 
   private editResource = async () => {
+    this.setState({ isUploading: true })
     const { resourceName, files } = this.state
     const { resource } = this.props
 
@@ -66,7 +70,7 @@ class ResourceCard extends React.Component<Props> {
       store.dispatch(addAlert('error', 'resources-edit-error'))
     }
 
-    this.setState({ showEditResource: false, resourceName, files: [] })
+    this.setState({ showEditResource: false, resourceName, files: [], isUploading: false })
   }
 
   private handleResourceNameChange = (val: string) => {
@@ -83,7 +87,7 @@ class ResourceCard extends React.Component<Props> {
 
   public render() {
     const { resource, isEditingUnlocked } = this.props
-    const { showEditResource, resourceName } = this.state
+    const { showEditResource, resourceName, isUploading } = this.state
 
     const editingButton = isEditingUnlocked ?
         <div className="resource__buttons">
@@ -133,39 +137,44 @@ class ResourceCard extends React.Component<Props> {
               onClose={this.closeEditResource}
               showCloseButton={false}
             >
-              <div className="resources__dialog-content">
-                <Input
-                  l10nId="resources-name-placeholder"
-                  value={resourceName}
-                  onChange={this.handleResourceNameChange}
-                  validation={{ minLength: 3 }}
-                />
-                {
-                  resource.kind === 'file' ?
-                    <FileUploader
-                      onFilesChange={this.onFilesChange}
-                      onFilesError={this.onFilesError}
-                      multiple={false}
-                      accepts={ACCEPTED_FILE_TYPES}
+              {
+                isUploading ?
+                  <Spinner />
+                :
+                  <div className="resources__dialog-content">
+                    <Input
+                      l10nId="resources-name-placeholder"
+                      value={resourceName}
+                      onChange={this.handleResourceNameChange}
+                      validation={{ minLength: 3 }}
                     />
-                  : null
-                }
-              </div>
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeEditResource}>
-                  <Localized id="resources-edit-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button
-                  clickHandler={this.editResource}
-                  isDisabled={resourceName.length < 3}
-                >
-                  <Localized id="resources-edit-update">
-                    Update
-                  </Localized>
-                </Button>
-              </div>
+                    {
+                      resource.kind === 'file' ?
+                        <FileUploader
+                          onFilesChange={this.onFilesChange}
+                          onFilesError={this.onFilesError}
+                          multiple={false}
+                          accepts={ACCEPTED_FILE_TYPES}
+                        />
+                      : null
+                    }
+                    <div className="dialog__buttons">
+                      <Button clickHandler={this.closeEditResource}>
+                        <Localized id="resources-edit-cancel">
+                          Cancel
+                        </Localized>
+                      </Button>
+                      <Button
+                        clickHandler={this.editResource}
+                        isDisabled={resourceName.length < 3}
+                      >
+                        <Localized id="resources-edit-update">
+                          Update
+                        </Localized>
+                      </Button>
+                    </div>
+                  </div>
+              }
             </Dialog>
           : null
         }
