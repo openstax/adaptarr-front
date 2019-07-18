@@ -1336,7 +1336,7 @@ editor-tools-exercise-insert-commentary = Dodaj komentarz
 editor-tools-format-text-type = { $type ->
   [paragraph] Akapit
   [title] Nagłówek
-  [figure_caption] Opis figury
+  [figure_caption] Opis ilustracji
  *[notavalidtype] Tekst
 }
 
