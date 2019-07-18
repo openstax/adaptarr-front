@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as PropTypes from 'prop-types'
 import Select from 'react-select'
 import { Editor, Value, Operation } from 'slate'
 import { pick } from 'lodash'
@@ -8,6 +9,7 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import store from 'src/store'
 import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+import Storage from 'src/api/storage'
 
 import ToolGroup from '../ToolGroup'
 import CharactersCounter from '../CharactersCounter'
@@ -22,8 +24,29 @@ export type Props = {
 }
 
 export default class DocumentTools extends React.Component<Props> {
-  render() {
+  static contextTypes = {
+    storage: PropTypes.instanceOf(Storage),
+  }
+
+  componentDidMount() {
     const { editor, value } = this.props
+
+    const code = this.context.storage.language
+    if (value.data.get('language') !== code) {
+
+      const newProperties = Value.createProperties({ data: value.data.set('language', code) })
+      const prevProperties = pick(value, Object.keys(newProperties))
+
+      editor.applyOperation({
+        type: 'set_value',
+        properties: prevProperties,
+        newProperties,
+      } as unknown as Operation)
+    }
+  }
+
+  render() {
+    const { value } = this.props
 
     const code = value.data.get('language')
     const language = LANGUAGES.find(lang => lang.code === code)
@@ -64,6 +87,8 @@ export default class DocumentTools extends React.Component<Props> {
       properties: prevProperties,
       newProperties,
     } as unknown as Operation)
+
+    this.context.storage.setLanguage(code)
 
     store.dispatch(setCurrentDraftLang(code))
   }
