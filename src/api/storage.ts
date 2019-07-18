@@ -54,6 +54,7 @@ export default class Storage extends StorageBase {
   id: string
   url: string
   title: string
+  language: string = 'en'
   files: FileDescription[]
   tag: string | null = null
   document: Value | null = null
@@ -96,6 +97,7 @@ export default class Storage extends StorageBase {
     const deserialize = this.serializer.deserialize(await index.data)
     this.document = deserialize.document
     this.glossary = deserialize.glossary
+    this.language = deserialize.language
     return { document: this.document, glossary: this.glossary }
   }
 
@@ -104,7 +106,10 @@ export default class Storage extends StorageBase {
    */
   async write(document: Value, glossary: Value | null) {
     try {
-      const text = this.serializer.serialize(document, glossary, this.title)
+      const text = this.serializer.serialize(document, glossary, {
+        title: this.title,
+        language: this.language,
+      })
 
       await axios.put(`drafts/${this.id}/files/index.cnxml`, text)
 
@@ -139,6 +144,16 @@ export default class Storage extends StorageBase {
    */
   mediaUrl(name: string) {
     return this.url + '/files/' + name
+  }
+
+  /**
+   * Set language for this document to given value.
+   * It will be used to save cnxml with correct value.
+   *
+   * @param {string} code ISO language code
+   */
+  setLanguage(code: string) {
+    this.language = code
   }
 
   serializer = new CNXML({
