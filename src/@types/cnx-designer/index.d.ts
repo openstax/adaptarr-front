@@ -12,10 +12,15 @@ declare module 'cnx-designer' {
   import { Plugin } from 'slate-react'
   import { List } from 'immutable'
 
+  type SerializeOptions = {
+    title?: string
+    language?: string
+  }
+
   export class CNXML {
     constructor(args: {documentRules: any[], glossaryRules: any[]})
-    deserialize(html: string, options?: {}): {document: Value, glossary: Value}
-    serialize(documentValue: Value, glossaryValue: Value | null, title: string): string
+    deserialize(html: string, options?: {}): {language: string, document: Value, glossary: Value}
+    serialize(documentValue: Value, glossaryValue: Value | null, options: SerializeOptions): string
   }
 
   export class APIError extends Error {
