@@ -549,7 +549,8 @@ role-section-manage = Zarządzaj rolami
 
 role-name = Nazwa roli
 
-role-create = Utwórz rolę
+role-create =
+  .value = Utwórz rolę
 
 role-edit = Edycja
 

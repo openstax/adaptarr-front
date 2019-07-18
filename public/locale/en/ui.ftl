@@ -550,7 +550,8 @@ role-section-manage = Manage roles
 
 role-name = Role name
 
-role-create = Create role
+role-create =
+  .value = Create role
 
 role-edit = Edit
 
