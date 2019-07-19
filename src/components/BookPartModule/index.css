@@ -13,3 +13,9 @@
 .bookpart__item--module .begin-process-dialog .dialog__content {
   overflow: visible;
 }
+
+.bookpart__title .highlight {
+  color: #fff;
+  padding: 0 2px;
+  background-color: var(--danger);
+}

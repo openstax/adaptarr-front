@@ -26,6 +26,7 @@ type Props = {
   modulesMap: types.ModulesMap
   processes: Map<number, api.Process>
   isEditingUnlocked: boolean
+  highlightText: string
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
 }
@@ -128,7 +129,7 @@ class Module extends React.Component<Props> {
   }
 
   public render() {
-    const { item, processes, isEditingUnlocked } = this.props
+    const { item, processes, isEditingUnlocked, highlightText } = this.props
     const {
       showRemoveModule,
       showBeginProcess,
@@ -136,6 +137,12 @@ class Module extends React.Component<Props> {
       module: mod,
       showCancelProcess,
     } = this.state
+
+    let titleWithHighlights = ''
+    if (highlightText) {
+      const rgx = new RegExp(highlightText, 'gi')
+      titleWithHighlights = item.title.replace(rgx, match => `<span class="highlight">${match}</span>`)
+    }
 
     return (
       <>
@@ -152,7 +159,11 @@ class Module extends React.Component<Props> {
               />
             : item.title */
           }
-          {item.title}
+          {
+            highlightText ?
+              <span dangerouslySetInnerHTML={{__html: titleWithHighlights}}></span>
+            : item.title
+          }
         </span>
         <span className="bookpart__info">
           {
