@@ -32,14 +32,14 @@ class FileUploader extends React.Component<Props> {
     this.props.onFilesChange(files)
   }
 
-  private filesRemoveOne = (file: File) => {
+  public filesRemoveOne = (file: File) => {
     const files = this.filesRef.current
     if (files) {
       files.removeFile(file)
     }
   }
 
-  private filesRemoveAll = () => {
+  public filesRemoveAll = () => {
     const files = this.filesRef.current
     if (files) {
       files.removeFiles()
