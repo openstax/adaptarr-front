@@ -208,6 +208,20 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </a>
               </div>
             </li>
+            <li className="nav__link">
+              <Tooltip l10nId="navigation-helpdesk" isDisabled={!toggleSidebar}>
+                <NavLink to="/helpdesk" activeClassName="active">
+                  <span className="nav__content">
+                    <Icon name="help" size="medium" />
+                    <span className="nav__text">
+                      <Localized id="navigation-helpdesk">
+                        Helpdesk
+                      </Localized>
+                    </span>
+                  </span>
+                </NavLink>
+              </Tooltip>
+            </li>
             <LimitedUI permissions="user:invite">
               <li className="nav__link">
                 <Tooltip l10nId="navigation-invite" direction="right" isDisabled={!toggleSidebar}>

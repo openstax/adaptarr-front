@@ -543,6 +543,38 @@ settings-language-dialog-cancel = Cancel
 
 
 
+## Screens - helpdesk
+
+helpdesk-view-title = Helpdesk
+
+helpdesk-export-local-database = Export database
+
+helpdesk-export-local-database-loading = Exporting...
+
+# Variables:
+# - $details (string): error details
+helpdesk-export-error = We couldn't export your database. Details: { $details }
+
+helpdesk-import-local-database = Import database
+
+helpdesk-import-invalid-file = Invalid import file. Please contact with administrator.
+
+helpdesk-import-database-title = Import database from file
+
+helpdesk-import-cancel = Cancel
+
+helpdesk-import-confirm = Import database
+
+helpdesk-import-success = Database has beed replaced successfully.
+
+helpdesk-import-error-uploaded-database = We couldn't read from upload file.
+
+# Variables:states
+# - $details (string): error details
+helpdesk-import-error = We couldn't replace this database. Details: { $details }
+
+
+
 ## Screens - roles
 
 role-view-title = Roles
@@ -1001,6 +1033,8 @@ navigation-profile = Your profile
 navigation-settings = Settings
 
 navigation-logout = Logout
+
+navigation-helpdesk = Helpdesk
 
 navigation-invite = Invitations
 

@@ -19,6 +19,7 @@ import Draft from 'src/screens/app/Draft'
 import Resources from 'src/screens/app/Resources'
 import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
+import Helpdesk from 'src/screens/app/Helpdesk'
 import Invitations from 'src/screens/app/Invitations'
 import Roles from 'src/screens/app/Roles'
 import Processes from 'src/screens/app/Processes'
@@ -126,6 +127,7 @@ class App extends React.Component<Props> {
                   <Route path="/resources/:id" component={Resources}/>
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
+                  <Route path="/helpdesk" component={Helpdesk}/>
                   <Route path="/invitations" component={Invitations}/>
                   <Route path="/roles" component={Roles}/>
                   <Route path="/processes" component={Processes}/>

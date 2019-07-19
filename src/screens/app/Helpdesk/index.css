@@ -1,0 +1,12 @@
+.helpdesk__tools {
+  display: flex;
+  flex-direction: column;
+}
+
+.helpdesk__tools .button {
+  margin-bottom: 20px;
+}
+
+.helpdesk__dialog-content .dialog__buttons {
+  margin-top: 20px;
+}

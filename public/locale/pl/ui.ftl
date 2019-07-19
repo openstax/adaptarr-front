@@ -542,6 +542,38 @@ settings-language-dialog-cancel = Anuluj
 
 
 
+## Screens - helpdesk
+
+helpdesk-view-title = Centrum pomocy
+
+helpdesk-export-local-database = Wyeksportuj bazę danych
+
+helpdesk-export-local-database-loading = Eksportowanie...
+
+# Variables:
+# - $details (string): error details
+helpdesk-export-error = Nie udało się wyeksportować bazy danych. Szczegóły: { $details }
+
+helpdesk-import-local-database = Importuj bazę danych
+
+helpdesk-import-invalid-file = Niepoprawny plik. Proszę skontaktować się z administratorem.
+
+helpdesk-import-database-title = Importuj bazę danych z pliku
+
+helpdesk-import-cancel = Anuluj
+
+helpdesk-import-database = Importuj bazę
+
+helpdesk-import-success = Pomyślnie zaktualizowano bazę danych.
+
+helpdesk-import-error-uploaded-database = Nie udało się odczytać treści przesłanego pliku.
+
+# Variables:
+# - $details (string): error details
+helpdesk-import-error = Nie udało się zaktualizować bazy danych. Szczegóły: { $details }
+
+
+
 ## Screens - roles
 
 role-view-title = Role
@@ -1003,6 +1035,8 @@ navigation-profile = Mój profil
 navigation-settings = Ustawienia
 
 navigation-logout = Wyloguj
+
+navigation-helpdesk = Pomoc
 
 navigation-invite = Zaproszenia
 
