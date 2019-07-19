@@ -7,6 +7,7 @@ declare module 'cnx-designer' {
     Range,
     Value,
     Path,
+    ValueJSON,
   } from 'slate'
   import { Plugin } from 'slate-react'
   import { List } from 'immutable'
@@ -31,9 +32,30 @@ declare module 'cnx-designer' {
     mediaUrl(name: string): string
   }
 
+  export type PersistDBData = {
+    database: {
+      name: string
+      version: number
+      objectStores: {
+        indexes: {[key: string]: {
+          name: string
+          keyPath: IDBKeyPath
+          multiEntry: boolean
+          unique: boolean
+        }}
+        keyPath: IDBKeyPath,
+        autoIncrement: boolean
+      }
+    }
+    remove: {[key: string]: Object}
+    insert: {[key: string]: Object[]}
+  }
+
   export class PersistDB {
     static open(): Promise<PersistDB>
     static load(id: string): Promise<DocumentDB>
+    export(): Promise<PersistDBData>
+    import(database: PersistDBData): Promise<void>
     openDocument(id: string): Promise<DocumentDB>
     dirty(): Promise<{}[]>
     discard(id: string): Promise<void>
