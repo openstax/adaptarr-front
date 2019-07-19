@@ -15,6 +15,9 @@ book-view-title = { $title }
 # Alternative title for while book is still loading.
 book-view-title-loading = Loading
 
+book-search-input =
+  .placeholder = Search
+
 book-button-add-module = Add module
 
 book-button-add-group = Add group

@@ -69,6 +69,8 @@ class Book extends React.Component<Props> {
     groupNameInput: string
     showAddGroup: boolean
     showAddModule: boolean
+    searchInput: string
+    filteredParts: api.BookPart[]
   } = {
     isLoading: true,
     parts: [],
@@ -78,6 +80,46 @@ class Book extends React.Component<Props> {
     groupNameInput: '',
     showAddGroup: false,
     showAddModule: false,
+    searchInput: '',
+    filteredParts: [],
+  }
+
+  private onSearch = (val: string) => {
+    const { parts } = this.state
+    let filteredParts: api.BookPart[] = []
+    // Do not show first part which is just Book
+    ;(parts[0].parts as api.BookPart[]).forEach(part => {
+      if (part.kind === 'module') {
+        const rgx = new RegExp(val, 'gi')
+        if (part.title.match(rgx)) {
+          filteredParts.push(part)
+        }
+      } else if (part.kind === 'group') {
+        const filteredGroup = this.filterDraftsFromGroup(part, val)
+        if (filteredGroup) {
+          filteredParts.push(filteredGroup)
+        }
+      }
+    })
+    this.setState({ searchInput: val, filteredParts })
+  }
+
+  private filterDraftsFromGroup = (group: api.BookPart, val: string): api.BookPart | null => {
+    let parts: api.BookPart[] = []
+    group.parts!.forEach(p => {
+      if (p.kind === 'module') {
+        const rgx = new RegExp(val, 'gi')
+        if (p.title.match(rgx)) {
+          parts.push(p)
+        }
+      } else if (p.kind === 'group') {
+        const filteredGroup = this.filterDraftsFromGroup(p, val)
+        if (filteredGroup) {
+          parts.push(filteredGroup)
+        }
+      }
+    })
+    return parts.length ? new api.BookPart({...group, parts: parts} as GroupData, group.book) : null
   }
 
   private showModuleDetails = (item: api.BookPart) => {
@@ -108,6 +150,7 @@ class Book extends React.Component<Props> {
               onModuleClick={this.showModuleDetails}
               afterAction={this.fetchBook}
               isEditingUnlocked={this.state.isEditingUnlocked}
+              highlightText={this.state.searchInput}
             />
         }
       </div>
@@ -347,6 +390,8 @@ class Book extends React.Component<Props> {
       showAddGroup,
       showAddModule,
       groupNameInput,
+      searchInput,
+      filteredParts,
     } = this.state
 
     const title = book ? book.title : 'Loading'
@@ -383,20 +428,27 @@ class Book extends React.Component<Props> {
                 : null
               }
             </LimitedUI>
+            <div className="book__search">
+              <Input
+                l10nId="book-search-input"
+                value={searchInput}
+                onChange={this.onSearch}
+              />
+            </div>
           </Header>
           {
             !isLoading ?
               <>
                 <Nestable
                   isDisabled={!isEditingUnlocked}
-                  items={parts[0].parts as api.BookPart[]}
+                  items={searchInput ? filteredParts : parts[0].parts as api.BookPart[]}
                   className="book-collection"
                   childrenProp="parts"
                   renderItem={this.renderItem}
                   renderCollapseIcon={this.renderCollapseIcon}
                   onMove={this.handleOnMove}
                   onChange={this.handlePositionChange}
-                  collapsed
+                  collapsed={!searchInput}
                 />
                 {
                   isEditingUnlocked ?

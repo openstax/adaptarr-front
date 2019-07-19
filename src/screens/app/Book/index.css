@@ -2,6 +2,11 @@
   cursor: grabbing;
 }
 
+.book__search {
+  position: absolute;
+  right: 20px;
+}
+
 .book-collection {
   width: 100%;
 }
