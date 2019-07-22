@@ -2,7 +2,8 @@ import axios from 'src/config/axios'
 import { AxiosResponse } from 'axios'
 
 import Base from './base'
-import { elevated } from './utils'
+import User from './user'
+import { elevated, elevate } from './utils'
 
 export type ResourceData = {
   id: string,
@@ -50,7 +51,12 @@ export default class Resource extends Base<ResourceData> {
       data.append('file', file)
     }
 
-    let res = await elevated(() => axios.post('resources', data))
+    const session = await User.session()
+    if (!session.is_elevated) {
+      await elevate()
+    }
+
+    let res = await axios.post('resources', data)
     return new Resource(res.data)
   }
 
