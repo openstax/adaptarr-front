@@ -105,11 +105,16 @@ export default class Resource extends Base<ResourceData> {
    * This method requires elevated permissions: 'resources:manage'
    */
   async replaceContent(file: File): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`resources/${this.id}/content`, file, {
+    const session = await User.session()
+    if (!session.is_elevated) {
+      await elevate()
+    }
+
+    return await axios.put(`resources/${this.id}/content`, file, {
       headers: {
         'Content-Type': 'multipart',
       },
-    }))
+    })
   }
 
   /**
