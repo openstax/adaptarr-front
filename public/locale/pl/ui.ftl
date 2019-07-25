@@ -268,6 +268,8 @@ dashboard-drafts-delete = Usuń
 
 dashboard-drafts-empty = Brak tekstów do wyświetlenia
 
+dashboard-drafts-details = Szczegóły
+
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Szkic został utworzony.
 

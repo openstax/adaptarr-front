@@ -11,6 +11,7 @@ import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
 import Spinner from 'src/components/Spinner'
+import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
 import './index.css'
@@ -224,12 +225,19 @@ class DraftsList extends React.Component<Props> {
               </div>
             </>
           :
+            <>
             <Link
               to={`/drafts/${item.id}`}
               className="draftsList__draft-title"
             >
               {item.title}
             </Link>
+            <Button to={`/drafts/${item.id}`}>
+              <Localized id="dashboard-drafts-details">
+                Details
+              </Localized>
+            </Button>
+          </>
         }
       </div>
     )

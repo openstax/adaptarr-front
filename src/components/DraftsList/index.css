@@ -38,10 +38,15 @@
   width: 100%;
   color: var(--font-dark);
   padding: 15px 0;
+  flex: 1;
 }
 
 .draftsList__draft-title:hover {
   font-weight: 700;
+}
+
+.draftsList .nestable-item-name {
+  margin-right: 15px;
 }
 
 .draftsList .draft-info {

@@ -267,6 +267,8 @@ dashboard-drafts-delete = Delete
 
 dashboard-drafts-empty = You don't have any drafts.
 
+dashboard-drafts-details = Details
+
 # Alert displayed when draft of a module was created.
 dashboard-create-draft-alert-success = Draft was created successfully.
 
