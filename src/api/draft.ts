@@ -169,7 +169,14 @@ export default class Draft extends Base<DraftData> {
    *
    * All changes will be lost.
    */
-  async cancelProcess(): Promise<any> {
-    await await elevated(() => axios.delete(`drafts/${this.module}`))
+  async cancelProcess(): Promise<AxiosResponse> {
+    return await elevated(() => axios.delete(`drafts/${this.module}`))
+  }
+
+  /**
+   * Write index.cnxml.
+   */
+  async writeCNXML(text: string) {
+    return await axios.put(`drafts/${this.module}/files/index.cnxml`, text)
   }
 }
