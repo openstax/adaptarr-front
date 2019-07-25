@@ -4,12 +4,13 @@ import * as React from 'react'
 
 type Props = {
   children?: any
+  className?: string
 }
 
-const section = (props: Props) => {
+const section = ({ children, className }: Props) => {
   return (
-    <section className="section--wrapper">
-      {props.children}
+    <section className={`section--wrapper ${className ? className : ''}`}>
+      {children}
     </section>
   )
 }
