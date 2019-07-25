@@ -301,6 +301,36 @@ draft-cancel = Anuluj
 
 
 
+## Screens - draft details
+
+# Variables:
+# - $draft (string): draft's title
+draft-details-view-title = Szczegóły dla tekstu { $draft }
+
+draft-details-go-to-draft = Przejdź do tekstu
+
+draft-details-button-download = Pobierz CNXML
+
+draft-details-button-downloading = Pobieranie...
+
+draft-details-button-import = Importuj CNXML
+
+draft-details-button-importing = Importowanie...
+
+draft-details-import-title = Wgraj plik CNXML do zaimportowania
+
+draft-details-button-cancel = Anuluj
+
+draft-details-button-confirm = Potwierdź
+
+draft-details-import-success = Pomyślnie zaimportowano plik.
+
+# Variables:
+# - $details (string): error details.
+draft-details-import-error = Nie udało się zaimportować pliku. Szczegóły: { $details }
+
+
+
 ## Screens - dashboard - draft deletion dialog
 
 dashboard-delete-draft-dialog-title = Usunąć szkic "{ $title }"?

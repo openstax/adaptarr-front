@@ -16,6 +16,7 @@ import Books from 'src/screens/app/Books'
 import Book from 'src/screens/app/Book'
 import Module from 'src/screens/app/Module'
 import Draft from 'src/screens/app/Draft'
+import DraftDetais from 'src/screens/app/DraftDetails'
 import Resources from 'src/screens/app/Resources'
 import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
@@ -122,7 +123,8 @@ class App extends React.Component<Props> {
                   <Route exact path="/books" component={Books}/>
                   <Route path="/books/:id" component={Book}/>
                   <Route path="/modules/:id" component={Module}/>
-                  <Route path="/drafts/:id" component={Draft}/>
+                  <Route exact path="/drafts/:id" component={DraftDetais}/>
+                  <Route path="/drafts/:id/edit" component={Draft}/>
                   <Route exact path="/resources" component={Resources}/>
                   <Route path="/resources/:id" component={Resources}/>
                   <Route path="/users/:id" component={Profile}/>
