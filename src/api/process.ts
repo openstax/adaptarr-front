@@ -165,9 +165,36 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async update(name: string): Promise<Process> {
+  async updateName(name: string): Promise<Process> {
     const rsp = await elevated(() => axios.put(`processes/${this.id}`, { name }))
     return new Process(rsp.data)
+  }
+
+  /**
+   * Update name or roles for slot in process.
+   *
+   * This function requires editing-process:edit permission.
+   */
+  async updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`processes/${this.id}/slots/${slot}`, data))
+  }
+
+  /**
+   * Update name of step in process.
+   *
+   * This function requires editing-process:edit permission.
+   */
+  async updateStepName(step: number, name: string): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}`, { name }))
+  }
+
+  /**
+   * Update name of link in process.
+   *
+   * This function requires editing-process:edit permission.
+   */
+  async updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
+    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}/links/${slot}/${target}`, { name }))
   }
 
   /**
