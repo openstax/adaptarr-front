@@ -8,3 +8,12 @@
   margin-top: 20px;
   max-width: 800px;
 }
+
+.process__dialog-content {
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
+
+.process__dialog-content p {
+  margin-bottom: 10px;
+}

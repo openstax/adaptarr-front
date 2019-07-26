@@ -124,8 +124,8 @@ class ProcessForm extends React.Component<Props> {
                   Create process
                 </Localized>
               :
-                <Localized id="process-form-new-version">
-                  Create new version
+                <Localized id="process-form-save-changes">
+                  Save changes
                 </Localized>
             }
           </Button>

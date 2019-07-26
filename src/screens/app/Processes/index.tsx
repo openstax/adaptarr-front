@@ -1,9 +1,10 @@
-import './index.css'
-
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import User from 'src/api/user'
 import Process, { ProcessStructure } from 'src/api/process'
+import { elevate } from 'src/api/utils'
+
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
@@ -14,8 +15,11 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
+import Dialog from 'src/components/ui/Dialog'
 
 import ProcessPreview from 'src/containers/ProcessPreview'
+
+import './index.css'
 
 class Processes extends React.Component<{}> {
   state: {
@@ -23,11 +27,15 @@ class Processes extends React.Component<{}> {
     structure: ProcessStructure | null
     process: Process | null
     showPreview: boolean
+    previewStructure: ProcessStructure | null
+    showConfirmNewVersionCreation: boolean
   } = {
     showForm: false,
     structure: null,
     process: null,
     showPreview: false,
+    previewStructure: null,
+    showConfirmNewVersionCreation: false,
   }
 
   private showForm = () => {
@@ -43,7 +51,8 @@ class Processes extends React.Component<{}> {
     this.setState({ showForm: true, structure, process: p })
   }
 
-  private createProcess = (structure: ProcessStructure) => {
+  private createProcess = async (structure: ProcessStructure) => {
+    // Create new process if we are not editing existing one.
     if (!this.state.process) {
       Process.create(structure)
         .then(() => {
@@ -55,29 +64,195 @@ class Processes extends React.Component<{}> {
           store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
         })
     } else {
-      this.state.process.createVersion(structure)
-        .then(() => {
+      // Check if changes require creating new version.
+      // If not then just update changed fields.
+      const oldStructure = await this.state.process.structure()
+
+      const {
+        newVersionRequired,
+        updates,
+      } = this.compareOldWithNew(oldStructure, structure)
+
+      if (!newVersionRequired) {
+        try {
+          const session = await User.session()
+          if (!session.is_elevated) {
+            await elevate()
+          }
+          await Promise.all(updates.map(u => u()))
           this.closeForm()
-          store.dispatch(addAlert('success', 'process-create-version-success', {name: structure.name}))
+          store.dispatch(addAlert('success', 'process-update-success'))
           store.dispatch(fetchProcesses())
-        })
-        .catch((e) => {
-          store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
-        })
+        } catch (e) {
+          console.log(e)
+          store.dispatch(addAlert('error', 'process-update-error'))
+        }
+      } else {
+        // Show confirmation dialog
+        this.showConfirmNewVersionCreation(structure)
+      }
     }
   }
 
+  private showConfirmNewVersionCreation = (structure: ProcessStructure) => {
+    this.setState({ showConfirmNewVersionCreation: true, structure })
+  }
+
+  private closeConfirmNewVersionCreation = () => {
+    this.setState({ showConfirmNewVersionCreation: false })
+  }
+
+  private createNewProcessVersion = () => {
+    const { process, structure } = this.state
+    if (!process || !structure) return
+
+    process.createVersion(structure)
+      .then(() => {
+        this.closeForm()
+        store.dispatch(addAlert('success', 'process-create-version-success', {name: structure.name}))
+        store.dispatch(fetchProcesses())
+      })
+      .catch((e) => {
+        store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
+      })
+
+    this.closeConfirmNewVersionCreation()
+  }
+
   private closePreview = () => {
-    this.setState({ showPreview: false, structure: null, process: null })
+    this.setState({ showPreview: false, previewStructure: null })
   }
 
   private onShowPreview = async (p: Process) => {
-    const structure = await p.structure()
-    this.setState({ showPreview: true, structure, process: p })
+    const previewStructure = await p.structure()
+    this.setState({ showPreview: true, previewStructure, })
+  }
+
+  private compareOldWithNew = (oldStructure: ProcessStructure, newStructure: ProcessStructure): {
+    newVersionRequired: boolean,
+    updates: Function[],
+  } => {
+    const { process } = this.state
+
+    if (!process) {
+      throw new Error("Couldn't establish process to update.")
+    }
+
+    let res: {
+      newVersionRequired: boolean
+      updates: any[]
+    } = {
+      newVersionRequired: false,
+      updates: [],
+    }
+
+    if (
+      oldStructure.slots.length !== newStructure.slots.length
+      || oldStructure.steps.length !== newStructure.steps.length
+      || oldStructure.start !== newStructure.start
+      ) {
+      return {
+        newVersionRequired: true,
+        updates: [],
+      }
+    }
+
+    if (oldStructure.name !== newStructure.name) {
+      res.updates.push(() => process.updateName(newStructure.name))
+    }
+
+    // Slots and steps have unique id's, but those are present only on oldStructure,
+    // so we are comparing slots, steps, links by index and we are using id from oldStructre
+    // to update them. We have to check all fields, because only few of them are editable.
+
+    let slotIndex = 0
+    for (const slot of oldStructure.slots) {
+      const newSlot = newStructure.slots[slotIndex]
+      if (slot.autofill !== newSlot.autofill) {
+        return {
+          newVersionRequired: true,
+          updates: [],
+        }
+      }
+      let slotUpdate: {name?: string, roles?: number[]} = {}
+      if (slot.name !== newSlot.name) {
+        slotUpdate.name = newSlot.name
+      }
+      if (numberArrayDiff(slot.roles, newSlot.roles).length) {
+        slotUpdate.roles = newSlot.roles
+      }
+      if (slotUpdate.name || slotUpdate.roles) {
+        res.updates.push(() => process.updateSlot(slot.id, slotUpdate))
+      }
+
+      slotIndex++
+    }
+
+    let stepIndex = 0
+    for (const step of oldStructure.steps) {
+      const newStep = newStructure.steps[stepIndex]
+      if (
+        step.links.length !== newStep.links.length
+        || step.slots.length !== newStep.slots.length
+      ) {
+        return {
+          newVersionRequired: true,
+          updates: [],
+        }
+      }
+
+      if (step.name !== newStep.name) {
+        res.updates.push(() => process.updateStepName(step.id, newStep.name))
+      }
+
+      let linkIndex = 0
+      for (const link of step.links) {
+        const newLink = newStep.links[linkIndex]
+        // link.slot/to are based on indexes so we can easly compare them
+        if (
+          link.slot !== newLink.slot
+          || link.to !== newLink.to
+        ) {
+          return {
+            newVersionRequired: true,
+            updates: [],
+          }
+        }
+
+        if (link.name !== newLink.name) {
+          const slotId = oldStructure.slots[link.slot].id
+          const stepId = oldStructure.steps[link.to].id
+          res.updates.push(() => process.updateLinkName(step.id, slotId, stepId, newLink.name))
+        }
+
+        linkIndex++
+      }
+
+      let slotIndex = 0
+      for (const slot of step.slots) {
+        const newSlot = step.slots[slotIndex]
+        // slot.slot are based on indexes so we can easly compare them
+        if (
+          slot.slot !== newSlot.slot
+          || slot.permission !== newSlot.permission
+        ) {
+          return {
+            newVersionRequired: true,
+            updates: [],
+          }
+        }
+
+        slotIndex++
+      }
+
+      stepIndex++
+    }
+
+    return res
   }
 
   public render() {
-    const { showForm, structure, showPreview, process } = this.state
+    const { showForm, structure, showPreview, previewStructure, process, showConfirmNewVersionCreation } = this.state
 
     return (
       <div className={`container ${showPreview ? 'container--splitted' : ''}`}>
@@ -110,7 +285,7 @@ class Processes extends React.Component<{}> {
           </div>
         </Section>
         {
-          showPreview && structure ?
+          showPreview && previewStructure ?
             <Section>
               <Header
                 l10nId="processes-view-preview"
@@ -121,9 +296,35 @@ class Processes extends React.Component<{}> {
                 </Button>
               </Header>
               <div className="section__content">
-                <ProcessPreview structure={structure} />
+                <ProcessPreview structure={previewStructure} />
               </div>
             </Section>
+          : null
+        }
+        {
+          showConfirmNewVersionCreation ?
+            <Dialog
+              size="medium"
+              l10nId="process-update-warning-new-version"
+              placeholder="Warning! New version will be created."
+              onClose={this.closeConfirmNewVersionCreation}
+            >
+              <Localized id="process-update-warning-new-version-content" p={<p/>}>
+                <div className="process__dialog-content"></div>
+              </Localized>
+              <div className="dialog__buttons">
+                <Button clickHandler={this.closeConfirmNewVersionCreation}>
+                  <Localized id="process-update-warning-new-version-cancel">
+                    Cancel
+                  </Localized>
+                </Button>
+                <Button clickHandler={this.createNewProcessVersion}>
+                  <Localized id="process-update-warning-new-version-confirm">
+                    Create new version
+                  </Localized>
+                </Button>
+              </div>
+            </Dialog>
           : null
         }
       </div>
@@ -132,3 +333,11 @@ class Processes extends React.Component<{}> {
 }
 
 export default Processes
+
+function numberArrayDiff(a: number[], b: number[]) {
+  if (a.length > b.length) {
+    return a.filter(item => b.indexOf(item) < 0)
+  } else {
+    return b.filter(item => a.indexOf(item) < 0)
+  }
+}

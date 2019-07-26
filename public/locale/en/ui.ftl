@@ -705,6 +705,23 @@ process-update-name-success = Name has been updated.
 # - $details (string): error details.
 process-update-name-error = Couldn't update name. Details: { $details }.
 
+process-update-success = Process has been updated.
+
+process-update-error = Some changes could not be applied.
+
+process-update-warning-new-version = Warning! New version will be created.
+
+# Fragments:
+# - <p> ... </p>: paragraph content
+process-update-warning-new-version-content =
+  <p>Changes which you made require creating new version of this process.</p>
+  <p>All drafts using current process will not be affected by this change.</p>
+  <p>You will see changes which you made only for drafts started after creating this version.</p>
+
+process-update-warning-new-version-cancel = Cancel
+
+process-update-warning-new-version-confirm = Create new version
+
 # Alert displayed when version of process has been created.
 #
 # Variables:
@@ -723,7 +740,7 @@ process-create-version-error = Couldn't create new version. Details: { $details 
 
 process-form-create = Create process
 
-process-form-new-version = Create new version
+process-form-save-changes = Save changes
 
 process-form-cancel = Cancel
 

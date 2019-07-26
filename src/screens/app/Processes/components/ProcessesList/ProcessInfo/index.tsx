@@ -117,7 +117,7 @@ class ProcessInfo extends React.Component<Props> {
 
   private onSubmit = () => {
     if (this.state.name.length) {
-      this.props.process.update(this.state.name)
+      this.props.process.updateName(this.state.name)
         .then(() => {
           store.dispatch(addAlert('success', 'process-update-name-success'))
           store.dispatch(fetchProcesses())

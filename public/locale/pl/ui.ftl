@@ -704,6 +704,23 @@ process-update-name-success = Nazwa została zaktualizowana.
 # - $details (string): error details.
 process-update-name-error = Nazwa nie została zaktualizowana. Szczegóły: { $details }.
 
+process-update-success = Proces został zaktualizowany.
+
+process-update-error = Niektóre zmiany nie mogłby zostać zapisane.
+
+process-update-warning-new-version = Ostrzeżenie! Zostanie utworzona nowa wersja.
+
+# Fragments:
+# - <p> ... </p>: paragraph content
+process-update-warning-new-version-content =
+  <p>Zmiany, które zostały wprowadzone, wymagają utworzenia nowej wersji procesu.</p>
+  <p>Wszystkie szkice będące w obecnym procesie nie ulegną zmianie.</p>
+  <p>Wprowadzone zmiany będą widoczne tylko dla nowo utworzonych szkiców w tej wersji procesu.</p>
+
+process-update-warning-new-version-cancel = Anuluj
+
+process-update-warning-new-version-confirm = Utwórz nową wersję
+
 # Alert displayed when version of process has been created.
 #
 # Variables:
@@ -722,7 +739,7 @@ process-create-version-error = Nie udało się utworzyć nowej wersji. Szczegó�
 
 process-form-create = Utwórz proces
 
-process-form-new-version = Utwórz nową wersję
+process-form-save-changes = Zapisz zmiany
 
 process-form-cancel = Anuluj
 
