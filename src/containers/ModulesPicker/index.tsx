@@ -186,6 +186,8 @@ class ModuleList extends React.Component<Props> {
                 onFilesChange={this.onFilesChange}
                 onFilesError={this.onFilesError}
                 accepts={['.zip', '.rar', '.cnxml']}
+                optional={true}
+                multiple={false}
               />
             </form>
           </div>

@@ -130,6 +130,7 @@ class UserProfile extends React.Component<Props> {
             onFilesError={this.onFilesError}
             accepts={['.jpg', 'jpeg', '.png']}
             multiple={false}
+            optional={false}
           />
         )
         break

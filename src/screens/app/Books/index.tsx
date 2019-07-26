@@ -157,6 +157,8 @@ class Books extends React.Component<Props> {
                       onFilesChange={this.onFilesChange}
                       onFilesError={this.onFilesError}
                       accepts={['.zip', '.rar']}
+                      optional={true}
+                      multiple={false}
                     />
                     <div className="dialog__buttons">
                       <Button clickHandler={this.closeAddBookDialog}>

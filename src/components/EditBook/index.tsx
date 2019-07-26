@@ -95,6 +95,8 @@ class EditBook extends React.Component<Props> {
                   onFilesChange={this.onFilesChange}
                   onFilesError={this.onFilesError}
                   accepts={['.zip', '.rar']}
+                  optional={true}
+                  multiple={false}
                 />
                 <div className="dialog__buttons dialog__buttons--center">
                   <Localized id="book-edit-submit" attrs={{ value: true }}>

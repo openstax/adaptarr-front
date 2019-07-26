@@ -11,6 +11,7 @@ type Props = {
   onFilesChange: (files: File[]) => any
   onFilesError: (error: FilesError, file: File) => any
   className?: string
+  optional: boolean
   dropActiveClassName?: string
   accepts: string[]
   multiple?: boolean
@@ -50,7 +51,10 @@ class FileUploader extends React.Component<Props> {
 
   public render() {
     const files = this.state.files
-    const { onFilesChange, onFilesError, ...otherProps } = this.props
+    const { onFilesChange, onFilesError, optional, ...otherProps } = this.props
+    const multiple = typeof otherProps.multiple === 'boolean' ?
+        otherProps.multiple
+      : otherProps.maxFiles !== 1
 
     return (
       <div className="files-uploader">
@@ -60,18 +64,26 @@ class FileUploader extends React.Component<Props> {
         onError={onFilesError}
         {...otherProps}
       >
-        <Localized id="file-upload-select-files">
+        <Localized
+          id="file-upload-select-files"
+          $multiple={multiple.toString()}
+          $optional={optional.toString()}
+        >
           Drop files here or click to upload (optional).
         </Localized>
       </Files>
       {
         files.length ?
-          <React.Fragment>
-            <Button type="danger" clickHandler={() => this.filesRemoveAll()}>
-              <Localized id="file-upload-remove-all">
-                Remove all files
-              </Localized>
-            </Button>
+          <>
+            {
+              multiple ?
+                <Button type="danger" clickHandler={() => this.filesRemoveAll()}>
+                  <Localized id="file-upload-remove-all">
+                    Remove all files
+                  </Localized>
+                </Button>
+              : null
+            }
             <ul className="files__list">
               {
                 files.map((file: File, index: number) => {
@@ -91,7 +103,7 @@ class FileUploader extends React.Component<Props> {
                 })
               }
             </ul>
-          </React.Fragment>
+          </>
         : null
       }
       </div>

@@ -144,6 +144,7 @@ class Helpdesk extends React.Component {
                       onFilesError={this.onFilesError}
                       multiple={false}
                       accepts={['.json']}
+                      optional={false}
                       ref={this.filesRef}
                     />
                     <div className="dialog__buttons">

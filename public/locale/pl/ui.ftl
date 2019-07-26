@@ -1114,7 +1114,16 @@ date-diff-days = { $days ->
 
 ## Reusable components - file upload
 
-file-upload-select-files = Upuść pliki lub kliknij, aby dodać (opcjonalnie).
+# Variables:
+# - $multiple (string): true or false
+# - $optional (string): true or false
+file-upload-select-files = Upuść { $multiple ->
+  [true] pliki
+ *[false] plik
+} lub kliknij, aby dodać { $optional ->
+  [true] (opcjonalnie)
+ *[false] (wymagane)
+}
 
 file-upload-remove-all = Usuń wszystkie pliki
 

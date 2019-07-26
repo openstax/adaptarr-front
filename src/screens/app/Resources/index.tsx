@@ -236,6 +236,7 @@ class Resources extends React.Component<Props> {
                               onFilesError={this.onFilesError}
                               multiple={false}
                               accepts={ACCEPTED_FILE_TYPES}
+                              optional={false}
                             />
                           : null
                         }
