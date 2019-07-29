@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import LocalizationProvider from 'src/l10n'
 
 import App from 'src/App'
-import registerServiceWorker from 'src/registerServiceWorker'
+import { unregister } from 'src/registerServiceWorker'
 import ErrorBoundary from 'src/components/ErrorBoundary'
 import { SENTRY_DSN, SENTRY_RELEASE } from 'src/config/sentry'
 
@@ -31,4 +31,4 @@ ReactDOM.render(
   document.getElementById('root') as HTMLElement
 )
 
-registerServiceWorker()
+unregister()
