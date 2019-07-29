@@ -227,7 +227,7 @@ class DraftsList extends React.Component<Props> {
           :
             <>
             <Link
-              to={`/drafts/${item.id}`}
+              to={`/drafts/${item.id}/edit`}
               className="draftsList__draft-title"
             >
               {item.title}
