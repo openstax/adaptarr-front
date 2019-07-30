@@ -51,6 +51,7 @@
     "react-nestable": "https://github.com/PiotrKozlowski/react-nestable.git",
     "react-portal": "^4.2.0",
     "react-redux": "^6.0.0",
+    "react-route-guard": "^1.0.7",
     "react-router-dom": "^4.3.1",
     "react-select": "^2.1.2",
     "react-tag-input": "^6.4.0",

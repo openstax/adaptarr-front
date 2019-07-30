@@ -1,6 +1,7 @@
 import * as React from 'react'
 import  { Localized } from 'fluent-react/compat'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { SecureRoute } from 'react-route-guard'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
@@ -8,7 +9,6 @@ import * as api from 'src/api'
 import Navigation from 'src/components/Navigation'
 import Spinner from 'src/components/Spinner'
 import Notification from 'src/components/Notification'
-import Icon from 'src/components/ui/Icon'
 
 import Dashboard from 'src/screens/app/Dashboard'
 import NotificationsCentre from 'src/screens/app/NotificationsCentre'
@@ -93,6 +93,23 @@ export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificatio
 }
 
 class App extends React.Component<Props> {
+  private InvitationsGuard = {
+    shouldRoute: () => {
+      return this.props.user.user.permissions.has('user:invite')
+    }
+  }
+
+  private RolesGuard = {
+    shouldRoute: () => {
+      return this.props.user.user.permissions.has('role:edit')
+    }
+  }
+
+  private ProcessesGuard = {
+    shouldRoute: () => {
+      return this.props.user.user.permissions.has('editing-process:edit')
+    }
+  }
 
   componentDidMount () {
     this.props.fetchUser()
@@ -130,9 +147,9 @@ class App extends React.Component<Props> {
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
                   <Route path="/helpdesk" component={Helpdesk}/>
-                  <Route path="/invitations" component={Invitations}/>
-                  <Route path="/roles" component={Roles}/>
-                  <Route path="/processes" component={Processes}/>
+                  <SecureRoute path="/invitations" component={Invitations} routeGuard={this.InvitationsGuard} redirectToPathWhenFail="/" />
+                  <SecureRoute path="/roles" component={Roles} routeGuard={this.RolesGuard} redirectToPathWhenFail="/"/>
+                  <SecureRoute path="/processes" component={Processes} routeGuard={this.ProcessesGuard} redirectToPathWhenFail="/"/>
                   <Route component={Error404}/>
                 </Switch>
               </main>
