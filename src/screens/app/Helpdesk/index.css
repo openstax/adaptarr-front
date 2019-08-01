@@ -10,3 +10,7 @@
 .helpdesk__dialog-content .dialog__buttons {
   margin-top: 20px;
 }
+
+.helpdesk .chat {
+  height: calc(100% - 72px);
+}

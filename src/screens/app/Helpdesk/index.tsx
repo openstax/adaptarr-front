@@ -2,9 +2,14 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 import { PersistDB, PersistDBData } from 'cnx-designer'
+import { connect } from 'react-redux'
+
+import Conversation, { ConversationData } from 'src/api/conversation'
 
 import store from 'src/store'
+import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
+import { createConversation, openConversation } from 'src/store/actions/Conversations'
 
 import saveAs from 'src/helpers/saveAsFile'
 
@@ -15,10 +20,23 @@ import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
 import FileUploader from 'src/containers/FilesUploader'
+import Chat from 'src/containers/Chat'
 
 import './index.css'
 
-class Helpdesk extends React.Component {
+type Props = {
+  conversations: Map<number, ConversationData>
+  sockets: Map<number, Conversation>
+}
+
+const mapStateToProps = ({ conversations: { conversations, sockets } }: State) => {
+  return {
+    conversations,
+    sockets,
+  }
+}
+
+class Helpdesk extends React.Component<Props> {
   state: {
     isExportingDatabase: boolean
     isImportingDatabase: boolean
@@ -27,6 +45,7 @@ class Helpdesk extends React.Component {
     uploadedDatabase: PersistDBData | undefined
     showWhatToReplace: boolean
     selectedStates: string[]
+    conversation: Conversation | undefined
   } = {
     isExportingDatabase: false,
     isImportingDatabase: false,
@@ -35,6 +54,7 @@ class Helpdesk extends React.Component {
     uploadedDatabase: undefined,
     showWhatToReplace: false,
     selectedStates: [],
+    conversation: undefined,
   }
 
   private exportDatabase = async () => {
@@ -90,84 +110,125 @@ class Helpdesk extends React.Component {
 
   filesRef: React.RefObject<FileUploader> = React.createRef()
 
+  // TODO: Move import / export tools to another component
+
+  private startHelpdeskConversation = () => {
+    // TODO: This should check for helpdesk conversation instead of 123
+    if (this.props.conversations.has(2)) {
+      if (this.props.sockets.has(2)) {
+        const conversation = this.props.sockets.get(2)!
+        this.setState({ conversation })
+      } else {
+        store.dispatch(openConversation(2))
+      }
+    } else {
+      // This should create helpdesk conversation instead of hardocded one
+      store.dispatch(createConversation([1, 2]))
+    }
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (
+      prevProps.conversations.size !== this.props.conversations.size
+      || prevProps.sockets.size !== this.props.sockets.size
+      ) {
+        this.startHelpdeskConversation()
+      }
+  }
+
+  componentDidMount () {
+    this.startHelpdeskConversation()
+  }
+
   public render() {
     const {
       isExportingDatabase,
       isImportingDatabase,
       showImportDatabase,
       files,
+      conversation,
     } = this.state
 
     return (
-      <Section>
-        <Header l10nId="helpdesk-view-title" title="Helpdesk" />
-        <div className="section__content helpdesk">
-          <div className="helpdesk__tools">
-            <Button
-              clickHandler={this.exportDatabase}
-              isDisabled={isExportingDatabase}
-            >
-              {
-                isExportingDatabase ?
-                  <Localized id="helpdesk-export-local-database-loading">
-                    Exporting...
-                  </Localized>
-                :
-                  <Localized id="helpdesk-export-local-database">
-                    Export local database
-                  </Localized>
-              }
-            </Button>
-            <Button clickHandler={this.showImportDatabase}>
-              <Localized id="helpdesk-import-local-database">
-                Import local database
-              </Localized>
-            </Button>
+      <div className="container container--splitted helpdesk">
+        <Section>
+          <Header l10nId="helpdesk-view-title" title="Helpdesk" />
+          <div className="section__content helpdesk">
+            <div className="helpdesk__tools">
+              <Button
+                clickHandler={this.exportDatabase}
+                isDisabled={isExportingDatabase}
+              >
+                {
+                  isExportingDatabase ?
+                    <Localized id="helpdesk-export-local-database-loading">
+                      Exporting...
+                    </Localized>
+                  :
+                    <Localized id="helpdesk-export-local-database">
+                      Export local database
+                    </Localized>
+                }
+              </Button>
+              <Button clickHandler={this.showImportDatabase}>
+                <Localized id="helpdesk-import-local-database">
+                  Import local database
+                </Localized>
+              </Button>
+            </div>
           </div>
-        </div>
-        {
-          showImportDatabase ?
-            <Dialog
-              size="medium"
-              l10nId="helpdesk-import-database-title"
-              placeholder="Replace whole database or select drafts to replace"
-              onClose={this.closeImportDatabase}
-              showCloseButton={false}
-            >
-              {
-                isImportingDatabase ?
-                  <Spinner />
-                :
-                  <div className="helpdesk__dialog-content">
-                    <FileUploader
-                      onFilesChange={this.onFilesChange}
-                      onFilesError={this.onFilesError}
-                      multiple={false}
-                      accepts={['.json']}
-                      optional={false}
-                      ref={this.filesRef}
-                    />
-                    <div className="dialog__buttons">
-                      <Button clickHandler={this.closeImportDatabase}>
-                        <Localized id="helpdesk-import-cancel">
-                          Cancel
-                        </Localized>
-                      </Button>
-                      <Button
-                          clickHandler={this.importDatabase}
-                          isDisabled={!files.length}
-                        >
-                        <Localized id="helpdesk-import-confirm">
-                          Import database
-                        </Localized>
-                      </Button>
+          {
+            showImportDatabase ?
+              <Dialog
+                size="medium"
+                l10nId="helpdesk-import-database-title"
+                placeholder="Replace whole database or select drafts to replace"
+                onClose={this.closeImportDatabase}
+                showCloseButton={false}
+              >
+                {
+                  isImportingDatabase ?
+                    <Spinner />
+                  :
+                    <div className="helpdesk__dialog-content">
+                      <FileUploader
+                        onFilesChange={this.onFilesChange}
+                        onFilesError={this.onFilesError}
+                        multiple={false}
+                        accepts={['.json']}
+                        optional={false}
+                        ref={this.filesRef}
+                      />
+                      <div className="dialog__buttons">
+                        <Button clickHandler={this.closeImportDatabase}>
+                          <Localized id="helpdesk-import-cancel">
+                            Cancel
+                          </Localized>
+                        </Button>
+                        <Button
+                            clickHandler={this.importDatabase}
+                            isDisabled={!files.length}
+                          >
+                          <Localized id="helpdesk-import-confirm">
+                            Import database
+                          </Localized>
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-              }
-            </Dialog>
-          : null
-        }
-      </Section>
+                }
+              </Dialog>
+            : null
+          }
+        </Section>
+        <Section>
+          <Header l10nId="helpdesk-view-chat-title" title="Chat" />
+          {
+            conversation ?
+              <Chat conversation={conversation} />
+            : <Spinner/>
+          }
+        </Section>
+      </div>
     )
   }
 
@@ -196,4 +257,4 @@ class Helpdesk extends React.Component {
   }
 }
 
-export default Helpdesk
+export default connect(mapStateToProps)(Helpdesk)
