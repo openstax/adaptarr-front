@@ -1843,3 +1843,18 @@ editor-tools-suggestion-change =
 confirm-dialog-button-cancel = Anuluj
 
 confirm-dialog-button-ok = Ok
+
+
+
+## Reusable components - chat
+
+chat-message-loading-messages = Ładowanie wiadomości...
+
+chat-message-begining = To jest początek Twojej historii wiadomości.
+
+chat-input-placeholder =
+  .placeholder = Wpisz swoją wiadomość
+
+chat-today = Dzisiaj
+
+chat-yesterday = Wczoraj

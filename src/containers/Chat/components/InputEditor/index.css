@@ -1,0 +1,9 @@
+.chat__input-editor {
+  padding: 20px;
+  max-height: 80px;
+  overflow: auto;
+  border-top: 1px solid var(--lighter-bg);
+  background-color: #fff;
+  border-top-left-radius: 11px;
+  border-top-right-radius: 11px;
+}
