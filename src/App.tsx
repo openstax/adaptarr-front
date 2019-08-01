@@ -30,6 +30,7 @@ import * as userActions from 'src/store/actions/User'
 import * as appActions from 'src/store/actions/app'
 import * as teamActions from 'src/store/actions/Team'
 import * as notificationsActions from 'src/store/actions/Notifications'
+import * as conversationsActions from 'src/store/actions/Conversations'
 import * as booksActions from 'src/store/actions/Books'
 import * as modulesActions from 'src/store/actions/Modules'
 import * as types from 'src/store/types'
@@ -57,6 +58,7 @@ type Props = {
   fetchProcesses: () => void
   fetchTeamMap: () => void
   fetchNotifications: () => void
+  fetchConversationsMap: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
@@ -83,13 +85,14 @@ const mapStateToProps = ({
   }
 }
 
-const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
+const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | conversationsActions.FetchConversationsMap | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchRoles: () => dispatch(appActions.fetchRoles()),
     fetchProcesses: () => dispatch(appActions.fetchProcesses()),
     fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
+    fetchConversationsMap: () => dispatch(conversationsActions.fetchConversationsMap()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
   }
@@ -120,6 +123,7 @@ class App extends React.Component<Props> {
     this.props.fetchProcesses()
     this.props.fetchTeamMap()
     this.props.fetchNotifications()
+    this.props.fetchConversationsMap()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
 
