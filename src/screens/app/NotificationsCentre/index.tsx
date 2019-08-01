@@ -16,8 +16,6 @@ import NotificationComp from 'src/components/Notification'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import Conversation from 'src/containers/Conversation'
-
 import { TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
@@ -93,71 +91,36 @@ class NotificationsCentre extends React.Component<Props> {
       <div className="container">
         {
           !isLoading ?
-            <React.Fragment>
-              <Section>
-                <Header l10nId="notification-centre-view-title" title="Notifications" />
-                <div className="section__content">
-                  {
-                    unreadNotifications.length > 0 ?
-                      <ul className="notificationsList">
-                        {
-                          unreadNotifications.map((noti: api.Notification) => {
-                            return (
-                              <li
-                                key={noti.id}
-                                className="notificationsList__item"
-                                onClick={() => this.showDetails(noti)}
-                              >
-                                <NotificationComp
-                                  notification={noti}
-                                  disableLink={true}
-                                  avatarSize="medium"
-                                />
-                              </li>
-                            )
-                          })
-                        }
-                      </ul>
-                    : <Localized id="notification-centre-empty">
-                      No notifications found.
-                    </Localized>
-                  }
-                </div>
-              </Section>
-              {/* <Section>
+            <Section>
+              <Header l10nId="notification-centre-view-title" title="Notifications" />
+              <div className="section__content">
                 {
-                  showDetails ?
-                    <React.Fragment>
-                      <Header l10nId="xxx-no-translation" title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
-                        <span className="date">
-                          { details ? <DateDiff dateString={details.timestamp} /> : null }
-                        </span>
-                        <Button size="small" clickHandler={this.closeDetails}>
-                          <Icon name="close" />
-                        </Button>
-                      </Header>
-                      <div className="section__content">
-                        { details ? this.notificationDetails(details) : null }
-                      </div>
-                    </React.Fragment>
-                  :
-                    <React.Fragment>
-                      <Header
-                        fixed
-                        l10nId="xxx-no-translation"
-                        title="Jason Cook"
-                      >
-                        <span className="date">
-                          { new Date().toISOString().split('T')[0] }
-                        </span>
-                      </Header>
-                      <div className="section__content">
-                        <Conversation id="1"/>
-                      </div>
-                    </React.Fragment>
+                  unreadNotifications.length > 0 ?
+                    <ul className="notificationsList">
+                      {
+                        unreadNotifications.map((noti: api.Notification) => {
+                          return (
+                            <li
+                              key={noti.id}
+                              className="notificationsList__item"
+                              onClick={() => this.showDetails(noti)}
+                            >
+                              <NotificationComp
+                                notification={noti}
+                                disableLink={true}
+                                avatarSize="medium"
+                              />
+                            </li>
+                          )
+                        })
+                      }
+                    </ul>
+                  : <Localized id="notification-centre-empty">
+                    No notifications found.
+                  </Localized>
                 }
-              </Section> */}
-            </React.Fragment>
+              </div>
+            </Section>
           : <Spinner />
         }
       </div>
