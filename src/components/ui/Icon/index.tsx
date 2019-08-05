@@ -66,7 +66,7 @@ const icon = ({ size, name }: Props) => {
         )
       case 'arrow-left':
         return (
-          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="caret-left" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 512"><path fill="currentColor" d="M192 127.338v257.324c0 17.818-21.543 26.741-34.142 14.142L29.196 270.142c-7.81-7.81-7.81-20.474 0-28.284l128.662-128.662c12.599-12.6 34.142-3.676 34.142 14.142z"></path></svg>
+          <svg width="14.251" height="25" version="1.1" viewBox="0 0 3.7706 6.6146" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -290.39)"><g transform="translate(-.12201 1.2908)"><g transform="matrix(0 -1 -1 0 295.83 295.83)"><g transform="matrix(0 .014639 -.014639 0 6.737 290.52)" fill="#1b3859"><g><path d="m345.44 248.29-194.29 194.28c-12.359 12.365-32.397 12.365-44.75 0-12.354-12.354-12.354-32.391 0-44.744l171.91-171.91-171.91-171.9c-12.354-12.359-12.354-32.394 0-44.748 12.354-12.359 32.391-12.359 44.75 0l194.29 194.28c6.177 6.18 9.262 14.271 9.262 22.366 0 8.099-3.091 16.196-9.267 22.373z"/></g></g></g></g></g></svg>
         )
       case 'arrow-down':
         return (
