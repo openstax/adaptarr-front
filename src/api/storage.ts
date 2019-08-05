@@ -2,6 +2,7 @@ import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
 import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
 import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
+import suggestionRules from 'src/screens/app/Draft/plugins/Suggestions/deSerializationRules'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
 import { AxiosResponse } from 'axios'
@@ -157,7 +158,7 @@ export default class Storage extends StorageBase {
   }
 
   serializer = new CNXML({
-    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize],
-    glossaryRules: [],
+    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize, suggestionRules],
+    glossaryRules: [suggestionRules],
   })
 }
