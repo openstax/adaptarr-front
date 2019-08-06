@@ -123,9 +123,8 @@ export default class SaveButton extends React.Component<Props> {
 
     try {
       await storage.write(document, isGlossaryEmpty ? null : glossary)
-      // TODO: get version from API
-      await documentDbContent.save(document, Date.now().toString())
-      await documentDbGlossary.save(glossary, Date.now().toString())
+      await documentDbContent.save(document, storage.tag)
+      await documentDbGlossary.save(glossary, storage.tag)
       store.dispatch(addAlert('success', 'editor-tools-save-alert-success'))
     } catch (ex) {
       this.setState({ showErrorDialog: true, error: ex.toString() })

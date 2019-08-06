@@ -301,8 +301,8 @@ class StepChanger extends React.Component<Props> {
       const isGlossaryEmpty = !this.props.glossary.document.nodes.has(0) ||
         this.props.glossary.document.nodes.get(0).type !== 'definition'
       await storage.write(document, isGlossaryEmpty ? null : glossary)
-      await documentDbContent.save(document, Date.now().toString())
-      await documentDbGlossary.save(glossary, Date.now().toString())
+      await documentDbContent.save(document, storage.tag)
+      await documentDbGlossary.save(glossary, storage.tag)
       this.nextStep()
     } catch (ex) {
       store.dispatch(addAlert('error', 'step-changer-save-advance-error', {

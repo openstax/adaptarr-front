@@ -57,7 +57,7 @@ export default class Storage extends StorageBase {
   title: string
   language: string = 'en'
   files: FileDescription[]
-  tag: string | null = null
+  tag: string
   document: Value | null = null
   glossary: Value | null = null
 
@@ -89,17 +89,11 @@ export default class Storage extends StorageBase {
 
   /**
    * Read the document.
-   *
-   * @return {document: Value, glossary: Value}
    */
-  async read() {
+  async read(): Promise<Index> {
     const index = await axios.get(`drafts/${this.id}/files/index.cnxml`)
     this.tag = index.headers.etag
-    const deserialize = this.serializer.deserialize(await index.data)
-    this.document = deserialize.document
-    this.glossary = deserialize.glossary
-    this.language = deserialize.language
-    return { document: this.document, glossary: this.glossary }
+    return new Index(this.tag, await index.data)
   }
 
   /**
@@ -107,15 +101,20 @@ export default class Storage extends StorageBase {
    */
   async write(document: Value, glossary: Value | null) {
     try {
-      const text = this.serializer.serialize(document, glossary, {
+      const text = Storage.serializer.serialize(document, glossary, {
         title: this.title,
         language: this.language,
       })
 
-      await axios.put(`drafts/${this.id}/files/index.cnxml`, text)
+      const rsp = await axios.put(`drafts/${this.id}/files/index.cnxml`, text, {
+        headers: {
+          'If-Match': this.tag,
+        },
+      })
 
       this.document = document
       this.glossary = glossary
+      this.tag = rsp.headers.etag
     } catch (e) {
       throw new APIError(e.response)
     }
@@ -157,8 +156,22 @@ export default class Storage extends StorageBase {
     this.language = code
   }
 
-  serializer = new CNXML({
+  static serializer = new CNXML({
     documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize, suggestionRules],
     glossaryRules: [suggestionRules],
   })
+}
+
+export class Index {
+  version: string
+  content: string
+
+  constructor(version: string, content: string) {
+    this.version = version
+    this.content = content
+  }
+
+  deserialize() {
+    return Storage.serializer.deserialize(this.content)
+  }
 }

@@ -73,11 +73,18 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 
   let document, glossary
 
+  const index = await storage.read()
+
+  if (documentDbContent.dirty && index.version != documentDbContent.version) {
+    // TODO: display prompt?
+    throw new Error('local changes about to be overwritten')
+  }
+
   if (documentDbContent.dirty) {
     document = await documentDbContent.restore()
     glossary = await documentDbGlossary.restore()
   } else {
-    const deserialize = await storage.read()
+    const deserialize = index.deserialize()
     document = deserialize.document
     glossary = deserialize.glossary
     // Reset glossary if it have invalid content
@@ -90,9 +97,8 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
         }
       })
     }
-    // TODO: get version from API
-    await documentDbContent.save(document, Date.now().toString())
-    await documentDbGlossary.save(glossary, Date.now().toString())
+    await documentDbContent.save(document, index.version)
+    await documentDbGlossary.save(glossary, index.version)
   }
 
   const { modules: { modulesMap } } = store.getState()
@@ -244,7 +250,7 @@ class Draft extends React.Component<Props> {
       isGlossaryEmpty: false,
     }, async () => {
       this.glossaryEditor.current!.focus()
-      await this.props.documentDbGlossary.save(this.state.valueGlossary, Date.now().toString())
+      await this.props.documentDbGlossary.save(this.state.valueGlossary, this.props.documentDbGlossary.version!)
     })
   }
 
@@ -260,7 +266,7 @@ class Draft extends React.Component<Props> {
       isGlossaryEmpty: true,
       showRemoveGlossaryDialog: false,
     }, async () => {
-      await this.props.documentDbGlossary.save(this.state.valueGlossary, Date.now().toString())
+      await this.props.documentDbGlossary.save(this.state.valueGlossary, this.props.documentDbGlossary.version!)
     })
   }
 
