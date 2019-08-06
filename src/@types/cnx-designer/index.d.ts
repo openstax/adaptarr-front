@@ -29,11 +29,6 @@ declare module 'cnx-designer' {
   }
 
   export class Storage {
-    static load(id: string): Promise<Storage>
-    read(): Promise<{ document: Value, glossary: Value }>
-    write(document: Value, glossary: Value): Promise<void>
-    writeFile(file: File): Promise<void>
-    current(document: Value, glossary: Value): boolean
     mediaUrl(name: string): string
   }
 
@@ -69,6 +64,7 @@ declare module 'cnx-designer' {
   export class DocumentDB {
     id: string
     dirty: boolean
+    version: string | null
 
     save(value: Value, version: string): Promise<void>
     mark(op: Operation): Promise<void>
