@@ -76,7 +76,11 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   const index = await storage.read()
   const dirty = documentDbContent.dirty || documentDbGlossary.dirty
 
-  if (dirty && index.version != documentDbContent.version) {
+  // XXX: Some users might have local changes saved with the old temporary
+  // versioning scheme. Remove check for
+  // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
+  // all users should have migrated to the new version.
+  if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
     // TODO: display prompt?
     throw new Error('local changes about to be overwritten')
   }
