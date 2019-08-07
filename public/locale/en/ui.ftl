@@ -991,6 +991,15 @@ free-slots-error = Couldn't assign you to this slot. { $details ->
   [none] {""}
 }
 
+free-slots-confirm-title = Take slot
+
+free-slots-confirm-info = You will be assigned to given draft and process manager
+  will be informed that you are willing to work on this task.
+
+free-slots-cancel = Cancel
+
+free-slots-confirm = Confirm
+
 
 
 ## Reusable components - step changer

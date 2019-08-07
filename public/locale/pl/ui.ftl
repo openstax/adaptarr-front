@@ -993,6 +993,15 @@ free-slots-error = Nie udało się objąć funkcji. { $details ->
   [none] {""}
 }
 
+free-slots-confirm-title = Biorę to zadanie
+
+free-slots-confirm-info = Przypisanie siebie do tekstu menedżer procesu
+  traktuje jako deklarację wykonania zadania.
+
+free-slots-cancel = Anuluj
+
+free-slots-confirm = Potwierdź
+
 
 
 ## Reusable components - step changer

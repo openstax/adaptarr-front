@@ -27,3 +27,8 @@
   width: 100%;
   justify-content: space-between;
 }
+
+.free-slots__dialog-content {
+  line-height: 1.4;
+  margin-bottom: 20px;
+}
