@@ -74,19 +74,28 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   let document, glossary
 
   const index = await storage.read()
+  const dirty = documentDbContent.dirty || documentDbGlossary.dirty
 
-  if (documentDbContent.dirty && index.version != documentDbContent.version) {
+  if (dirty && index.version != documentDbContent.version) {
     // TODO: display prompt?
     throw new Error('local changes about to be overwritten')
   }
 
+  const deserialize = (!documentDbContent.dirty || !documentDbGlossary.dirty)
+    ? index.deserialize()
+    : null
+
   if (documentDbContent.dirty) {
     document = await documentDbContent.restore()
+  } else {
+    document = deserialize!.document
+    await documentDbContent.save(document, index.version)
+  }
+
+  if (documentDbGlossary.dirty) {
     glossary = await documentDbGlossary.restore()
   } else {
-    const deserialize = index.deserialize()
-    document = deserialize.document
-    glossary = deserialize.glossary
+    glossary = deserialize!.glossary
     // Reset glossary if it have invalid content
     if (glossary.document.nodes.get(0).type !== 'definition') {
       glossary = Value.fromJS({
@@ -97,7 +106,6 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
         }
       })
     }
-    await documentDbContent.save(document, index.version)
     await documentDbGlossary.save(glossary, index.version)
   }
 
