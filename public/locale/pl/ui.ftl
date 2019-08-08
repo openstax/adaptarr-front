@@ -301,6 +301,17 @@ draft-remove-glossary = Usuń
 
 draft-cancel = Anuluj
 
+draft-load-incorrect-version-title = Nowsza wersja tego dokumentu jest dostępna
+
+draft-load-incorrect-version-info = Ten dokument został zmodyfikowany od czasu jego
+  ostatniego otwarcia. Zdarza się to zwykle podczas próby edycji dokumentu z dwóch komputerów
+  lub przeglądarek jednocześnie. Możesz rozwiązać ten problem, odrzucając lokalne zmiany
+  i łądując wersję z serwera lub możesz kontynuować pracę z bieżącą wersją.
+
+draft-load-incorrect-version-button-discard = Odrzuć lokalne zmiany
+
+draft-load-incorrect-version-button-keep-working = Kontynuuj pracę z bieżącą wersją
+
 
 
 ## Screens - draft details

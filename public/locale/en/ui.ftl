@@ -301,6 +301,17 @@ draft-remove-glossary = Remove
 
 draft-cancel = Cancel
 
+draft-load-incorrect-version-title = A newer version of this document is available
+
+draft-load-incorrect-version-info = The document was modified since you have last opened it.
+  This usually happens when trying to edit a document from two computers or browsers at
+  the same time. You can resolve this issue either by discarding local changes and loading
+  version from the server, or you can keep working on current version.
+
+draft-load-incorrect-version-button-discard = Discard local changes
+
+draft-load-incorrect-version-button-keep-working = Keep working on current version
+
 
 
 ## Screens - draft details

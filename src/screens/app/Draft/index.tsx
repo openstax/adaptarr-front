@@ -10,6 +10,7 @@ import { Editor } from 'slate-react'
 import { List } from 'immutable'
 
 import timeout from 'src/helpers/timeout'
+import confirmDialog from 'src/helpers/confirmDialog'
 
 import store from 'src/store'
 import * as api from 'src/api'
@@ -59,7 +60,7 @@ type Props = {
 KeyUtils.setGenerator(() => uuid.v4())
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
-  const [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
+  let [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
     Promise.race([
       Promise.all([
         PersistDB.load(`${id}-document`),
@@ -81,8 +82,30 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
   // all users should have migrated to the new version.
   if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
-    // TODO: display prompt?
-    throw new Error('local changes about to be overwritten')
+    const res = await confirmDialog(
+        'draft-load-incorrect-version-title',
+        'draft-load-incorrect-version-info',
+        {
+          discard: 'draft-load-incorrect-version-button-discard',
+          keepWorking: 'draft-load-incorrect-version-button-keep-working',
+        }
+      )
+
+    switch (res) {
+      case 'discard': {
+        if (documentDbContent.dirty) {
+          await Promise.all([documentDbContent.discard(), documentDbGlossary.discard()])
+        }
+        break
+      }
+      case 'keepWorking':
+        // Local changes will be loaded.
+        storage.tag = documentDbContent.version!
+        index.version = documentDbContent.version!
+        break
+      default:
+        throw new Error(`Unknown action: "${res}" while trying to handle loading of incorrect version of document.`)
+    }
   }
 
   const deserialize = (!documentDbContent.dirty || !documentDbGlossary.dirty)
