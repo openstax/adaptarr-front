@@ -6,6 +6,7 @@ import { isKeyHotkey } from 'is-hotkey'
 
 import Storage from 'src/api/storage'
 import saveAsFile from 'src/helpers/saveAsFile'
+import confirmDialog from 'src/helpers/confirmDialog'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -122,7 +123,32 @@ export default class SaveButton extends React.Component<Props> {
     this.setState({ saving: true })
 
     try {
-      await storage.write(document, isGlossaryEmpty ? null : glossary)
+      const glossaryContent = isGlossaryEmpty ? null : glossary
+      const res = await storage.write(document, glossaryContent)
+        .catch(async (e) => {
+          if (e.response && e.response.status === 412) {
+            const res = await confirmDialog(
+              'draft-save-incorrect-version-title',
+              'draft-save-incorrect-version-content',
+              {
+                cancel: 'draft-save-incorrect-version-button-cancel',
+                overwrite: 'draft-save-incorrect-version-button-overwrite',
+              },
+            )
+            return res
+          }
+          throw e
+        })
+      if (res) {
+        if (res === 'overwrite') {
+          await storage.write(document, glossaryContent, true)
+        } else if (res === 'cancel') {
+          this.setState({ saving: false })
+          return
+        } else {
+          throw new Error(`Undefined response from confirmDialog: ${res}`)
+        }
+      }
       await documentDbContent.save(document, storage.tag)
       await documentDbGlossary.save(glossary, storage.tag)
       store.dispatch(addAlert('success', 'editor-tools-save-alert-success'))

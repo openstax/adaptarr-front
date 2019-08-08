@@ -99,14 +99,14 @@ export default class Storage extends StorageBase {
   /**
    * Write the document
    */
-  async write(document: Value, glossary: Value | null) {
+  async write(document: Value, glossary: Value | null, overwrite: boolean = false) {
     try {
       const text = Storage.serializer.serialize(document, glossary, {
         title: this.title,
         language: this.language,
       })
 
-      const rsp = await axios.put(`drafts/${this.id}/files/index.cnxml`, text, {
+      const rsp = await axios.put(`drafts/${this.id}/files/index.cnxml`, text, overwrite ? undefined : {
         headers: {
           'If-Match': this.tag,
         },

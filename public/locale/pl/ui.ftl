@@ -312,6 +312,17 @@ draft-load-incorrect-version-button-discard = Odrzuć lokalne zmiany
 
 draft-load-incorrect-version-button-keep-working = Kontynuuj pracę z bieżącą wersją
 
+draft-save-incorrect-version-title = Ostrzeżenie!
+
+draft-save-incorrect-version-content = Twoja wersja dokumentu różni się od wersji zapisanej
+  na serwerze. Zdarza się to zwykle podczas próby edycji dokumentu z dwóch komputerów
+  lub przeglądarek jednocześnie. Możesz rozwiązać ten problem, napdpisując dokument na serwerze
+  swoją wersją albo odświeżając stronę i łądując nową wersję dokumentu.
+
+draft-save-incorrect-version-button-cancel = Anuluj
+
+draft-save-incorrect-version-button-overwrite = Nadpisz dokument
+
 
 
 ## Screens - draft details
