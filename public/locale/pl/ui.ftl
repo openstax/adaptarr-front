@@ -1792,3 +1792,11 @@ editor-tools-suggestion-delete = <action>Usuń</action> <content>{ $delete }</co
 # - <content> ... </content>: content.
 editor-tools-suggestion-change =
   <action>Zastąp</action> <content>{ $delete }</content> tekstem <content>{ $insert }</content>
+
+
+
+## Reusable component - confirm dialog
+
+confirm-dialog-button-cancel = Anuluj
+
+confirm-dialog-button-ok = Ok

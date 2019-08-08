@@ -10,6 +10,8 @@ export type Props = {
   target?: string,
   overflowAuto?: boolean,
   showCloseButton?: boolean,
+  closeOnBgClick?: boolean,
+  closeOnEsc?: boolean,
   content?: () => React.ReactNode,
   onClose?: () => void,
 }
@@ -71,13 +73,17 @@ export default class Modal extends React.Component<Props> {
   }
 
   onClick = (ev: React.MouseEvent) => {
-    if (ev.target === this.back) {
+    const { closeOnBgClick = true } = this.props
+
+    if (ev.target === this.back && closeOnBgClick) {
       this.onClose()
     }
   }
 
   onKeyDown = (ev: React.KeyboardEvent) => {
-    if (ev.key === 'Escape') {
+    const { closeOnEsc = true } = this.props
+
+    if (ev.key === 'Escape' && closeOnEsc) {
       this.onClose()
     }
   }

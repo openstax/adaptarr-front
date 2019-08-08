@@ -13,6 +13,8 @@ type Props = {
   onClose: () => void
   children: React.ReactNode
   showCloseButton?: boolean
+  closeOnBgClick?: boolean
+  closeOnEsc?: boolean
   [localizationProps: string]: any
 }
 
@@ -22,7 +24,7 @@ class Dialog extends React.Component<Props> {
   private setModal = (el: Modal | null) => el && (this.modal = el)
 
   private renderModal = () => {
-    const { size, l10nId, placeholder = "...", className, onClose, children, showCloseButton, ...args } = this.props
+    const { size, l10nId, placeholder = "...", className, onClose, children, showCloseButton, closeOnBgClick, closeOnEsc, ...args } = this.props
 
     return (
       <div className={`dialog__content dialog__content--${size ? size : 'small'} ${className ? className : ''}`}>
@@ -41,13 +43,15 @@ class Dialog extends React.Component<Props> {
   }
 
   public render() {
-    const { onClose, showCloseButton = true } = this.props
+    const { onClose, showCloseButton = true, closeOnBgClick, closeOnEsc } = this.props
     return (
       <Modal
         ref={this.setModal}
         content={this.renderModal}
         onClose={onClose}
         showCloseButton={showCloseButton}
+        closeOnBgClick={closeOnBgClick}
+        closeOnEsc={closeOnEsc}
       />
     )
   }

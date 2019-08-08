@@ -1770,3 +1770,11 @@ editor-tools-suggestion-delete = <action>Remove</action> <content>{ $delete }</c
 # - <content> ... </content>: content.
 editor-tools-suggestion-change =
   <action>Replace</action> <content>{ $delete }</content> with <content>{ $insert }</content>
+
+
+
+## Reusable component - confirm dialog
+
+confirm-dialog-button-cancel = Cancel
+
+confirm-dialog-button-ok = Ok

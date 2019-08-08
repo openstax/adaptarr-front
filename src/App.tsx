@@ -9,6 +9,7 @@ import * as api from 'src/api'
 import Navigation from 'src/components/Navigation'
 import Spinner from 'src/components/Spinner'
 import Notification from 'src/components/Notification'
+import ConfirmDialog from 'src/components/ConfirmDialog'
 
 import Dashboard from 'src/screens/app/Dashboard'
 import NotificationsCentre from 'src/screens/app/NotificationsCentre'
@@ -66,7 +67,18 @@ type Props = {
   removeAlert: (alert: types.Alert) => void
 }
 
-export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts, app: { roles, processes } }: State) => {
+export const mapStateToProps = ({
+  user,
+  notifications,
+  team,
+  booksMap,
+  modules,
+  alerts,
+  app: {
+    roles,
+    processes,
+  },
+}: State) => {
   return {
     user,
     team,
@@ -124,8 +136,10 @@ class App extends React.Component<Props> {
   }
 
   public render() {
-    const { isLoading, user } = this.props.user
-    const { alerts } = this.props.alerts
+    const {
+      user: { isLoading, user },
+      alerts: { alerts },
+    } = this.props
 
     return (
       <Router>
@@ -192,6 +206,7 @@ class App extends React.Component<Props> {
                   : null
                 }
               </div>
+              <ConfirmDialog />
             </div>
           : <Spinner />
         }
