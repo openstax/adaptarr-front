@@ -288,7 +288,7 @@ draft-style-switcher = { $style ->
   [pdf] Style wersji PDF
 }
 
-draft-style-switcher-info-box = Widok roboczy. Niektóre element w ostatecznej wersji
+draft-style-switcher-info-box = Widok roboczy. Niektóre elementy w ostatecznej wersji
   podręcznika będą wyświetlane inaczej.
 
 draft-loading-message = Ładowanie wersji roboczej może potrwać nawet kilka minut.
