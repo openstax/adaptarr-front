@@ -2,7 +2,7 @@ import axios from 'src/config/axios'
 import { AxiosResponse } from 'axios'
 
 import Base from './base'
-import Process, { ProcessStructure, ProcessSlot, ProcessStep, Link } from './process'
+import Process, { ProcessStructure, ProcessSlot, Link, ProcessSingleStep } from './process'
 
 import { elevated } from './utils'
 
@@ -92,14 +92,14 @@ export default class ProcessVersion extends Base<VersionData> {
   /**
    * Return list of steps for this version.
    */
-  async steps(): Promise<ProcessStep[]> {
+  async steps(): Promise<ProcessSingleStep[]> {
     return (await axios.get(`processes/${this.process}/versions/${this.id}/steps`)).data
   }
 
   /**
    * Return informations about specific step in this version.
    */
-  async step(step: number): Promise<ProcessStep> {
+  async step(step: number): Promise<ProcessSingleStep> {
     return (await axios.get(`processes/${this.process}/versions/${this.id}/steps/${step}`)).data
   }
 

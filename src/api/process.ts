@@ -54,6 +54,26 @@ export type StepSlot = {
 }
 
 /**
+ * Data for process step, but returned when request was for single step.
+ */
+export type ProcessSingleStep = {
+  id: number,
+  name: string,
+  links: Link[],
+  process: [number, number], // [ProcessID, VersionID]
+  slots: SingleStepSlot[],
+}
+
+/**
+ * Represent assignment of slots to steps.
+ */
+export type SingleStepSlot = {
+  slot: number,
+  permissions: SlotPermission[],
+  user: number | null,
+}
+
+/**
  * Slot permissions.
  */
 export type SlotPermission = 'view' | 'edit' | 'propose-changes' | 'accept-changes'
