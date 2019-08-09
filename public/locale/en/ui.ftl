@@ -1742,6 +1742,10 @@ editor-tools-source-type = { $type ->
 # - $counter (number): total number of suggestions.
 editor-tools-suggestions-title = Suggestions ({ $counter })
 
+editor-tools-suggestion-accept-all = Accept all
+
+editor-tools-suggestion-reject-all = Reject all
+
 editor-tools-suggestion-undefined = Undefined suggestion
 
 # Variables:

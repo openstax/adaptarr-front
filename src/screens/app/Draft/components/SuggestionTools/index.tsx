@@ -13,6 +13,8 @@ import Icon from 'src/components/ui/Icon'
 import { OnToggle as OnToggleDocument } from '../ToolboxDocument'
 import { OnToggle as OnToggleGlossary } from '../ToolboxGlossary'
 
+import './index.css'
+
 type Props = {
   editor: Editor,
   value: Value,
@@ -205,6 +207,18 @@ export default class SuggestionsTools extends React.Component<Props> {
     return null
   }
 
+  private acceptAll = () => {
+    // Accepting suggestion my change path of the next one
+    // so we are accepting all of them starting from the end.
+    this.state.suggestions.reverse().forEach(sugg => this.onAccept(sugg))
+  }
+
+  private rejectAll = () => {
+    // Rejecting suggestion my change path of the next one
+    // so we are rejecting all of them starting from the end.
+    this.state.suggestions.reverse().forEach(sugg => this.onDecline(sugg))
+  }
+
   render() {
     const { suggestions, activeIndex } = this.state
 
@@ -239,6 +253,18 @@ export default class SuggestionsTools extends React.Component<Props> {
             />
           : <Localized id="editor-tools-suggestion-undefined">Undefined suggesiton</Localized>
         }
+        <div className="suggestion__controls">
+          <Button clickHandler={this.acceptAll}>
+            <Localized id="editor-tools-suggestion-accept-all">
+              Accept all
+            </Localized>
+          </Button>
+          <Button clickHandler={this.rejectAll}>
+            <Localized id="editor-tools-suggestion-reject-all">
+              Reject all
+            </Localized>
+          </Button>
+        </div>
       </ToolGroup>
     )
   }
