@@ -32,6 +32,10 @@ book-begin-process = Begin process
 
 book-begin-process-title = Configure and begin process
 
+book-begin-process-no-modules = All modules in this chapter are already assigned to the process.
+
+book-begin-process-no-modules-ok = Ok
+
 book-process-preview-title = Process details:
 
 book-process-cancel-title = Cancel process without saving changes
@@ -908,20 +912,23 @@ process-preview-step-link =
 
 begin-process-select-process = Select process:
 
+begin-process-info = You are about to begin process for:
+
 begin-process-start = Start process
 
 # Alert displayed when process has been started.
 #
 # Variables:
 # - $process (string): name of process which was started.
-# - $module (string): title of module for which process was started.
-begin-process-success = Started process “{ $process }” for “{ $module }”.
+# - $success (number): number of modules for which process was started.
+# - $total (number): total number of modules for which process should be started.
+begin-process-success = Started process “{ $process }” for { $success }/{ $total } modules.
 
 # Alert displayed when process has not been started.
 #
 # Variables:
-# - $details (string): error details.
-begin-process-error = Couldn't start process. Details: { $details }.
+# - $module (string): title of module for which process wasn't started.
+begin-process-error = Couldn't start process for „{ $module }”.
 
 begin-process-assign-user-title = Select user for this slot.
 

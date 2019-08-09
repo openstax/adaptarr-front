@@ -32,6 +32,10 @@ book-begin-process = Rozpocznij proces
 
 book-begin-process-title = Skonfiguruj i rozpocznij proces
 
+book-begin-process-no-modules = Wszystkie moduły w tym rozdziale są już przypisane do procesu.
+
+book-begin-process-no-modules-ok = Ok
+
 book-process-preview-title = Szczegóły procesu:
 
 book-process-cancel-title = Przerwij proces bez zapisywania zmian
@@ -909,20 +913,23 @@ process-preview-step-link =
 
 begin-process-select-process = Wybierz proces:
 
+begin-process-info = Za chwilę rozpoczenisz proces dla:
+
 begin-process-start = Rozpocznij proces
 
 # Alert displayed when process has been started.
 #
 # Variables:
 # - $process (string): name of process which was started.
-# - $module (string): title of module for which process was started.
-begin-process-success = Rozpoczęto proces „{ $process }” dla „{ $module }”.
+# - $success (number): number of modules for which process was started.
+# - $total (number): total number of modules for which process should be started.
+begin-process-success = Rozpoczęto proces „{ $process }” dla { $success }/{ $total } modułów.
 
 # Alert displayed when process has not been started.
 #
 # Variables:
-# - $details (string): error details.
-begin-process-error = Nie udało się rozpocząć procesu. Szczegóły: { $details }.
+# - $module (string): title of module for which process wasn't started.
+begin-process-error = Nie udało się rozpocząć procesu dla „{ $module }”.
 
 begin-process-assign-user-title = Wybierz użytkownika dla danej funkcji.
 

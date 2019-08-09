@@ -237,7 +237,7 @@ class Module extends React.Component<Props> {
               onClose={this.closeBeginProcessDialog}
             >
               <BeginProcess
-                module={mod}
+                modules={[mod]}
                 onClose={this.closeBeginProcessDialog}
               />
             </Dialog>
