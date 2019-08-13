@@ -7,17 +7,17 @@ import * as api from 'src/api'
 
 import updateImgSrcs from 'src/helpers/updateImgSrcs'
 
-import { RequestInfoKind } from 'src/store/types'
+import { AlertDataKind } from 'src/store/types'
 import { addAlert } from 'src/store/actions/Alerts'
 
 type Props = {
   moduleId: string
-  addAlert: (kind: RequestInfoKind, message: string) => void
+  addAlert: (kind: AlertDataKind, message: string) => void
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 
