@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { Inline } from 'slate'
 
+import { SlotPermission } from 'src/api/process'
+
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -11,6 +13,7 @@ import './index.css'
 
 type Props = {
   suggestion: Suggestion
+  draftPermissions: SlotPermission[]
   onClick: (suggestion: Suggestion) => any
   onAccept: (suggestion: Suggestion) => any
   onDecline: (suggestion: Suggestion) => any
@@ -70,9 +73,13 @@ const SuggestionBox = (props: Props) => {
       onClick={onClick}
     >
       <div className="suggestion-box__buttons">
-        <Button clickHandler={() => props.onAccept(props.suggestion)}>
-          <Icon name="check" />
-        </Button>
+        {
+          props.draftPermissions.includes('accept-changes') ?
+            <Button clickHandler={() => props.onAccept(props.suggestion)}>
+              <Icon name="check" />
+            </Button>
+          : null
+        }
         <Button clickHandler={() => props.onDecline(props.suggestion)}>
           <Icon name="close" />
         </Button>

@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { Editor, Value, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
+import { connect } from 'react-redux'
+
+import { SlotPermission } from 'src/api/process'
+
+import { State } from 'src/store/reducers'
 
 import { SUGGESTION_TYPES } from '../../plugins/Suggestions/types'
 
@@ -20,6 +25,13 @@ type Props = {
   value: Value,
   toggleState: boolean,
   onToggle: OnToggleDocument | OnToggleGlossary,
+  draftPermissions: SlotPermission[]
+}
+
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
+  return {
+    draftPermissions: currentDraftPermissions,
+  }
 }
 
 export type SuggestionInsert = {
@@ -48,14 +60,14 @@ export type SuggestionChange = {
 
 export type Suggestion = SuggestionInsert | SuggestionDelete | SuggestionChange
 
-type State = {
+type LocaleState = {
   suggestion: Suggestion | undefined,
   suggestions: Suggestion[],
   activeIndex: number,
 }
 
-export default class SuggestionsTools extends React.Component<Props> {
-  state: State = {
+class SuggestionsTools extends React.Component<Props> {
+  state: LocaleState = {
     suggestion: undefined,
     suggestions: [],
     activeIndex: 0,
@@ -250,15 +262,20 @@ export default class SuggestionsTools extends React.Component<Props> {
               onClick={this.selectSuggestion}
               onAccept={this.onAccept}
               onDecline={this.onDecline}
+              draftPermissions={this.props.draftPermissions}
             />
           : <Localized id="editor-tools-suggestion-undefined">Undefined suggesiton</Localized>
         }
         <div className="suggestion__controls">
-          <Button clickHandler={this.acceptAll}>
-            <Localized id="editor-tools-suggestion-accept-all">
-              Accept all
-            </Localized>
-          </Button>
+          {
+            this.props.draftPermissions.includes('accept-changes') ?
+              <Button clickHandler={this.acceptAll}>
+                <Localized id="editor-tools-suggestion-accept-all">
+                  Accept all
+                </Localized>
+              </Button>
+            : null
+          }
           <Button clickHandler={this.rejectAll}>
             <Localized id="editor-tools-suggestion-reject-all">
               Reject all
@@ -382,3 +399,5 @@ export default class SuggestionsTools extends React.Component<Props> {
     }
   }
 }
+
+export default connect(mapStateToProps)(SuggestionsTools)
