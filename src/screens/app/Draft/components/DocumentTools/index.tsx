@@ -28,27 +28,10 @@ export default class DocumentTools extends React.Component<Props> {
     storage: PropTypes.instanceOf(Storage),
   }
 
-  componentDidMount() {
-    const { editor, value } = this.props
-
-    const code = this.context.storage.language
-    if (value.data.get('language') !== code) {
-
-      const newProperties = Value.createProperties({ data: value.data.set('language', code) })
-      const prevProperties = pick(value, Object.keys(newProperties))
-
-      editor.applyOperation({
-        type: 'set_value',
-        properties: prevProperties,
-        newProperties,
-      } as unknown as Operation)
-    }
-  }
-
   render() {
     const { value } = this.props
 
-    const code = value.data.get('language')
+    const code = this.context.storage.language
     const language = LANGUAGES.find(lang => lang.code === code)
 
     return (
@@ -77,17 +60,6 @@ export default class DocumentTools extends React.Component<Props> {
   }
 
   setLanguage = ({ value: code }: {value: string, label: string}) => {
-    const { editor, value } = this.props
-
-    const newProperties = Value.createProperties({ data: value.data.set('language', code) })
-    const prevProperties = pick(value, Object.keys(newProperties))
-
-    editor.applyOperation({
-      type: 'set_value',
-      properties: prevProperties,
-      newProperties,
-    } as unknown as Operation)
-
     this.context.storage.setLanguage(code)
 
     store.dispatch(setCurrentDraftLang(code))

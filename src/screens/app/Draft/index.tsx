@@ -4,6 +4,7 @@ import { PersistDB, DocumentDB, uuid } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
 import { Value, KeyUtils } from 'slate'
+import { connect } from 'react-redux'
 
 import timeout from 'src/helpers/timeout'
 import confirmDialog from 'src/helpers/confirmDialog'
@@ -11,6 +12,7 @@ import confirmDialog from 'src/helpers/confirmDialog'
 import store from 'src/store'
 import * as api from 'src/api'
 import { SlotPermission } from 'src/api/process'
+import { State } from 'src/store/reducers'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
 import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/Drafts'
 
@@ -41,6 +43,7 @@ type Props = {
   document: Value
   glossary: Value
   history: History
+  currentDraftLang: string
 }
 
 ;KeyUtils.resetGenerator()
@@ -95,9 +98,11 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     }
   }
 
-  const deserialize = (!documentDbContent.dirty || !documentDbGlossary.dirty)
-    ? index.deserialize()
-    : null
+  const deserialize = index.deserialize()
+
+  if (deserialize && storage.language !== deserialize.language) {
+    storage.setLanguage(deserialize.language)
+  }
 
   if (documentDbContent.dirty) {
     document = await documentDbContent.restore()
@@ -136,6 +141,12 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   }
 
   return { documentDbContent, documentDbGlossary, storage, document, glossary, draft }
+}
+
+const mapStateToProps = ({ draft: { currentDraftLang } }: State) => {
+  return {
+    currentDraftLang,
+  }
 }
 
 class Draft extends React.Component<Props> {
@@ -181,7 +192,7 @@ class Draft extends React.Component<Props> {
   }
 
   componentDidMount() {
-    store.dispatch(setCurrentDraftLang(this.state.valueDocument.data.get('language') || 'en'))
+    store.dispatch(setCurrentDraftLang(this.props.storage.language))
     store.dispatch(setCurrentDraftPermissions(Array.from(this.draftPermissions)))
   }
 
@@ -190,12 +201,12 @@ class Draft extends React.Component<Props> {
   }
 
   public render() {
-    const { documentDbContent, documentDbGlossary, storage, draft } = this.props
+    const { documentDbContent, documentDbGlossary, storage, draft, currentDraftLang } = this.props
     const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox } = this.state
     const permissions = draft.permissions || []
     const readOnly = permissions.length === 0 || permissions.every(p => p === 'view')
 
-    const editorLanguage = valueDocument.data.get('language') || 'en'
+    const editorLanguage = currentDraftLang || 'en'
 
     return (
       <Section>
@@ -270,4 +281,4 @@ class Draft extends React.Component<Props> {
   }
 }
 
-export default Load(loader, [], 'draft-loading-message')(Draft)
+export default Load(loader, [], 'draft-loading-message')(connect(mapStateToProps)(Draft))
