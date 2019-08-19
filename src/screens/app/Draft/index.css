@@ -28,33 +28,59 @@
 .document, .glossary {
   position: relative;
   display: flex;
+  flex-direction: column;
 }
 
 .document {
   flex: 1;
 }
 
-.document__content {
-  flex: 1;
+.document__header {
+  width: 90%;
+  max-width: 900px;
+  margin: 20px auto;
+  padding-right: 277px; /* Toolbox width */
+}
+
+.document--readonly .document__header {
+  padding-right: 0;
+}
+
+.document__editor {
+  display: flex;
+}
+
+.document__editor--document > .toolbox {
+  margin-top: -64px;
+}
+
+/* Show only one spinner (for document) when loading draft. */
+.document__editor--glossary .spinner {
+  display: none;
 }
 
 .document__glossary-toggler {
   width: 90%;
-  max-width: 940px;
+  max-width: 900px;
   margin: 40px auto 20px auto;
+  padding-right: 277px; /* Toolbox width */
 }
 
 .editor {
   flex: 1;
   width: 90%;
   max-width: 900px;
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 20px;
   font-size: 15px;
   text-align: justify;
   line-height: 1.3;
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.document--readonly .editor--glossary {
+  margin-top: 20px;
 }
 
 .editor section > section > .title {

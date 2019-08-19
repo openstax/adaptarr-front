@@ -5,6 +5,7 @@
   height: calc(100vh - 18px - 46px); /* 100vh - padding-bottom and top value + borders - top */
   width: 260px;
   padding: 8px;
+  border-top: 1px solid var(--dark-bg);
   border-left: 1px solid var(--dark-bg);
   border-bottom: 1px solid var(--dark-bg);
   background-color: #fff;

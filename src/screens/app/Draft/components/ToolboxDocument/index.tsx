@@ -91,6 +91,16 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
+    if (!editor) {
+      return (
+        <div className="toolbox">
+          <Localized id="editor-toolbox-no-selection">
+            Please select editor to show toolbox.
+          </Localized>
+        </div>
+      )
+    }
+
     if (selection.start.key !== selection.end.key) {
       <div className="toolbox">
         <Localized id="editor-toolbox-mulit-selection">
