@@ -91,7 +91,11 @@ export default class Storage extends StorageBase {
    * Read the document.
    */
   async read(): Promise<Index> {
-    const index = await axios.get(`drafts/${this.id}/files/index.cnxml`)
+    const index = await axios.get(`drafts/${this.id}/files/index.cnxml`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })
     this.tag = index.headers.etag
     return new Index(this.tag, await index.data)
   }
