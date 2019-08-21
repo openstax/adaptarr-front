@@ -223,12 +223,14 @@ class SuggestionsTools extends React.Component<Props> {
     // Accepting suggestion my change path of the next one
     // so we are accepting all of them starting from the end.
     this.state.suggestions.reverse().forEach(sugg => this.onAccept(sugg))
+    this.setState({ suggestions: [], activeIndex: 0 })
   }
 
   private rejectAll = () => {
     // Rejecting suggestion my change path of the next one
     // so we are rejecting all of them starting from the end.
     this.state.suggestions.reverse().forEach(sugg => this.onDecline(sugg))
+    this.setState({ suggestions: [], activeIndex: 0 })
   }
 
   render() {
@@ -336,7 +338,10 @@ class SuggestionsTools extends React.Component<Props> {
       }
     }
 
-    this.focusClosestSuggestion()
+    this.removeSuggestionFromState(suggestion)
+    if (!this.state.suggestions[this.state.activeIndex]) {
+      this.focusClosestSuggestion()
+    }
   }
 
   private onDecline = (suggestion: Suggestion) => {
@@ -366,7 +371,36 @@ class SuggestionsTools extends React.Component<Props> {
       }
     }
 
-    this.focusClosestSuggestion()
+    this.removeSuggestionFromState(suggestion)
+    if (!this.state.suggestions[this.state.activeIndex]) {
+      this.focusClosestSuggestion()
+    }
+  }
+
+  private removeSuggestionFromState = (suggestion: Suggestion) => {
+    const suggestions = this.state.suggestions.filter(sugg => {
+      if (sugg.type !== suggestion.type) return true
+
+      if (
+        suggestion.type === 'insert'
+        && (sugg as SuggestionInsert).insert.key === suggestion.insert.key
+        ) return false
+
+      if (
+        suggestion.type === 'delete'
+        && (sugg as SuggestionDelete).delete.key === suggestion.delete.key
+        ) return false
+
+      if (
+        suggestion.type === 'change'
+        && (sugg as SuggestionChange).start.key === suggestion.start.key
+        && (sugg as SuggestionChange).end.key === suggestion.end.key
+        ) return false
+
+      return true
+    })
+
+    this.setState({ suggestions })
   }
 
   private previousSuggestion = () => {
@@ -396,6 +430,11 @@ class SuggestionsTools extends React.Component<Props> {
       this.nextSuggestion()
     } else if (suggestions[activeIndex - 1]) {
       this.previousSuggestion()
+    } else {
+      if (suggestions.length > 0) {
+        this.selectSuggestion(suggestions[0])
+      }
+      this.setState({ activeIndex: 0 })
     }
   }
 }
