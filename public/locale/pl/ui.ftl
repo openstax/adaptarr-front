@@ -305,23 +305,23 @@ draft-remove-glossary = Usuń
 
 draft-cancel = Anuluj
 
-draft-load-incorrect-version-title = Nowsza wersja tego dokumentu jest dostępna
+draft-load-incorrect-version-title = Niezgodność wersji dokumentu
 
-draft-load-incorrect-version-info = Ten dokument został zmodyfikowany od czasu jego
-  ostatniego otwarcia. Zdarza się to zwykle podczas próby edycji dokumentu z dwóch komputerów
-  lub przeglądarek jednocześnie. Możesz rozwiązać ten problem, odrzucając lokalne zmiany
-  i łądując wersję z serwera lub możesz kontynuować pracę z bieżącą wersją.
+draft-load-incorrect-version-info = Twoja wersja dokumentu różni się od wersji zapisanej
+  na serwerze, ponieważ plik został zmodyfikowany na innym komputerze lub przeglądarce.
+  Możesz rozwiązać ten problem, odrzucając niezapisane zmiany i ładując wersję z serwera
+  lub możesz kontynuować pracę z bieżącą wersją.
 
-draft-load-incorrect-version-button-discard = Odrzuć lokalne zmiany
+draft-load-incorrect-version-button-discard = Odrzuć niezapisane zmiany
 
 draft-load-incorrect-version-button-keep-working = Kontynuuj pracę z bieżącą wersją
 
-draft-save-incorrect-version-title = Ostrzeżenie!
+draft-save-incorrect-version-title = Niezgodność wersji dokumentu
 
 draft-save-incorrect-version-content = Twoja wersja dokumentu różni się od wersji zapisanej
-  na serwerze. Zdarza się to zwykle podczas próby edycji dokumentu z dwóch komputerów
-  lub przeglądarek jednocześnie. Możesz rozwiązać ten problem, napdpisując dokument na serwerze
-  swoją wersją albo odświeżając stronę i łądując nową wersję dokumentu.
+  na serwerze, ponieważ plik został zmodyfikowany na innym komputerze lub przeglądarce.
+  Możesz dokument z serwera nadpisać obecnie przeglądaną wersją. Odświeżenie strony
+  w przeglądarce umożliwi załadowanie dokumentu zapisanego na serwerze.
 
 draft-save-incorrect-version-button-cancel = Anuluj
 
@@ -1404,21 +1404,24 @@ editor-tools-save-alert-success = Szkic został zapisany.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Nie udało się zapisać szkicu.
 
-editor-tools-save-error-title = Nie udało się zapisać dokumentu
+editor-tools-save-error-title = Tworzenie kopii zapasowej
 
 # Variables:
 # - $error (string): error message
 # Fragments:
 # - <p> ... </p>: paragraph
 editor-tools-save-error-content =
-  <p>Wystąpił błąd podczas zapisywania. To nie Twoja wina, ten błąd nie powinien wystąpić.</p>
-  <p>Proszę wyeksportować dokument i wysłać go do administratora, aby mógł go naprawić.</p>
-  <p>Szczegóły błędu: { $error }</p>
+  <p>Nie udało się zapisać dokumentu na serwerze, ale nadal masz bezpiecznie zachowaną
+  całą pracę w swojej przeglądarce na tym komputerze.</p>
+  <p>Pobierz kopię zapasową i wróć do pracy nad tekstem. W tej sytuacji zalecamy pracę nad
+  plikiem na tym samym komputerze.</p>
+  <p>Jeżeli chcesz przekazać pracę do kolejnego etapu, prześlij kopię zapasową mailem
+  pod adres helpdesk@openstax.pl</p>
 
-editor-tools-save-error-export = Wyeksportuj dokument
+editor-tools-save-error-export = Pobierz kopię zapasową
 
 editor-tools-save-export-title = Wyślij pobrany plik do administratora
-  aby mógł rozwiązać problem.
+  jeżeli chcesz przekazać pracę do kolejnego etapu.
 
 editor-tools-save-export-ok = Ok
 

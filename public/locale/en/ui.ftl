@@ -305,28 +305,27 @@ draft-remove-glossary = Remove
 
 draft-cancel = Cancel
 
-draft-load-incorrect-version-title = A newer version of this document is available
+draft-load-incorrect-version-title = Document version mismatch
 
-draft-load-incorrect-version-info = The document was modified since you have last opened it.
-  This usually happens when trying to edit a document from two computers or browsers at
-  the same time. You can resolve this issue either by discarding local changes and loading
-  version from the server, or you can keep working on current version.
+draft-load-incorrect-version-info = Your version of the document is different from the
+  version saved on the server because the file has been modified on another computer
+  or browser. You can solve this problem by discarding unsaved changes and loading the
+  version from the server, or you can continue working with the current version.
 
-draft-load-incorrect-version-button-discard = Discard local changes
+draft-load-incorrect-version-button-discard = Discard unsaved changes
 
 draft-load-incorrect-version-button-keep-working = Keep working on current version
 
-draft-save-incorrect-version-title = Warning!
+draft-save-incorrect-version-title = Document version mismatch
 
-draft-save-incorrect-version-content = Your version of document differs from version
-  on the server. This usually happens when trying to edit a document from two computers or
-  browsers at the same time. You can resolve this issue either by overwriting document
-  on the server with your version or by refreshing page and loading new version
-  of document.
+draft-save-incorrect-version-content = Your version of the document is different from the
+  version saved on the server because the file has been modified on another computer
+  or browser. You can overwrite the document from the currently viewed version.
+  Refreshing the page in the browser will allow you to load the document saved on the server.
 
 draft-save-incorrect-version-button-cancel = Cancel
 
-draft-save-incorrect-version-button-overwrite = Overwrite
+draft-save-incorrect-version-button-overwrite = Overwrite document
 
 
 
@@ -1405,22 +1404,24 @@ editor-tools-save-alert-success = Draft has been saved successfully.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Draft couldn't be saved.
 
-editor-tools-save-error-title = We couldn't save this document
+editor-tools-save-error-title = Backup
 
 # Variables:
 # - $error (string): error message
 # Fragments:
 # - <p> ... </p>: paragraph
 editor-tools-save-error-content =
-  <p>There was an error while saving this document. It's not your fault, it
-  should not have happened.</p>
-  <p>Please export document and send it to the administrator so he can fix it.</p>
-  <p>Error details: { $error }</p>
+  <p>The document could not be saved to the server, but you still have all of your work
+  securely stored in your browser on this computer.</p>
+  <p>Download the backup and return to working on the text. In this situation,
+  we recommend working on a file on the same computer.</p>
+  <p>If you want to transfer work to the next stage, send a backup by email
+  to helpdesk@openstax.pl</p>
 
-editor-tools-save-error-export = Export document
+editor-tools-save-error-export = Download backup
 
-editor-tools-save-export-title = Please send downloaded file to the administrator
-  so he can fix your problem.
+editor-tools-save-export-title = Send the downloaded file to the administrator if you want
+  to transfer the work to the next stage.
 
 editor-tools-save-export-ok = Ok
 
