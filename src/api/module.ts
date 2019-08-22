@@ -20,7 +20,10 @@ export type Data = {
  */
 export type ModuleProcess = {
   process: number,
-  step: number,
+  step: {
+    id: number,
+    name: string,
+  },
   version: number,
 }
 
