@@ -913,8 +913,6 @@ process-preview-step-link =
 
 ## Reusable components - begin process
 
-begin-process-select-process = Select process:
-
 begin-process-info = You are about to begin process for:
 
 begin-process-start = Start process
