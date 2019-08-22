@@ -915,8 +915,6 @@ process-preview-step-link =
 
 ## Reusable components - begin process
 
-begin-process-select-process = Wybierz proces:
-
 begin-process-info = Za chwilę rozpoczenisz proces dla:
 
 begin-process-start = Rozpocznij proces
