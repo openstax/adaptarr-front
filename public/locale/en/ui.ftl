@@ -18,6 +18,8 @@ book-view-title-loading = Loading
 book-search-input =
   .placeholder = Search
 
+book-statistics-choose-process = Statistics for process:
+
 book-button-add-module = Add module
 
 book-button-add-group = Add group
@@ -25,8 +27,9 @@ book-button-add-group = Add group
 book-button-remove = Remove
 
 # Variable:
-# - $name (string): process name.
-book-in-process = Process: { $name }
+# - $process (string): process name.
+# - $step (string): step name.
+book-in-process = { $step } in { $process }
 
 book-begin-process = Begin process
 
@@ -120,11 +123,12 @@ book-edit-alert-success = Book was updated successfully.
 
 
 
-## Screens - book view - reordering parts
+## Screens - book view - book parts
 
-book-part-moving-locked = Moving modules is locked.
-
-book-part-moving-unlocked = Now you can move modules.
+# Variables:
+# - $step (string): name of step
+# - $counter (string): number of modules in current step
+book-part-step-statistic = { $step }: { $counter }
 
 # Alert displayed when a module or a group was moved to a different location.
 #

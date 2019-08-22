@@ -6,7 +6,6 @@ import { History } from 'history'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-
 import * as api from 'src/api'
 import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
 
@@ -17,6 +16,7 @@ import LimitedUI from 'src/components/LimitedUI'
 import EditBook from 'src/components/EditBook'
 import BookPartGroup from 'src/components/BookPartGroup'
 import BookPartModule from 'src/components/BookPartModule'
+import ProcessSelector from 'src/components/ProcessSelector'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -70,7 +70,7 @@ class Book extends React.Component<Props> {
     showAddGroup: boolean
     showAddModule: boolean
     searchInput: string
-    filteredParts: api.BookPart[]
+    selectedProcess: api.Process | null
   } = {
     isLoading: true,
     parts: [],
@@ -81,45 +81,15 @@ class Book extends React.Component<Props> {
     showAddGroup: false,
     showAddModule: false,
     searchInput: '',
-    filteredParts: [],
+    selectedProcess: null,
   }
 
-  private onSearch = (val: string) => {
-    const { parts } = this.state
-    let filteredParts: api.BookPart[] = []
-    // Do not show first part which is just Book
-    ;(parts[0].parts as api.BookPart[]).forEach(part => {
-      if (part.kind === 'module') {
-        const rgx = new RegExp(val, 'gi')
-        if (part.title.match(rgx)) {
-          filteredParts.push(part)
-        }
-      } else if (part.kind === 'group') {
-        const filteredGroup = this.filterDraftsFromGroup(part, val)
-        if (filteredGroup) {
-          filteredParts.push(filteredGroup)
-        }
-      }
-    })
-    this.setState({ searchInput: val, filteredParts })
+  private handleProcessChange = (selectedProcess: api.Process | null) => {
+    this.setState({ selectedProcess })
   }
 
-  private filterDraftsFromGroup = (group: api.BookPart, val: string): api.BookPart | null => {
-    let parts: api.BookPart[] = []
-    group.parts!.forEach(p => {
-      if (p.kind === 'module') {
-        const rgx = new RegExp(val, 'gi')
-        if (p.title.match(rgx)) {
-          parts.push(p)
-        }
-      } else if (p.kind === 'group') {
-        const filteredGroup = this.filterDraftsFromGroup(p, val)
-        if (filteredGroup) {
-          parts.push(filteredGroup)
-        }
-      }
-    })
-    return parts.length ? new api.BookPart({...group, parts: parts} as GroupData, group.book) : null
+  private onSearch = (searchInput: string) => {
+    this.setState({ searchInput })
   }
 
   private showModuleDetails = (item: api.BookPart) => {
@@ -133,24 +103,66 @@ class Book extends React.Component<Props> {
     this.setState({ showModuleDetails: undefined })
   }
 
+  /**
+   * Check if @param {ModuleData} mod is matching searchInput and / or selectedProcess.
+   */
+  private testModule = (mod: ModuleData) => {
+    const { selectedProcess, searchInput } = this.state
+    const rgx = new RegExp(searchInput, 'gi')
+
+    let passed = true
+    if (selectedProcess) {
+      if (!mod.process || mod.process.process !== selectedProcess.id) {
+        passed = false
+      }
+    }
+    if (passed && searchInput) {
+      if (!mod.title.match(rgx)) {
+        passed = false
+      }
+    }
+    return passed
+  }
+
+  /**
+   * Check if any of modules in @param {GroupData} part is matching
+   * searchInput and / or selectedProcess.
+   */
+  private testModulesInPart = (part: GroupData, cb: (mod: ModuleData) => boolean): boolean => {
+    return part.parts.some(part => {
+      if (part.kind === 'module' && cb(part)) return true
+      if (part.kind === 'group') return this.testModulesInPart(part, cb)
+      return false
+    })
+  }
+
   private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+    const { selectedProcess, searchInput, isEditingUnlocked, book } = this.state
+
+    if (selectedProcess || searchInput) {
+      if (item.kind === 'module' && !this.testModule(item)) return null
+      if (item.kind === 'group' && !this.testModulesInPart(item as GroupData, this.testModule)) return null
+    }
+
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
           item.kind === 'group' ?
             <BookPartGroup
-              item={new api.BookPart((item as GroupData), this.state.book!)}
-              book={this.state.book!}
+              item={new api.BookPart((item as GroupData), book!)}
+              book={book!}
               collapseIcon={collapseIcon}
               afterAction={this.fetchBook}
-              isEditingUnlocked={this.state.isEditingUnlocked}
+              isEditingUnlocked={isEditingUnlocked}
+              modulesMap={this.props.modules.modulesMap}
+              showStatsFor={selectedProcess}
             />
           : <BookPartModule
-              item={new api.BookPart((item as ModuleData), this.state.book!)}
+              item={new api.BookPart((item as ModuleData), book!)}
               onModuleClick={this.showModuleDetails}
               afterAction={this.fetchBook}
-              isEditingUnlocked={this.state.isEditingUnlocked}
-              highlightText={this.state.searchInput}
+              isEditingUnlocked={isEditingUnlocked}
+              highlightText={searchInput}
             />
         }
       </div>
@@ -219,40 +231,12 @@ class Book extends React.Component<Props> {
       // While processing data trough react-nestable, instances are lost,
       // so we have to recreate it
       // TODO: Adjust / rewrite react-nestable to handle instances properly
-
-      const getPartData = (item: any): PartData | undefined => {
-        let data: PartData
-        if (item.kind === 'module') {
-          data = {
-            kind: 'module',
-            number: item.number,
-            title: item.title,
-            id: item.id,
-          }
-        } else if (item.kind === 'group') {
-          data = {
-            kind: 'group',
-            number: item.number,
-            title: item.title,
-            parts: item.parts.map((p: any) => getPartData(p)),
-          }
-        } else {
-          return undefined
-        }
-
-        return data
-      }
-
-      const data = getPartData(changedItem)
-      if (!data) return
-
-      changedItem = new api.BookPart(data, this.state.book!)
+      changedItem = new api.BookPart((changedItem as PartData), this.state.book!)
     }
 
     changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
-        console.log({item: changedItem.title, target: targetParent.title})
         this.props.addAlert('success', 'book-part-moving-alert-success', {item: changedItem.title, target: targetParent.title})
       })
       .catch(e => {
@@ -391,7 +375,6 @@ class Book extends React.Component<Props> {
       showAddModule,
       groupNameInput,
       searchInput,
-      filteredParts,
     } = this.state
 
     const title = book ? book.title : 'Loading'
@@ -408,7 +391,7 @@ class Book extends React.Component<Props> {
             />
           : null
         }
-        <Section>
+        <Section className="book">
           <Header l10nId={titleKey} title={title}>
             <LimitedUI permissions="book:edit">
               <Button clickHandler={this.toggleEditing}>
@@ -436,12 +419,16 @@ class Book extends React.Component<Props> {
               />
             </div>
           </Header>
+          <ProcessSelector
+            title="book-statistics-choose-process"
+            onChange={this.handleProcessChange}
+          />
           {
             !isLoading ?
               <>
                 <Nestable
                   isDisabled={!isEditingUnlocked}
-                  items={searchInput ? filteredParts : parts[0].parts as api.BookPart[]}
+                  items={parts[0].parts as api.BookPart[]}
                   className="book-collection"
                   childrenProp="parts"
                   renderItem={this.renderItem}
