@@ -1371,6 +1371,15 @@ editable-text-error-max-length = Liczba znaków może wynosić maksymalnie { $ma
 
 
 
+## Reusable components - process selector
+
+process-selector-title = Wybierz process:
+
+process-selector-placeholder =
+  .placeholder = Wybierz...
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title

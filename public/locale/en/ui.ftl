@@ -1372,6 +1372,15 @@ editable-text-error-max-length = Maximum { $max } characters allowed.
 
 
 
+## Reusable components - process selector
+
+process-selector-title = Select process:
+
+process-selector-placeholder =
+  .placeholder = Select...
+
+
+
 ## Editor - document title
 
 # Placeholder text for document title
