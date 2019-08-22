@@ -10,7 +10,7 @@ import { addModuleToMap } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers'
 
 import ProcessVersion from 'src/api/processversion'
-import { Draft, Storage, Module, Process } from 'src/api'
+import { Draft, Storage, Module } from 'src/api'
 import { Link, SlotPermission } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
@@ -306,7 +306,7 @@ class StepChanger extends React.Component<Props> {
       this.nextStep()
     } catch (ex) {
       store.dispatch(addAlert('error', 'step-changer-save-advance-error', {
-        details: ex.response.data.raw,
+        details: ex.response ? ex.response.data.raw : ex.toString(),
       }))
     }
 

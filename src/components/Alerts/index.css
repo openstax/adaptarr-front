@@ -50,6 +50,8 @@
 }
 
 .alerts--error .alerts__alert {
+  display: block;
+  word-wrap: break-word;
   width: 500px;
   cursor: default;
 }

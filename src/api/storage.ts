@@ -120,7 +120,11 @@ export default class Storage extends StorageBase {
       this.glossary = glossary
       this.tag = rsp.headers.etag
     } catch (e) {
-      throw new APIError(e.response)
+      if (e.response) {
+        throw new APIError(e.response)
+      } else {
+        throw e
+      }
     }
   }
 
