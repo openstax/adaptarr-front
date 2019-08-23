@@ -9,7 +9,6 @@ import { fetchModulesMap } from 'src/store/actions/Modules'
 import { Process, Module, User } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
-import { State } from 'src/store/reducers'
 
 import ConfigureSlots from './ConfigureSlots'
 import Button from 'src/components/ui/Button'
@@ -20,6 +19,7 @@ type Props = {
   modules: Module[]
   processes: Map<number, Process>
   onClose: () => any
+  afterUpdate?: (errors: Module[]) => void
 }
 
 export type SlotId = number
@@ -122,6 +122,10 @@ class BeginProcess extends React.Component<Props> {
     errors.forEach(m => {
       store.dispatch(addAlert('error', 'begin-process-error', {module: m.title}))
     })
+
+    if (this.props.afterUpdate) {
+      this.props.afterUpdate(errors)
+    }
   }
 
   private handleProcessChange = async ({ value: process }: { value: Process, label: string}) => {
