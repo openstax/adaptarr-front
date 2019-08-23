@@ -6,6 +6,7 @@ import FormatTools from '../FormatTools'
 import DefinitionTools from '../DefinitionTools'
 import MeaningTools from '../MeaningTools'
 import SeeAlsoTools from '../SeeAlsoTools'
+import SuggestionsTools from '../SuggestionTools'
 import TermTools from '../TermTools'
 import GlossaryTools from '../GlossaryTools'
 
@@ -14,7 +15,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'termTools' | 'meaningTools' | 'seeAlsoTools' | 'definitionTools' | 'glossaryTools'
+type ToolName = 'termTools' | 'meaningTools' | 'seeAlsoTools' | 'definitionTools' | 'glossaryTools' | 'suggestionsTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -25,6 +26,7 @@ type State = {
   meaningTools: boolean
   seeAlsoTools: boolean
   glossaryTools: boolean
+  suggestionsTools: boolean
 }
 
 /**
@@ -36,6 +38,7 @@ const DEFAULT_TOGGLERS = {
   meaningTools: false,
   seeAlsoTools: false,
   glossaryTools: false,
+  suggestionsTools: true,
 }
 
 class Toolbox extends React.Component<Props> {
@@ -64,7 +67,15 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
-    if (!selection.isFocused) return null
+    if (!editor) {
+      return (
+        <div className="toolbox">
+          <Localized id="editor-toolbox-no-selection">
+            Please select editor to show toolbox.
+          </Localized>
+        </div>
+      )
+    }
 
     if (selection.start.key !== selection.end.key) {
       return (
@@ -115,6 +126,13 @@ class Toolbox extends React.Component<Props> {
           toggleState={this.state.glossaryTools}
           onToggle={this.toggleTool}
         />
+
+        <SuggestionsTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.suggestionsTools}
+          onToggle={this.toggleTool}
+        />
       </div>
     )
   }
@@ -159,6 +177,11 @@ class Toolbox extends React.Component<Props> {
     let newState = {...DEFAULT_TOGGLERS}
 
     switch (node.type) {
+      case 'suggestion_insert':
+      case 'suggestion_delete':
+        newState.suggestionsTools = true
+        newState.glossaryTools = false
+        break
       case 'term':
         newState.termTools = true
         break

@@ -2,6 +2,7 @@ import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
 import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
 import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
+import suggestionRules from 'src/screens/app/Draft/plugins/Suggestions/deSerializationRules'
 import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
 import { Value } from 'slate'
 import { AxiosResponse } from 'axios'
@@ -56,7 +57,7 @@ export default class Storage extends StorageBase {
   title: string
   language: string = 'en'
   files: FileDescription[]
-  tag: string | null = null
+  tag: string
   document: Value | null = null
   glossary: Value | null = null
 
@@ -88,35 +89,42 @@ export default class Storage extends StorageBase {
 
   /**
    * Read the document.
-   *
-   * @return {document: Value, glossary: Value}
    */
-  async read() {
-    const index = await axios.get(`drafts/${this.id}/files/index.cnxml`)
+  async read(): Promise<Index> {
+    const index = await axios.get(`drafts/${this.id}/files/index.cnxml`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })
     this.tag = index.headers.etag
-    const deserialize = this.serializer.deserialize(await index.data)
-    this.document = deserialize.document
-    this.glossary = deserialize.glossary
-    this.language = deserialize.language
-    return { document: this.document, glossary: this.glossary }
+    return new Index(this.tag, await index.data)
   }
 
   /**
    * Write the document
    */
-  async write(document: Value, glossary: Value | null) {
+  async write(document: Value, glossary: Value | null, overwrite: boolean = false) {
     try {
-      const text = this.serializer.serialize(document, glossary, {
+      const text = Storage.serializer.serialize(document, glossary, {
         title: this.title,
         language: this.language,
       })
 
-      await axios.put(`drafts/${this.id}/files/index.cnxml`, text)
+      const rsp = await axios.put(`drafts/${this.id}/files/index.cnxml`, text, overwrite ? undefined : {
+        headers: {
+          'If-Match': this.tag,
+        },
+      })
 
       this.document = document
       this.glossary = glossary
+      this.tag = rsp.headers.etag
     } catch (e) {
-      throw new APIError(e.response)
+      if (e.response) {
+        throw new APIError(e.response)
+      } else {
+        throw e
+      }
     }
   }
 
@@ -156,8 +164,22 @@ export default class Storage extends StorageBase {
     this.language = code
   }
 
-  serializer = new CNXML({
-    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize],
-    glossaryRules: [],
+  static serializer = new CNXML({
+    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize, suggestionRules],
+    glossaryRules: [suggestionRules],
   })
+}
+
+export class Index {
+  version: string
+  content: string
+
+  constructor(version: string, content: string) {
+    this.version = version
+    this.content = content
+  }
+
+  deserialize() {
+    return Storage.serializer.deserialize(this.content)
+  }
 }

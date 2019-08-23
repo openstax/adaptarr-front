@@ -29,11 +29,6 @@ declare module 'cnx-designer' {
   }
 
   export class Storage {
-    static load(id: string): Promise<Storage>
-    read(): Promise<{ document: Value, glossary: Value }>
-    write(document: Value, glossary: Value): Promise<void>
-    writeFile(file: File): Promise<void>
-    current(document: Value, glossary: Value): boolean
     mediaUrl(name: string): string
   }
 
@@ -69,6 +64,7 @@ declare module 'cnx-designer' {
   export class DocumentDB {
     id: string
     dirty: boolean
+    version: string | null
 
     save(value: Value, version: string): Promise<void>
     mark(op: Operation): Promise<void>
@@ -117,6 +113,7 @@ declare module 'cnx-designer' {
     // From slate-core, but not included in @types/slate for some reason
     isVoid(node: Node): boolean
     unwrapChildrenByPath(path: Path): EditorAug
+    moveAnchorToEndOfNode(node: Node): EditorAug
 
     // From slate-edit-list
     decreaseItemDepth(): EditorAug
@@ -143,10 +140,20 @@ declare module 'cnx-designer' {
 
   export function TextContent(options?: {marks?: string[]}): Plugin[]
 
+  type TextOptions = {
+    code?: {
+      inlines: string[],
+    },
+    term?: {
+      inlines: string[],
+    },
+  }
+
   export function Document(options?: {
     content?: string[],
     document_content?: string[],
     marks?: string[],
+    text?: TextOptions,
     list?: any,
   }): Plugin[]
 
@@ -155,5 +162,6 @@ declare module 'cnx-designer' {
     glossary_content?: string[],
     marks?: string[],
     list?: any,
+    text?: TextOptions,
   }): Plugin[]
 }

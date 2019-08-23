@@ -10,6 +10,7 @@ import FormatTools from '../FormatTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
 import SectionTools from '../SectionTools'
+import SuggestionsTools from '../SuggestionTools'
 import XrefTools from '../XrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
@@ -23,7 +24,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
+type ToolName = 'insertTools' | 'suggestionsTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -31,6 +32,7 @@ type State = {
   selectionParent: Document | Block | Inline | null
   // Togglers for components:
   insertTools: boolean
+  suggestionsTools: boolean
   termTools: boolean
   linkTools: boolean
   xrefTools: boolean
@@ -49,6 +51,7 @@ type State = {
  */
 const DEFAULT_TOGGLERS = {
   insertTools: false,
+  suggestionsTools: true,
   termTools: true,
   linkTools: true,
   xrefTools: true,
@@ -88,6 +91,16 @@ class Toolbox extends React.Component<Props> {
     const { value: { selection }, editor, value } = this.props
     const { selectionParent } = this.state
 
+    if (!editor) {
+      return (
+        <div className="toolbox">
+          <Localized id="editor-toolbox-no-selection">
+            Please select editor to show toolbox.
+          </Localized>
+        </div>
+      )
+    }
+
     if (selection.start.key !== selection.end.key) {
       <div className="toolbox">
         <Localized id="editor-toolbox-mulit-selection">
@@ -104,6 +117,13 @@ class Toolbox extends React.Component<Props> {
           value={value}
           selectionParent={selectionParent}
           toggleState={this.state.insertTools}
+          onToggle={this.toggleTool}
+        />
+
+        <SuggestionsTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.suggestionsTools}
           onToggle={this.toggleTool}
         />
 
@@ -225,6 +245,11 @@ class Toolbox extends React.Component<Props> {
     }
 
     switch (node.type) {
+      case 'suggestion_insert':
+      case 'suggestion_delete':
+        newState.suggestionsTools = true
+        newState.insertTools = false
+      	break
       case 'term':
         newState.termTools = true
         break

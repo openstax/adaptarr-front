@@ -42,7 +42,7 @@ type Props = {
   modules: {
     modulesMap: types.ModulesMap
   }
-  addAlert: (kind: types.RequestInfoKind, message: string, args?: object) => void
+  addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
 
 const mapStateToProps = ({ team, modules }: State) => {
@@ -54,7 +54,7 @@ const mapStateToProps = ({ team, modules }: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addAlert: (kind: types.RequestInfoKind, message: string, args: Object) => dispatch(addAlert(kind, message, args)),
+    addAlert: (kind: types.AlertDataKind, message: string, args: Object) => dispatch(addAlert(kind, message, args)),
   }
 }
 

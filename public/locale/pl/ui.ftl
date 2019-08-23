@@ -32,6 +32,10 @@ book-begin-process = Rozpocznij proces
 
 book-begin-process-title = Skonfiguruj i rozpocznij proces
 
+book-begin-process-no-modules = Wszystkie moduły w tym rozdziale są już przypisane do procesu.
+
+book-begin-process-no-modules-ok = Ok
+
 book-process-preview-title = Szczegóły procesu:
 
 book-process-cancel-title = Przerwij proces bez zapisywania zmian
@@ -288,7 +292,7 @@ draft-style-switcher = { $style ->
   [pdf] Style wersji PDF
 }
 
-draft-style-switcher-info-box = Widok roboczy. Niektóre element w ostatecznej wersji
+draft-style-switcher-info-box = Widok roboczy. Niektóre elementy w ostatecznej wersji
   podręcznika będą wyświetlane inaczej.
 
 draft-loading-message = Ładowanie wersji roboczej może potrwać nawet kilka minut.
@@ -300,6 +304,28 @@ draft-add-glossary = Dodaj skorowidz
 draft-remove-glossary = Usuń
 
 draft-cancel = Anuluj
+
+draft-load-incorrect-version-title = Niezgodność wersji dokumentu
+
+draft-load-incorrect-version-info = Twoja wersja dokumentu różni się od wersji zapisanej
+  na serwerze, ponieważ plik został zmodyfikowany na innym komputerze lub przeglądarce.
+  Możesz rozwiązać ten problem, odrzucając niezapisane zmiany i ładując wersję z serwera
+  lub możesz kontynuować pracę z bieżącą wersją.
+
+draft-load-incorrect-version-button-discard = Odrzuć niezapisane zmiany
+
+draft-load-incorrect-version-button-keep-working = Kontynuuj pracę z bieżącą wersją
+
+draft-save-incorrect-version-title = Niezgodność wersji dokumentu
+
+draft-save-incorrect-version-content = Twoja wersja dokumentu różni się od wersji zapisanej
+  na serwerze, ponieważ plik został zmodyfikowany na innym komputerze lub przeglądarce.
+  Możesz dokument z serwera nadpisać obecnie przeglądaną wersją. Odświeżenie strony
+  w przeglądarce umożliwi załadowanie dokumentu zapisanego na serwerze.
+
+draft-save-incorrect-version-button-cancel = Anuluj
+
+draft-save-incorrect-version-button-overwrite = Nadpisz dokument
 
 
 
@@ -887,20 +913,23 @@ process-preview-step-link =
 
 begin-process-select-process = Wybierz proces:
 
+begin-process-info = Za chwilę rozpoczenisz proces dla:
+
 begin-process-start = Rozpocznij proces
 
 # Alert displayed when process has been started.
 #
 # Variables:
 # - $process (string): name of process which was started.
-# - $module (string): title of module for which process was started.
-begin-process-success = Rozpoczęto proces „{ $process }” dla „{ $module }”.
+# - $success (number): number of modules for which process was started.
+# - $total (number): total number of modules for which process should be started.
+begin-process-success = Rozpoczęto proces „{ $process }” dla { $success }/{ $total } modułów.
 
 # Alert displayed when process has not been started.
 #
 # Variables:
-# - $details (string): error details.
-begin-process-error = Nie udało się rozpocząć procesu. Szczegóły: { $details }.
+# - $module (string): title of module for which process wasn't started.
+begin-process-error = Nie udało się rozpocząć procesu dla „{ $module }”.
 
 begin-process-assign-user-title = Wybierz użytkownika dla danej funkcji.
 
@@ -993,6 +1022,15 @@ free-slots-error = Nie udało się objąć funkcji. { $details ->
   [none] {""}
 }
 
+free-slots-confirm-title = Biorę to zadanie
+
+free-slots-confirm-info = Przypisanie siebie do tekstu menedżer procesu
+  traktuje jako deklarację wykonania zadania.
+
+free-slots-cancel = Anuluj
+
+free-slots-confirm = Potwierdź
+
 
 
 ## Reusable components - step changer
@@ -1038,6 +1076,25 @@ step-changer-save-advance = Zapisz i przenieś
 # Variables:
 # - $details (string): error details.
 step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu. Szczegóły: { $details }.
+
+step-changer-dialog-suggestions = Proszę zaakceptować lub odrzucić wszystkie sugestie.
+
+# Variables:
+# - $document (number): number of suggestions inside document.
+# - $glossary (number): number of suggestions inside glossary.
+step-changer-dialog-suggestions-info = Liczba sugestii w dokumencie: { $document }. Liczba sugestii w glosariuszu { $glossary }. Proszę zaakceptować lub odrzucić wszystkie z nich.
+
+step-changer-dialog-suggestions-ok = Ok
+
+step-changer-dialog-wrong-target-title = Niepoprawny link
+
+step-changer-dialog-wrong-target = Nie znaleźliśmy wybranego celu. Spróbuj ponownie później
+  lub skontaktuj się z administratorem.
+
+step-changer-dialog-wrong-target-suggestions = Liczba sugestii w dokumencie: { $document }.
+  Liczba sugestii w glosariuszu { $glossary }. Możesz przenieść tę wersję roboczą do kroku,
+  który zawiera uprawnienie do akceptowania zmian lub musisz rozwiązać wszystkie
+  sugestie, aby przenieść szkic do innego kroku.
 
 
 
@@ -1347,21 +1404,24 @@ editor-tools-save-alert-success = Szkic został zapisany.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Nie udało się zapisać szkicu.
 
-editor-tools-save-error-title = Nie udało się zapisać dokumentu
+editor-tools-save-error-title = Tworzenie kopii zapasowej
 
 # Variables:
 # - $error (string): error message
 # Fragments:
 # - <p> ... </p>: paragraph
 editor-tools-save-error-content =
-  <p>Wystąpił błąd podczas zapisywania. To nie Twoja wina, ten błąd nie powinien wystąpić.</p>
-  <p>Proszę wyeksportować dokument i wysłać go do administratora, aby mógł go naprawić.</p>
-  <p>Szczegóły błędu: { $error }</p>
+  <p>Nie udało się zapisać dokumentu na serwerze, ale nadal masz bezpiecznie zachowaną
+  całą pracę w swojej przeglądarce na tym komputerze.</p>
+  <p>Pobierz kopię zapasową i wróć do pracy nad tekstem. W tej sytuacji zalecamy pracę nad
+  plikiem na tym samym komputerze.</p>
+  <p>Jeżeli chcesz przekazać pracę do kolejnego etapu, prześlij kopię zapasową mailem
+  pod adres helpdesk@openstax.pl</p>
 
-editor-tools-save-error-export = Wyeksportuj dokument
+editor-tools-save-error-export = Pobierz kopię zapasową
 
 editor-tools-save-export-title = Wyślij pobrany plik do administratora
-  aby mógł rozwiązać problem.
+  jeżeli chcesz przekazać pracę do kolejnego etapu.
 
 editor-tools-save-export-ok = Ok
 
@@ -1727,3 +1787,48 @@ editor-tools-source-type = { $type ->
  *[inline] Linia
   [block] Blok
 }
+
+
+
+## Editor toolboxes - suggestions
+
+# Variables:
+# - $counter (number): total number of suggestions.
+editor-tools-suggestions-title = Sugestie ({ $counter })
+
+editor-tools-suggestion-accept-all = Akceptuj wszystkie
+
+editor-tools-suggestion-reject-all = Odrzuć wszystkie
+
+editor-tools-suggestion-undefined = Nieznana sugestia
+
+# Variables:
+# - $insert (string): text to insert.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-insert = <action>Dodaj</action> <content>{ $insert }</content>
+
+# Variables:
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-delete = <action>Usuń</action> <content>{ $delete }</content>
+
+# Variables:
+# - $insert (string): text to insert.
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-change =
+  <action>Zastąp</action> <content>{ $delete }</content> tekstem <content>{ $insert }</content>
+
+
+
+## Reusable component - confirm dialog
+
+confirm-dialog-button-cancel = Anuluj
+
+confirm-dialog-button-ok = Ok

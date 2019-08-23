@@ -1,44 +1,37 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
-import Counters from 'slate-counters'
-import { Localized, ReactLocalization } from 'fluent-react/compat'
-import { PersistDB, DocumentDB, uuid, Document, Glossary, Persistence } from 'cnx-designer'
+import { Localized } from 'fluent-react/compat'
+import { PersistDB, DocumentDB, uuid } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
-import { Block, Value, Text, KeyUtils, Editor as Editor_ } from 'slate'
-import { Editor } from 'slate-react'
-import { List } from 'immutable'
+import { Value, KeyUtils } from 'slate'
+import { connect } from 'react-redux'
 
 import timeout from 'src/helpers/timeout'
+import confirmDialog from 'src/helpers/confirmDialog'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import { SlotPermission } from 'src/api/process'
+import { State } from 'src/store/reducers'
 import { fetchReferenceTargets } from 'src/store/actions/Modules'
-import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/Drafts'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
 import InfoBox from 'src/components/InfoBox'
 import Header from 'src/components/Header'
-import Button from 'src/components/ui/Button'
-import Dialog from 'src/components/ui/Dialog'
 import DraftInfo from 'src/components/DraftInfo'
 import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
 import StepChanger from './components/StepChanger'
 import SaveButton from './components/SaveButton'
-import ToolboxDocument from './components/ToolboxDocument'
-import ToolboxGlossary from './components/ToolboxGlossary'
-import LocalizationLoader from './components/LocalizationLoader'
 
-import StorageContext from './plugins/Storage'
-import I10nPlugin from './plugins/I10n'
-import XrefPlugin, { collectForeignDocuments } from './plugins/Xref'
-import TablesPlugin from './plugins/Tables'
-import SourceElements from './plugins/SourceElements'
-import Shortcuts from './plugins/Shortcuts'
+import { collectForeignDocuments } from './plugins/Xref'
 
 import PersistanceError from './PersistanceError'
+
+import EditorDocument from './editors/document'
+import EditorGlossary from './editors/glossary'
 
 import './index.css'
 
@@ -50,13 +43,14 @@ type Props = {
   document: Value
   glossary: Value
   history: History
+  currentDraftLang: string
 }
 
 ;KeyUtils.resetGenerator()
 KeyUtils.setGenerator(() => uuid.v4())
 
 async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
-  const [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
+  let [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
     Promise.race([
       Promise.all([
         PersistDB.load(`${id}-document`),
@@ -70,13 +64,57 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
 
   let document, glossary
 
+  const index = await storage.read()
+  const dirty = documentDbContent.dirty || documentDbGlossary.dirty
+
+  // XXX: Some users might have local changes saved with the old temporary
+  // versioning scheme. Remove check for
+  // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
+  // all users should have migrated to the new version.
+  if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
+    const res = await confirmDialog(
+        'draft-load-incorrect-version-title',
+        'draft-load-incorrect-version-info',
+        {
+          discard: 'draft-load-incorrect-version-button-discard',
+          keepWorking: 'draft-load-incorrect-version-button-keep-working',
+        }
+      )
+
+    switch (res) {
+      case 'discard': {
+        if (documentDbContent.dirty) {
+          await Promise.all([documentDbContent.discard(), documentDbGlossary.discard()])
+        }
+        break
+      }
+      case 'keepWorking':
+        // Local changes will be loaded.
+        storage.tag = documentDbContent.version!
+        index.version = documentDbContent.version!
+        break
+      default:
+        throw new Error(`Unknown action: "${res}" while trying to handle loading of incorrect version of document.`)
+    }
+  }
+
+  const deserialize = index.deserialize()
+
+  if (deserialize && storage.language !== deserialize.language) {
+    storage.setLanguage(deserialize.language)
+  }
+
   if (documentDbContent.dirty) {
     document = await documentDbContent.restore()
+  } else {
+    document = deserialize!.document
+    await documentDbContent.save(document, index.version)
+  }
+
+  if (documentDbGlossary.dirty) {
     glossary = await documentDbGlossary.restore()
   } else {
-    const deserialize = await storage.read()
-    document = deserialize.document
-    glossary = deserialize.glossary
+    glossary = deserialize!.glossary
     // Reset glossary if it have invalid content
     if (glossary.document.nodes.get(0).type !== 'definition') {
       glossary = Value.fromJS({
@@ -87,9 +125,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
         }
       })
     }
-    // TODO: get version from API
-    await documentDbContent.save(document, Date.now().toString())
-    await documentDbGlossary.save(glossary, Date.now().toString())
+    await documentDbGlossary.save(glossary, index.version)
   }
 
   const { modules: { modulesMap } } = store.getState()
@@ -107,6 +143,12 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   return { documentDbContent, documentDbGlossary, storage, document, glossary, draft }
 }
 
+const mapStateToProps = ({ draft: { currentDraftLang } }: State) => {
+  return {
+    currentDraftLang,
+  }
+}
+
 class Draft extends React.Component<Props> {
   state: {
     editorStyle: string
@@ -114,45 +156,19 @@ class Draft extends React.Component<Props> {
     valueDocument: Value
     valueGlossary: Value
     isGlossaryEmpty: boolean
-    showRemoveGlossaryDialog: boolean
   } = {
     editorStyle: '',
     showInfoBox: false,
     valueDocument: this.props.document,
     valueGlossary: this.props.glossary,
     isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || this.props.glossary.document.nodes.get(0).type !== 'definition',
-    showRemoveGlossaryDialog: false,
   }
 
-  static contextTypes = {
-    l10n: PropTypes.instanceOf(ReactLocalization),
-  }
-
-  pluginsDocument = [
-    I10nPlugin,
-    XrefPlugin,
-    TablesPlugin,
-    SourceElements,
-    Counters(),
-    ...Document({
-      document_content: ['table', 'source_element'],
-      content: ['source_element'],
-    }),
-    Shortcuts(),
-    Persistence({ db: this.props.documentDbContent }),
-  ]
-
-  pluginsGlossary = [
-    I10nPlugin,
-    ...Glossary(),
-    Shortcuts(),
-    Persistence({ db: this.props.documentDbGlossary }),
-  ]
-
-  static childContextTypes = {
-    documentDbContent: PropTypes.instanceOf(DocumentDB),
-    documentDbGlossary: PropTypes.instanceOf(DocumentDB),
-  }
+  draftPermissions = new Set(this.props.draft.permissions || [])
+  stepPermissions = this.props.draft.step!.slots.reduce((acc, slot) => {
+    acc = new Set([...acc, ...slot.permissions])
+    return acc
+  }, new Set<SlotPermission>())
 
   private handleStyleChange = (style: string) => {
     this.setState({ editorStyle: style, showInfoBox: true })
@@ -166,125 +182,31 @@ class Draft extends React.Component<Props> {
     this.props.history.push('/')
   }
 
-  getChildContext() {
-    return {
-      documentDbContent: this.props.documentDbContent,
-      documentDbGlossary: this.props.documentDbGlossary,
-    }
-  }
-
-  onChangeDocument = ({ value }: { value: Value }) => {
+  onChangeDocument = (value: Value) => {
     this.setState({ valueDocument: value })
   }
 
-  onChangeGlossary = ({ value }: { value: Value }) => {
+  onChangeGlossary = (value: Value) => {
     const isGlossaryEmpty = !value.document.nodes.has(0) || value.document.nodes.get(0).type !== 'definition'
     this.setState({ valueGlossary: value, isGlossaryEmpty })
   }
 
-  addGlossary = () => {
-    const definition = Block.create({
-      type: 'definition',
-      nodes: List([
-        Block.create({
-          type: 'definition_term',
-          nodes: List([Text.create('')]),
-        }),
-        Block.create({
-          type: 'definition_meaning',
-          nodes: List([
-            Block.create({
-              type: 'paragraph',
-              nodes: List([Text.create('')]),
-            }),
-          ]),
-        }),
-      ]),
-    })
-
-    this.setState({
-      valueGlossary: Value.fromJS({
-        object: 'value',
-        document: {
-          object: 'document',
-          nodes: [definition.toJS()],
-        }
-      }),
-      isGlossaryEmpty: false,
-    }, async () => {
-      this.glossaryEditor.current!.focus()
-      await this.props.documentDbGlossary.save(this.state.valueGlossary, Date.now().toString())
-    })
-  }
-
-  removeGlossary = () => {
-    this.setState({
-      valueGlossary: Value.fromJS({
-        object: 'value',
-        document: {
-          object: 'document',
-          nodes: [],
-        }
-      }),
-      isGlossaryEmpty: true,
-      showRemoveGlossaryDialog: false,
-    }, async () => {
-      await this.props.documentDbGlossary.save(this.state.valueGlossary, Date.now().toString())
-    })
-  }
-
-  showRemoveGlossaryDialog = () => {
-    this.setState({ showRemoveGlossaryDialog: true })
-  }
-
-  closeRemoveGlossaryDialog = () => {
-    this.setState({ showRemoveGlossaryDialog: false })
-  }
-
-  isEditorFocused = () => {
-    const cE = this.contentEditor.current
-    const gE = this.glossaryEditor.current
-    if (gE && gE.value.selection.isFocused) return true
-    // Return true even if cE is not focused because focus is moved when user click
-    // on Select or other Input element in Toolbox
-    if (cE) return true
-    return false
-  }
-
   componentDidMount() {
-    store.dispatch(setCurrentDraftLang(this.state.valueDocument.data.get('language') || 'en'))
+    store.dispatch(setCurrentDraftLang(this.props.storage.language))
+    store.dispatch(setCurrentDraftPermissions(Array.from(this.draftPermissions)))
   }
 
-  contentEditor: React.RefObject<Editor> = React.createRef()
-  glossaryEditor: React.RefObject<Editor> = React.createRef()
+  componentWillUnmount() {
+    store.dispatch(setCurrentDraftPermissions([]))
+  }
 
   public render() {
-    const { documentDbContent, documentDbGlossary, storage, draft } = this.props
-    const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox, showRemoveGlossaryDialog } = this.state
+    const { documentDbContent, documentDbGlossary, storage, draft, currentDraftLang } = this.props
+    const { valueDocument, valueGlossary, isGlossaryEmpty, editorStyle, showInfoBox } = this.state
     const permissions = draft.permissions || []
-    const viewPermission = permissions.length === 0 || permissions.every(p => p === 'view')
-    const isEditorFocused = this.isEditorFocused()
-    const showGlossaryToolbox = this.glossaryEditor.current &&
-      this.glossaryEditor.current.value.selection.isFocused
-    const showDocumentToolbox = this.contentEditor.current && !showGlossaryToolbox
-    const glossaryToggler = viewPermission ? null :
-      (
-        <div className="document__glossary-toggler">
-          {
-            isGlossaryEmpty ?
-              <Button clickHandler={this.addGlossary}>
-                {this.context.l10n.getString('draft-add-glossary')}
-              </Button>
-            :
-              <Button
-                type="danger"
-                clickHandler={this.showRemoveGlossaryDialog}
-              >
-                {this.context.l10n.getString('draft-remove-glossary')}
-              </Button>
-          }
-        </div>
-      )
+    const readOnly = permissions.length === 0 || permissions.every(p => p === 'view')
+
+    const editorLanguage = currentDraftLang || 'en'
 
     return (
       <Section>
@@ -302,7 +224,7 @@ class Draft extends React.Component<Props> {
           <div className="draft__controls">
             <StyleSwitcher onChange={this.handleStyleChange} />
             {
-              !viewPermission ?
+              !readOnly ?
                 <SaveButton
                   document={valueDocument}
                   glossary={valueGlossary}
@@ -317,113 +239,46 @@ class Draft extends React.Component<Props> {
         </Header>
         <div className="section__content draft">
           <div className={`draft__editor ${editorStyle}`}>
-            <div className="document">
-              <div className="document__content">
-                {
-                  showInfoBox ?
-                    <InfoBox onClose={this.hideInfoBox}>
-                      <Localized id="draft-style-switcher-info-box">
-                        This is experimental feature. There are visual differences between preview and original styles.
-                      </Localized>
-                    </InfoBox>
-                  : null
-                }
-                <Title draft={draft} />
-                <LocalizationLoader
-                  locale={valueDocument.data.get('language') || 'en'}
-                >
-                  <StorageContext storage={storage}>
-                    <Editor
-                      ref={this.contentEditor}
-                      className="editor editor--document"
-                      value={valueDocument}
-                      plugins={this.pluginsDocument}
-                      onChange={this.onChangeDocument}
-                      readOnly={viewPermission}
-                    />
-                    {
-                      isGlossaryEmpty ?
-                        glossaryToggler
-                      :
-                        <>
-                          { glossaryToggler }
-                          <Editor
-                            ref={this.glossaryEditor}
-                            className="editor editor--glossary"
-                            value={valueGlossary}
-                            plugins={this.pluginsGlossary}
-                            onChange={this.onChangeGlossary}
-                            readOnly={viewPermission}
-                          />
-                        </>
-                    }
-                  </StorageContext>
-                </LocalizationLoader>
-              </div>
+            <div className={`document ${readOnly ? 'document--readonly' : ''}`}>
               {
-                viewPermission ?
-                  null
-                :
-                  <div className="document__ui">
-                    <StorageContext storage={storage}>
-                      {
-                        showDocumentToolbox ?
-                          <ToolboxDocument
-                            editor={this.contentEditor.current as unknown as Editor_}
-                            value={valueDocument}
-                          />
-                        : null
-                      }
-                      {
-                        showGlossaryToolbox ?
-                          <ToolboxGlossary
-                            editor={this.glossaryEditor.current as unknown as Editor_}
-                            value={valueGlossary}
-                          />
-                        : null
-                      }
-                      {
-                        !isEditorFocused ?
-                          <div className="toolbox">
-                            <Localized id="editor-toolbox-no-selection">
-                              Please select editor to show toolbox.
-                            </Localized>
-                          </div>
-                        : null
-                      }
-                    </StorageContext>
-                  </div>
+                showInfoBox ?
+                  <InfoBox onClose={this.hideInfoBox}>
+                    <Localized id="draft-style-switcher-info-box">
+                      This is experimental feature. There are visual differences between preview and original styles.
+                    </Localized>
+                  </InfoBox>
+                : null
               }
+              <div className="document__header">
+                <Title draft={draft} />
+              </div>
+              <EditorDocument
+                documentDB={documentDbContent}
+                storage={storage}
+                value={valueDocument}
+                readOnly={readOnly}
+                draftPermissions={this.draftPermissions}
+                stepPermissions={this.stepPermissions}
+                language={editorLanguage}
+                onChange={this.onChangeDocument}
+              />
+              <EditorGlossary
+                documentDB={documentDbGlossary}
+                storage={storage}
+                value={valueGlossary}
+                readOnly={readOnly}
+                draftPermissions={this.draftPermissions}
+                stepPermissions={this.stepPermissions}
+                language={editorLanguage}
+                isGlossaryEmpty={isGlossaryEmpty}
+                onChange={this.onChangeGlossary}
+              />
             </div>
           </div>
         </div>
-        {
-          showRemoveGlossaryDialog ?
-            <Dialog
-              l10nId="draft-remove-glossary-dialog"
-              placeholder="Are you sure you want to remove glossary?"
-              onClose={this.closeRemoveGlossaryDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeRemoveGlossaryDialog}>
-                  <Localized id="draft-cancel">Cancel</Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.removeGlossary}
-                >
-                  <Localized id="draft-remove-glossary">
-                    Remove
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
       </Section>
     )
   }
 }
 
-export default Load(loader, [], 'draft-loading-message')(Draft)
+export default Load(loader, [], 'draft-loading-message')(connect(mapStateToProps)(Draft))

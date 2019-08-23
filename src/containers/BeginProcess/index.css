@@ -2,3 +2,16 @@
   font-weight: 700;
   margin-bottom: 5px;
 }
+
+.begin-process p {
+  margin-top: 10px;
+}
+
+.begin-process ul {
+  margin-bottom: 10px;
+  padding-left: 20px;
+}
+
+.begin-process li {
+  list-style: disc;
+}

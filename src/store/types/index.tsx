@@ -49,24 +49,29 @@ export type DraftShortInfo = { module: string, title: string }
 
 
 
-export type RequestInfoKind = 'success' | 'error' | 'warning' | 'info'
-export type RequestInfo = {
-  kind: RequestInfoKind
+export type AlertDataKind = 'success' | 'error' | 'warning' | 'info'
+
+export type AlertData = {
+  kind: AlertDataKind
   message: string
   arguments: object
 }
 
 export type AlertKind = 'alert' | 'notification'
 
-export type Alert = {
+export type AlertInfo = {
   id: number
   kind: 'alert'
-  data: RequestInfo
-} | {
+  data: AlertData
+}
+
+export type AlertNotification = {
   id: number
   kind: 'notification'
   data: Notification
 }
+
+export type Alert = AlertInfo | AlertNotification
 
 
 

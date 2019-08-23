@@ -1,4 +1,10 @@
-import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES, SET_PROCESSES } from 'src/store/constants'
+import {
+  SET_LOCALE,
+  SET_AVAILABLE_LOCALES,
+  SET_ROLES, SET_PROCESSES,
+  SHOW_CONFIRM_DIALOG,
+  CLOSE_CONFIRM_DIALOG,
+} from 'src/store/constants'
 import { Process, Role } from 'src/api'
 
 export interface SetLocale {
@@ -29,7 +35,23 @@ export interface SetProcesses {
   data: Map<number, Process>,
 }
 
-export type AppAction = SetLocale | SetAvailableLocales | SetRoles | SetProcesses
+export type ConfirmDialogOptions = {
+  title: string
+  content: string
+  buttons: {[key: string]: string}
+  callback: (key: string) => any
+}
+
+export interface ShowConfirmDialog {
+  type: SHOW_CONFIRM_DIALOG
+  data: ConfirmDialogOptions
+}
+
+export interface CloseConfirmDialog {
+  type: CLOSE_CONFIRM_DIALOG
+}
+
+export type AppAction = SetLocale | SetAvailableLocales | SetRoles | SetProcesses | ShowConfirmDialog | CloseConfirmDialog
 
 export const setLocale = (locale: string[]): SetLocale => ({
   type: SET_LOCALE,
@@ -64,4 +86,18 @@ export const fetchProcesses = (): FetchProcesses => {
 export const setProcesses = (processes: Map<number, Process>): SetProcesses => ({
   type: SET_PROCESSES,
   data: processes,
+})
+
+export const showConfirmDialog = (title: string, content: string, buttons: {[key: string]: string}, callback: (key: string) => any): ShowConfirmDialog => ({
+  type: SHOW_CONFIRM_DIALOG,
+  data: {
+    title,
+    content,
+    buttons,
+    callback,
+  }
+})
+
+export const closeConfirmDialog = (): CloseConfirmDialog => ({
+  type: CLOSE_CONFIRM_DIALOG,
 })

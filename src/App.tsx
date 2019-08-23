@@ -1,14 +1,14 @@
 import * as React from 'react'
-import  { Localized } from 'fluent-react/compat'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import { SecureRoute } from 'react-route-guard'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
 
+import Alerts from 'src/components/Alerts'
 import Navigation from 'src/components/Navigation'
 import Spinner from 'src/components/Spinner'
-import Notification from 'src/components/Notification'
+import ConfirmDialog from 'src/components/ConfirmDialog'
 
 import Dashboard from 'src/screens/app/Dashboard'
 import NotificationsCentre from 'src/screens/app/NotificationsCentre'
@@ -32,7 +32,6 @@ import * as teamActions from 'src/store/actions/Team'
 import * as notificationsActions from 'src/store/actions/Notifications'
 import * as booksActions from 'src/store/actions/Books'
 import * as modulesActions from 'src/store/actions/Modules'
-import * as alertsActions from 'src/store/actions/Alerts'
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers/index'
 
@@ -53,9 +52,6 @@ type Props = {
   modules: {
     modulesMap: types.ModulesMap
   }
-  alerts: {
-    alerts: types.Alert[]
-  }
   fetchUser: () => void
   fetchRoles: () => void
   fetchProcesses: () => void
@@ -63,23 +59,31 @@ type Props = {
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
-  removeAlert: (alert: types.Alert) => void
 }
 
-export const mapStateToProps = ({ user, notifications, team, booksMap, modules, alerts, app: { roles, processes } }: State) => {
+const mapStateToProps = ({
+  user,
+  notifications,
+  team,
+  booksMap,
+  modules,
+  app: {
+    roles,
+    processes,
+  },
+}: State) => {
   return {
     user,
     team,
     notifications,
     booksMap,
     modules,
-    alerts,
     roles,
     processes,
   }
 }
 
-export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap | alertsActions.AddAlert) => {
+const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchRoles: () => dispatch(appActions.fetchRoles()),
@@ -88,7 +92,6 @@ export const mapDispatchToProps = (dispatch: userActions.FetchUser | notificatio
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
-    removeAlert: (alert: types.Alert) => dispatch(alertsActions.removeAlert(alert))
   }
 }
 
@@ -125,7 +128,6 @@ class App extends React.Component<Props> {
 
   public render() {
     const { isLoading, user } = this.props.user
-    const { alerts } = this.props.alerts
 
     return (
       <Router>
@@ -153,45 +155,8 @@ class App extends React.Component<Props> {
                   <Route component={Error404}/>
                 </Switch>
               </main>
-              <div className="alerts">
-                {
-                  alerts.length > 0 ?
-                    <ul className="alerts__list">
-                      {
-                        alerts.map((alert: types.Alert) => {
-
-                          switch(alert.kind) {
-                            case 'alert':
-                              return (
-                                <li
-                                  key={alert.id}
-                                  className={`alerts__alert alert--${alert.data.kind}`}
-                                  onClick={() => this.props.removeAlert(alert)}
-                                >
-                                  <Localized id={alert.data.message} {...alert.data.arguments}>
-                                    Unknow alert
-                                  </Localized>
-                                </li>
-                              )
-                            case 'notification':
-                              return (
-                                <li
-                                  key={alert.id}
-                                  className="alerts__alert alert--notification"
-                                  onClick={() => this.props.removeAlert(alert)}
-                                >
-                                  <Notification
-                                    notification={alert.data}
-                                  />
-                                </li>
-                              )
-                          }
-                        })
-                      }
-                    </ul>
-                  : null
-                }
-              </div>
+              <Alerts />
+              <ConfirmDialog />
             </div>
           : <Spinner />
         }

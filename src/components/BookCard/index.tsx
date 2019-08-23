@@ -13,7 +13,7 @@ import Dialog from 'src/components/ui/Dialog'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import { IsLoading, BooksMap, RequestInfoKind } from 'src/store/types'
+import { IsLoading, BooksMap, AlertDataKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
@@ -26,7 +26,7 @@ type Props = {
   }
   isEditingUnlocked: boolean
   fetchBooksMap: () => void
-  addAlert: (kind: RequestInfoKind, message: string) => void
+  addAlert: (kind: AlertDataKind, message: string) => void
 }
 
 export const mapStateToProps = ({ booksMap }: State) => {
@@ -38,7 +38,7 @@ export const mapStateToProps = ({ booksMap }: State) => {
 export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
   return {
     fetchBooksMap: () => dispatch(fetchBooksMap()),
-    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 

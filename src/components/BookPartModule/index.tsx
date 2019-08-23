@@ -4,6 +4,7 @@ import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
 import * as api from 'src/api'
+import ProcessVersion from 'src/api/processversion'
 import { ProcessStructure } from 'src/api/process'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -86,8 +87,8 @@ class Module extends React.Component<Props> {
   }
 
   private showProcessDetails = async () => {
-    const processId = this.state.module!.process!.process
-    const process = this.props.processes.get(processId)!
+    const { process: processId, version } = this.state.module!.process!
+    const process = await ProcessVersion.load(processId, version)
     const structure = await process.structure()
     this.setState({ processStructure: structure })
   }
@@ -236,7 +237,7 @@ class Module extends React.Component<Props> {
               onClose={this.closeBeginProcessDialog}
             >
               <BeginProcess
-                module={mod}
+                modules={[mod]}
                 onClose={this.closeBeginProcessDialog}
               />
             </Dialog>

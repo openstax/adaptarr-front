@@ -3,9 +3,13 @@ import { Localized } from 'fluent-react/compat'
 import { Editor, Value, Text, Block, Inline, Document, Node, Range, Selection } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
 
 import * as api from 'src/api'
 import { FileDescription } from 'src/api/storage'
+import { SlotPermission } from 'src/api/process'
+import { ReferenceTarget } from 'src/store/types'
+import { State } from 'src/store/reducers'
 
 import LinkBox from '../LinkBox'
 import ToolGroup from '../ToolGroup'
@@ -16,8 +20,6 @@ import Icon from 'src/components/ui/Icon'
 import AssetList from 'src/containers/AssetList'
 import XrefTargetSelector from 'src/containers/XrefTargetSelector'
 
-import { ReferenceTarget } from 'src/store/types'
-
 import { OnToggle } from '../ToolboxDocument'
 
 export type Props = {
@@ -26,14 +28,23 @@ export type Props = {
   selectionParent: Document | Block | Inline | null,
   toggleState: boolean,
   onToggle: OnToggle,
+  draftPermissions: SlotPermission[]
 }
 
-export default class InsertTools extends React.Component<Props> {
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
+  return {
+    draftPermissions: currentDraftPermissions,
+  }
+}
+
+class InsertTools extends React.Component<Props> {
   figureModal: Modal | null = null
   xrefModal: Modal | null = null
   linkModal: Modal | null = null
 
   render() {
+    const { draftPermissions } = this.props
+
     return (
       <ToolGroup
         title="editor-tools-insert-title"
@@ -123,7 +134,7 @@ export default class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.insertSourceElement}
           className="toolbox__button--insert"
-          isDisabled={!this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
+          isDisabled={draftPermissions.includes('propose-changes') || !this.validateParents(['document', 'section', 'admonition', 'exercise_problem', 'exercise_solution', 'quotation'])}
         >
           <Icon size="small" name="file-code" />
           <Localized id="editor-tools-insert-source">
@@ -335,3 +346,5 @@ const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
   })
   editor.unwrapChildrenByPath(path)
 }
+
+export default connect(mapStateToProps)(InsertTools)

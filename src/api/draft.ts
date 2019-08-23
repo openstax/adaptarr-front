@@ -3,7 +3,7 @@ import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import Module from './module'
-import { SlotPermission, Link } from './process'
+import { SlotPermission, ProcessSingleStep } from './process'
 import { UserData } from './user'
 import { elevated } from './utils'
 
@@ -17,7 +17,7 @@ export type DraftData = {
   title: string,
   language: string,
   permissions?: SlotPermission[],
-  step?: DraftStep,
+  step?: ProcessSingleStep,
   books: string[],
 }
 
@@ -35,16 +35,6 @@ export type AdvanceResult = {
  * draft:process:finished if action has ended the process.
  */
 export type AdvanceCode = 'draft:process:advanced' | 'draft:process:finished'
-
-/**
- * Data from ProcessStep but without slots and with links only for current user.
- */
-export type DraftStep = {
-  id: number,
-  name: string,
-  links: Link[],
-  process: [number, number], // [ProcessID, VersionID]
-}
 
 /**
  * Details about the process this draft follows.
@@ -126,7 +116,7 @@ export default class Draft extends Base<DraftData> {
   /**
    * Information about the step this draft is currently in.
    */
-  step?: DraftStep
+  step?: ProcessSingleStep
 
   /**
    * All books ids in which this draft occurs.

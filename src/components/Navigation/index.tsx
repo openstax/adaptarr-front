@@ -82,7 +82,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               <Tooltip l10nId="navigation-dashboard" direction="right" isDisabled={!toggleSidebar}>
                 <NavLink exact to="/" activeClassName="active">
                   <span className="nav__content">
-                    <Icon name="dashboard" />
+                    <Icon size="medium" name="dashboard" />
                     <span className="nav__text">
                       <Localized id="navigation-dashboard">
                         Dashboard
@@ -96,7 +96,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               <Tooltip l10nId="navigation-notifications" isDisabled={!toggleSidebar}>
                 <NavLink to="/notifications" activeClassName="active">
                   <span className="nav__content">
-                    <Icon name="bell" />
+                    <Icon size="medium" name="bell" />
                     <span className="nav__text">
                       <Localized id="navigation-notifications">
                         Notifications
@@ -146,7 +146,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   isActive={(_, location) => isActive(location, ['books', 'modules'])}
                 >
                   <span className="nav__content">
-                    <Icon name="books" />
+                    <Icon size="medium" name="books" />
                     <span className="nav__text">
                       <Localized id="navigation-books">
                         Books
@@ -160,7 +160,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               <Tooltip l10nId="navigation-resources" direction="right" isDisabled={!toggleSidebar}>
                 <NavLink to="/resources" activeClassName="active">
                   <span className="nav__content">
-                    <Icon name="resources" />
+                    <Icon size="medium" name="resources" />
                     <span className="nav__text">
                       <Localized id="navigation-resources">
                         Resources
@@ -178,7 +178,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   isActive={(_, location) => isActive(location, ['users', 'settings'])}
                 >
                   <span className="nav__content">
-                    <Icon name="user"/>
+                    <Icon size="medium" name="user"/>
                     <span className="nav__text">
                       <Localized id="navigation-profile">
                         Your profile
@@ -212,7 +212,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
               <Tooltip l10nId="navigation-helpdesk" isDisabled={!toggleSidebar}>
                 <NavLink to="/helpdesk" activeClassName="active">
                   <span className="nav__content">
-                    <Icon name="help" size="medium" />
+                    <Icon size="medium" name="help" />
                     <span className="nav__text">
                       <Localized id="navigation-helpdesk">
                         Helpdesk
@@ -227,7 +227,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <Tooltip l10nId="navigation-invite" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/invitations" activeClassName="active">
                     <span className="nav__content">
-                      <Icon name="user-plus" />
+                      <Icon size="medium" name="user-plus" />
                       <span className="nav__text">
                         <Localized id="navigation-invite">
                           Invitations
@@ -243,7 +243,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <Tooltip l10nId="navigation-roles" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/roles" activeClassName="active">
                     <span className="nav__content">
-                      <Icon name="users" />
+                      <Icon size="medium" name="users" />
                       <span className="nav__text">
                         <Localized id="navigation-roles">
                           Manage roles
@@ -259,7 +259,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <Tooltip l10nId="navigation-processes" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/processes" activeClassName="active">
                     <span className="nav__content">
-                      <Icon name="paper-pen" />
+                      <Icon size="medium" name="paper-pen" />
                       <span className="nav__text">
                         <Localized id="navigation-processes">
                           Editing processes

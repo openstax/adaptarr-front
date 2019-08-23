@@ -1,12 +1,15 @@
 import { DraftsAction } from 'src/store/actions/Drafts'
-import { SET_CURRENT_DRAFT_LANG } from 'src/store/constants'
+import { SET_CURRENT_DRAFT_LANG, SET_CURRENT_DRAFT_PERMISSIONS } from 'src/store/constants'
+import { SlotPermission } from 'src/api/process'
 
 export interface State {
   currentDraftLang: string
+  currentDraftPermissions: SlotPermission[]
 }
 
 export const initialState: State = {
-  currentDraftLang: 'en'
+  currentDraftLang: 'en',
+  currentDraftPermissions: [],
 }
 
 export function reducer (state: State = initialState, action: DraftsAction) {
@@ -15,6 +18,11 @@ export function reducer (state: State = initialState, action: DraftsAction) {
       return {
         ...state,
         currentDraftLang: action.data,
+      }
+    case SET_CURRENT_DRAFT_PERMISSIONS:
+      return {
+        ...state,
+        currentDraftPermissions: action.data,
       }
   }
   return state

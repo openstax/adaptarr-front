@@ -6,8 +6,9 @@ import { Localized } from 'fluent-react/compat'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchModulesMap } from 'src/store/actions/Modules'
-import { Process, Module } from 'src/api'
+import { Process, Module, User } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
+import { elevate } from 'src/api/utils'
 import { State } from 'src/store/reducers'
 
 import ConfigureSlots from './ConfigureSlots'
@@ -16,7 +17,7 @@ import Button from 'src/components/ui/Button'
 import './index.css'
 
 type Props = {
-  module: Module
+  modules: Module[]
   processes: Map<number, Process>
   onClose: () => any
 }
@@ -43,7 +44,7 @@ class BeginProcess extends React.Component<Props> {
 
   public render() {
     const { process, structure } = this.state
-    const { processes } = this.props
+    const { processes, modules } = this.props
 
     return (
       <div className="begin-process">
@@ -66,6 +67,16 @@ class BeginProcess extends React.Component<Props> {
             />
           : null
         }
+        <p>
+          <strong>
+            <Localized id="begin-process-info">
+              You are about to start process for:
+            </Localized>
+          </strong>
+        </p>
+        <ul>
+          {modules.map(m => <li key={m.id}>{m.title}</li>)}
+        </ul>
         {
           process ?
             <Button clickHandler={this.startProcess}>
@@ -79,7 +90,7 @@ class BeginProcess extends React.Component<Props> {
     )
   }
 
-  private startProcess = () => {
+  private startProcess = async () => {
     const { process, slots } = this.state
     if (!process) return
 
@@ -88,18 +99,29 @@ class BeginProcess extends React.Component<Props> {
       slots: Array.from(slots.entries()),
     }
 
-    this.props.module.beginProcess(processData)
+    const session = await User.session()
+    if (!session.is_elevated) {
+      await elevate()
+    }
+
+    const errors: Module[] = []
+
+    await Promise.all(this.props.modules.map(m =>
+        m.beginProcess(processData)
+          .catch(() => errors.push(m))))
       .then(() => {
         store.dispatch(fetchModulesMap())
         store.dispatch(addAlert('success', 'begin-process-success', {
           process: process.name,
-          module: this.props.module.title,
+          success: this.props.modules.length - errors.length,
+          total: this.props.modules.length,
         }))
         this.props.onClose()
       })
-      .catch(e => {
-        store.dispatch(addAlert('error', 'begin-process-error', {details: e.response.data.error}))
-      })
+
+    errors.forEach(m => {
+      store.dispatch(addAlert('error', 'begin-process-error', {module: m.title}))
+    })
   }
 
   private handleProcessChange = async ({ value: process }: { value: Process, label: string}) => {

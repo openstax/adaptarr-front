@@ -18,7 +18,7 @@ import Input from 'src/components/ui/Input'
 import FilesUploader from 'src/containers/FilesUploader'
 
 import * as modulesActions from 'src/store/actions/Modules'
-import { RequestInfoKind } from 'src/store/types'
+import { AlertDataKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -26,7 +26,7 @@ type Props = {
   onModuleClick: (mod: api.Module) => any
   addModuleToMap: (mod: api.Module) => any
   removeModuleFromMap: (id: string) => any
-  addAlert: (kind: RequestInfoKind, message: string, args?: object) => void
+  addAlert: (kind: AlertDataKind, message: string, args?: object) => void
 }
 
 type SelectOption = { value: string, label: string }
@@ -47,7 +47,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addModuleToMap: (mod: api.Module) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
-    addAlert: (kind: RequestInfoKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 

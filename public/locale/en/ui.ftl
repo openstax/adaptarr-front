@@ -32,6 +32,10 @@ book-begin-process = Begin process
 
 book-begin-process-title = Configure and begin process
 
+book-begin-process-no-modules = All modules in this chapter are already assigned to the process.
+
+book-begin-process-no-modules-ok = Ok
+
 book-process-preview-title = Process details:
 
 book-process-cancel-title = Cancel process without saving changes
@@ -300,6 +304,28 @@ draft-add-glossary = Add glossary
 draft-remove-glossary = Remove
 
 draft-cancel = Cancel
+
+draft-load-incorrect-version-title = Document version mismatch
+
+draft-load-incorrect-version-info = Your version of the document is different from the
+  version saved on the server because the file has been modified on another computer
+  or browser. You can solve this problem by discarding unsaved changes and loading the
+  version from the server, or you can continue working with the current version.
+
+draft-load-incorrect-version-button-discard = Discard unsaved changes
+
+draft-load-incorrect-version-button-keep-working = Keep working on current version
+
+draft-save-incorrect-version-title = Document version mismatch
+
+draft-save-incorrect-version-content = Your version of the document is different from the
+  version saved on the server because the file has been modified on another computer
+  or browser. You can overwrite the document from the currently viewed version.
+  Refreshing the page in the browser will allow you to load the document saved on the server.
+
+draft-save-incorrect-version-button-cancel = Cancel
+
+draft-save-incorrect-version-button-overwrite = Overwrite document
 
 
 
@@ -885,20 +911,23 @@ process-preview-step-link =
 
 begin-process-select-process = Select process:
 
+begin-process-info = You are about to begin process for:
+
 begin-process-start = Start process
 
 # Alert displayed when process has been started.
 #
 # Variables:
 # - $process (string): name of process which was started.
-# - $module (string): title of module for which process was started.
-begin-process-success = Started process “{ $process }” for “{ $module }”.
+# - $success (number): number of modules for which process was started.
+# - $total (number): total number of modules for which process should be started.
+begin-process-success = Started process “{ $process }” for { $success }/{ $total } modules.
 
 # Alert displayed when process has not been started.
 #
 # Variables:
-# - $details (string): error details.
-begin-process-error = Couldn't start process. Details: { $details }.
+# - $module (string): title of module for which process wasn't started.
+begin-process-error = Couldn't start process for „{ $module }”.
 
 begin-process-assign-user-title = Select user for this slot.
 
@@ -991,6 +1020,15 @@ free-slots-error = Couldn't assign you to this slot. { $details ->
   [none] {""}
 }
 
+free-slots-confirm-title = Take slot
+
+free-slots-confirm-info = You will be assigned to given draft and process manager
+  will be informed that you are willing to work on this task.
+
+free-slots-cancel = Cancel
+
+free-slots-confirm = Confirm
+
 
 
 ## Reusable components - step changer
@@ -1036,6 +1074,28 @@ step-changer-save-advance = Save and advance
 # Variables:
 # - $details (string): error details.
 step-changer-save-advance-error = Couldn't save and advance to the next step. Details: { $details }.
+
+step-changer-dialog-suggestions = Please resolve all suggestions.
+
+# Variables:
+# - $document (number): number of suggestions inside document.
+# - $glossary (number): number of suggestions inside glossary.
+step-changer-dialog-suggestions-info = You have { $document } unresolved { $document ->
+  [1] suggestion
+ *[more] suggestions
+} in document and { $glossary } in glossary. Please resolve all of them before changing step.
+
+step-changer-dialog-suggestions-ok = Ok
+
+step-changer-dialog-wrong-target-title = Wrong target
+
+step-changer-dialog-wrong-target = We couldn't find target which you selected.
+  Please try again later or contact administrator.
+
+step-changer-dialog-wrong-target-suggestions = You have { $document } suggestions
+  in document and { $glossary } in glossary. You can either move this draft to the
+  step which contains permission for accepting changes or you have to resolve all
+  of them to move draft to other step.
 
 
 
@@ -1344,22 +1404,24 @@ editor-tools-save-alert-success = Draft has been saved successfully.
 # Alert displayed when document could not be saved.
 editor-tools-save-alert-error = Draft couldn't be saved.
 
-editor-tools-save-error-title = We couldn't save this document
+editor-tools-save-error-title = Backup
 
 # Variables:
 # - $error (string): error message
 # Fragments:
 # - <p> ... </p>: paragraph
 editor-tools-save-error-content =
-  <p>There was an error while saving this document. It's not your fault, it
-  should not have happened.</p>
-  <p>Please export document and send it to the administrator so he can fix it.</p>
-  <p>Error details: { $error }</p>
+  <p>The document could not be saved to the server, but you still have all of your work
+  securely stored in your browser on this computer.</p>
+  <p>Download the backup and return to working on the text. In this situation,
+  we recommend working on a file on the same computer.</p>
+  <p>If you want to transfer work to the next stage, send a backup by email
+  to helpdesk@openstax.pl</p>
 
-editor-tools-save-error-export = Export document
+editor-tools-save-error-export = Download backup
 
-editor-tools-save-export-title = Please send downloaded file to the administrator
-  so he can fix your problem.
+editor-tools-save-export-title = Send the downloaded file to the administrator if you want
+  to transfer the work to the next stage.
 
 editor-tools-save-export-ok = Ok
 
@@ -1702,3 +1764,48 @@ editor-tools-source-type = { $type ->
  *[inline] Inline
   [block] Block
 }
+
+
+
+## Editor toolboxes - suggestions
+
+# Variables:
+# - $counter (number): total number of suggestions.
+editor-tools-suggestions-title = Suggestions ({ $counter })
+
+editor-tools-suggestion-accept-all = Accept all
+
+editor-tools-suggestion-reject-all = Reject all
+
+editor-tools-suggestion-undefined = Undefined suggestion
+
+# Variables:
+# - $insert (string): text to insert.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-insert = <action>Add</action> <content>{ $insert }</content>
+
+# Variables:
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-delete = <action>Remove</action> <content>{ $delete }</content>
+
+# Variables:
+# - $insert (string): text to insert.
+# - $delete (string): text to delete.
+# Fragments:
+# - <action> ... </action>: action name.
+# - <content> ... </content>: content.
+editor-tools-suggestion-change =
+  <action>Replace</action> <content>{ $delete }</content> with <content>{ $insert }</content>
+
+
+
+## Reusable component - confirm dialog
+
+confirm-dialog-button-cancel = Cancel
+
+confirm-dialog-button-ok = Ok

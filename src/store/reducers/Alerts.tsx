@@ -16,24 +16,14 @@ export const initialState: State = {
 export function reducer (state: State = initialState, action: AlertsAction) {
   switch (action.type) {
     case PUSH_ALERT:
-      let alertsAfterAdd = state.alerts
-      alertsAfterAdd.push(action.data)
-      if (alertsAfterAdd.length > 2) {
-        alertsAfterAdd.shift()
-      }
       return {
         ...state,
-        alerts: alertsAfterAdd,
+        alerts: [...state.alerts, action.data],
       }
     case REMOVE_ALERT:
-      let alertsAfterRemove = state.alerts
-      const indexToRemove = alertsAfterRemove.map(el => el.id).indexOf(action.data.id)
-      if (indexToRemove || indexToRemove === 0) {
-        alertsAfterRemove.splice(indexToRemove, 1)
-      }
       return {
         ...state,
-        alerts: alertsAfterRemove,
+        alerts: state.alerts.filter(a => a.id !== action.data.id),
       }
   }
   return state

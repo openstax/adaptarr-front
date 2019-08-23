@@ -5,15 +5,16 @@ import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
+import BeginProcess from 'src/containers/BeginProcess'
 import ModulesPicker from 'src/containers/ModulesPicker'
-
-import { ModuleStatus } from 'src/store/types'
 
 type Props = {
   book: api.Book
@@ -24,34 +25,51 @@ type Props = {
 }
 
 class Group extends React.Component<Props> {
-
   state: {
     showEditGroup: boolean
     showAddGroup: boolean
     showRemoveGroup: boolean
     showAddModule: boolean
     groupNameInput: string
+    showBeginProcess: boolean
+    modules: api.Module[] | undefined
+    showNoModules: boolean
   } = {
     showEditGroup: false,
     showAddGroup: false,
     showRemoveGroup: false,
     showAddModule: false,
     groupNameInput: '',
+    showBeginProcess: false,
+    modules: undefined,
+    showNoModules: false,
   }
 
-  private getModStatuses = (group: api.BookPart = this.props.item): ModuleStatus[] => {
-    let modStatuses: ModuleStatus[] = []
+  private showBeginProcessDialog = async () => {
+    let modules: api.Module[] = []
 
-    group.parts!.forEach(part => {
-      // TODO: push real module status
+    for (let part of this.props.item.parts!) {
       if (part.kind === 'module') {
-        modStatuses.push('ready')
-      } else if (part.kind === 'group') {
-        modStatuses = modStatuses.concat(this.getModStatuses(part))
+        const mod = await part.module()
+        if (mod && !mod.process) {
+          modules.push(mod)
+        }
       }
-    })
+    }
 
-    return modStatuses
+    if (modules.length) {
+      this.setState({ showBeginProcess: true, modules })
+    } else {
+      this.setState({ showNoModules: true, modules: undefined })
+    }
+  }
+
+  private closeBeginProcessDialog = () => {
+    this.setState({ showBeginProcess: false, modules: undefined })
+  }
+
+  private closeNoModules = () => {
+    this.setState({ showNoModules: false })
   }
 
   private updateGroupNameInput = (val: string) => {
@@ -195,6 +213,9 @@ class Group extends React.Component<Props> {
       showRemoveGroup,
       showAddModule,
       groupNameInput,
+      showBeginProcess,
+      modules,
+      showNoModules,
     } = this.state
     const { isEditingUnlocked, collapseIcon, item } = this.props
 
@@ -233,6 +254,13 @@ class Group extends React.Component<Props> {
                   </Localized>
                 </Button>
               </LimitedUI>
+            : null
+          }
+          {
+            item.parts!.length ?
+              <Button clickHandler={this.showBeginProcessDialog}>
+                <Localized id="book-begin-process">Begin process</Localized>
+              </Button>
             : null
           }
         </span>
@@ -299,6 +327,40 @@ class Group extends React.Component<Props> {
               onClose={this.closeAddModuleDialog}
             >
               <ModulesPicker onModuleClick={this.handleModuleClick}/>
+            </Dialog>
+          : null
+        }
+        {
+          showBeginProcess && modules ?
+            <Dialog
+              l10nId="book-begin-process-title"
+              placeholder="Configure and begin process"
+              size="medium"
+              className="bookpart__item--module begin-process-dialog"
+              onClose={this.closeBeginProcessDialog}
+            >
+              <BeginProcess
+                modules={modules}
+                onClose={this.closeBeginProcessDialog}
+              />
+            </Dialog>
+          : null
+        }
+        {
+          showNoModules ?
+            <Dialog
+              l10nId="book-begin-process-no-modules"
+              placeholder="All modules in this chapter are already assigned to the process."
+              size="medium"
+              onClose={this.closeNoModules}
+            >
+              <div className="dialog__buttons dialog__buttons--center">
+                <Button clickHandler={this.closeNoModules}>
+                  <Localized id="book-begin-process-no-modules-ok">
+                    Ok
+                  </Localized>
+                </Button>
+              </div>
             </Dialog>
           : null
         }
