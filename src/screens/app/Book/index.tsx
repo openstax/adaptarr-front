@@ -136,6 +136,10 @@ class Book extends React.Component<Props> {
     })
   }
 
+  private toggleCollapseGroup = (num: number) => {
+    this.nestable.current!.toggleCollapseGroup(num)
+  }
+
   private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
     const { selectedProcess, searchInput, isEditingUnlocked, book } = this.state
 
@@ -156,6 +160,7 @@ class Book extends React.Component<Props> {
               isEditingUnlocked={isEditingUnlocked}
               modulesMap={this.props.modules.modulesMap}
               showStatsFor={selectedProcess}
+              onTitleClick={this.toggleCollapseGroup}
             />
           : <BookPartModule
               item={new api.BookPart((item as ModuleData), book!)}
@@ -363,6 +368,8 @@ class Book extends React.Component<Props> {
     this.fetchBook()
   }
 
+  nestable = React.createRef<Nestable>()
+
   public render() {
     const {
       isLoading,
@@ -427,6 +434,7 @@ class Book extends React.Component<Props> {
             !isLoading ?
               <>
                 <Nestable
+                  ref={this.nestable}
                   isDisabled={!isEditingUnlocked}
                   items={parts[0].parts as api.BookPart[]}
                   className="book-collection"

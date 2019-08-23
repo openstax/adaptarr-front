@@ -21,7 +21,8 @@ type Props = {
   isEditingUnlocked: boolean
   modulesMap: Map<string, api.Module>
   showStatsFor: api.Process | null
-  afterAction: () => any
+  afterAction: () => void
+  onTitleClick: (num: number) => void
 }
 
 class Group extends React.Component<Props> {
@@ -219,6 +220,12 @@ class Group extends React.Component<Props> {
     this.props.afterAction()
   }
 
+  private onTitleClick = () => {
+    if (!this.props.isEditingUnlocked) {
+      this.props.onTitleClick(this.props.item.number)
+    }
+  }
+
   componentDidUpdate(prevProps: Props) {
     const prevTitle = prevProps.item.title
     const title = this.props.item.title
@@ -250,7 +257,7 @@ class Group extends React.Component<Props> {
         <span className="bookpart__icon">
           {collapseIcon}
         </span>
-        <span className="bookpart__title">
+        <span className="bookpart__title" onClick={this.onTitleClick}>
           {
             isEditingUnlocked ?
               <EditableText

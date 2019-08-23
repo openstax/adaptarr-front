@@ -36,7 +36,7 @@
   margin-top: 0;
 }
 
-.book-collection .nestable .nestable-item-0 > .nestable-list {
+.book-collection.nestable .nestable-item-0 > .nestable-list {
   padding-left: 0;
   margin-left: 20px;
 }
@@ -104,8 +104,11 @@
 .bookpart__title {
   font-size: 16px;
   display: inline-flex;
+  flex: 1;
+  height: 30px;
   align-items: center;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .bookpart__item--module .bookpart__title {
