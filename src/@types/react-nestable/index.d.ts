@@ -24,5 +24,8 @@ declare module 'react-nestable' {
     onChange?: (newItems: Item[], changedItem: Item, realPathTo: number[]) => any
   }
 
-  export default class Nestable extends React.Component<NestableProps> {}
+  export default class Nestable extends React.Component<NestableProps> {
+    public collapse: (val: 'NONE' | 'ALL' | (string | number)[]) => void
+    public toggleCollapseGroup: (num: number) => void
+  }
 }

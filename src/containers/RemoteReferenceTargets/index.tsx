@@ -98,15 +98,11 @@ class RemoteReferenceTargets extends React.Component<Props> {
         <div className={`remote-reference-targets ${targets ? 'hide' : ''}`}>
           {
             books.map(parts => (
-              <Nestable
+              <NestableCustomized
                 key={parts.title + parts.number}
-                isDisabled={true}
-                items={[parts]}
-                className="book-collection"
-                childrenProp="parts"
-                renderItem={this.renderItem}
-                renderCollapseIcon={this.renderCollapseIcon}
-                collapsed
+                parts={[parts]}
+                modules={this.props.modules}
+                onModuleClick={this.selectRefSource}
               />
             ))
           }
@@ -135,8 +131,12 @@ class RemoteReferenceTargets extends React.Component<Props> {
   }
 
   unselectRefSource = () => this.setState({ selected: null })
+}
 
-  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
+
+const NestableCustomized = ({ parts, modules, onModuleClick }: { parts: api.BookPart[], modules: ModulesMap, onModuleClick: (ev: React.MouseEvent) => void }) => {
+  const renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
@@ -145,27 +145,42 @@ class RemoteReferenceTargets extends React.Component<Props> {
               <span className="bookpart__icon">
                 {collapseIcon}
               </span>
-              <div className="bookpart__title">
+              <div
+                className="bookpart__title"
+                onClick={() => nestable.current!.toggleCollapseGroup(item.number)}
+              >
                 {item.title}
               </div>
             </>
           :
             <RemoteSource
-              module={this.props.modules.get(item.id)!}
-              onClick={this.selectRefSource}
+              module={modules.get(item.id)!}
+              onClick={onModuleClick}
             />
         }
       </div>
     )
   }
 
-  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+  const renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
     if (isCollapsed) {
       return <Icon name="arrow-right"/>
     }
-
     return <Icon name="arrow-down" />
   }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
+  const nestable = React.createRef<Nestable>()
+
+  return (
+    <Nestable
+      ref={nestable}
+      isDisabled={true}
+      items={parts}
+      className="book-collection"
+      childrenProp="parts"
+      renderItem={renderItem}
+      renderCollapseIcon={renderCollapseIcon}
+      collapsed
+    />
+  )
+}
