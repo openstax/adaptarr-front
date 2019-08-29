@@ -30,23 +30,23 @@ class Invitations extends React.Component<Props> {
   state: {
     emailValue: string
     isEmailVaild: boolean
-    langCode: string
+    language: typeof LANGUAGES[0]
     role: Role | null
   } = {
     emailValue: '',
     isEmailVaild: false,
-    langCode: LANGUAGES[0].code,
+    language: LANGUAGES[0],
     role: null,
   }
 
   private sendInvitation = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { emailValue: email, isEmailVaild, langCode, role } = this.state
+    const { emailValue: email, isEmailVaild, language, role } = this.state
 
     if (!isEmailVaild) return
 
-    Invitation.create({ email, role: role ? role.id : null, language: langCode })
+    Invitation.create({ email, role: role ? role.id : null, language: language.code })
       .then(() => {
         this.setState({ emailValue: '', role: null })
         this.input!.unTouch()
@@ -70,12 +70,12 @@ class Invitations extends React.Component<Props> {
     }
   }
 
-  private setLanguage = ({ code }: typeof LANGUAGES[0]) => {
-    this.setState({ langCode: code })
+  private setLanguage = ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
+    this.setState({ language: value })
   }
 
-  private handleRoleChange = (role: Role) => {
-    this.setState({ role })
+  private handleRoleChange = ({ value }: { value: Role, label: string }) => {
+    this.setState({ role: value })
   }
 
   input: Input | null
@@ -83,8 +83,7 @@ class Invitations extends React.Component<Props> {
   private setInputRef = (el: Input | null) => el && (this.input = el)
 
   public render() {
-    const { emailValue, isEmailVaild, langCode, role } = this.state
-    const language = LANGUAGES.find(lang => lang.code === langCode)
+    const { emailValue, isEmailVaild, language, role } = this.state
 
     return (
       <div className="container">
@@ -105,16 +104,16 @@ class Invitations extends React.Component<Props> {
                 />
                 <Select
                   className="react-select"
-                  value={language}
+                  value={{ value: language, label: language.name }}
+                  options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
+                  formatOptionLabel={option => option.label}
                   onChange={this.setLanguage}
-                  options={LANGUAGES}
-                  getOptionLabel={getOptionLabel}
                 />
                 <Select
                   className="react-select"
-                  value={role}
-                  options={this.props.roles}
-                  formatOptionLabel={(role) => role.name}
+                  value={role ? { value: role, label: role.name } : null}
+                  options={this.props.roles.map(role => ({ value: role, label: role.name}))}
+                  formatOptionLabel={option => option.label}
                   onChange={this.handleRoleChange}
                 />
                 <Localized id="invitation-send" attrs={{ value: true }}>
@@ -127,10 +126,6 @@ class Invitations extends React.Component<Props> {
       </div>
     )
   }
-}
-
-function getOptionLabel({ name }: typeof LANGUAGES[0]) {
-  return name
 }
 
 export default connect(mapStateToProps)(Invitations)

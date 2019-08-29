@@ -294,8 +294,10 @@ form input[type="submit"] {
   border-radius: 17px;
   border: none;
   color: var(--font-dark);
+  overflow: hidden;
 }
 
 .react-select > div > div {
   justify-content: center;
+  padding: 0;
 }
