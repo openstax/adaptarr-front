@@ -11,8 +11,8 @@
   opacity: 1;
   border: 10px solid transparent;
   border-radius: 50%;
-  border-top: 10px solid var(--main-decoration);
-  border-bottom: 10px solid var(--secondary-decoration);
+  border-top: 10px solid var(--dark-bg);
+  border-bottom: 10px solid var(--dark-bg);
   width: 80px;
   height: 80px;
   -webkit-animation: spin 2s linear infinite; /* Safari */
