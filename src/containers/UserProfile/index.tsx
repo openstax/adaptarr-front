@@ -280,8 +280,8 @@ class UserProfile extends React.Component<Props> {
     })
   }
 
-  private handleRoleChange = (role: api.Role) => {
-    this.setState({ showChangeRoleDialog: true, newRole: role })
+  private handleRoleChange = ({ value }: { value: api.Role, label: string }) => {
+    this.setState({ showChangeRoleDialog: true, newRole: value })
   }
 
   private handleRoleUnassign = () => {
@@ -400,9 +400,9 @@ class UserProfile extends React.Component<Props> {
                       <LimitedUI permissions="user:assign-role">
                         <Select
                           className="react-select"
-                          value={currentRole}
-                          options={this.props.roles}
-                          formatOptionLabel={(role) => role.name}
+                          value={currentRole ? { value: currentRole, label: currentRole.name } : null}
+                          options={this.props.roles.map(role => ({ value: role, label: role.name }))}
+                          formatOptionLabel={option => option.label}
                           onChange={this.handleRoleChange}
                         />
                         <Button
