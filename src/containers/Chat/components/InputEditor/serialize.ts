@@ -111,7 +111,7 @@ function inline(bytes: number[], node: Inline) {
     break
 
   case 'mention':
-    const user = node.data.get('user')
+    const user = node.data.get('userId')
     leb128(body, user)
     frame(bytes, FRAME_MENTION, body)
     break

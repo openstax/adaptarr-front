@@ -1,5 +1,7 @@
 import { Editor, SlateError, Block } from 'slate'
 
+import { CONTEXT_ANNOTATION_TYPE } from '../InputEditor'
+
 function normalizeDocument(editor: Editor, error: SlateError) {
   switch (error.code) {
   case 'child_min_invalid':
@@ -28,5 +30,10 @@ export default {
     mention: {
       isVoid: true,
     },
+  },
+  annotations: {
+    [CONTEXT_ANNOTATION_TYPE]: {
+      isAtomic: true,
+    }
   },
 }

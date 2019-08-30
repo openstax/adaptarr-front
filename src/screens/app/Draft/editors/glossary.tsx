@@ -56,7 +56,7 @@ class EditorGlossary extends React.Component<Props> {
     Persistence({ db: this.props.documentDB }),
   ]
 
-  onChange = ({ value }: { value: Value }) => {
+  onChange = ({ value }: Editor_) => {
     this.props.onChange(value)
   }
 
