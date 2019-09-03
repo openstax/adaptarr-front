@@ -54,6 +54,9 @@ class EditorDocument extends React.Component<Props> {
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
+      media: {
+        inlines: SUGGESTION_TYPES,
+      },
       text: {
         code: {
           inlines: SUGGESTION_TYPES,
