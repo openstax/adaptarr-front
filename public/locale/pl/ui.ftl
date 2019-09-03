@@ -1323,7 +1323,6 @@ error-boundary-title = Coś poszło nie tak
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
-  <p>To nie Twoja wina, ten błąd nie powinien wystąpić.</p>
   <p>Aby zapobiec uszkodzeniu dokumentu przez błędy, wyłączyliśmy edycję, dopóki
   nie przeładujesz strony. Nie martw się o swoją pracę. Została ona automatycznie
   zapisana i zostanie przywrócona po ponownym załadowaniu.</p>

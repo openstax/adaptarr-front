@@ -1324,7 +1324,6 @@ error-boundary-title = Something went wrong
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
-  <p>It's not your fault, it should not have happened.</p>
   <p>To prevent errors from corrupting your document we disabled editing until
   you reload the page. Don't worry about your work; it has been auto-saved and
   will be restored after reload.</p>
