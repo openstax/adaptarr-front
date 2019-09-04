@@ -92,7 +92,7 @@ class DraftInfo extends React.Component<Props> {
                     {
                       draft.permissions.map(p => {
                         return (
-                          <span className="draft-info__permission">
+                          <span key={p} className="draft-info__permission">
                             <Localized
                               id="draft-info-permission"
                               $permission={p}
