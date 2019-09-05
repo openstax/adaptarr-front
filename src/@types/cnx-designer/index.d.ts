@@ -147,6 +147,9 @@ declare module 'cnx-designer' {
     term?: {
       inlines: string[],
     },
+    footnote?: {
+      inlines: string[],
+    },
   }
 
   export function Document(options?: {

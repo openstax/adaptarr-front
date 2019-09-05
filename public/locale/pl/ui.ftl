@@ -1977,6 +1977,16 @@ editor-tools-suggestion-change =
 
 
 
+## Editor toolboxes - footnote
+
+editor-tools-footnote-title = Przypis
+
+editor-tools-footnote-show = Pokaż treść
+
+editor-tools-footnote-hide = Ukryj treść
+
+
+
 ## Reusable component - confirm dialog
 
 confirm-dialog-button-cancel = Anuluj

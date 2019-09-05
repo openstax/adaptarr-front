@@ -26,22 +26,17 @@ export default class FootnoteTools extends React.Component<Props> {
         toggleState={this.props.toggleState}
         onToggle={() => this.props.onToggle('footnoteTools')}
       >
-        <span className="footnote__title">
-          <Localized id="editor-tools-footnote-toggle">
-            Show / Hide footnote' text:
-          </Localized>
-        </span>
         {
           collapsed ?
             <Button clickHandler={this.showText}>
               <Localized id="editor-tools-footnote-show">
-                Show
+                Show content
               </Localized>
             </Button>
           :
             <Button clickHandler={this.hideText}>
               <Localized id="editor-tools-footnote-hide">
-                Hide
+                Hide content
               </Localized>
             </Button>
         }
