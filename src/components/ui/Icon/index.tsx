@@ -4,7 +4,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'arrow-down' | 'arrow-left' | 'arrow-right' | 'bell' | 'book' | 'books' | 'chat' | 'check' | 'check-simple' | 'close' | 'code' | 'cog' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file' | 'file-code' | 'flask' | 'folder' | 'help' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'menu' | 'minus' | 'outdent' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'quote' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'www',
+  name: 'arrow-down' | 'arrow-left' | 'arrow-right' | 'bell' | 'book' | 'books' | 'chat' | 'check' | 'check-simple' | 'close' | 'code' | 'cog' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file' | 'file-code' | 'flask' | 'folder' | 'footnote' | 'help' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'menu' | 'minus' | 'outdent' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'quote' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'www',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -93,6 +93,10 @@ const icon = ({ size, name }: Props) => {
       case 'folder':
         return (
           <svg width="25" height="21.373" version="1.1" viewBox="0 0 6.6146 5.6549" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -291.35)"><path transform="matrix(1.037 0 0 1.037 29.174 -28.295)" d="m-26.584 308.23-1.3105 2e-3c-0.13078 0-0.23828 0.10748-0.23828 0.23828v4.9727c0 6e-3 0.0012 7e-3 2e-3 0.0117l2e-3 -0.0176c-0.01273 0.0543 5e-3 0.1065 0.0332 0.14453 0.02734 0.0368 0.06407 0.063 0.10547 0.0801 5.67e-4 2.6e-4 0.0014-2.6e-4 2e-3 0 8.57e-4 3.4e-4 0.0011 2e-3 2e-3 2e-3 0.02825 0.0124 0.05954 0.0195 0.0918 0.0195h4.7949c0.01066 0 0.01682-3e-3 0.02539-6e-3 0.11272-0.0134 0.20268-0.10715 0.20898-0.22266l-0.0039 0.0215a0.080483 0.080483 0 0 0 2e-3 -4e-3l1.1016-2.7598c0.03026-0.0759-6e-3 -0.15542-0.05469-0.19922-0.04873-0.0438-0.11043-0.0684-0.17774-0.0684h-0.86523v-1.1758c0-0.13203-0.10831-0.24024-0.24024-0.24024h-2.3967l-1.0352-0.7832a0.080483 0.080483 0 0 0-0.04883-0.0156zm-0.82227 0.68945h0.60547l1.0391 0.78711a0.080483 0.080483 0 0 0 0.04883 0.0156h2.123c0.02923 0 0.05273 0.0233 0.05273 0.0566v0.66602h-3.252c-0.06789 0-0.12664 0.0357-0.16211 0.0781-0.03547 0.0424-0.05507 0.0898-0.07227 0.13282l-0.4375 1.0938v-2.7734c0-0.0319 0.02547-0.0566 0.05469-0.0566z"/></g></svg>
+        )
+      case 'footnote':
+        return (
+          <svg width="20" height="20" version="1.1" viewBox="0 0 5.2917 5.2917" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -291.71)"><path transform="matrix(.26458 0 0 .26458 0 291.71)" d="m10 0c-0.97321 0-1.7578 0.78458-1.7578 1.7578v4.002l-2.8301-2.8301c-0.68818-0.68818-1.7962-0.68814-2.4844 0-0.68818 0.68818-0.68818 1.7962 0 2.4844l2.8301 2.8301h-4.002c-0.97321 0-1.7559 0.78263-1.7559 1.7559 0 0.97319 0.78265 1.7578 1.7559 1.7578h4.002l-2.8301 2.8301c-0.68818 0.68818-0.68818 1.7962 0 2.4844 0.68815 0.68818 1.7962 0.68818 2.4844 0l2.8301-2.8301v4.002c0 0.97319 0.7846 1.7559 1.7578 1.7559 0.97321 0 1.7559-0.78267 1.7559-1.7559v-4.002l2.8301 2.8301c0.68815 0.68818 1.7962 0.68818 2.4844 0 0.68815-0.68814 0.68815-1.7962 0-2.4844l-2.8301-2.8301h4.002c0.97321 0 1.7578-0.78462 1.7578-1.7578 0-0.97323-0.7846-1.7559-1.7578-1.7559h-4.002l2.8301-2.8301c0.68815-0.68814 0.68815-1.7962 0-2.4844-0.68817-0.68818-1.7962-0.68814-2.4844 0l-2.8301 2.8301v-4.002c0-0.97323-0.78264-1.7578-1.7559-1.7578z"/></g></svg>
         )
       case 'help':
         return (
