@@ -9,6 +9,7 @@ import SeeAlsoTools from '../SeeAlsoTools'
 import SuggestionsTools from '../SuggestionTools'
 import TermTools from '../TermTools'
 import GlossaryTools from '../GlossaryTools'
+import { onMouseDown } from '../ToolboxDocument'
 
 export type Props = {
   value: Value,
@@ -88,7 +89,7 @@ class Toolbox extends React.Component<Props> {
     }
 
     return (
-      <div className="toolbox" onMouseDown={ev => ev.preventDefault()}>
+      <div className="toolbox" onMouseDown={onMouseDown}>
         <FormatTools
           editor={editor}
           value={value}
