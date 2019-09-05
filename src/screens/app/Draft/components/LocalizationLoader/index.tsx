@@ -7,6 +7,7 @@ import { LocalizationProvider, ReactLocalization } from 'fluent-react/compat'
 import { MANIFEST } from 'src/l10n'
 
 import Load from 'src/components/Load'
+import Spinner from 'src/components/Spinner'
 
 type Props = {
   locale: string,
@@ -58,4 +59,12 @@ class LocalizationLoader extends React.Component<Props> {
   }
 }
 
-export default Load(loader, ['locale'])<{}>(LocalizationLoader)
+export default Load(loader, ['locale'], undefined, undefined, EditorLoader)<{}>(LocalizationLoader)
+
+function EditorLoader() {
+  return (
+    <div className="editor">
+      <Spinner />
+    </div>
+  )
+}
