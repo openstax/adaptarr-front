@@ -26,7 +26,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       if (!selection.isCollapsed) {
         // User want to replace current selection with new text
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         editor.insertInline(inlineProps)
         break
       }
@@ -52,7 +52,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
     case 'deleteCharBackward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToStartOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -110,7 +110,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
     case 'deleteCharForward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -155,7 +155,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       // When cutting text
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToFocus()
+        editor.moveToEnd()
       }
       break
 
