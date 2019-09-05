@@ -18,6 +18,8 @@ book-view-title-loading = Ładowanie
 book-search-input =
   .placeholder = Szukaj
 
+book-statistics-choose-process = Statystyki dla procesu:
+
 book-button-add-module = Dodaj moduł
 
 book-button-add-group = Dodaj rozdział
@@ -25,8 +27,9 @@ book-button-add-group = Dodaj rozdział
 book-button-remove = Usuń
 
 # Variable:
-# - $name (string): process name.
-book-in-process = Proces: { $name }
+# - $process (string): process name.
+# - $step (string): step name.
+book-in-process = { $step } w { $process }
 
 book-begin-process = Rozpocznij proces
 
@@ -121,11 +124,12 @@ book-edit-alert-success = Książka została zaktualizowana.
 
 
 
-## Screens - book view - reordering parts
+## Screens - book view - book parts
 
-book-part-moving-locked = Przenoszenie modułów jest zablokowane.
-
-book-part-moving-unlocked = Teraz możesz przenosić moduły.
+# Variables:
+# - $step (string): name of step
+# - $counter (string): number of modules in current step
+book-part-step-statistic = { $step }: { $counter }
 
 # Alert displayed when a module or a group was moved to a different location.
 #
@@ -911,8 +915,6 @@ process-preview-step-link =
 
 ## Reusable components - begin process
 
-begin-process-select-process = Wybierz proces:
-
 begin-process-info = Za chwilę rozpoczenisz proces dla:
 
 begin-process-start = Rozpocznij proces
@@ -1321,7 +1323,6 @@ error-boundary-title = Coś poszło nie tak
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
-  <p>To nie Twoja wina, ten błąd nie powinien wystąpić.</p>
   <p>Aby zapobiec uszkodzeniu dokumentu przez błędy, wyłączyliśmy edycję, dopóki
   nie przeładujesz strony. Nie martw się o swoją pracę. Została ona automatycznie
   zapisana i zostanie przywrócona po ponownym załadowaniu.</p>
@@ -1368,6 +1369,15 @@ editable-text-error-min-length = Liczba znaków musi wynosić przynajmniej { $mi
 # Variables:
 # - $max (number): number of maximum allowed charaters
 editable-text-error-max-length = Liczba znaków może wynosić maksymalnie { $max }.
+
+
+
+## Reusable components - process selector
+
+process-selector-title = Wybierz process:
+
+process-selector-placeholder =
+  .placeholder = Wybierz...
 
 
 

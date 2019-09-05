@@ -6294,7 +6294,7 @@ react-lifecycles-compat@^3.0.4:
 
 "react-nestable@https://github.com/PiotrKozlowski/react-nestable.git":
   version "1.1.0"
-  resolved "https://github.com/PiotrKozlowski/react-nestable.git#e3f39bdc3069a139baa53ba912be5461e7c3eb5c"
+  resolved "https://github.com/PiotrKozlowski/react-nestable.git#2ceb2657daabfe671ca91ac65b6794c0a103e87d"
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"

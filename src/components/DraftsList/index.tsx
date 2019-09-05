@@ -144,6 +144,8 @@ class DraftsList extends React.Component<Props> {
     this.fetchBooks()
   }
 
+  nestable = React.createRef<Nestable>()
+
   public render() {
     const { isLoading, books } = this.state
 
@@ -165,14 +167,7 @@ class DraftsList extends React.Component<Props> {
                               {b.name}
                             </div>
                             <ul className="list">
-                              <Nestable
-                                isDisabled={true}
-                                items={b.parts}
-                                className="book-collection"
-                                childrenProp="parts"
-                                renderItem={this.renderItem}
-                                renderCollapseIcon={this.renderCollapseIcon}
-                              />
+                              <NestableCustomized parts={b.parts} />
                             </ul>
                           </>
                         :
@@ -210,46 +205,64 @@ class DraftsList extends React.Component<Props> {
       </div>
     )
   }
-
-  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
-  return (
-      <div className={`bookpart__item bookpart__item--${item.kind}`}>
-        {
-          item.kind === 'group' ?
-            <>
-              <span className="bookpart__icon">
-                {collapseIcon}
-              </span>
-              <div className="bookpart__title">
-                {item.title}
-              </div>
-            </>
-          :
-            <>
-            <Link
-              to={`/drafts/${item.id}/edit`}
-              className="draftsList__draft-title"
-            >
-              {item.title}
-            </Link>
-            <Button to={`/drafts/${item.id}`}>
-              <Localized id="dashboard-drafts-details">
-                Details
-              </Localized>
-            </Button>
-          </>
-        }
-      </div>
-    )
-  }
-
-  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
-    if (isCollapsed) {
-      return <Icon name="arrow-right"/>
-    }
-
-    return <Icon name="arrow-down" />
-  }
 }
 
 export default connect(mapStateToProps)(DraftsList)
+
+const NestableCustomized = ({ parts }: { parts: api.BookPart[] }) => {
+  const renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+    return (
+        <div className={`bookpart__item bookpart__item--${item.kind}`}>
+          {
+            item.kind === 'group' ?
+              <>
+                <span className="bookpart__icon">
+                  {collapseIcon}
+                </span>
+                <div
+                  className="bookpart__title"
+                  onClick={() => nestable.current!.toggleCollapseGroup(item.number)}
+                >
+                  {item.title}
+                </div>
+              </>
+            :
+              <>
+              <Link
+                to={`/drafts/${item.id}/edit`}
+                className="draftsList__draft-title"
+              >
+                {item.title}
+              </Link>
+              <Button to={`/drafts/${item.id}`}>
+                <Localized id="dashboard-drafts-details">
+                  Details
+                </Localized>
+              </Button>
+            </>
+          }
+        </div>
+      )
+    }
+
+  const renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+    if (isCollapsed) {
+      return <Icon name="arrow-right"/>
+    }
+    return <Icon name="arrow-down" />
+  }
+
+  const nestable = React.createRef<Nestable>()
+
+  return (
+    <Nestable
+      ref={nestable}
+      isDisabled={true}
+      items={parts}
+      className="book-collection"
+      childrenProp="parts"
+      renderItem={renderItem}
+      renderCollapseIcon={renderCollapseIcon}
+    />
+  )
+}

@@ -20,14 +20,12 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 
 type Props = {
   locale: string[],
-  availableLocales: string[],
   user: User,
 }
 
-const mapStateToProps = ({ app, user: { user } }: State) => ({
-  locale: app.locale,
-  availableLocales: app.availableLocales,
-  user: user,
+const mapStateToProps = ({ app: { locale }, user: { user } }: State) => ({
+  locale,
+  user,
 })
 
 class Settings extends React.Component<Props> {
@@ -47,8 +45,8 @@ class Settings extends React.Component<Props> {
     newPassword2: '',
   }
 
-  private handleLanguageChange = (selectedLanguage: typeof LANGUAGES[0]) => {
-    this.setState({ showChangeLanguage: true, newSelectedLanguage: selectedLanguage })
+  private handleLanguageChange = ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
+    this.setState({ showChangeLanguage: true, newSelectedLanguage: value })
   }
 
   private changeLanguage = () => {
@@ -95,7 +93,7 @@ class Settings extends React.Component<Props> {
       })
       .catch(e => {
         store.dispatch(addAlert('error', 'settings-change-password-alert-error'))
-        console.log(e)
+        console.error(e)
       })
   }
 
@@ -113,7 +111,7 @@ class Settings extends React.Component<Props> {
   }
 
   public render() {
-    const { locale, availableLocales } = this.props
+    const { locale } = this.props
     const {
       arePasswordsValid,
       showChangeLanguage,
@@ -123,10 +121,6 @@ class Settings extends React.Component<Props> {
     } = this.state
 
     const language = LANGUAGES.find(lang => lang.code === locale[0])
-
-    const languageOptions = availableLocales.map(locale =>
-      LANGUAGES.find(lang => lang.code === locale)
-    )
 
     return (
       <section className="section--wrapper">
@@ -163,10 +157,10 @@ class Settings extends React.Component<Props> {
             </h2>
             <Select
               className="react-select"
-              value={language}
+              value={language ? { value: language, label: language.name } : null}
               onChange={this.handleLanguageChange}
-              options={languageOptions}
-              getOptionLabel={getOptionLabel}
+              options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
+              formatOptionLabel={option => option.label}
             />
             <h2 className="settings__title">
               <Localized id="settings-section-password">
@@ -208,7 +202,3 @@ class Settings extends React.Component<Props> {
 }
 
 export default connect(mapStateToProps)(Settings)
-
-function getOptionLabel({ name }: typeof LANGUAGES[0]) {
-  return name
-}

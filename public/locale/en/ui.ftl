@@ -18,6 +18,8 @@ book-view-title-loading = Loading
 book-search-input =
   .placeholder = Search
 
+book-statistics-choose-process = Statistics for process:
+
 book-button-add-module = Add module
 
 book-button-add-group = Add group
@@ -25,8 +27,9 @@ book-button-add-group = Add group
 book-button-remove = Remove
 
 # Variable:
-# - $name (string): process name.
-book-in-process = Process: { $name }
+# - $process (string): process name.
+# - $step (string): step name.
+book-in-process = { $step } in { $process }
 
 book-begin-process = Begin process
 
@@ -120,11 +123,12 @@ book-edit-alert-success = Book was updated successfully.
 
 
 
-## Screens - book view - reordering parts
+## Screens - book view - book parts
 
-book-part-moving-locked = Moving modules is locked.
-
-book-part-moving-unlocked = Now you can move modules.
+# Variables:
+# - $step (string): name of step
+# - $counter (string): number of modules in current step
+book-part-step-statistic = { $step }: { $counter }
 
 # Alert displayed when a module or a group was moved to a different location.
 #
@@ -909,8 +913,6 @@ process-preview-step-link =
 
 ## Reusable components - begin process
 
-begin-process-select-process = Select process:
-
 begin-process-info = You are about to begin process for:
 
 begin-process-start = Start process
@@ -1322,7 +1324,6 @@ error-boundary-title = Something went wrong
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
-  <p>It's not your fault, it should not have happened.</p>
   <p>To prevent errors from corrupting your document we disabled editing until
   you reload the page. Don't worry about your work; it has been auto-saved and
   will be restored after reload.</p>
@@ -1369,6 +1370,15 @@ editable-text-error-min-length = Minimum { $min } characters required.
 # Variables:
 # - $max (number): number of maximum allowed charaters
 editable-text-error-max-length = Maximum { $max } characters allowed.
+
+
+
+## Reusable components - process selector
+
+process-selector-title = Select process:
+
+process-selector-placeholder =
+  .placeholder = Select...
 
 
 

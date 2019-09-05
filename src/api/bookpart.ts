@@ -2,7 +2,7 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import Book from './book'
-import Module from './module'
+import Module, { ModuleProcess } from './module'
 import { elevated } from './utils'
 
 export type Kind = 'module' | 'group'
@@ -12,6 +12,8 @@ export type ModuleData = {
   number: number,
   title: string,
   id: string,
+  process: ModuleProcess | null,
+  language: string,
 }
 
 export type GroupData = {
@@ -55,6 +57,18 @@ export default class BookPart extends Base<PartData> {
    * {@code 'module'}).
    */
   id?: string
+
+  /**
+   * Process data of module for this part (if {@link #kind} is
+   * {@code 'module'}).
+   */
+  process?: ModuleProcess | null
+
+  /**
+   * Language of this modules for this part (if {@link #kind} is
+   * {@code 'module'}).
+   */
+  language?: string
 
   /**
    * List of parts which make up this group (only if {@link #kind} is

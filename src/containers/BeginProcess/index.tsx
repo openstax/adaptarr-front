@@ -1,6 +1,4 @@
 import * as React from 'react'
-import Select from 'react-select'
-import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
@@ -9,27 +7,21 @@ import { fetchModulesMap } from 'src/store/actions/Modules'
 import { Process, Module, User } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
-import { State } from 'src/store/reducers'
 
 import ConfigureSlots from './ConfigureSlots'
+import ProcessSelector from 'src/components/ProcessSelector'
 import Button from 'src/components/ui/Button'
 
 import './index.css'
 
 type Props = {
   modules: Module[]
-  processes: Map<number, Process>
   onClose: () => any
+  afterUpdate?: (errors: Module[]) => void
 }
 
 export type SlotId = number
 export type UserId = number
-
-const mapStateToProps = ({ app: { processes } }: State) => {
-  return {
-    processes,
-  }
-}
 
 class BeginProcess extends React.Component<Props> {
   state: {
@@ -44,19 +36,11 @@ class BeginProcess extends React.Component<Props> {
 
   public render() {
     const { process, structure } = this.state
-    const { processes, modules } = this.props
+    const { modules } = this.props
 
     return (
       <div className="begin-process">
-        <h3>
-          <Localized id="begin-process-select-process">
-            Select process:
-          </Localized>
-        </h3>
-        <Select
-          className="react-select"
-          value={process !== null ? {value: process, label: process.name} : null}
-          options={Array.from(processes.values()).map(p => {return {value: p, label: p.name}})}
+        <ProcessSelector
           onChange={this.handleProcessChange}
         />
         {
@@ -122,9 +106,13 @@ class BeginProcess extends React.Component<Props> {
     errors.forEach(m => {
       store.dispatch(addAlert('error', 'begin-process-error', {module: m.title}))
     })
+
+    if (this.props.afterUpdate) {
+      this.props.afterUpdate(errors)
+    }
   }
 
-  private handleProcessChange = async ({ value: process }: { value: Process, label: string}) => {
+  private handleProcessChange = async (process: Process) => {
     const structure = await process.structure()
     this.setState({ process, structure })
   }
@@ -134,4 +122,4 @@ class BeginProcess extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(BeginProcess)
+export default BeginProcess

@@ -123,6 +123,10 @@ class Module extends React.Component<Props> {
     this.closeCancelProcess()
   }
 
+  private afterBeginProcess = () => {
+    this.props.afterAction()
+  }
+
   componentDidUpdate(prevProps: Props) {
     if (this.props.item !== prevProps.item) {
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
@@ -181,16 +185,17 @@ class Module extends React.Component<Props> {
           }
           <LimitedUI permissions="editing-process:manage">
             {
-              mod && mod.process ?
+              item.process ?
                 <Button
                   className="bookpart__process"
                   clickHandler={this.showProcessDetails}
                 >
                   <Localized
                     id="book-in-process"
-                    $name={processes.get(mod.process.process)!.name}
+                    $process={processes.get(item.process.process)!.name}
+                    $step={item.process.step.name}
                   >
-                    Process: [process name]
+                    {`{ $step } in { $process }`}
                   </Localized>
                 </Button>
               :
@@ -239,6 +244,7 @@ class Module extends React.Component<Props> {
               <BeginProcess
                 modules={[mod]}
                 onClose={this.closeBeginProcessDialog}
+                afterUpdate={this.afterBeginProcess}
               />
             </Dialog>
           : null

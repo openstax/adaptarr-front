@@ -5,8 +5,6 @@ import store from 'src/store'
 import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 
-import confirmDialog from 'src/helpers/confirmDialog'
-
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
@@ -21,12 +19,14 @@ type Props = {
   item: api.BookPart
   collapseIcon: any
   isEditingUnlocked: boolean
-  afterAction: () => any
+  modulesMap: Map<string, api.Module>
+  showStatsFor: api.Process | null
+  afterAction: () => void
+  onTitleClick: (num: number) => void
 }
 
 class Group extends React.Component<Props> {
   state: {
-    showEditGroup: boolean
     showAddGroup: boolean
     showRemoveGroup: boolean
     showAddModule: boolean
@@ -35,7 +35,6 @@ class Group extends React.Component<Props> {
     modules: api.Module[] | undefined
     showNoModules: boolean
   } = {
-    showEditGroup: false,
     showAddGroup: false,
     showRemoveGroup: false,
     showAddModule: false,
@@ -43,6 +42,36 @@ class Group extends React.Component<Props> {
     showBeginProcess: false,
     modules: undefined,
     showNoModules: false,
+  }
+
+  private getModStatuses = (group: api.BookPart = this.props.item) => {
+    // Map<step name, number of modules in this step>
+    let modStatuses: Map<string, number> = new Map()
+
+    if (!this.props.showStatsFor) return modStatuses
+
+    for (const part of group.parts!) {
+      if (part.kind === 'module') {
+        if (part.process && part.process.process === this.props.showStatsFor.id) {
+          let counter = 1
+          if (modStatuses.has(part.process.step.name)) {
+            counter = modStatuses.get(part.process.step.name)! + 1
+          }
+          modStatuses.set(part.process.step.name, counter)
+        }
+      } else if (part.kind === 'group') {
+        const map = this.getModStatuses(part)
+
+        for (let [stepName, counter] of map.entries()) {
+          if (modStatuses.has(stepName)) {
+            counter += modStatuses.get(stepName)!
+          }
+          modStatuses.set(stepName, counter)
+        }
+      }
+    }
+
+    return modStatuses
   }
 
   private showBeginProcessDialog = async () => {
@@ -91,14 +120,6 @@ class Group extends React.Component<Props> {
       .catch((e) => {
         store.dispatch(addAlert('error', e.message))
       })
-  }
-
-  private cancelEditBookName = () => {
-    this.setState({ groupNameInput: this.props.item.title })
-  }
-
-  private handleChangeGroupName = (value: string) => {
-    this.setState({ groupNameInput: value })
   }
 
   private handleAddGroup = (e: React.FormEvent) => {
@@ -195,6 +216,16 @@ class Group extends React.Component<Props> {
     this.setState({ showAddModule: false })
   }
 
+  private afterBeginProcess = () => {
+    this.props.afterAction()
+  }
+
+  private onTitleClick = () => {
+    if (!this.props.isEditingUnlocked) {
+      this.props.onTitleClick(this.props.item.number)
+    }
+  }
+
   componentDidUpdate(prevProps: Props) {
     const prevTitle = prevProps.item.title
     const title = this.props.item.title
@@ -217,14 +248,16 @@ class Group extends React.Component<Props> {
       modules,
       showNoModules,
     } = this.state
-    const { isEditingUnlocked, collapseIcon, item } = this.props
+    const { isEditingUnlocked, collapseIcon, item, showStatsFor } = this.props
+    const partsNotInProcess = item.parts!.some(p => p.kind === 'module' && !p.process)
+    const modStatuses = this.getModStatuses()
 
     return (
       <>
         <span className="bookpart__icon">
           {collapseIcon}
         </span>
-        <span className="bookpart__title">
+        <span className="bookpart__title" onClick={this.onTitleClick}>
           {
             isEditingUnlocked ?
               <EditableText
@@ -257,11 +290,23 @@ class Group extends React.Component<Props> {
             : null
           }
           {
-            item.parts!.length ?
-              <Button clickHandler={this.showBeginProcessDialog}>
-                <Localized id="book-begin-process">Begin process</Localized>
-              </Button>
-            : null
+            showStatsFor ?
+              modStatuses.size ?
+                Array.from(modStatuses.entries()).map(([stepName, counter]) => {
+                  return (
+                      <span key={stepName} className="bookpart__step">
+                        <Localized id="book-part-step-statistic" $step={stepName} $counter={counter}>
+                          {`{ $step }: { $counter }`}
+                        </Localized>
+                      </span>
+                    )
+                })
+              : null
+            : partsNotInProcess ?
+                <Button clickHandler={this.showBeginProcessDialog}>
+                  <Localized id="book-begin-process">Begin process</Localized>
+                </Button>
+              : null
           }
         </span>
         {
@@ -342,6 +387,7 @@ class Group extends React.Component<Props> {
               <BeginProcess
                 modules={modules}
                 onClose={this.closeBeginProcessDialog}
+                afterUpdate={this.afterBeginProcess}
               />
             </Dialog>
           : null
