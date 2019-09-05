@@ -301,3 +301,7 @@ form input[type="submit"] {
   justify-content: center;
   padding: 0;
 }
+
+.react-select > div > div > div:first-child {
+  overflow: visible;
+}
