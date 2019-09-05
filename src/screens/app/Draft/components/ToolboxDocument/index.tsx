@@ -110,7 +110,7 @@ class Toolbox extends React.Component<Props> {
     }
 
     return (
-      <div className="toolbox" onMouseDown={this.onMouseDown}>
+      <div className="toolbox" onMouseDown={onMouseDown}>
         <FormatTools editor={editor} value={value} selectionParent={selectionParent} />
         <InsertTools
           editor={editor}
@@ -195,14 +195,6 @@ class Toolbox extends React.Component<Props> {
         />
       </div>
     )
-  }
-
-  // We do not want to lose selection from Editor when clicking on toolbox.
-  private onMouseDown = (ev: React.MouseEvent<HTMLDivElement>) => {
-    const target = ev.target as HTMLElement
-    if (target.tagName !== 'INPUT') {
-      ev.preventDefault()
-    }
   }
 
   // Find Lowest Common Ancestor for start and end of selection.
@@ -311,3 +303,11 @@ class Toolbox extends React.Component<Props> {
 }
 
 export default Toolbox
+
+// We do not want to lose selection from Editor when clicking on toolbox.
+export const onMouseDown = (ev: React.MouseEvent<HTMLDivElement>) => {
+  const target = ev.target as HTMLElement
+  if (target.tagName !== 'INPUT') {
+    ev.preventDefault()
+  }
+}
