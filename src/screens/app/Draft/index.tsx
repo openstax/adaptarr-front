@@ -49,7 +49,7 @@ type Props = {
 ;KeyUtils.resetGenerator()
 KeyUtils.setGenerator(() => uuid.v4())
 
-async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
+async function loader({ match: { params: { id } } }: { match: match<{ id: string }>, history: History }) {
   let [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
     Promise.race([
       Promise.all([
@@ -62,10 +62,16 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     api.Draft.load(id),
   ])
 
-  let document, glossary
+  const draftPermissions = draft.permissions || []
+  const readOnly = draftPermissions.length === 0 || draftPermissions.every(p => p === 'view')
+
+  if (readOnly) {
+    history.replaceState(undefined, '', `/drafts/${id}/view`)
+  }
 
   const index = await storage.read()
-  const dirty = documentDbContent.dirty || documentDbGlossary.dirty
+  const dirty = !readOnly && (documentDbContent.dirty || documentDbGlossary.dirty)
+  let { document, glossary, language: draftLang } = index.deserialize()
 
   // XXX: Some users might have local changes saved with the old temporary
   // versioning scheme. Remove check for
@@ -98,34 +104,32 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     }
   }
 
-  const deserialize = index.deserialize()
-
-  if (deserialize && storage.language !== deserialize.language) {
-    storage.setLanguage(deserialize.language)
+  if (storage.language !== draftLang) {
+    storage.setLanguage(draftLang)
   }
 
-  if (documentDbContent.dirty) {
-    document = await documentDbContent.restore()
-  } else {
-    document = deserialize!.document
-    await documentDbContent.save(document, index.version)
-  }
-
-  if (documentDbGlossary.dirty) {
-    glossary = await documentDbGlossary.restore()
-  } else {
-    glossary = deserialize!.glossary
-    // Reset glossary if it have invalid content
-    if (glossary.document.nodes.get(0).type !== 'definition') {
-      glossary = Value.fromJS({
-        object: 'value',
-        document: {
-          object: 'document',
-          nodes: [],
-        }
-      })
+  if (!readOnly) {
+    if (documentDbContent.dirty) {
+      document = await documentDbContent.restore()
+    } else {
+      await documentDbContent.save(document, index.version)
     }
-    await documentDbGlossary.save(glossary, index.version)
+
+    if (documentDbGlossary.dirty) {
+      glossary = await documentDbGlossary.restore()
+    } else {
+      // Reset glossary if it have invalid content
+      if (glossary.document.nodes.get(0).type !== 'definition') {
+        glossary = Value.fromJS({
+          object: 'value',
+          document: {
+            object: 'document',
+            nodes: [],
+          }
+        })
+      }
+      await documentDbGlossary.save(glossary, index.version)
+    }
   }
 
   const { modules: { modulesMap } } = store.getState()

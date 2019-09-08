@@ -24,7 +24,7 @@ import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 type Props = {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
-  documentDB: DocumentDB
+  documentDB: DocumentDB | undefined
   readOnly: boolean
   storage: Storage
   value: Value
@@ -60,7 +60,7 @@ class EditorDocument extends React.Component<Props> {
       },
     }),
     Shortcuts(),
-    Persistence({ db: this.props.documentDB }),
+    this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
   onChange = ({ value }: { value: Value }) => {

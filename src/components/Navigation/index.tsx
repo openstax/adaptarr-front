@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
@@ -7,7 +5,6 @@ import { Localized } from 'fluent-react/compat'
 
 import { Notification } from 'src/api'
 
-import Header from 'src/components/Header'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
@@ -17,6 +14,8 @@ import Tooltip from 'src/components/ui/Tooltip'
 
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
+
+import './index.css'
 
 type Props = {
   notifications: {
