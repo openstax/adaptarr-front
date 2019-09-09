@@ -12,6 +12,7 @@ import { SlotPermission } from 'src/api/process'
 import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxDocument from '../components/ToolboxDocument'
 
+import Docref from '../plugins/Docref'
 import StorageContext from '../plugins/Storage'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
@@ -39,6 +40,7 @@ class EditorDocument extends React.Component<Props> {
 
   plugins = [
     I10nPlugin,
+    Docref,
     XrefPlugin,
     TablesPlugin,
     SourceElements({ inlines: SUGGESTION_TYPES }),

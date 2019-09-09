@@ -1435,6 +1435,8 @@ reference-target-list-tab-remote = Inne dokumenty
 
 reference-target-list-tab-remote-not-assigned = Nie przypisany do żadnej książki
 
+reference-target-link-module = Połącz z tym modułem
+
 
 
 ## Reusable components - error boundary
@@ -1719,7 +1721,9 @@ editor-tools-list-style = { $style ->
 
 ## Editor toolboxes - references
 
-editor-tools-xref-title = Odnośnik
+editor-tools-xref-title = Odnośnik do elementu
+
+editor-tools-docref-title = Odnośnik do modułu
 
 editor-tools-xref-case = Wybierz przypadek
 

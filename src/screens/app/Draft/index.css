@@ -132,6 +132,11 @@
   background-color: var(--red)
 }
 
+.editor a {
+  cursor: pointer;
+  color: blue;
+}
+
 .editor p {
   margin-top: 0.6em;
   margin-bottom: 0.6em;

@@ -12,6 +12,7 @@ import ListTools from '../ListTools'
 import SectionTools from '../SectionTools'
 import SuggestionsTools from '../SuggestionTools'
 import XrefTools from '../XrefTools'
+import DocrefTools from '../DocrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SourceTools from '../SourceTools'
@@ -24,7 +25,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'suggestionsTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
+type ToolName = 'insertTools' | 'suggestionsTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -36,6 +37,7 @@ type State = {
   termTools: boolean
   linkTools: boolean
   xrefTools: boolean
+  docrefTools: boolean
   sourceTools: boolean
   listTools: boolean
   quotationTools: boolean
@@ -55,6 +57,7 @@ const DEFAULT_TOGGLERS = {
   termTools: true,
   linkTools: true,
   xrefTools: true,
+  docrefTools: true,
   sourceTools: true,
   listTools: false,
   quotationTools: false,
@@ -143,6 +146,12 @@ class Toolbox extends React.Component<Props> {
           editor={editor}
           value={value}
           toggleState={this.state.xrefTools}
+          onToggle={this.toggleTool}
+        />
+        <DocrefTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.docrefTools}
           onToggle={this.toggleTool}
         />
         <SourceTools
@@ -250,6 +259,9 @@ class Toolbox extends React.Component<Props> {
         break
       case 'xref':
         newState.xrefTools = true
+        break
+      case 'docref':
+        newState.docrefTools = true
         break
       case 'source_element':
         newState.sourceTools = true
