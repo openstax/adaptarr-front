@@ -1,30 +1,30 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import * as api from 'src/api'
-import getCurrentLng from 'src/helpers/getCurrentLng'
-
-import LimitedUI from 'src/components/LimitedUI'
-import ModulesList from 'src/components/ModulesList'
-import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
-import Input from 'src/components/ui/Input'
-
-import FilesUploader from 'src/containers/FilesUploader'
+import { Module } from 'src/api'
 
 import * as modulesActions from 'src/store/actions/Modules'
 import { AlertDataKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/Alerts'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+import getCurrentLng from 'src/helpers/getCurrentLng'
+
+import LimitedUI from 'src/components/LimitedUI'
+import ModulesList from 'src/components/ModulesList'
+import Input from 'src/components/ui/Input'
+
+import FilesUploader from 'src/containers/FilesUploader'
+
+import './index.css'
+
 type Props = {
-  onModuleClick: (mod: api.Module) => any
-  addModuleToMap: (mod: api.Module) => any
+  onModuleClick: (mod: Module) => any
+  addModuleToMap: (mod: Module) => any
   removeModuleFromMap: (id: string) => any
   addAlert: (kind: AlertDataKind, message: string, args?: object) => void
 }
@@ -45,31 +45,26 @@ const mapStateToProps = ({ modules }: State) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    addModuleToMap: (mod: api.Module) => dispatch(modulesActions.addModuleToMap(mod)),
+    addModuleToMap: (mod: Module) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
     addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
   }
 }
 
 class ModuleList extends React.Component<Props> {
-
   state: {
     moduleTitleValue: string
     moduleLanguage: SelectOption
-    moduleToDelete: api.Module | null
-    showRemoveModule: boolean
     files: File[]
     filterInput: string
   } = {
     moduleTitleValue: '',
     moduleLanguage: LANGUAGES.find(lng => lng.value === getCurrentLng('iso')) || LANGUAGES[0],
-    moduleToDelete: null,
-    showRemoveModule: false,
     files: [],
     filterInput: '',
   }
 
-  private handleModuleClick = (mod: api.Module) => {
+  private handleModuleClick = (mod: Module) => {
     this.props.onModuleClick(mod)
   }
 
@@ -86,7 +81,7 @@ class ModuleList extends React.Component<Props> {
 
     const { moduleTitleValue: title, files, moduleLanguage: lang } = this.state
 
-    ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title, lang.value))
+    ;(files.length ? Module.createFromZip(title, files[0]) : Module.create(title, lang.value))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
@@ -105,19 +100,22 @@ class ModuleList extends React.Component<Props> {
     this.props.addAlert('error', error.message)
   }
 
-  private showRemoveModuleDialog = (mod: api.Module) => {
-    this.setState({ showRemoveModule: true, moduleToDelete: mod })
+  private showRemoveModuleDialog = async (mod: Module) => {
+    const res = await confirmDialog({
+      title: 'module-list-delete-module-title',
+      buttons: {
+        cancel: 'module-list-delete-module-cancel',
+        confirm: 'module-list-delete-module-confirm',
+      },
+      showCloseButton: false,
+    })
+
+    if (res === 'confirm') {
+      this.removeModule(mod)
+    }
   }
 
-  private closeRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: false, moduleToDelete: null })
-  }
-
-  private removeModule = () => {
-    const mod = this.state.moduleToDelete
-
-    if (!mod) return
-
+  private removeModule = (mod: Module) => {
     mod.delete()
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
@@ -126,7 +124,6 @@ class ModuleList extends React.Component<Props> {
       .catch(e => {
         this.props.addAlert('error', e.message)
       })
-    this.closeRemoveModuleDialog()
   }
 
   private handleFilterInput = (val: string) => {
@@ -136,28 +133,10 @@ class ModuleList extends React.Component<Props> {
   }
 
   public render() {
-    const { moduleTitleValue, moduleLanguage, showRemoveModule } = this.state
+    const { moduleTitleValue, moduleLanguage } = this.state
 
     return (
       <div className="modulesList">
-        {
-          showRemoveModule ?
-            <Dialog
-              l10nId="module-list-delete-module-title"
-              placeholder="Deleting module is permanent."
-              onClose={this.closeRemoveModuleDialog}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.removeModule}>
-                  <Localized id="module-list-delete-module-confirm">Delete</Localized>
-                </Button>
-                <Button type="danger" clickHandler={this.closeRemoveModuleDialog}>
-                  <Localized id="module-list-delete-module-cancel">Cancel</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
         <LimitedUI permissions="module:edit">
           <div className="modulesList__new">
             <form onSubmit={this.addNewModule}>

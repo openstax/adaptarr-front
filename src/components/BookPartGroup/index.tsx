@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import store from 'src/store'
 import * as api from 'src/api'
+
+import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+
+import confirmDialog from 'src/helpers/confirmDialog'
 
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
@@ -28,20 +31,16 @@ type Props = {
 class Group extends React.Component<Props> {
   state: {
     showAddGroup: boolean
-    showRemoveGroup: boolean
     showAddModule: boolean
     groupNameInput: string
     showBeginProcess: boolean
     modules: api.Module[] | undefined
-    showNoModules: boolean
   } = {
     showAddGroup: false,
-    showRemoveGroup: false,
     showAddModule: false,
     groupNameInput: '',
     showBeginProcess: false,
     modules: undefined,
-    showNoModules: false,
   }
 
   private getModStatuses = (group: api.BookPart = this.props.item) => {
@@ -89,16 +88,19 @@ class Group extends React.Component<Props> {
     if (modules.length) {
       this.setState({ showBeginProcess: true, modules })
     } else {
-      this.setState({ showNoModules: true, modules: undefined })
+      this.setState({ modules: undefined })
+      await confirmDialog({
+        title: 'book-begin-process-no-modules',
+        buttons: {
+          ok: 'book-begin-process-no-modules-ok',
+        },
+        buttonsPosition: 'center',
+      })
     }
   }
 
   private closeBeginProcessDialog = () => {
     this.setState({ showBeginProcess: false, modules: undefined })
-  }
-
-  private closeNoModules = () => {
-    this.setState({ showNoModules: false })
   }
 
   private updateGroupNameInput = (val: string) => {
@@ -158,7 +160,7 @@ class Group extends React.Component<Props> {
     this.setState({ showAddGroup: false })
   }
 
-  private handleRemoveGroup = () => {
+  private removeGroup = () => {
     const { item } = this.props
 
     item.delete()
@@ -169,15 +171,21 @@ class Group extends React.Component<Props> {
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
-    this.closeRemoveGroupDialog()
   }
 
-  private showRemoveGroupDialog = () => {
-    this.setState({ showRemoveGroup: true })
-  }
+  private showRemoveGroupDialog = async () => {
+    const res = await confirmDialog({
+      title: 'book-remove-group-dialog-title',
+      buttons: {
+        cancel: 'book-remove-group-cancel',
+        confirm: 'book-remove-group-confirm',
+      },
+      showCloseButton: false,
+    })
 
-  private closeRemoveGroupDialog = () => {
-    this.setState({ showRemoveGroup: false })
+    if (res === 'confirm') {
+      this.removeGroup()
+    }
   }
 
   private handleAddModule = (selectedModule: api.Module) => {
@@ -241,12 +249,10 @@ class Group extends React.Component<Props> {
   public render() {
     const {
       showAddGroup,
-      showRemoveGroup,
       showAddModule,
       groupNameInput,
       showBeginProcess,
       modules,
-      showNoModules,
     } = this.state
     const { isEditingUnlocked, collapseIcon, item, showStatsFor } = this.props
     const partsNotInProcess = item.parts!.some(p => p.kind === 'module' && !p.process)
@@ -341,29 +347,6 @@ class Group extends React.Component<Props> {
           : null
         }
         {
-          showRemoveGroup ?
-            <Dialog
-              l10nId="book-remove-group-dialog-title"
-              placeholder="Remove this group and all its contents?"
-              size="medium"
-              onClose={this.closeRemoveGroupDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeRemoveGroupDialog}>
-                  <Localized id="book-remove-group-cancel">Cancel</Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.handleRemoveGroup}
-                >
-                  <Localized id="book-remove-group-confirm">Delete</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
-        {
           showAddModule ?
             <Dialog
               l10nId="book-group-add-module-dialog-title"
@@ -389,24 +372,6 @@ class Group extends React.Component<Props> {
                 onClose={this.closeBeginProcessDialog}
                 afterUpdate={this.afterBeginProcess}
               />
-            </Dialog>
-          : null
-        }
-        {
-          showNoModules ?
-            <Dialog
-              l10nId="book-begin-process-no-modules"
-              placeholder="All modules in this chapter are already assigned to the process."
-              size="medium"
-              onClose={this.closeNoModules}
-            >
-              <div className="dialog__buttons dialog__buttons--center">
-                <Button clickHandler={this.closeNoModules}>
-                  <Localized id="book-begin-process-no-modules-ok">
-                    Ok
-                  </Localized>
-                </Button>
-              </div>
             </Dialog>
           : null
         }

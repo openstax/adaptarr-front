@@ -78,14 +78,17 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
   // all users should have migrated to the new version.
   if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
-    const res = await confirmDialog(
-        'draft-load-incorrect-version-title',
-        'draft-load-incorrect-version-info',
-        {
+    const res = await confirmDialog({
+        title: 'draft-load-incorrect-version-title',
+        content: 'draft-load-incorrect-version-info',
+        buttons: {
           discard: 'draft-load-incorrect-version-button-discard',
           keepWorking: 'draft-load-incorrect-version-button-keep-working',
-        }
-      )
+        },
+        showCloseButton: false,
+        closeOnBgClick: false,
+        closeOnEsc: false,
+      })
 
     switch (res) {
       case 'discard': {

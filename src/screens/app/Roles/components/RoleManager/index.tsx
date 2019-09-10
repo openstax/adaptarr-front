@@ -1,17 +1,18 @@
-import './index.css'
-
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import Role, { Permission } from 'src/api/role'
+
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+
 import Permissions from 'src/components/Permissions'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
-import Dialog from 'src/components/ui/Dialog'
+
+import './index.css'
 
 type Props = {
   role: Role
@@ -19,29 +20,34 @@ type Props = {
 }
 
 class RoleManager extends React.Component<Props> {
-
   state: {
     isEditing: boolean
     roleName: string
     permissions: Permission[]
-    showConfirmationDialog: boolean
   } = {
     isEditing: false,
     roleName: '',
     permissions: [],
-    showConfirmationDialog: false,
   }
 
   private toggleEditMode = () => {
     this.setState({ isEditing: !this.state.isEditing })
   }
 
-  private openRemoveRoleDialog = () => {
-    this.setState({ showConfirmationDialog: true })
-  }
+  private openRemoveRoleDialog = async () => {
+    const res = await confirmDialog({
+      title: 'role-delete-title',
+      $name: this.props.role.name,
+      buttons: {
+        cancel: 'role-delete-cancel',
+        confirm: 'role-remove',
+      },
+      showCloseButton: false,
+    })
 
-  private closeDeleteRoleDialog = () => {
-    this.setState({ showConfirmationDialog: false })
+    if (res === 'confirm') {
+      this.removeRole()
+    }
   }
 
   private removeRole = () => {
@@ -112,7 +118,7 @@ class RoleManager extends React.Component<Props> {
   }
 
   public render() {
-    const { isEditing, roleName, permissions, showConfirmationDialog } = this.state
+    const { isEditing, roleName, permissions } = this.state
     const role = this.props.role
 
     return (
@@ -160,29 +166,6 @@ class RoleManager extends React.Component<Props> {
             </Button>
           </form>
         </div>
-        {
-          showConfirmationDialog ?
-            <Dialog
-              l10nId="role-delete-title"
-              placeholder="Are you sure you want to delete this role?"
-              $name={role.name}
-              onClose={this.closeDeleteRoleDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeDeleteRoleDialog}>
-                  <Localized id="role-delete-cancel">Cancel</Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.removeRole}
-                >
-                  <Localized id="role-remove">Remove</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
       </div>
     )
   }
