@@ -93,9 +93,12 @@ class EditorGlossary extends React.Component<Props> {
   }
 
   removeGlossary = async () => {
-    const res = await confirmDialog('draft-remove-glossary-dialog', '', {
-      cancel: 'draft-cancel',
-      remove: 'draft-remove-glossary',
+    const res = await confirmDialog({
+      title: 'draft-remove-glossary-dialog',
+      buttons: {
+        cancel: 'draft-cancel',
+        remove: 'draft-remove-glossary',
+      },
     })
 
     if (res === 'remove') {

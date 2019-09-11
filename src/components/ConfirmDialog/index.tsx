@@ -20,36 +20,59 @@ const mapStateToProps = ({ app: { showConfirmDialog, confirmDialogOptions} }: St
 const ConfirmDialog = ({ options, show }: { options: ConfirmDialogOptions, show: boolean }) => {
   if (!show) return null
 
+  const {
+    title,
+    content,
+    buttons,
+    buttonsPosition = 'default',
+    showCloseButton = true,
+    closeOnBgClick = true,
+    closeOnEsc = true,
+    callback = (key: string) => console.warn(`Resolved with: ${key}. You did not provide callback for button click.`),
+    ...localizationProps
+  } = options
+
   return (
     <Dialog
       size="medium"
-      l10nId={options.title}
+      l10nId={title}
       placeholder="Confirm action"
-      onClose={() => false}
-      showCloseButton={false}
-      closeOnBgClick={false}
-      closeOnEsc={false}
+      onClose={() => callback('close')}
+      showCloseButton={showCloseButton}
+      closeOnBgClick={closeOnBgClick}
+      closeOnEsc={closeOnEsc}
+      {...localizationProps}
     >
       {
-        options.content ?
-          <div className="confirm-dialog__content">
-            <Localized id={options.content}>
-              {options.content}
-            </Localized>
+        content ?
+          typeof content === 'string' ?
+            <div className="confirm-dialog__content">
+              <Localized id={content}>
+                {content}
+              </Localized>
+            </div>
+          : content
+        : null
+      }
+      {
+        buttons ?
+          <div className={`dialog__buttons dialog__buttons--${buttonsPosition}`}>
+            {
+              Object.entries(buttons).map(([key, val]: [string, string | typeof Button], i) => (
+                <Button key={key+i} clickHandler={() => callback(key)}>
+                  {
+                    typeof val === 'string' ?
+                      <Localized id={val}>
+                        {val}
+                      </Localized>
+                    : val
+                  }
+                </Button>
+              ))
+            }
           </div>
         : null
       }
-      <div className="dialog__buttons">
-        {
-          Object.entries(options.buttons).map(([key, val], i) => (
-            <Button key={key+i} clickHandler={() => options.callback(key)}>
-              <Localized id={val}>
-                {val}
-              </Localized>
-            </Button>
-          ))
-        }
-      </div>
     </Dialog>
   )
 }

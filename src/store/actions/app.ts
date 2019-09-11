@@ -7,6 +7,8 @@ import {
 } from 'src/store/constants'
 import { Process, Role } from 'src/api'
 
+import Button from 'src/components/ui/Button'
+
 export interface SetLocale {
   type: SET_LOCALE,
   data: string[],
@@ -37,9 +39,15 @@ export interface SetProcesses {
 
 export type ConfirmDialogOptions = {
   title: string
-  content: string
-  buttons: {[key: string]: string}
-  callback: (key: string) => any
+  buttons?: {[key: string]: string | typeof Button}
+  size?: 'small' | 'medium' | 'big'
+  content?: string | JSX.Element
+  buttonsPosition?: 'default' | 'center' | 'start' | 'end'
+  showCloseButton?: boolean
+  closeOnBgClick?: boolean
+  closeOnEsc?: boolean
+  callback?: (key: string) => any
+  [localizationProps: string]: any
 }
 
 export interface ShowConfirmDialog {
@@ -88,14 +96,9 @@ export const setProcesses = (processes: Map<number, Process>): SetProcesses => (
   data: processes,
 })
 
-export const showConfirmDialog = (title: string, content: string, buttons: {[key: string]: string}, callback: (key: string) => any): ShowConfirmDialog => ({
+export const showConfirmDialog = (options: ConfirmDialogOptions): ShowConfirmDialog => ({
   type: SHOW_CONFIRM_DIALOG,
-  data: {
-    title,
-    content,
-    buttons,
-    callback,
-  }
+  data: options,
 })
 
 export const closeConfirmDialog = (): CloseConfirmDialog => ({

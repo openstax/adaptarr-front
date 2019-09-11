@@ -1,14 +1,16 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import { elevate } from 'src/api/utils'
 import { addAlert } from 'src/store/actions/Alerts'
+
+import store from 'src/store'
+import { IsLoading, BooksMap } from 'src/store/types'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
+import { fetchModulesMap } from 'src/store/actions/Modules'
+import { State } from 'src/store/reducers/index'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -22,10 +24,7 @@ import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
-import { IsLoading, BooksMap } from 'src/store/types'
-import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
-import { fetchModulesMap } from 'src/store/actions/Modules'
-import { State } from 'src/store/reducers/index'
+import './index.css'
 
 type Props = {
   booksMap: {
@@ -50,7 +49,6 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
 }
 
 class Books extends React.Component<Props> {
-
   state: {
     titleInput: string
     showAddBook: boolean

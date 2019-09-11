@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import Nestable from 'react-nestable'
 import { History } from 'history'
@@ -8,6 +6,10 @@ import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
+
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -25,9 +27,7 @@ import Input from 'src/components/ui/Input'
 import ModulePreview from 'src/containers/ModulePreview'
 import ModulesPicker from 'src/containers/ModulesPicker'
 
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import './index.css'
 
 type Props = {
   match: {

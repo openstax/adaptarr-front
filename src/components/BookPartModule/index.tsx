@@ -8,6 +8,11 @@ import ProcessVersion from 'src/api/processversion'
 import { ProcessStructure } from 'src/api/process'
 import { addAlert } from 'src/store/actions/Alerts'
 
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
+
+import confirmDialog from 'src/helpers/confirmDialog'
+
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
@@ -16,9 +21,6 @@ import Dialog from 'src/components/ui/Dialog'
 import BeginProcess from 'src/containers/BeginProcess'
 import ProcessPreview from 'src/containers/ProcessPreview'
 import UpdateSlots from 'src/containers/UpdateSlots'
-
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers'
 
 import './index.css'
 
@@ -39,25 +41,28 @@ const mapStateToProps = ({ modules: { modulesMap }, app: { processes } }: State)
 
 class Module extends React.Component<Props> {
   state: {
-    showRemoveModule: boolean
     showBeginProcess: boolean
-    showCancelProcess: boolean
     processStructure: ProcessStructure | null
     module: api.Module | undefined
   } = {
-    showRemoveModule: false,
     showBeginProcess: false,
-    showCancelProcess: false,
     processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
   }
 
-  private showRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: true })
-  }
+  private showRemoveModuleDialog = async () => {
+    const res = await confirmDialog({
+      title: 'book-remove-module-title',
+      buttons: {
+        cancel: 'book-remove-module-cancel',
+        confirm: 'book-remove-module-confirm',
+      },
+      showCloseButton: false,
+    })
 
-  private closeRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: false })
+    if (res === 'confirm') {
+      this.removeModule()
+    }
   }
 
   private removeModule = () => {
@@ -75,7 +80,6 @@ class Module extends React.Component<Props> {
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
-    this.closeRemoveModuleDialog()
   }
 
   private showBeginProcessDialog = () => {
@@ -97,12 +101,19 @@ class Module extends React.Component<Props> {
     this.setState({ processStructure: null })
   }
 
-  private showCancelProcess = () => {
-    this.setState({ showCancelProcess: true })
-  }
+  private showCancelProcess = async () => {
+    const res = await confirmDialog({
+      title: 'book-process-cancel-title',
+      buttons: {
+        cancel: 'book-process-cancel-button-cancel',
+        cancelProcess: 'book-process-cancel-button',
+      },
+      showCloseButton: false,
+    })
 
-  private closeCancelProcess = () => {
-    this.setState({ showCancelProcess: false })
+    if (res === 'cancelProcess') {
+      this.cancelProcess()
+    }
   }
 
   private cancelProcess = async () => {
@@ -120,7 +131,6 @@ class Module extends React.Component<Props> {
       console.error(e)
       store.dispatch(addAlert('success', 'book-process-cancel-error', {details: e.toString()}))
     }
-    this.closeCancelProcess()
   }
 
   private afterBeginProcess = () => {
@@ -136,11 +146,9 @@ class Module extends React.Component<Props> {
   public render() {
     const { item, processes, isEditingUnlocked, highlightText } = this.props
     const {
-      showRemoveModule,
       showBeginProcess,
       processStructure,
       module: mod,
-      showCancelProcess,
     } = this.state
 
     let titleWithHighlights = ''
@@ -206,33 +214,6 @@ class Module extends React.Component<Props> {
           </LimitedUI>
         </span>
         {
-          showRemoveModule ?
-            <Dialog
-              l10nId="book-remove-module-title"
-              placeholder="Are you sure?"
-              size="medium"
-              onClose={this.closeRemoveModuleDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeRemoveModuleDialog}>
-                  <Localized id="book-remove-module-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.removeModule}
-                >
-                  <Localized id="book-remove-module-confirm">
-                    Delete
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
-        {
           showBeginProcess && mod ?
             <Dialog
               l10nId="book-begin-process-title"
@@ -265,29 +246,6 @@ class Module extends React.Component<Props> {
               />
               <div className="dialog__buttons dialog__buttons--center">
                 <Button clickHandler={this.showCancelProcess}>
-                  <Localized id="book-process-cancel-button">
-                    Cancel process
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
-        {
-          showCancelProcess ?
-            <Dialog
-              l10nId="book-process-cancel-title"
-              placeholder="Cancel process without saving changes"
-              size="medium"
-              onClose={this.closeCancelProcess}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeCancelProcess}>
-                  <Localized id="book-process-cancel-button-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.cancelProcess}>
                   <Localized id="book-process-cancel-button">
                     Cancel process
                   </Localized>

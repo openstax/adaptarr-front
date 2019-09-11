@@ -9,13 +9,14 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+
 import ProcessForm from './components/ProcessForm'
 import ProcessesList from './components/ProcessesList'
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-import Dialog from 'src/components/ui/Dialog'
 
 import ProcessPreview from 'src/containers/ProcessPreview'
 
@@ -28,14 +29,12 @@ class Processes extends React.Component<{}> {
     process: Process | null
     showPreview: boolean
     previewStructure: ProcessStructure | null
-    showConfirmNewVersionCreation: boolean
   } = {
     showForm: false,
     structure: null,
     process: null,
     showPreview: false,
     previewStructure: null,
-    showConfirmNewVersionCreation: false,
   }
 
   private showForm = () => {
@@ -94,17 +93,23 @@ class Processes extends React.Component<{}> {
     }
   }
 
-  private showConfirmNewVersionCreation = (structure: ProcessStructure) => {
-    this.setState({ showConfirmNewVersionCreation: true, structure })
+  private showConfirmNewVersionCreation = async (structure: ProcessStructure) => {
+    const res = await confirmDialog({
+      title: 'process-update-warning-new-version',
+      buttons: {
+        cancel: 'process-update-warning-new-version-cancel',
+        confirm: 'process-update-warning-new-version-confirm',
+      },
+    })
+
+    if (res === 'confirm') {
+      this.createNewProcessVersion(structure)
+    }
   }
 
-  private closeConfirmNewVersionCreation = () => {
-    this.setState({ showConfirmNewVersionCreation: false })
-  }
-
-  private createNewProcessVersion = () => {
-    const { process, structure } = this.state
-    if (!process || !structure) return
+  private createNewProcessVersion = (structure: ProcessStructure) => {
+    const { process } = this.state
+    if (!process) return
 
     process.createVersion(structure)
       .then(() => {
@@ -115,8 +120,6 @@ class Processes extends React.Component<{}> {
       .catch((e) => {
         store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
       })
-
-    this.closeConfirmNewVersionCreation()
   }
 
   private closePreview = () => {
@@ -252,7 +255,7 @@ class Processes extends React.Component<{}> {
   }
 
   public render() {
-    const { showForm, structure, showPreview, previewStructure, process, showConfirmNewVersionCreation } = this.state
+    const { showForm, structure, showPreview, previewStructure, process } = this.state
 
     return (
       <div className={`container ${showPreview ? 'container--splitted' : ''}`}>
@@ -299,32 +302,6 @@ class Processes extends React.Component<{}> {
                 <ProcessPreview structure={previewStructure} />
               </div>
             </Section>
-          : null
-        }
-        {
-          showConfirmNewVersionCreation ?
-            <Dialog
-              size="medium"
-              l10nId="process-update-warning-new-version"
-              placeholder="Warning! New version will be created."
-              onClose={this.closeConfirmNewVersionCreation}
-            >
-              <Localized id="process-update-warning-new-version-content" p={<p/>}>
-                <div className="process__dialog-content"></div>
-              </Localized>
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeConfirmNewVersionCreation}>
-                  <Localized id="process-update-warning-new-version-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.createNewProcessVersion}>
-                  <Localized id="process-update-warning-new-version-confirm">
-                    Create new version
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
           : null
         }
       </div>

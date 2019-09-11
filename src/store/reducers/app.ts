@@ -12,7 +12,7 @@ export interface State {
   confirmDialogOptions: ConfirmDialogOptions
 }
 
-const DEFAULT_CONFIRM_DIALOG_OPTIONS = {
+const DEFAULT_CONFIRM_DIALOG_OPTIONS: ConfirmDialogOptions = {
   title: 'confirm-dialog-title',
   content: '',
   buttons: {
@@ -61,12 +61,7 @@ export function reducer(state: State = initialState, action: AppAction) {
     return {
       ...state,
       showConfirmDialog: true,
-      confirmDialogOptions: {
-        title: action.data.title,
-        content: action.data.content,
-        buttons: action.data.buttons,
-        callback: action.data.callback,
-      },
+      confirmDialogOptions: action.data,
     }
 
   case CLOSE_CONFIRM_DIALOG:

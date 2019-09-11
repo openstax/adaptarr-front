@@ -2,11 +2,13 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import Process, { FreeSlot } from 'src/api/process'
+
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+
 import Button from 'src/components/ui/Button'
-import Dialog from 'src/components/ui/Dialog'
 
 import './index.css'
 
@@ -17,12 +19,8 @@ type Props = {
 class FreeSlots extends React.Component<Props> {
   state: {
     freeSlots: FreeSlot[]
-    selectedSlot: FreeSlot | null
-    showConfirmDialog: boolean
   } = {
     freeSlots: [],
-    selectedSlot: null,
-    showConfirmDialog: false,
   }
 
   private fetchFreeSlots = async () => {
@@ -30,19 +28,32 @@ class FreeSlots extends React.Component<Props> {
     this.setState({ freeSlots })
   }
 
-  private showConfirmDialog = (slot: FreeSlot) => {
-    this.setState({ showConfirmDialog: true, selectedSlot: slot })
-  }
+  private showConfirmDialog = async (slot: FreeSlot) => {
+    const res = await confirmDialog({
+      title: 'free-slots-confirm-title',
+      content: <div className="free-slots__dialog-content">
+                <Localized id="free-slots-confirm-info">
+                  You will be assigned to given draft and process manager will be
+                  informed that you are willing to work on this task.
+                </Localized>
+              </div>,
+      buttons: {
+        cancel: 'free-slots-cancel',
+        confirm: 'free-slots-confirm',
+      },
+      showCloseButton: false,
+    })
 
-  private closeConfirmDialog = () => {
-    this.setState({ showConfirmDialog: false, selectedSlot: null })
+    if (res === 'confirm') {
+      this.takeSlot(slot)
+    }
   }
 
   componentDidMount = () => {
     this.fetchFreeSlots()
   }
   public render() {
-    const { freeSlots, showConfirmDialog } = this.state
+    const { freeSlots } = this.state
 
     return (
       <div className="free-slots">
@@ -83,42 +94,11 @@ class FreeSlots extends React.Component<Props> {
               There are no free slots for you to take.
             </Localized>
         }
-        {
-          showConfirmDialog ?
-            <Dialog
-              size="medium"
-              l10nId="free-slots-confirm-title"
-              placeholder="Take slot"
-              onClose={this.closeConfirmDialog}
-              showCloseButton={false}
-            >
-              <div className="free-slots__dialog-content">
-                <Localized id="free-slots-confirm-info">
-                  You will be assigned to given draft and process manager will be informed that you are willing to work on this task.
-                </Localized>
-              </div>
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeConfirmDialog}>
-                  <Localized id="free-slots-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.takeSlot}>
-                  <Localized id="free-slots-confirm">
-                    Confirm
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
       </div>
     )
   }
 
-  private takeSlot = () => {
-    const slot = this.state.selectedSlot
-    if (!slot) return
+  private takeSlot = (slot: FreeSlot) => {
     Process.takeSlot({ draft: slot.draft.module, slot: slot.id })
       .then(() => {
         store.dispatch(addAlert('success', 'free-slots-success', {

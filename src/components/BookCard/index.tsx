@@ -1,25 +1,25 @@
-import './index.css'
-
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import * as api from 'src/api'
-
-import LimitedUI from 'src/components/LimitedUI'
-import EditBook from 'src/components/EditBook'
-import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
+import { Book } from 'src/api'
 
 import { IsLoading, BooksMap, AlertDataKind } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
 
+import confirmDialog from 'src/helpers/confirmDialog'
+
+import LimitedUI from 'src/components/LimitedUI'
+import EditBook from 'src/components/EditBook'
+import Button from 'src/components/ui/Button'
+
+import './index.css'
+
 type Props = {
-  book: api.Book
+  book: Book
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
@@ -43,17 +43,25 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
 }
 
 class BookCard extends React.Component<Props> {
-
   state: {
-    showConfirmationDialog: boolean
     showEditBook: boolean
   } = {
-    showConfirmationDialog: false,
     showEditBook: false,
   }
 
-  private removeBook = () => {
-    this.setState({ showConfirmationDialog: true })
+  private removeBook = async () => {
+    const res = await confirmDialog({
+      title: 'book-delete-title',
+      $title: this.props.book.title,
+      buttons: {
+        cancel: 'book-delete-cancel',
+        confirm: 'book-delete-confirm',
+      },
+    })
+
+    if (res === 'confirm') {
+      this.removeBookPermamently()
+    }
   }
 
   private removeBookPermamently = () => {
@@ -71,32 +79,17 @@ class BookCard extends React.Component<Props> {
     this.setState({ showEditBook: true })
   }
 
-  private content = () => (
-    <>
-      <h2 className="card__title">{this.props.book.title}</h2>
-      {
-        this.props.isEditingUnlocked ?
-          <div className="card__buttons">
-            <LimitedUI permissions="book:edit">
-              <Button clickHandler={this.showEditBook}>
-                <Localized id="book-card-edit">
-                  Edit
-                </Localized>
-              </Button>
-              <Button type="danger" clickHandler={this.removeBook}>
-                <Localized id="book-card-remove">
-                  Remove
-                </Localized>
-              </Button>
-            </LimitedUI>
-          </div>
-        : null
-      }
-    </>
-  )
+  private closeEditBook = () => {
+    this.setState({ showEditBook: false })
+  }
+
+  private editBookSuccess = () => {
+    this.props.fetchBooksMap()
+    this.setState({ showEditBook: false })
+  }
 
   public render() {
-    const { showConfirmationDialog, showEditBook } = this.state
+    const { showEditBook } = this.state
     const { book, isEditingUnlocked } = this.props
 
     return (
@@ -104,40 +97,33 @@ class BookCard extends React.Component<Props> {
         {
           isEditingUnlocked ?
             <div className="card__content">
-              {this.content()}
+              <h2 className="card__title">{book.title}</h2>
+              <div className="card__buttons">
+                <LimitedUI permissions="book:edit">
+                  <Button clickHandler={this.showEditBook}>
+                    <Localized id="book-card-edit">
+                      Edit
+                    </Localized>
+                  </Button>
+                  <Button type="danger" clickHandler={this.removeBook}>
+                    <Localized id="book-card-remove">
+                      Remove
+                    </Localized>
+                  </Button>
+                </LimitedUI>
+              </div>
             </div>
           :
             <Link to={`books/${book.id}`} className="card__content">
-              {this.content()}
+              <h2 className="card__title">{book.title}</h2>
             </Link>
-        }
-        {
-          showConfirmationDialog ?
-            <Dialog
-              l10nId="book-delete-title"
-              placeholder="Are you sure you want to delete this book?"
-              $title={book.title}
-              onClose={() => this.setState({ showConfirmationDialog: false })}
-            >
-              <div className="dialog__buttons">
-                <Button
-                  clickHandler={() => this.setState({ showConfirmationDialog: false })}
-                >
-                  <Localized id="book-delete-cancel">Cancel</Localized>
-                </Button>
-                <Button clickHandler={this.removeBookPermamently}>
-                  <Localized id="book-delete-confirm">Confirm</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
         }
         {
           showEditBook ?
             <EditBook
               book={book}
-              onClose={() => this.setState({ showEditBook: false })}
-              onSuccess={() => {this.props.fetchBooksMap(), this.setState({ showEditBook: false })}}
+              onClose={this.closeEditBook}
+              onSuccess={this.editBookSuccess}
             />
           : null
         }
