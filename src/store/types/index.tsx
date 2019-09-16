@@ -4,7 +4,7 @@ export type IsLoading = boolean
 export type RequestStatus = {status: string, message?: string | {}}
 
 
-export type TeamMap = Map<number, User>
+export type UsersMap = Map<number, User>
 
 
 

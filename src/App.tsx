@@ -28,7 +28,6 @@ import Teams from 'src/screens/app/Teams'
 
 import * as userActions from 'src/store/actions/User'
 import * as appActions from 'src/store/actions/app'
-import * as teamActions from 'src/store/actions/Team'
 import * as notificationsActions from 'src/store/actions/Notifications'
 import * as booksActions from 'src/store/actions/Books'
 import * as modulesActions from 'src/store/actions/Modules'
@@ -41,9 +40,7 @@ type Props = {
   user: {
     isLoading: types.IsLoading
     user: api.User
-  }
-  team: {
-    teamMap: types.TeamMap
+    users: types.UsersMap
   }
   notifications: {}
   booksMap: {
@@ -53,9 +50,9 @@ type Props = {
     modulesMap: types.ModulesMap
   }
   fetchUser: () => void
+  fetchUsers: () => void
   fetchRoles: () => void
   fetchProcesses: () => void
-  fetchTeamMap: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
@@ -64,7 +61,6 @@ type Props = {
 const mapStateToProps = ({
   user,
   notifications,
-  team,
   booksMap,
   modules,
   app: {
@@ -74,7 +70,6 @@ const mapStateToProps = ({
 }: State) => {
   return {
     user,
-    team,
     notifications,
     booksMap,
     modules,
@@ -86,9 +81,9 @@ const mapStateToProps = ({
 const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
+    fetchUsers: () => dispatch(userActions.fetchUsersMap()),
     fetchRoles: () => dispatch(appActions.fetchRoles()),
     fetchProcesses: () => dispatch(appActions.fetchProcesses()),
-    fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
@@ -116,9 +111,9 @@ class App extends React.Component<Props> {
 
   componentDidMount () {
     this.props.fetchUser()
+    this.props.fetchUsers()
     this.props.fetchRoles()
     this.props.fetchProcesses()
-    this.props.fetchTeamMap()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()

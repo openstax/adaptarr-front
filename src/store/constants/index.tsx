@@ -10,11 +10,11 @@ export type FETCH_USER_FAILURE = typeof FETCH_USER_FAILURE
 export const CLEAR_USER_DATA = 'CLEAR_USER_DATA'
 export type CLEAR_USER_DATA = typeof CLEAR_USER_DATA
 
-export const SET_TEAM_MAP = 'SET_TEAM_MAP'
-export type SET_TEAM_MAP = typeof SET_TEAM_MAP
+export const SET_USERS_MAP = 'SET_USERS_MAP'
+export type SET_USERS_MAP = typeof SET_USERS_MAP
 
-export const SET_USER_IN_TEAM_MAP = 'SET_USER_IN_TEAM_MAP'
-export type SET_USER_IN_TEAM_MAP = typeof SET_USER_IN_TEAM_MAP
+export const SET_USER_IN_USERS_MAP = 'SET_USER_IN_USERS_MAP'
+export type SET_USER_IN_USERS_MAP = typeof SET_USER_IN_USERS_MAP
 
 
 
