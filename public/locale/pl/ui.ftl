@@ -1105,11 +1105,14 @@ step-changer-dialog-wrong-target-suggestions = Liczba sugestii w dokumencie: { $
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user-invite] Zapraszanie użytkowników
-  [user-delete] Usuwanie użytkowników
   [user-edit] Edytuj profile użytkowników
   [user-edit-permissions] Edycja uprawnień użytkowników
-  [user-assign-role] Przypisywanie ról do użytkowników
+  [user-delete] Usuwanie użytkowników
+  [team-manage] Zarządzanie zespołami
+  [member-add] Dodawanie członków zespołu
+  [member-remove] Usuwanie członków zespołu
+  [member-assign-role] Przypisywanie roli członkom zespołu
+  [member-edit-permissions] Edycja uprawnień członków zespołu
   [book-edit] Tworzenie, usuwanie i edycja książek
   [module-edit] Tworzenie, usuwanie i edycja modułów
   [role-edit] Tworzenie, usuwanie i edycja ról

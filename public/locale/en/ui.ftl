@@ -1106,11 +1106,14 @@ step-changer-dialog-wrong-target-suggestions = You have { $document } suggestion
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user-invite] Invite users
-  [user-delete] Delete users
   [user-edit] Edit user's profiles
   [user-edit-permissions] Edit user's permissions
-  [user-assign-role] Assign roles to users
+  [user-delete] Delete users
+  [team-manage] Manage teams
+  [member-add] Add team members
+  [member-remove] Remove team members
+  [member-assign-role] Assign roles to team members
+  [member-edit-permissions] Edit team members permissions
   [book-edit] Create, delete and edit book content
   [module-edit] Create, delete and edit modules
   [role-edit] Create, delete and edit roles
