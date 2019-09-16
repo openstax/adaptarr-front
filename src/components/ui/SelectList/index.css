@@ -1,0 +1,34 @@
+.select-list {
+  position: relative;
+  z-index: 99;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+  border-radius: 20px;
+}
+
+.select-list__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  min-height: 22px;
+  cursor: pointer;
+  background-color: #fff;
+}
+
+.select-list__item:first-child {
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+}
+
+.select-list__item:last-child {
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
+}
+
+.select-list__item:hover {
+  background-color: var(--lighter-bg);
+}
+
+.select-list__selected .icon svg {
+  width: 15px;
+}
