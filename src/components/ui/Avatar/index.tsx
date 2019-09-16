@@ -1,31 +1,32 @@
-import './index.css'
-
 import * as React from 'react'
 import Tooltip from 'react-tooltip-lite'
 import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import * as api from 'src/api'
 
-import * as types from 'src/store/types'
+import { UsersMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
+
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+
+import './index.css'
 
 type Props = {
   user: api.User | number | undefined
-  teamMap: types.TeamMap
+  users: UsersMap
   disableLink?: boolean
   status?: 'unread' | 'online'
   size?: 'small' | 'medium' | 'big'
   withName?: boolean
 }
 
-const mapStateToProps = ({ team: { teamMap } }: State) => ({ teamMap })
+const mapStateToProps = ({ user: { users } }: State) => ({ users })
 
 const avatar = (props: Props) => {
-  const { user, disableLink, status, size, teamMap, withName } = props
+  const { user, disableLink, status, size, users, withName } = props
 
-  const userData = user instanceof api.User ? user : user && teamMap.get(user)
+  const userData = user instanceof api.User ? user : user && users.get(user)
 
   let mainClasses = ['avatar']
   let statusClasses = ['avatar__status']
