@@ -4,7 +4,7 @@ import * as React from 'react'
 
 type Props = {
   size?: 'small' | 'medium' | 'big'
-  name: 'arrow-down' | 'arrow-left' | 'arrow-right' | 'bell' | 'book' | 'books' | 'chat' | 'check' | 'close' | 'code' | 'cog' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file' | 'file-code' | 'flask' | 'folder' | 'help' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'menu' | 'minus' | 'outdent' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'quote' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'www',
+  name: 'arrow-down' | 'arrow-left' | 'arrow-right' | 'bell' | 'book' | 'books' | 'chat' | 'check' | 'check-simple' | 'close' | 'code' | 'cog' | 'comment' | 'dashboard' | 'emphasis' | 'eye' | 'file' | 'file-code' | 'flask' | 'folder' | 'help' | 'indent' | 'info' | 'image' | 'list-ul' | 'list-ol' | 'link' | 'lock' | 'logout' | 'menu' | 'minus' | 'outdent' | 'paper-pen' | 'pencil' | 'plus' | 'profile' | 'quote' | 'redo' | 'resources' | 'save' | 'subscript' | 'superscript' | 'sticky-note' | 'strong' | 'term' | 'underline' | 'undo' | 'unlock' | 'user' | 'user-plus' | 'users' | 'www',
 }
 
 const icon = ({ size, name }: Props) => {
@@ -45,6 +45,10 @@ const icon = ({ size, name }: Props) => {
       case 'check':
         return (
           <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 6.6145832 6.6145833" version="1.1"> <g transform="translate(0,-290.38542)"> <g transform="translate(-0.12201331,1.2908049)"> <g> <g transform="translate(0.12339897,-0.67895868)"> <g transform="matrix(0.12720353,0,0,0.12720353,-3.5224347e-4,289.77356)"> <g> <path d="M 26,0 C 15.666362,-0.14198211 5.7265674,6.5895219 1.9247128,16.181495 -1.9695756,25.410163 0.18057885,36.769553 7.1879093,43.929796 14.001616,51.264384 25.227995,53.962495 34.630936,50.527544 44.485181,47.173031 51.721556,37.424768 51.980894,27.003548 52.506441,16.879352 46.425039,6.8658852 37.261874,2.5677035 33.765216,0.87533493 29.884078,-0.00512232 26,0 Z M 40.495,17.329 C 35.043265,23.415345 29.680208,29.589558 24.172797,35.620734 22.464013,36.798903 21.07537,34.8961 19.797571,34.000056 17.027512,31.749628 14.186092,29.579773 11.460805,27.278793 9.6856382,25.213404 13.138623,22.688991 14.708411,24.805496 17.394274,26.953998 20.080137,29.102499 22.766,31.251 27.787635,25.641793 32.733235,19.957918 37.802627,14.395609 39.662672,12.942616 42.100677,15.592177 40.495,17.329 Z"/> </g> </g> </g> </g> </g> </g> </svg>
+        )
+      case 'check-simple':
+        return (
+          <svg width="12.06" height="13" version="1.1" viewBox="0 0 3.1909 3.4396" xmlns="http://www.w3.org/2000/svg"><g transform="translate(0 -293.56)"><path d="m2.8489 293.57c-0.06797 0.017-0.12904 0.0602-0.16798 0.12539l-1.4986 2.5103-0.67237-1.1247c-0.07796-0.13039-0.24547-0.17296-0.37587-0.0949-0.1304 0.078-0.17293 0.24603-0.09496 0.37642l0.9034 1.5108c0.04452 0.0746 0.119 0.11577 0.19842 0.12677 0.01162 2e-3 0.02266 1e-3 0.03432 2e-3 0.01852 2e-4 0.03633 1e-3 0.0548-2e-3 0.03113-5e-3 0.05991-0.0162 0.08771-0.0314 1.52e-4 -8e-5 4.05e-4 5e-5 5.61e-4 -4e-5 0.04116-0.0228 0.07893-0.052 0.10485-0.0953l1.7288-2.8956c0.07787-0.13043 0.03526-0.29795-0.09515-0.37583-0.06521-0.0389-0.13991-0.048-0.20788-0.0306z"/></g></svg>
         )
       case 'close':
         return (
