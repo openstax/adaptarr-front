@@ -1,19 +1,21 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import { User } from 'src/api'
+import User, { SystemPermission } from 'src/api/user'
+import { TeamPermission } from 'src/api/team'
+
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { Permission } from 'src/api/role'
+
+import './index.css'
 
 type Props = {
   user: {
     isLoading: IsLoading
     user: User
   }
-  permissions?: Permission | Permission[] // User has to have one or more permissions to see hidden UI
+  // User has to have one or more permissions to see hidden UI
+  permissions?: SystemPermission | TeamPermission | (SystemPermission | TeamPermission)[]
 }
 
 const mapStateToProps = ({ user }: State) => {
@@ -29,12 +31,12 @@ class LimitedUI extends React.Component<Props> {
 
     // Render component only if user have proper permissions
     if (typeof permissions === 'string') {
-      if (!user.permissions.has(permissions)) {
+      if (!user.allPermissions.has(permissions)) {
         return null
       }
     } else {
       let noAccess = permissions.some(p => {
-        if (!user.permissions.has(p)) {
+        if (!user.allPermissions.has(p)) {
           return true
         }
         return false
