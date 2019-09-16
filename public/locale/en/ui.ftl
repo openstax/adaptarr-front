@@ -446,7 +446,7 @@ user-profile-view-title-your = Your profile
 # - $name (string): user's name
 user-profile-view-title-named = { $name }'s profile
 
-user-profile-section-team = Your team
+user-profile-section-teams-members = Your teams' members
 
 user-profile-section-bio = Bio
 
