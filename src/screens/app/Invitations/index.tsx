@@ -1,54 +1,81 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
+import Role from 'src/api/role'
+import Invitation, { InvitationData } from 'src/api/invitation'
+import Team, { TeamPermission } from 'src/api/team'
+
 import store from 'src/store'
-import { Invitation, Role } from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/'
+
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
+import Permissions from 'src/components/Permissions'
 import Input from 'src/components/ui/Input'
 
-type Props = {
-  roles: Role[]
+import './index.css'
+
+export type InvitationsProps = {
+  teams: Map<number, Team>
 }
 
-const mapStateToProps = ({ app: { roles } }: State) => {
+const mapStateToProps = ({ app: { teams } }: State) => {
   return {
-    roles,
+    teams,
   }
 }
 
-class Invitations extends React.Component<Props> {
+export type InvitationsState = {
+  emailValue: string
+  isEmailVaild: boolean
+  language: typeof LANGUAGES[0]
+  team: Team | null
+  role: Role | null
+  permissions: TeamPermission[]
+}
 
-  state: {
-    emailValue: string
-    isEmailVaild: boolean
-    language: typeof LANGUAGES[0]
-    role: Role | null
-  } = {
+class Invitations extends React.Component<InvitationsProps> {
+  state: InvitationsState = {
     emailValue: '',
     isEmailVaild: false,
     language: LANGUAGES[0],
+    team: null,
     role: null,
+    permissions: [],
   }
 
   private sendInvitation = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { emailValue: email, isEmailVaild, language, role } = this.state
+    const { emailValue: email, isEmailVaild, language, role, team, permissions } = this.state
 
-    if (!isEmailVaild) return
+    if (!isEmailVaild || !team) return
 
-    Invitation.create({ email, role: role ? role.id : null, language: language.code })
+    let data: InvitationData = {
+      email,
+      language: language.code,
+      team: team.id,
+      permissions,
+    }
+
+    if (role) {
+      data.role = role.id
+    }
+
+    Invitation.create(data)
       .then(() => {
-        this.setState({ emailValue: '', role: null })
+        this.setState({
+          emailValue: '',
+          role: null,
+          team: null,
+          permissions: [],
+          language: LANGUAGES[0],
+        })
         this.input!.unTouch()
         store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
       })
@@ -74,8 +101,16 @@ class Invitations extends React.Component<Props> {
     this.setState({ language: value })
   }
 
+  private handleTeamChange = ({ value }: { value: Team, label: string }) => {
+    this.setState({ team: value })
+  }
+
   private handleRoleChange = ({ value }: { value: Role, label: string }) => {
     this.setState({ role: value })
+  }
+
+  private handlePermissionsChange = (permissions: TeamPermission[]) => {
+    this.setState({ permissions })
   }
 
   input: Input | null
@@ -83,7 +118,8 @@ class Invitations extends React.Component<Props> {
   private setInputRef = (el: Input | null) => el && (this.input = el)
 
   public render() {
-    const { emailValue, isEmailVaild, language, role } = this.state
+    const { emailValue, isEmailVaild, language, role, team, permissions } = this.state
+    const { teams } = this.props
 
     return (
       <div className="container">
@@ -111,10 +147,22 @@ class Invitations extends React.Component<Props> {
                 />
                 <Select
                   className="react-select"
+                  value={team ? { value: team, label: team.name } : null}
+                  options={Array.from(teams.values()).map(team => ({ value: team, label: team.name }))}
+                  formatOptionLabel={option => option.label}
+                  onChange={this.handleTeamChange}
+                />
+                <Select
+                  className="react-select"
+                  isDisabled={!team}
                   value={role ? { value: role, label: role.name } : null}
-                  options={this.props.roles.map(role => ({ value: role, label: role.name}))}
+                  options={team ? team.roles.map(role => ({ value: role, label: role.name})) : []}
                   formatOptionLabel={option => option.label}
                   onChange={this.handleRoleChange}
+                />
+                <Permissions
+                  type="team"
+                  onChange={this.handlePermissionsChange}
                 />
                 <Localized id="invitation-send" attrs={{ value: true }}>
                   <input type="submit" value="Send invitation" disabled={!isEmailVaild || !emailValue} />
