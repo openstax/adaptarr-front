@@ -51,7 +51,6 @@ type Props = {
   }
   fetchUser: () => void
   fetchUsers: () => void
-  fetchRoles: () => void
   fetchProcesses: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
@@ -64,7 +63,6 @@ const mapStateToProps = ({
   booksMap,
   modules,
   app: {
-    roles,
     processes,
   },
 }: State) => {
@@ -73,7 +71,6 @@ const mapStateToProps = ({
     notifications,
     booksMap,
     modules,
-    roles,
     processes,
   }
 }
@@ -82,7 +79,6 @@ const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActio
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchUsers: () => dispatch(userActions.fetchUsersMap()),
-    fetchRoles: () => dispatch(appActions.fetchRoles()),
     fetchProcesses: () => dispatch(appActions.fetchProcesses()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
@@ -112,7 +108,6 @@ class App extends React.Component<Props> {
   componentDidMount () {
     this.props.fetchUser()
     this.props.fetchUsers()
-    this.props.fetchRoles()
     this.props.fetchProcesses()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
