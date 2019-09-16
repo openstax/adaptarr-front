@@ -35,15 +35,21 @@
   margin-left: 30px;
 }
 
+.profile__roles {
+  display: flex;
+  flex-direction: column;
+}
+
 .profile__role {
-  margin-top: 5px;
+  margin: 10px 0;
+}
+
+.profile__role-name {
+  display: block;
+  margin-bottom: 10px;
 }
 
 .profile__main-info .limitedui .react-select {
-  margin-top: 15px;
-}
-
-.profile__button--unassign-role {
   margin-top: 15px;
 }
 

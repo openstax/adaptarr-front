@@ -3,12 +3,11 @@ import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import { Draft, User, Role } from 'src/api'
+import { Draft, User, Role, Team, TeamMember } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
-import { fetchUser } from 'src/store/actions/User'
-import { updateUserInTeamMap } from 'src/store/actions/Team'
+import { updateUserInUsersMap } from 'src/store/actions/User'
 import { State } from 'src/store/reducers'
 
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
@@ -28,13 +27,13 @@ import './index.css'
 type Props = {
   user: User
   currentUser: User
-  roles: Role[],
+  teams: Map<number, Team>
 }
 
-const mapStateToProps = ({ user: { user }, app: { roles } }: State) => {
+const mapStateToProps = ({ user: { user }, app: { teams } }: State) => {
   return {
     currentUser: user,
-    roles,
+    teams,
   }
 }
 
@@ -48,11 +47,9 @@ class UserProfile extends React.Component<Props> {
   state: {
     userName: string
     drafts: Draft[]
-    currentRole: Role | null
   } = {
     userName: this.props.user.name,
     drafts: [],
-    currentRole: this.props.user.role,
   }
 
   private handleNameChange = (name: string) => {
@@ -60,7 +57,7 @@ class UserProfile extends React.Component<Props> {
     const usr = user.id === currentUser.id ? currentUser : user
     usr.changeName(name).then((res) => {
       store.dispatch(addAlert('success', 'user-profile-update-name-success'))
-      store.dispatch(updateUserInTeamMap({...res.data}))
+      store.dispatch(updateUserInUsersMap({...res.data}))
       this.setState({ userName: name })
     }).catch(() => {
       store.dispatch(addAlert('success', 'user-profile-update-name-error'))
@@ -80,11 +77,11 @@ class UserProfile extends React.Component<Props> {
     })
 
     if (res === 'confirm') {
-      this.changeRole(value)
+      this.changeRole(value.team, value)
     }
   }
 
-  private handleRoleUnassign = async () => {
+  private handleRoleUnassign = async (team: number) => {
     const res = await confirmDialog({
       title: 'user-profile-role-remove',
       buttons: {
@@ -95,14 +92,14 @@ class UserProfile extends React.Component<Props> {
     })
 
     if (res === 'confirm') {
-      this.changeRole(null)
+      this.changeRole(team, null)
     }
   }
 
-  private changeRole = (newRole: Role | null) => {
-    this.props.user.changeRole(newRole ? newRole.id : null)
+  private changeRole = (team: number, newRole: Role | null) => {
+    const member = new TeamMember({ user: this.props.user.id, permissions: [], role: newRole }, team)
+    member.update({ role: newRole ? newRole.id : null })
       .then(() => {
-        store.dispatch(fetchUser())
         if (newRole) {
           store.dispatch(addAlert('success', 'user-profile-change-role-success', {
             name: newRole.name
@@ -110,6 +107,8 @@ class UserProfile extends React.Component<Props> {
         } else {
           store.dispatch(addAlert('success', 'user-profile-unassign-role-success'))
         }
+        this.props.user.teams.find(t => t.id === team)!.role = newRole
+        this.forceUpdate()
       })
       .catch((e) => {
         if (newRole) {
@@ -127,23 +126,23 @@ class UserProfile extends React.Component<Props> {
   async componentDidUpdate(prevProps: Props) {
     if (prevProps.user.id !== this.props.user.id) {
       this.setState({ userName: this.props.user.name })
-      if (this.props.currentUser.permissions.has('editing-process:manage')) {
+      if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
         const usersDrafts: Draft[] = await this.props.user.drafts()
-        this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
+        this.setState({ drafts: usersDrafts })
       }
     }
   }
 
   async componentDidMount() {
-    if (this.props.currentUser.permissions.has('editing-process:manage')) {
+    if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
       const usersDrafts: Draft[] = await this.props.user.drafts()
-      this.setState({ drafts: usersDrafts, currentRole: this.props.user.role })
+      this.setState({ drafts: usersDrafts })
     }
   }
 
   public render() {
-    const { drafts, currentRole, userName } = this.state
-    const { user, currentUser } = this.props
+    const { drafts, userName } = this.state
+    const { user, currentUser, teams } = this.props
 
     let header
     if (this.props.user.apiId === 'me') {
@@ -178,28 +177,77 @@ class UserProfile extends React.Component<Props> {
                     : decodeHtmlEntity(user.name)
                   }
                 </h2>
-                <span className="profile__role">
-                  {user.role ? user.role.name : null}
+                <div className="profile__roles">
                   {
-                    <LimitedUI permissions="user:assign-role">
-                      <Select
-                        className="react-select"
-                        value={currentRole ? { value: currentRole, label: currentRole.name } : null}
-                        options={this.props.roles.map(role => ({ value: role, label: role.name }))}
-                        formatOptionLabel={option => option.label}
-                        onChange={this.handleRoleChange}
-                      />
-                      <Button
-                        className="profile__button--unassign-role"
-                        clickHandler={this.handleRoleUnassign}
-                      >
-                        <Localized id="user-profile-section-role-unassign">
-                          Unassign user from role
-                        </Localized>
-                      </Button>
-                    </LimitedUI>
-                    }
-                </span>
+                    user.teams.map(team => {
+                      const currUsrTeam = currentUser.teams.find(t => t.id === team.id)
+                      let isEditable = false
+                      let options: { value: Role, label: string }[] = []
+                      if (
+                        (currentUser.is_super || currentUser.permissions.has('user:edit')) ||
+                        (currUsrTeam && currUsrTeam.role && currUsrTeam.role.permissions)
+                      ) {
+                        if (
+                          (currentUser.is_super || currentUser.permissions.has('user:edit')) ||
+                          currUsrTeam!.role!.permissions!.includes('member:assign-role')
+                        ) {
+                          isEditable = true
+                        }
+
+                        if (teams.has(team.id)) {
+                          options = teams.get(team.id)!.roles.map(role => ({ value: role, label: role.name }))
+                        }
+                      }
+                      return (
+                        <div key={team.id} className="profile__role">
+                          <span className="profile__role-name">
+                            {
+                              team.role ?
+                                <Localized
+                                  id="user-profile-role-in-team"
+                                  $team={team.name}
+                                  $role={team.role.name}
+                                >
+                                  {`{ $role } in team { $team }`}
+                                </Localized>
+                              :
+                                <Localized
+                                  id="user-profile-no-role-in-team"
+                                  $team={team.name}
+                                >
+                                  {`No role in team { $team }`}
+                                </Localized>
+                            }
+                          </span>
+                          {
+                            isEditable ?
+                              <>
+                                <Select
+                                  className="react-select"
+                                  value={team.role ? { value: team.role, label: team.role.name } : null}
+                                  options={options}
+                                  formatOptionLabel={option => option.label}
+                                  onChange={this.handleRoleChange}
+                                />
+                                {
+                                  team.role ?
+                                    <Button
+                                      clickHandler={() => this.handleRoleUnassign(team.id)}
+                                    >
+                                      <Localized id="user-profile-section-role-unassign">
+                                        Unassign user from role
+                                      </Localized>
+                                    </Button>
+                                  : null
+                                }
+                              </>
+                            : null
+                          }
+                        </div>
+                      )
+                    })
+                  }
+                </div>
               </div>
             </div>
             <div className="profile__info">

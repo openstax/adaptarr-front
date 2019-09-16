@@ -456,6 +456,15 @@ user-profile-section-role = Rola użytkownika
 
 user-profile-role-unknown = Nieznana rola
 
+# Variables:
+# - $role (string): role name
+# - $team (string): team name
+user-profile-role-in-team = { $role } w zespole { $team }
+
+# Variables:
+# - $team (string): team name
+user-profile-no-role-in-team = Brak roli w zespole { $team }
+
 ## Variables
 # $role: (string) - new role name
 user-profile-role-change = Zmienić rolę użytkownikowi na: { $role }?

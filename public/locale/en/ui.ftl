@@ -454,6 +454,15 @@ user-profile-section-contact = Contact
 
 user-profile-section-role = User's role
 
+# Variables:
+# - $role (string): role name
+# - $team (string): team name
+user-profile-role-in-team = { $role } in team { $team }
+
+# Variables:
+# - $team (string): team name
+user-profile-no-role-in-team = No role in team { $team }
+
 user-profile-role-unknown = Unknown role
 
 user-profile-section-role-unassign =  Unassign user from role
