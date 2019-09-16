@@ -637,6 +637,107 @@ helpdesk-import-error = We couldn't replace this database. Details: { $details }
 
 
 
+## Screens - teams
+
+teams-section-manage-teams-title = Manage teams
+
+teams-error-fetch = Couldn't fetch teams.
+
+teams-add-team =
+  .value = Add team
+
+teams-add-team-placeholder =
+  .placeholder = Team name
+
+# Variables:
+# - $name (string): name of created team.
+teams-add-team-success = Successfully created { $name } team.
+
+teams-add-team-error = Couldn't create new team.
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-roles-title = Manage roles in: { $team }
+
+teams-role-name =
+  .placeholder = Role name
+
+teams-role-create =
+  .value = Create role
+
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
+teams-role-create-success = New role "{ $name }" created successfully.
+
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
+teams-role-create-error = Couldn't create new role. Details: { $details }.
+
+
+
+## Reusable components - role manager
+
+role-manager-edit = Edit
+
+role-manager-remove = Remove
+
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
+role-manager-create-success = New role "{ $name }" created successfully.
+
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-create-error = Couldn't create new role. Details: { $details }.
+
+# Dialog displayed when user want to delete role.
+#
+# Variables:
+# - $name (string): name of role which user want to delete.
+role-manager-delete-title = Are you sure you want to delete "{ $name }" role?
+
+role-manager-delete-confirm = Confirm
+
+role-manager-delete-cancel = Cancel
+
+# Alert displayed when role has been deleted.
+#
+# Variables:
+# - $name (string): name of role which user deleted.
+role-manager-delete-success = Role "{ $name }" has been deleted.
+
+# Alert displayed when role has not been deleted.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-delete-error = Couldn't delete role. Details: { $details }.
+
+# Alert displayed when role has been updated.
+#
+# Variables:
+# - $name (string): name of role which user updated.
+role-manager-update-success = Role "{ $name }" has been updated.
+
+# Alert displayed when role has not been updated.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-update-error = Couldn't update role. Details: { $details }.
+
+role-manager-update-confirm =
+  .value = Update role
+
+role-manager-update-cancel = Cancel
+
+
+
 ## Screens - roles
 
 role-view-title = Roles
@@ -1153,6 +1254,8 @@ navigation-helpdesk = Helpdesk
 navigation-invite = Invitations
 
 navigation-roles = Roles
+
+navigation-teams = Teams and roles
 
 navigation-processes = Editing processes
 

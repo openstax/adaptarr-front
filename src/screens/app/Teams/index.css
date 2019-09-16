@@ -1,0 +1,46 @@
+.teams .section__content {
+  flex-direction: column;
+  width: 50%;
+}
+
+.teams__list {
+  width: 100%;
+  background-color: #fff;
+}
+
+.container--splitted .teams .section__content {
+  width: 100%;
+}
+
+.teams__team {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--light-bg);
+  cursor: pointer;
+}
+
+.teams__team:hover {
+  background-color: var(--light-bg);
+}
+
+.teams__team--selected {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.teams__role-add .permissions {
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+.teams__role-add .input {
+  padding: 2px 4px;
+  margin-bottom: 0;
+  background-color: var(--light-bg);
+}
+
+.teams__rolesList {
+  background-color: #fff;
+}

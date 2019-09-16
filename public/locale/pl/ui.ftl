@@ -636,6 +636,95 @@ helpdesk-import-error = Nie udało się zaktualizować bazy danych. Szczegóły:
 
 
 
+## Screens - teams
+
+teams-section-manage-teams-title = Zarządzaj zespołami
+
+teams-error-fetch = Nie udało się pobrać listy zespołów.
+
+teams-add-team =
+  .value = Dodaj zespół
+
+teams-add-team-placeholder =
+  .placeholder = Nazwa zespołu
+
+# Variables:
+# - $name (string): name of created team.
+teams-add-team-success = Pomyślnie utworzono zespół { $name }.
+
+teams-add-team-error = Nie udało się utworzyć zespołu.
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-roles-title = Zarządzaj rolami w: { $team }
+
+teams-role-name =
+  .placeholder = Nazwa roli
+
+teams-role-create =
+  .value = Utwórz rolę
+
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
+teams-role-create-success = Rola "{ $name }" została utworzona.
+
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
+teams-role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+
+
+
+## Reusable components - role manager
+
+role-manager-edit = Edycja
+
+role-manager-remove = Usuń
+
+# Dialog displayed when user want to delete role.
+#
+# Variables:
+# - $name (string): name of role which user want to delete.
+role-manager-delete-title = Usunąć rolę "{ $name }"?
+
+role-manager-delete-confirm = Potwierdź
+
+role-manager-delete-cancel = Anuluj
+
+# Alert displayed when role has been deleted.
+#
+# Variables:
+# - $name (string): name of role which user deleted.
+role-manager-delete-success = Rola "{ $name }" została usunięta.
+
+# Alert displayed when role has not been deleted.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+
+# Alert displayed when role has been updated.
+#
+# Variables:
+# - $name (string): name of role which user updated.
+role-manager-update-success = Rola "{ $name }" została zaktualizowana.
+
+# Alert displayed when role has not been updated.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
+
+role-manager-update-confirm =
+  .value = Zaktualizuj rolę
+
+role-manager-update-cancel = Anuluj
+
+
+
 ## Screens - roles
 
 role-view-title = Role
@@ -1152,6 +1241,8 @@ navigation-helpdesk = Pomoc
 navigation-invite = Zaproszenia
 
 navigation-roles = Role
+
+navigation-teams = Zespoły i role
 
 navigation-processes = Procesy
 

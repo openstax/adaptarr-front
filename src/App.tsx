@@ -25,6 +25,7 @@ import Invitations from 'src/screens/app/Invitations'
 import Roles from 'src/screens/app/Roles'
 import Processes from 'src/screens/app/Processes'
 import Error404 from 'src/screens/app/Error404'
+import Teams from 'src/screens/app/Teams'
 
 import * as userActions from 'src/store/actions/User'
 import * as appActions from 'src/store/actions/app'
@@ -98,19 +99,19 @@ const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActio
 class App extends React.Component<Props> {
   private InvitationsGuard = {
     shouldRoute: () => {
-      return this.props.user.user.permissions.has('user:invite')
+      return this.props.user.user.allPermissions.has('member:add')
     }
   }
 
-  private RolesGuard = {
+  private TeamsGuard = {
     shouldRoute: () => {
-      return this.props.user.user.permissions.has('role:edit')
+      return this.props.user.user.allPermissions.has('team:manage')
     }
   }
 
   private ProcessesGuard = {
     shouldRoute: () => {
-      return this.props.user.user.permissions.has('editing-process:edit')
+      return this.props.user.user.allPermissions.has('editing-process:edit')
     }
   }
 
@@ -150,7 +151,7 @@ class App extends React.Component<Props> {
                   <Route path="/settings" component={Settings}/>
                   <Route path="/helpdesk" component={Helpdesk}/>
                   <SecureRoute path="/invitations" component={Invitations} routeGuard={this.InvitationsGuard} redirectToPathWhenFail="/" />
-                  <SecureRoute path="/roles" component={Roles} routeGuard={this.RolesGuard} redirectToPathWhenFail="/"/>
+                  <SecureRoute path="/teams" component={Teams} routeGuard={this.TeamsGuard} redirectToPathWhenFail="/"/>
                   <SecureRoute path="/processes" component={Processes} routeGuard={this.ProcessesGuard} redirectToPathWhenFail="/"/>
                   <Route component={Error404}/>
                 </Switch>
