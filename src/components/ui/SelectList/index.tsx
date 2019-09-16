@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Localized } from 'fluent-react/compat'
 
 import Icon from 'src/components/ui/Icon'
 
@@ -87,7 +88,9 @@ class SelectList extends React.Component<SelectListProps> {
               onClick={this.toggleAll}
             >
               <span className="select-list__option">
-                Select all
+                <Localized id="select-list-select-all">
+                  Select all
+                </Localized>
               </span>
               {
                 selected.size === options.length ?

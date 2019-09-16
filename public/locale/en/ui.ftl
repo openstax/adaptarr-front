@@ -1155,6 +1155,22 @@ navigation-processes = Editing processes
 
 
 
+## Reusable components - team switcher
+##
+## This component is displayed at all times and allows user to swich team for which
+## he should see resources.
+
+team-switcher-select-placeholder = Select teams
+
+
+
+## Reusable components - select list
+
+select-list-select-all = Select all
+
+
+
+
 ## Reusable components - list of assets
 
 # Button for adding new assets (files).

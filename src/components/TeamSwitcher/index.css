@@ -1,0 +1,41 @@
+.team-switcher {
+  flex-direction: column;
+  cursor: pointer;
+}
+
+.team-switcher__box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px;
+  background-color: #fff;
+  border-radius: 20px;
+  box-sizing: border-box;
+}
+
+.team-switcher__value {
+  display: flex;
+  width: 90%;
+}
+
+.team-switcher__name {
+  max-width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.team-switcher__more {
+  margin-left: 7px;
+}
+
+.team-switcher__trigger .icon svg {
+  width: 10px;
+  height: 10px;
+}
+
+.team-switcher .select-list {
+  width: 100%;
+  margin-top: 5px;
+}

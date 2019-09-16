@@ -8,6 +8,7 @@ import { Notification } from 'src/api'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
+import TeamSwitcher from 'src/components/TeamSwitcher'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Tooltip from 'src/components/ui/Tooltip'
@@ -37,7 +38,6 @@ const isActive = (location: any, pathnames: string[]): boolean => {
 }
 
 class Navigation extends React.Component<RouteComponentProps & Props> {
-
   state: {
     toggleSidebar: boolean,
   } = {
@@ -75,6 +75,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </Localized>
           </Button>
         </div>
+        <TeamSwitcher />
         <nav className="nav">
           <ul>
             <li className="nav__link">
