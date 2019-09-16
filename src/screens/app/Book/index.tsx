@@ -36,18 +36,14 @@ type Props = {
     }
   }
   history: History
-  team: {
-    teamMap: types.TeamMap
-  }
   modules: {
     modulesMap: types.ModulesMap
   }
   addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
+const mapStateToProps = ({ modules }: State) => {
   return {
-    team,
     modules,
   }
 }
