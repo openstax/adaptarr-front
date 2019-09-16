@@ -3,13 +3,16 @@ import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import User from './user'
+import { TeamID } from './team'
+
 import { elevated, elevate } from './utils'
 
 export type ResourceData = {
-  id: string,
-  name: string,
-  parent: string | null,
-  kind: ResourceKind,
+  id: string
+  name: string
+  parent: string | null
+  kind: ResourceKind
+  team: TeamID
 }
 
 export type ResourceKind = 'directory' | 'file'
@@ -34,16 +37,18 @@ export default class Resource extends Base<ResourceData> {
   /**
    * Create a new resource.
    *
-   * This function requires elevated permissions: 'resources:manage'
+   * This function requires elevated permissions: 'resources:manage' in targeted team.
    *
    * @param name   name of the resource.
+   * @param team   id of the team in which to create the resource.
    * @param parent optional parent id.
    * @param file optional file, if omitted "folder" will be created.
    */
-  static async create({ name, parent, file }: { name: string, parent?: string, file?: File}): Promise<Resource> {
+  static async create({ name, team, parent, file }: { name: string, team: TeamID, parent?: string, file?: File}): Promise<Resource> {
     let data: FormData = new FormData()
 
     data.append('name', name)
+    data.append('team', team.toString())
     if (parent) {
       data.append('parent', parent)
     }
@@ -79,6 +84,11 @@ export default class Resource extends Base<ResourceData> {
    * Resource's kind.
    */
   kind: ResourceKind
+
+  /**
+   * ID of team for which this resource belongs.
+   */
+  team: TeamID
 
   /**
    * Fetch this resource's content.

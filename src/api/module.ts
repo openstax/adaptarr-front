@@ -3,16 +3,19 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import Draft from './draft'
+import { TeamID } from './team'
+
 import { elevated } from './utils'
 
 /**
  * Module data as returned by the API.
  */
 export type Data = {
-  id: string,
-  title: string,
-  language: string,
+  id: string
+  title: string
+  language: string
   process: ModuleProcess | null
+  team: TeamID
 }
 
 /**
@@ -136,6 +139,11 @@ export default class Module extends Base<Data> {
    * Short info about current process for this module.
    */
   process: ModuleProcess | null
+
+  /**
+   * ID of team for which this modules belongs.
+   */
+  team: TeamID
 
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
