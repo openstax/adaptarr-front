@@ -806,6 +806,8 @@ process-form-remove = Usuń
 
 process-form-process-name = Nazwa procesu
 
+process-form-process-team = Zespół
+
 process-form-process-starting-step = Krok początkowy
 
 process-form-slot-title = Lista funkcji:

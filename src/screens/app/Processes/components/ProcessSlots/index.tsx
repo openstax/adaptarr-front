@@ -1,15 +1,18 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import Role from 'src/api/role'
 import { ProcessSlot } from 'src/api/process'
 
 import Slot from './Slot'
+
 import Button from 'src/components/ui/Button'
 
 import './index.css'
 
 type Props = {
   slots: ProcessSlot[]
+  roles: Role[]
   onChange: (slots: ProcessSlot[]) => any
 }
 
@@ -95,6 +98,7 @@ export default class ProcessSlots extends React.Component<Props> {
               slot={s}
               onChange={this.updateSlot}
               remove={this.removeSlot}
+              roles={this.props.roles}
             />
           })
         }
