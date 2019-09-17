@@ -42,36 +42,18 @@ type Props = {
     user: api.User
     users: types.UsersMap
   }
-  notifications: {}
-  booksMap: {
-    booksMap: types.BooksMap
-  }
-  modules: {
-    modulesMap: types.ModulesMap
-  }
   fetchUser: () => void
   fetchUsers: () => void
   fetchProcesses: () => void
+  fetchTeams: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
 
-const mapStateToProps = ({
-  user,
-  notifications,
-  booksMap,
-  modules,
-  app: {
-    processes,
-  },
-}: State) => {
+const mapStateToProps = ({ user }: State) => {
   return {
     user,
-    notifications,
-    booksMap,
-    modules,
-    processes,
   }
 }
 
@@ -80,6 +62,7 @@ const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActio
     fetchUser: () => dispatch(userActions.fetchUser()),
     fetchUsers: () => dispatch(userActions.fetchUsersMap()),
     fetchProcesses: () => dispatch(appActions.fetchProcesses()),
+    fetchTeams: () => dispatch(appActions.fetchTeams()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
@@ -109,6 +92,7 @@ class App extends React.Component<Props> {
     this.props.fetchUser()
     this.props.fetchUsers()
     this.props.fetchProcesses()
+    this.props.fetchTeams()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
