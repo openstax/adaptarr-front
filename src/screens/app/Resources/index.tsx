@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
+import Team from 'src/api/team'
 import Resource, { ResourceKind } from 'src/api/resource'
 
 import store from 'src/store'
@@ -13,6 +14,7 @@ import Header from 'src/components/Header'
 import Section from 'src/components/Section'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Icon from 'src/components/ui/Icon'
@@ -57,6 +59,7 @@ export type ResourcesState = {
   resourceName: string
   files: File[]
   isUploading: boolean
+  team: Team | null
 }
 
 class Resources extends React.Component<ResourcesProps> {
@@ -70,6 +73,7 @@ class Resources extends React.Component<ResourcesProps> {
     resourceName: '',
     files: [],
     isUploading: false,
+    team: null,
   }
 
   private toggleEditing = () => {
@@ -86,6 +90,10 @@ class Resources extends React.Component<ResourcesProps> {
 
   private handleResourceNameChange = (val: string) => {
     this.setState({ resourceName: val })
+  }
+
+  private onTeamChange = (team: Team) => {
+    this.setState({ team })
   }
 
   private addFolder = () => {
@@ -106,10 +114,13 @@ class Resources extends React.Component<ResourcesProps> {
 
   private addResource = async () => {
     this.setState({ isUploading: true })
-    const { resourceName, resourceType, files, currentFolder } = this.state
+    const { resourceName, resourceType, files, currentFolder, team } = this.state
 
-    let data: { name: string, parent?: string, file?: File } = {
+    if (!team) return
+
+    let data: { name: string, team: number, parent?: string, file?: File } = {
       name: resourceName,
+      team: team.id,
     }
 
     if (currentFolder) {
@@ -133,6 +144,7 @@ class Resources extends React.Component<ResourcesProps> {
       resourceType: null,
       files: [],
       isUploading: false,
+      team: null,
     })
   }
 
@@ -171,6 +183,7 @@ class Resources extends React.Component<ResourcesProps> {
       resourceName,
       files,
       isUploading,
+      team,
     } = this.state
     const { selectedTeams } = this.props
 
@@ -248,6 +261,10 @@ class Resources extends React.Component<ResourcesProps> {
                           onChange={this.handleResourceNameChange}
                           validation={{ minLength: 2 }}
                         />
+                        <TeamSelector
+                          permission="resources:manage"
+                          onChange={this.onTeamChange}
+                        />
                         {
                           resourceType === 'file' ?
                             <FileUploader
@@ -267,7 +284,7 @@ class Resources extends React.Component<ResourcesProps> {
                           </Button>
                           <Button
                             clickHandler={this.addResource}
-                            isDisabled={resourceName.length < 3 || (resourceType === 'file' && !files[0])}
+                            isDisabled={resourceName.length < 3 || (resourceType === 'file' && !files[0]) || !team}
                           >
                             <Localized id="resources-add-confirm">
                               Confirm
