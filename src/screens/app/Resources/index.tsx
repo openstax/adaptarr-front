@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
@@ -6,6 +7,7 @@ import Resource, { ResourceKind } from 'src/api/resource'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers'
 
 import Header from 'src/components/Header'
 import Section from 'src/components/Section'
@@ -30,26 +32,35 @@ export const ACCEPTED_FILE_TYPES = [
   'video/*',
 ]
 
-type Props = {
+export type ResourcesProps = {
   match: {
     params: {
       id: string
     }
   }
+  selectedTeams: number[]
 }
 
-class Resources extends React.Component<Props> {
-  state: {
-    isLoading: boolean
-    resources: Resource[]
-    currentFolder: Resource | undefined
-    isEditingUnlocked: boolean
-    showAddResource: boolean
-    resourceType: ResourceKind | null
-    resourceName: string
-    files: File[]
-    isUploading: boolean
-  } = {
+const mapStateToProps = ({ app: { selectedTeams } }: State) => {
+  return {
+    selectedTeams,
+  }
+}
+
+export type ResourcesState = {
+  isLoading: boolean
+  resources: Resource[]
+  currentFolder: Resource | undefined
+  isEditingUnlocked: boolean
+  showAddResource: boolean
+  resourceType: ResourceKind | null
+  resourceName: string
+  files: File[]
+  isUploading: boolean
+}
+
+class Resources extends React.Component<ResourcesProps> {
+  state: ResourcesState = {
     isLoading: true,
     resources: [],
     currentFolder: undefined,
@@ -136,7 +147,7 @@ class Resources extends React.Component<Props> {
     this.setState({ resources, isLoading: false, currentFolder })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ResourcesProps) {
     if (prevProps.match.params.id !== this.props.match.params.id) {
       this.setState({ isLoading: true, currentFolder: undefined })
       this.fetchResources(this.props.match.params.id)
@@ -161,6 +172,7 @@ class Resources extends React.Component<Props> {
       files,
       isUploading,
     } = this.state
+    const { selectedTeams } = this.props
 
     return (
       <Section>
@@ -192,9 +204,16 @@ class Resources extends React.Component<Props> {
             isLoading ?
               <Spinner />
             :
-              resources.map(r => (
-                <ResourceCard key={r.id} resource={r} isEditingUnlocked={isEditingUnlocked} />
-              ))
+              resources.map(r => {
+                if (!selectedTeams.includes(r.team)) return null
+                return (
+                  <ResourceCard
+                    key={r.id}
+                    resource={r}
+                    isEditingUnlocked={isEditingUnlocked}
+                  />
+                )
+              })
           }
           {
             showAddResource ?
@@ -266,4 +285,4 @@ class Resources extends React.Component<Props> {
   }
 }
 
-export default Resources
+export default connect(mapStateToProps)(Resources)
