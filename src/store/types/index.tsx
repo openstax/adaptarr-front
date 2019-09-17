@@ -72,12 +72,3 @@ export type AlertNotification = {
 }
 
 export type Alert = AlertInfo | AlertNotification
-
-
-
-export type ConversationInfo = { title: string, timestamp: string, }
-export type Message = { user: User, message: string, timestamp: string, }
-export type Conversation = {
-  info: ConversationInfo
-  messages: Message[]
-}
