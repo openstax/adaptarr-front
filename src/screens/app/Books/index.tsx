@@ -17,6 +17,7 @@ import Header from 'src/components/Header'
 import LimitedUI from 'src/components/LimitedUI'
 import BookCard from 'src/components/BookCard'
 import Spinner from 'src/components/Spinner'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -56,6 +57,7 @@ export type BooksState = {
   files: File[]
   uploading: boolean
   isEditingUnlocked: boolean
+  team: api.Team | null
 }
 
 class Books extends React.Component<BooksProps> {
@@ -65,20 +67,23 @@ class Books extends React.Component<BooksProps> {
     files: [],
     uploading: false,
     isEditingUnlocked: false,
+    team: null,
   }
 
   private addBook = async (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { titleInput: title, files } = this.state
+    const { titleInput: title, files, team } = this.state
+
+    if (!team) return
 
     this.setState({ uploading: true })
 
-    api.Book.create(title, files[0])
+    api.Book.create(title, team.id, files[0])
       .then(() => {
         this.props.fetchBooksMap()
         this.props.fetchModulesMap()
-        this.setState({ titleInput: '' })
+        this.setState({ titleInput: '', team: null, files: [] })
         store.dispatch(addAlert('success', 'book-list-add-book-alert-success'))
         this.closeAddBookDialog()
       })
@@ -100,6 +105,10 @@ class Books extends React.Component<BooksProps> {
     this.setState({ titleInput: val })
   }
 
+  private onTeamChange = (team: api.Team) => {
+    this.setState({ team })
+  }
+
   private onFilesChange = (files: File[]) => {
     this.setState({ files })
   }
@@ -114,7 +123,7 @@ class Books extends React.Component<BooksProps> {
 
   public render() {
     const { booksMap: { isLoading, booksMap }, selectedTeams } = this.props
-    const { titleInput, showAddBook, uploading, isEditingUnlocked } = this.state
+    const { titleInput, showAddBook, uploading, isEditingUnlocked, team } = this.state
 
     return (
       <Section>
@@ -155,6 +164,10 @@ class Books extends React.Component<BooksProps> {
                       onChange={this.updateTitleInput}
                       validation={{minLength: 3}}
                     />
+                    <TeamSelector
+                      permission="book:edit"
+                      onChange={this.onTeamChange}
+                    />
                     <FilesUploader
                       onFilesChange={this.onFilesChange}
                       onFilesError={this.onFilesError}
@@ -169,7 +182,11 @@ class Books extends React.Component<BooksProps> {
                         </Localized>
                       </Button>
                       <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
-                        <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
+                        <input
+                          type="submit"
+                          value="Confirm"
+                          disabled={titleInput.length === 0 || !team}
+                        />
                       </Localized>
                     </div>
                   </form>
