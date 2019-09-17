@@ -18,6 +18,7 @@ import Button from 'src/components/ui/Button'
 import './index.css'
 
 export type BeginProcessProps = {
+  // All modules should belongs to one team.
   modules: Module[]
   teams: Map<number, Team>
   onClose: () => any
@@ -54,6 +55,7 @@ class BeginProcess extends React.Component<BeginProcessProps> {
     return (
       <div className="begin-process">
         <ProcessSelector
+          team={modules[0].team}
           onChange={this.handleProcessChange}
         />
         {
