@@ -551,6 +551,10 @@ resources-add-success = Pomyślnie dodano nowy zasób
 
 resources-add-error = Nie udało się dodać zasobu
 
+# Variables:
+# - $team (string): team in which this resource exists.
+resources-card-team = Zespół: { $team }
+
 resources-card-edit = Edytuj
 
 resources-card-edit-title = Zaktualizuj ten zasób

@@ -551,6 +551,10 @@ resources-add-success = Successfully added new resource
 
 resources-add-error = We couldn't add this resource
 
+# Variables:
+# - $team (string): team in which this resource exists.
+resources-card-team = Team: { $team }
+
 resources-card-edit = Edit
 
 resources-card-edit-title = Edit this resource

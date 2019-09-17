@@ -1,12 +1,14 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import { Resource } from 'src/api'
+import { Resource, Team } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import Spinner from 'src/components/Spinner'
@@ -21,18 +23,27 @@ import { ACCEPTED_FILE_TYPES } from './../../index'
 
 import './index.css'
 
-type Props = {
+export type ResourceCardProps = {
   resource: Resource
   isEditingUnlocked: boolean
+  teams: Map<number, Team>
 }
 
-class ResourceCard extends React.Component<Props> {
-  state: {
-    showEditResource: boolean
-    resourceName: string
-    files: File[]
-    isUploading: boolean
-  } = {
+const mapStateToProps = ({ app: { teams } }: State) => {
+  return {
+    teams,
+  }
+}
+
+export type ResourceCardState = {
+  showEditResource: boolean
+  resourceName: string
+  files: File[]
+  isUploading: boolean
+}
+
+class ResourceCard extends React.Component<ResourceCardProps> {
+  state: ResourceCardState = {
     showEditResource: false,
     resourceName: this.props.resource.name,
     files: [],
@@ -85,6 +96,24 @@ class ResourceCard extends React.Component<Props> {
     store.dispatch(addAlert('error', 'file-upload-error', { code: error.code }))
   }
 
+  private resourceName = () => (
+    <h2 className="resource__title">
+      <span className="resource__name">
+      {this.props.resource.name}
+      </span>
+      {
+        this.props.teams.has(this.props.resource.team) ?
+          <span className="resource__team">
+            <Localized id="resources-card-team" $team={this.props.teams.get(this.props.resource.team)!.name}>
+              Team: ...
+            </Localized>
+          </span>
+        : null
+      }
+
+    </h2>
+  )
+
   public render() {
     const { resource, isEditingUnlocked } = this.props
     const { showEditResource, resourceName, isUploading } = this.state
@@ -111,7 +140,7 @@ class ResourceCard extends React.Component<Props> {
             >
               <div className="resource__content">
                 <Icon size="big" name="folder" />
-                <h2 className="resource__name">{resource.name}</h2>
+                {this.resourceName()}
                 {editingButton}
               </div>
             </Link>
@@ -123,7 +152,7 @@ class ResourceCard extends React.Component<Props> {
             >
               <div className="resource__content">
                 <Icon size="big" name="file" />
-                <h2 className="resource__name">{resource.name}</h2>
+                {this.resourceName()}
                 {editingButton}
               </div>
             </Link>
@@ -184,4 +213,4 @@ class ResourceCard extends React.Component<Props> {
   }
 }
 
-export default ResourceCard
+export default connect(mapStateToProps)(ResourceCard)
