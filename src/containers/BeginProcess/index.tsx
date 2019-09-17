@@ -1,12 +1,15 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
+
+import { Process, Module, User, Team } from 'src/api'
+import { ProcessStructure } from 'src/api/process'
+import { elevate } from 'src/api/utils'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchModulesMap } from 'src/store/actions/Modules'
-import { Process, Module, User } from 'src/api'
-import { ProcessStructure } from 'src/api/process'
-import { elevate } from 'src/api/utils'
+import { State } from 'src/store/reducers'
 
 import ConfigureSlots from './ConfigureSlots'
 import ProcessSelector from 'src/components/ProcessSelector'
@@ -14,21 +17,30 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-type Props = {
+export type BeginProcessProps = {
   modules: Module[]
+  teams: Map<number, Team>
   onClose: () => any
   afterUpdate?: (errors: Module[]) => void
+}
+
+const mapStateToProps = ({ app: { teams } }: State) => {
+  return {
+    teams,
+  }
 }
 
 export type SlotId = number
 export type UserId = number
 
-class BeginProcess extends React.Component<Props> {
-  state: {
-    process: Process | null
-    structure: ProcessStructure | null
-    slots: Map<SlotId, UserId>
-  } = {
+export type BeginProcessState = {
+  process: Process | null
+  structure: ProcessStructure | null
+  slots: Map<SlotId, UserId>
+}
+
+class BeginProcess extends React.Component<BeginProcessProps> {
+  state: BeginProcessState = {
     process: null,
     structure: null,
     slots: new Map(),
@@ -36,7 +48,8 @@ class BeginProcess extends React.Component<Props> {
 
   public render() {
     const { process, structure } = this.state
-    const { modules } = this.props
+    const { modules, teams } = this.props
+    const team = process ? teams.get(process.team) : null
 
     return (
       <div className="begin-process">
@@ -44,9 +57,10 @@ class BeginProcess extends React.Component<Props> {
           onChange={this.handleProcessChange}
         />
         {
-          structure ?
+          structure && team ?
             <ConfigureSlots
               structure={structure}
+              team={team}
               onChange={this.handleConfigureSlotsChange}
             />
           : null
@@ -122,4 +136,4 @@ class BeginProcess extends React.Component<Props> {
   }
 }
 
-export default BeginProcess
+export default connect(mapStateToProps)(BeginProcess)
