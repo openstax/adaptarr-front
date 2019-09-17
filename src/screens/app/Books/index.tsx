@@ -26,18 +26,20 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import './index.css'
 
-type Props = {
+export type BooksProps = {
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
   }
+  selectedTeams: number[]
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
 
-export const mapStateToProps = ({ booksMap }: State) => {
+export const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => {
   return {
     booksMap,
+    selectedTeams,
   }
 }
 
@@ -48,14 +50,16 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
   }
 }
 
-class Books extends React.Component<Props> {
-  state: {
-    titleInput: string
-    showAddBook: boolean
-    files: File[]
-    uploading: boolean
-    isEditingUnlocked: boolean
-  } = {
+export type BooksState = {
+  titleInput: string
+  showAddBook: boolean
+  files: File[]
+  uploading: boolean
+  isEditingUnlocked: boolean
+}
+
+class Books extends React.Component<BooksProps> {
+  state: BooksState = {
     titleInput: '',
     showAddBook: false,
     files: [],
@@ -109,7 +113,7 @@ class Books extends React.Component<Props> {
   }
 
   public render() {
-    const { isLoading, booksMap } = this.props.booksMap
+    const { booksMap: { isLoading, booksMap }, selectedTeams } = this.props
     const { titleInput, showAddBook, uploading, isEditingUnlocked } = this.state
 
     return (
@@ -178,9 +182,16 @@ class Books extends React.Component<Props> {
             <div className="section__content books">
               {
                 booksMap.size > 0 ?
-                  Array.from(booksMap.values()).map((book: api.Book) => (
-                    <BookCard key={book.id} book={book} isEditingUnlocked={isEditingUnlocked}/>
-                  ))
+                  Array.from(booksMap.values()).map((book: api.Book) => {
+                    if (!selectedTeams.includes(book.team)) return null
+                    return (
+                      <BookCard
+                        key={book.id}
+                        book={book}
+                        isEditingUnlocked={isEditingUnlocked}
+                      />
+                    )
+                  })
                 : <Localized id="book-list-empty">
                   No books found.
                 </Localized>
