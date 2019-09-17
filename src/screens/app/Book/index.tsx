@@ -424,6 +424,7 @@ class Book extends React.Component<Props> {
           </Header>
           <ProcessSelector
             title="book-statistics-choose-process"
+            team={book ? book.team : undefined}
             onChange={this.handleProcessChange}
           />
           {
