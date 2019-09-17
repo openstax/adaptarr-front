@@ -1419,6 +1419,10 @@ load-error-persistance = If you are using incognito mode, please be aware that
 
 ## Reusable components - book card
 
+# Variables:
+# - $team (string): team in which this book exists.
+book-card-team = Team: { $team }
+
 book-card-edit = Edit
 
 book-card-remove = Remove

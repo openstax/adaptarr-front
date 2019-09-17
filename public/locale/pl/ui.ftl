@@ -1405,6 +1405,10 @@ load-error-persistance = Jeżeli używasz trybu prywatnego (incognito), edytor
 
 ## Reusable components - book card
 
+# Variables:
+# - $team (string): team in which this book exists.
+book-card-team = Zespół: { $team }
+
 book-card-edit = Edycja
 
 book-card-remove = Usuń
