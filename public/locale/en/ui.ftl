@@ -690,6 +690,40 @@ teams-role-create-success = New role "{ $name }" created successfully.
 # - $details (string): error details.
 teams-role-create-error = Couldn't create new role. Details: { $details }.
 
+teams-tab-roles = Roles
+
+teams-tab-members = Team members
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-members-title = Manage members in: { $team }
+
+teams-no-members = This team doesn't have members.
+
+teams-member-cancel = Cancel
+
+teams-member-remove = Remove
+
+# Variables:
+# - $user (string): name of user to remove.
+# - $team (string): name of team from which user will be removed.
+teams-member-remove-confirm-dialog = Do you want to remove { $user } from team { $team }?
+
+teams-member-remove-success = Successfully removed user from team.
+
+teams-member-remove-error = Couldn't remove user from team.
+
+teams-member-role-change-success = Successfully change user's role.
+
+teams-member-role-change-error = Couldn't change user's role.
+
+teams-member-add =
+  .value = Invite user
+
+teams-member-add-success = Successfully sent invitation.
+
+teams-member-add-error = Couldn't sent invitation.
+
 
 
 ## Reusable components - role manager
