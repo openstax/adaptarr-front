@@ -72,19 +72,22 @@ const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActio
 class App extends React.Component<Props> {
   private InvitationsGuard = {
     shouldRoute: () => {
-      return this.props.user.user.allPermissions.has('member:add')
+      const user = this.props.user.user
+      return user.is_super || user.allPermissions.has('member:add')
     }
   }
 
   private TeamsGuard = {
     shouldRoute: () => {
-      return this.props.user.user.allPermissions.has('team:manage')
+      const user = this.props.user.user
+      return user.is_super || user.allPermissions.has('team:manage')
     }
   }
 
   private ProcessesGuard = {
     shouldRoute: () => {
-      return this.props.user.user.allPermissions.has('editing-process:edit')
+      const user = this.props.user.user
+      return user.is_super || user.allPermissions.has('editing-process:edit')
     }
   }
 
