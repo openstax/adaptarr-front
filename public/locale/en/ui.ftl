@@ -686,7 +686,7 @@ teams-role-create =
 #
 # Variables:
 # - $name (string): name of role which user created.
-teams-role-create-success = New role "{ $name }" created successfully.
+teams-role-create-success = New role “{ $name }” created successfully.
 
 # Alert displayed when role has not been created.
 #
@@ -740,7 +740,7 @@ role-manager-remove = Remove
 #
 # Variables:
 # - $name (string): name of role which user created.
-role-manager-create-success = New role "{ $name }" created successfully.
+role-manager-create-success = New role “{ $name }” created successfully.
 
 # Alert displayed when role has not been created.
 #
@@ -752,7 +752,7 @@ role-manager-create-error = Couldn't create new role. Details: { $details }.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
-role-manager-delete-title = Are you sure you want to delete "{ $name }" role?
+role-manager-delete-title = Are you sure you want to delete “{ $name }” role?
 
 role-manager-delete-confirm = Confirm
 
@@ -762,7 +762,7 @@ role-manager-delete-cancel = Cancel
 #
 # Variables:
 # - $name (string): name of role which user deleted.
-role-manager-delete-success = Role "{ $name }" has been deleted.
+role-manager-delete-success = Role “{ $name }” has been deleted.
 
 # Alert displayed when role has not been deleted.
 #
@@ -774,7 +774,7 @@ role-manager-delete-error = Couldn't delete role. Details: { $details }.
 #
 # Variables:
 # - $name (string): name of role which user updated.
-role-manager-update-success = Role "{ $name }" has been updated.
+role-manager-update-success = Role “{ $name }” has been updated.
 
 # Alert displayed when role has not been updated.
 #
@@ -1854,7 +1854,7 @@ editor-tools-definition-remove-definition = Remove definition
 
 editor-tools-definition-insert-meaning = Add meaning
 
-editor-tools-definition-insert-seealso = Add "see also"
+editor-tools-definition-insert-seealso = Add “see also”
 
 
 

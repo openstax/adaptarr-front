@@ -109,7 +109,7 @@ book-unassign-user-alert-success = Użytkownik został usunięty z { $module }
 
 
 
-## Screens - book view - “Edit book” dialog
+## Screens - book view - „Edit book” dialog
 
 book-edit-dialog-title = Modyfikuj książkę
 
@@ -221,7 +221,7 @@ book-list-empty = Nie znaleziono książek.
 #
 # Variables:
 # - $title (string): title of the book to be deleted
-book-delete-title = Usunąć książkę "{ $title }"?
+book-delete-title = Usunąć książkę „{ $title }”?
 
 book-delete-confirm = Potwierdź
 
@@ -365,7 +365,7 @@ draft-details-import-error = Nie udało się zaimportować pliku. Szczegóły: {
 
 ## Screens - dashboard - draft deletion dialog
 
-dashboard-delete-draft-dialog-title = Usunąć szkic "{ $title }"?
+dashboard-delete-draft-dialog-title = Usunąć szkic „{ $title }”?
 
 dashboard-delete-draft-confirm = Usuń
 
@@ -685,7 +685,7 @@ teams-role-create =
 #
 # Variables:
 # - $name (string): name of role which user created.
-teams-role-create-success = Rola "{ $name }" została utworzona.
+teams-role-create-success = Rola „{ $name }” została utworzona.
 
 # Alert displayed when role has not been created.
 #
@@ -739,7 +739,7 @@ role-manager-remove = Usuń
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
-role-manager-delete-title = Usunąć rolę "{ $name }"?
+role-manager-delete-title = Usunąć rolę „{ $name }”?
 
 role-manager-delete-confirm = Potwierdź
 
@@ -749,7 +749,7 @@ role-manager-delete-cancel = Anuluj
 #
 # Variables:
 # - $name (string): name of role which user deleted.
-role-manager-delete-success = Rola "{ $name }" została usunięta.
+role-manager-delete-success = Rola „{ $name }” została usunięta.
 
 # Alert displayed when role has not been deleted.
 #
@@ -761,7 +761,7 @@ role-manager-delete-error = Nie udało się usunąć roli. Szczegóły: { $detai
 #
 # Variables:
 # - $name (string): name of role which user updated.
-role-manager-update-success = Rola "{ $name }" została zaktualizowana.
+role-manager-update-success = Rola „{ $name }” została zaktualizowana.
 
 # Alert displayed when role has not been updated.
 #
@@ -1864,7 +1864,7 @@ editor-tools-definition-remove-definition = Usuń definicję
 
 editor-tools-definition-insert-meaning = Dodaj znaczenie
 
-editor-tools-definition-insert-seealso = Dodaj "zobacz również"
+editor-tools-definition-insert-seealso = Dodaj „zobacz również”
 
 
 
