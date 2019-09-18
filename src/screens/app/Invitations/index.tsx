@@ -4,6 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import Role from 'src/api/role'
+import User from 'src/api/user'
 import Invitation, { InvitationData } from 'src/api/invitation'
 import Team, { TeamPermission } from 'src/api/team'
 
@@ -16,18 +17,20 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import TeamPermissions from 'src/components/TeamPermissions'
+import TeamPermissions, { TEAM_PERMISSIONS } from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
 
 export type InvitationsProps = {
   teams: TeamsMap
+  user: User
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
+const mapStateToProps = ({ app: { teams }, user: { user } }: State) => {
   return {
     teams,
+    user,
   }
 }
 
@@ -103,7 +106,7 @@ class Invitations extends React.Component<InvitationsProps> {
   }
 
   private handleTeamChange = ({ value }: { value: Team, label: string }) => {
-    this.setState({ team: value })
+    this.setState({ team: value, permissions: [] })
   }
 
   private handleRoleChange = ({ value }: { value: Role, label: string }) => {
@@ -120,7 +123,20 @@ class Invitations extends React.Component<InvitationsProps> {
 
   public render() {
     const { emailValue, isEmailVaild, language, role, team, permissions } = this.state
-    const { teams } = this.props
+    const { teams, user } = this.props
+
+    // User can give another user only subset of his permission in team
+    let disabledPermissions: TeamPermission[] = TEAM_PERMISSIONS
+    if (team) {
+      if (user.is_super) {
+        disabledPermissions = []
+      } else {
+        const usrTeam = user.teams.find(t => t.id === team.id)
+        if (usrTeam && usrTeam.role && usrTeam.role.permissions) {
+          disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.role!.permissions!.includes(p))
+        }
+      }
+    }
 
     return (
       <div className="container">
@@ -162,6 +178,8 @@ class Invitations extends React.Component<InvitationsProps> {
                   onChange={this.handleRoleChange}
                 />
                 <TeamPermissions
+                  selected={permissions}
+                  disabled={disabledPermissions}
                   onChange={this.handlePermissionsChange}
                 />
                 <Localized id="invitation-send" attrs={{ value: true }}>
