@@ -50,15 +50,28 @@ class UsersList extends React.Component<UsersListProps> {
   private fetchMembers = async () => {
     this.setState({ isLoading: true })
 
-    const { team } = this.props
+    const { team, allowedRoles = [], users } = this.props
+    const { filterInput } = this.state
+    const filterReg = new RegExp('^' + filterInput, 'i')
+
     let membersMap: MembersMap = new Map()
     const teams = Array.isArray(team) ? team : [team]
+
     for (const t of teams) {
-      const members = await t.members()
+      const members = (await t.members()).filter(member => {
+        const user = users.get(member.user)!
+        if (filterInput && !filterReg.test(user.name)) return false
+        if (allowedRoles.length) {
+          if (!member.role) return false
+          if (!allowedRoles.includes(member.role.id)) return false
+        }
+        return true
+      })
+
       membersMap.set(t.id, { team: t, members })
     }
 
-    this.setState({ isLoading: false })
+    this.setState({ isLoading: false, membersMap })
   }
 
   componentDidUpdate(prevProps: UsersListProps) {
@@ -72,12 +85,10 @@ class UsersList extends React.Component<UsersListProps> {
   }
 
   public render() {
-    const { isLoading, membersMap, filterInput } = this.state
-    const { allowedRoles = [], users, isSearchable } = this.props
+    const { isLoading, membersMap } = this.state
+    const { users, isSearchable } = this.props
 
     if (isLoading) return <Spinner />
-
-    const filterReg = new RegExp('^' + filterInput, 'i')
 
     return (
       <div className="usersList">
@@ -92,18 +103,20 @@ class UsersList extends React.Component<UsersListProps> {
         {
           Array.from(membersMap.values()).map(({ team, members }) => {
             return (
-              <>
-                <span className="usersList__team">{team.name}</span>
+              <div key={team.id} className="usersList__team">
+                <span className="usersList__team-name">
+                  <Localized id="user-profile-team-list-team" $team={team.name}>
+                    Team: ...
+                  </Localized>
+                </span>
                 <ul className="usersList__list">
                   {
                     members.length ?
                       members.map(member => {
                         const user = users.get(member.user)!
-                        if (filterInput && !filterReg.test(user.name)) return null
-                        if (member.role && !allowedRoles.includes(member.role.id)) return null
                         return (
                           <li
-                            key={team.name + member.user}
+                            key={team.id + member.user}
                             className="usersList__item"
                             onClick={() => this.props.onUserClick(user)}
                           >
@@ -119,7 +132,7 @@ class UsersList extends React.Component<UsersListProps> {
                       </li>
                   }
                 </ul>
-              </>
+              </div>
             )
           })
         }

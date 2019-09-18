@@ -501,6 +501,10 @@ user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 
 user-profile-users-drafts = User's drafts
 
+# Variables:
+# - $team (string): team name.
+user-profile-team-list-team = Members of team { $team }
+
 # Placeholder text for team search box.
 user-profile-team-list-search =
   .placeholder = Search for user
