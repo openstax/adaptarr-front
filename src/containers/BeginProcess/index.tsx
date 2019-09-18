@@ -56,6 +56,7 @@ class BeginProcess extends React.Component<BeginProcessProps> {
       <div className="begin-process">
         <ProcessSelector
           team={modules[0].team}
+          isClearable={false}
           onChange={this.handleProcessChange}
         />
         {
