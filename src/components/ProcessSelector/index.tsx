@@ -10,6 +10,7 @@ import { State } from 'src/store/reducers'
 type Props = {
   title?: string
   team?: Team | number
+  isClearable?: boolean
   processes: Map<number, Process>
   onChange: (p: Process | null) => void
 }
@@ -34,7 +35,7 @@ class ProcessSelector extends React.Component<Props> {
   }
 
   public render() {
-    const { title, processes, team } = this.props
+    const { title, processes, team, isClearable = true } = this.props
     const { process } = this.state
 
     const options = Array.from(processes.values())
@@ -65,7 +66,7 @@ class ProcessSelector extends React.Component<Props> {
             value={process ? { value: process, label: process.name } : null}
             options={options}
             onChange={this.onChange}
-            isClearable={true}
+            isClearable={isClearable}
           />
         </Localized>
       </div>
