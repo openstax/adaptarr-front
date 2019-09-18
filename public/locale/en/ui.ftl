@@ -843,6 +843,10 @@ process-create-version-success = Version “{ $name }” has been created.
 # - $details (string): error details.
 process-create-version-error = Couldn't create new version. Details: { $details }.
 
+# Variables:
+# - $team (string): team in which this process exists.
+processes-team = Team: { $team }
+
 
 
 ## Components for creating and updating process

@@ -1,9 +1,13 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
+import { Localized } from 'fluent-react/compat'
+
+import { Process, Team } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
-import { Process } from 'src/api'
+import { State } from 'src/store/reducers'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,22 +15,31 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-type Props = {
+export type ProcessInfoProps = {
   process: Process
+  teams: Map<number, Team>
   onProcessEdit: (process: Process) => any
   onProcessPreview: (process: Process) => any
 }
 
-class ProcessInfo extends React.Component<Props> {
-  state: {
-    name: string,
-    focused: boolean,
-  } = {
+const mapStateToProps = ({ app: { teams } }: State) => {
+  return {
+    teams,
+  }
+}
+
+export type ProcessInfoState = {
+  name: string,
+  focused: boolean,
+}
+
+class ProcessInfo extends React.Component<ProcessInfoProps> {
+  state: ProcessInfoState = {
     name: '',
     focused: false,
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ProcessInfoProps) {
     const prevName = prevProps.process.name
     const name = this.props.process.name
     if (prevName !== name) {
@@ -41,41 +54,53 @@ class ProcessInfo extends React.Component<Props> {
   nameRef: React.RefObject<HTMLSpanElement> = React.createRef()
 
   public render() {
+    const { process, teams } = this.props
+
     return (
       <>
-        <form
-          className="processes__name"
-          onSubmit={this.onSubmit}
-        >
-          <span
-            className="process__content-editable"
-            contentEditable
-            onInput={this.handleNameChange}
-            onKeyDown={this.onKeyDown}
-            dangerouslySetInnerHTML={{ __html: this.props.process.name }}
-            ref={this.nameRef}
-          ></span>
-          {
-            this.state.name !== this.props.process.name ?
-              <div className="process__controls">
-                <span
-                  className="process__small-icon"
-                  onClick={this.onSubmit}
-                >
-                  <Icon name="check" />
-                </span>
-                <span
-                  className="process__small-icon"
-                  onClick={this.cancelEdit}
-                >
-                  <Icon name="close" />
-                </span>
-              </div>
-            : null
-          }
-        </form>
+        <div className="processes__name-wrapper">
+          <form
+            className="processes__name"
+            onSubmit={this.onSubmit}
+          >
+            <span
+              className="process__content-editable"
+              contentEditable
+              onInput={this.handleNameChange}
+              onKeyDown={this.onKeyDown}
+              dangerouslySetInnerHTML={{ __html: process.name }}
+              ref={this.nameRef}
+            ></span>
+            {
+              this.state.name !== process.name ?
+                <div className="process__controls">
+                  <span
+                    className="process__small-icon"
+                    onClick={this.onSubmit}
+                  >
+                    <Icon name="check" />
+                  </span>
+                  <span
+                    className="process__small-icon"
+                    onClick={this.cancelEdit}
+                  >
+                    <Icon name="close" />
+                  </span>
+                </div>
+              : null
+            }
+          </form>
+          <span className="processes__team">
+            <Localized
+              id="processes-team"
+              $team={teams.has(process.team) ? teams.get(process.team)!.name : '...'}
+            >
+              Team: ...
+            </Localized>
+          </span>
+        </div>
         <div className="processes__controls">
-          <LimitedUI permissions="editing-process:edit">
+          <LimitedUI team={this.props.process.team} permissions="editing-process:edit">
             <Button clickHandler={this.editProcess}>
               <Icon name="pencil" />
             </Button>
@@ -134,4 +159,4 @@ class ProcessInfo extends React.Component<Props> {
   }
 }
 
-export default ProcessInfo
+export default connect(mapStateToProps)(ProcessInfo)
