@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import User from 'src/api/user'
-import Team from 'src/api/team'
+import Team, { TeamID } from 'src/api/team'
 import Process, { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
@@ -67,10 +67,10 @@ class Processes extends React.Component<ProcessesProps> {
     this.setState({ showForm: true, structure, process: p })
   }
 
-  private createProcess = async (structure: ProcessStructure) => {
+  private createProcess = async (structure: ProcessStructure, team: TeamID) => {
     // Create new process if we are not editing existing one.
     if (!this.state.process) {
-      Process.create(structure)
+      Process.create(structure, team)
         .then(() => {
           this.closeForm()
           store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
@@ -113,6 +113,9 @@ class Processes extends React.Component<ProcessesProps> {
   private showConfirmNewVersionCreation = async (structure: ProcessStructure) => {
     const res = await confirmDialog({
       title: 'process-update-warning-new-version',
+      content: <Localized id="process-update-warning-new-version-content" p={<p/>}>
+        <div className="process__dialog-content"></div>
+      </Localized>,
       buttons: {
         cancel: 'process-update-warning-new-version-cancel',
         confirm: 'process-update-warning-new-version-confirm',

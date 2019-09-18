@@ -905,6 +905,8 @@ process-form-step-link-slot = Slot allowed to use this link:
 
 process-form-step-link-remove = Remove link
 
+process-form-error-team = Please specify in which team you want create process.
+
 process-form-error-name = Please specify name of this process.
 
 process-form-error-slot-name = All slots must have a name.

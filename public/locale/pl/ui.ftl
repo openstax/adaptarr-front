@@ -892,6 +892,8 @@ process-form-step-link-slot = Funkcja, która może używać tego linku:
 
 process-form-step-link-remove = Usuń link
 
+process-form-error-team = Określ w jakim zespole chcesz utworzyć proces.
+
 process-form-error-name = Proszę podać nazwę procesu.
 
 process-form-error-slot-name = Wszystkie funkcje muszą posiadać nazwy.

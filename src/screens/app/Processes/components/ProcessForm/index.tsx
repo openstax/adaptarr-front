@@ -3,13 +3,14 @@ import Select from 'react-select'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import Team from 'src/api/team'
+import Team, { TeamID } from 'src/api/team'
 import Process, { ProcessSlot, ProcessStep, ProcessStructure, SlotPermission } from 'src/api/process'
 
 import { State } from 'src/store/reducers'
 
 import ProcessSlots from '../ProcessSlots'
 import ProcessSteps from '../ProcessSteps'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
@@ -19,7 +20,7 @@ export type ProcessFormProps = {
   structure?: ProcessStructure | null
   process?: Process
   teams: Map<number, Team>
-  onSubmit: (structure: ProcessStructure) => any
+  onSubmit: (structure: ProcessStructure, team: TeamID) => any
   onCancel: () => any
 }
 
@@ -58,8 +59,12 @@ class ProcessForm extends React.Component<ProcessFormProps> {
     })
   }
 
-  private handleTeamChange = ({ value }: { value: Team, label: string }) => {
-    this.setState({ team: value })
+  private handleTeamChange = (team: Team) => {
+    this.setState({ team }, () => {
+      if (this.state.errors.size) {
+        this.validateForm()
+      }
+    })
   }
 
   private handleStartingStepChange = ({ value }: { value: number, label: string }) => {
@@ -91,14 +96,16 @@ class ProcessForm extends React.Component<ProcessFormProps> {
 
     if (!this.validateForm()) return
 
-    const { name, startingStep, slots, steps } = this.state
+    const { name, startingStep, slots, steps, team } = this.state
+
+    if (!team) return
 
     this.props.onSubmit({
       start: startingStep,
       name,
       slots,
       steps,
-    })
+    }, team.id)
   }
 
   private updateStructure = () => {
@@ -142,8 +149,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
 
   public render() {
     const { startingStep, slots, steps, errors, name, team } = this.state
-    const { teams } = this.props
-    const teamsOptions = Array.from(teams.values()).map(t => ({ value: t, label: t.name }))
+    const { teams, process } = this.props
 
     return (
       <form
@@ -202,10 +208,10 @@ class ProcessForm extends React.Component<ProcessFormProps> {
               Team
             </Localized>
           </h3>
-          <Select
-            className="react-select"
-            value={team ? { value: team, label: team.name } : null}
-            options={teamsOptions}
+          <TeamSelector
+            isDisabled={process ? true : false}
+            team={process ? teams.get(process.team) : undefined}
+            permission="editing-process:edit"
             onChange={this.handleTeamChange}
           />
         </label>
@@ -247,7 +253,11 @@ class ProcessForm extends React.Component<ProcessFormProps> {
     // List with l10n ids for error messages.
     let errors: Set<string> = new Set()
 
-    const { name, startingStep, slots, steps } = this.state
+    const { name, startingStep, slots, steps, team } = this.state
+
+    if (!team) {
+      errors.add('process-form-error-team')
+    }
 
     // Validate that name for process exists.
     if (!name.length) {
