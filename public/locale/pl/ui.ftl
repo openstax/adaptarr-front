@@ -501,6 +501,12 @@ user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details
 
 user-profile-users-drafts = Teksty użytkownika
 
+user-profile-system-permissions = Systemowe uprawnienia użytkownika
+
+user-profile-system-permissions-change-success = Pomyślnie zaktualizowano uprawnienia.
+
+user-profile-system-permissions-change-error = Nie udało się zaktualizować uprawnień.
+
 # Variables:
 # - $team (string): team name.
 user-profile-team-list-team-members = Członkowie zespołu { $team }

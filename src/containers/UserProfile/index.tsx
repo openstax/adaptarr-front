@@ -4,6 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import { Draft, User, Role, TeamMember } from 'src/api'
+import { SystemPermission } from 'src/api/user'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
@@ -19,13 +20,14 @@ import Header from 'src/components/Header'
 import Load from 'src/components/Load'
 import DraftsList from 'src/components/DraftsList'
 import EditableText from 'src/components/EditableText'
+import SystemPermissions from 'src/components/SystemPermissions'
 import Button from 'src/components/ui/Button'
 import Avatar from 'src/components/ui/Avatar'
 import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-type Props = {
+export type UserProfileProps = {
   user: User
   currentUser: User
   teams: TeamsMap
@@ -44,13 +46,17 @@ async function loader({ userId }: { userId: string }) {
   return { user }
 }
 
-class UserProfile extends React.Component<Props> {
-  state: {
-    userName: string
-    drafts: Draft[]
-  } = {
+export type UserProfileState = {
+  userName: string
+  drafts: Draft[]
+  systemPermissions: SystemPermission[]
+}
+
+class UserProfile extends React.Component<UserProfileProps> {
+  state: UserProfileState = {
     userName: this.props.user.name,
     drafts: [],
+    systemPermissions: [],
   }
 
   private handleNameChange = (name: string) => {
@@ -124,9 +130,20 @@ class UserProfile extends React.Component<Props> {
       })
   }
 
-  async componentDidUpdate(prevProps: Props) {
+  private handleSystemPermissionsChange = (permissions: SystemPermission[]) => {
+    this.props.user.changePermissions(permissions)
+      .then(() => {
+        store.dispatch(addAlert('success', 'user-profile-system-permissions-change-success'))
+        this.setState({ systemPermissions: permissions })
+      })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'user-profile-system-permissions-change-error'))
+      })
+  }
+
+  async componentDidUpdate(prevProps: UserProfileProps) {
     if (prevProps.user.id !== this.props.user.id) {
-      this.setState({ userName: this.props.user.name })
+      this.setState({ userName: this.props.user.name, systemPermissions: [...this.props.user.permissions] })
       if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
         const usersDrafts: Draft[] = await this.props.user.drafts()
         this.setState({ drafts: usersDrafts })
@@ -135,6 +152,7 @@ class UserProfile extends React.Component<Props> {
   }
 
   async componentDidMount() {
+    this.setState({ systemPermissions: [...this.props.user.permissions] })
     if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
       const usersDrafts: Draft[] = await this.props.user.drafts()
       this.setState({ drafts: usersDrafts })
@@ -142,7 +160,7 @@ class UserProfile extends React.Component<Props> {
   }
 
   public render() {
-    const { drafts, userName } = this.state
+    const { drafts, userName, systemPermissions } = this.state
     const { user, currentUser, teams } = this.props
 
     let header
@@ -257,6 +275,19 @@ class UserProfile extends React.Component<Props> {
                   <Localized id="user-profile-users-drafts">User's drafts</Localized>
                 </h3>
                 <DraftsList drafts={drafts} />
+              </LimitedUI>
+            </div>
+            <div className="profile__permissions">
+              <LimitedUI permissions="user:edit-permissions">
+                <h3 className="profile__title">
+                  <Localized id="user-profile-system-permissions">
+                    User's system permissions
+                  </Localized>
+                </h3>
+                <SystemPermissions
+                  selected={systemPermissions}
+                  onChange={this.handleSystemPermissionsChange}
+                />
               </LimitedUI>
             </div>
           </div>

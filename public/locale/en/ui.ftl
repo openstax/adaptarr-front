@@ -501,6 +501,12 @@ user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 
 user-profile-users-drafts = User's drafts
 
+user-profile-system-permissions = User's system permissions
+
+user-profile-system-permissions-change-success = Successfully updated user's permissions.
+
+user-profile-system-permissions-change-error = Couldn't update user's permissions.
+
 # Variables:
 # - $team (string): team name.
 user-profile-team-list-team = Members of team { $team }
