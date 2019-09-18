@@ -16,7 +16,7 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
-import Permissions from 'src/components/Permissions'
+import TeamPermissions from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
@@ -161,8 +161,7 @@ class Invitations extends React.Component<InvitationsProps> {
                   formatOptionLabel={option => option.label}
                   onChange={this.handleRoleChange}
                 />
-                <Permissions
-                  type="team"
+                <TeamPermissions
                   onChange={this.handlePermissionsChange}
                 />
                 <Localized id="invitation-send" attrs={{ value: true }}>

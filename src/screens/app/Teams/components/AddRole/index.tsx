@@ -7,7 +7,7 @@ import Role from 'src/api/role'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
-import Permissions from 'src/components/Permissions'
+import TeamPermissions from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'
 
 type AddRoleProps = {
@@ -66,8 +66,7 @@ class AddRole extends React.Component<AddRoleProps> {
           value={roleName}
           onChange={this.onRoleNameChange}
         />
-        <Permissions
-          type="team"
+        <TeamPermissions
           selected={permissions}
           onChange={this.handlePermissionsChange}
         />

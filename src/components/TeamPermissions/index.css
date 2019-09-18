@@ -12,3 +12,7 @@
 .permissions__input {
   margin-right: 5px;
 }
+
+.permissions__item.disabled {
+  cursor: not-allowed;
+}

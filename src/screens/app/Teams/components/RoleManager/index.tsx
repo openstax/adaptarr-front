@@ -9,7 +9,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
-import Permissions from 'src/components/Permissions'
+import TeamPermissions from 'src/components/TeamPermissions'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
@@ -162,8 +162,7 @@ class RoleManager extends React.Component<Props> {
           className={`role-manager__content ${isEditing ? 'active' : ''}`}
         >
           <form onSubmit={this.updateRole}>
-            <Permissions
-              type="team"
+            <TeamPermissions
               selected={permissions}
               onChange={this.handleChange}
             />
