@@ -9,7 +9,8 @@ import {
   SET_SELECTED_TEAMS,
 } from 'src/store/constants'
 
-import { Process, Role, Team } from 'src/api'
+import { Process } from 'src/api'
+import { TeamsMap } from 'src/store/types'
 
 export interface State {
   locale: string[]
@@ -17,7 +18,7 @@ export interface State {
   processes: Map<number, Process>
   showConfirmDialog: boolean
   confirmDialogOptions: ConfirmDialogOptions
-  teams: Map<number, Team>
+  teams: TeamsMap
   selectedTeams: number[]
 }
 

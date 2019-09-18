@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { Book, Team } from 'src/api'
+import { Book } from 'src/api'
 
-import { IsLoading, BooksMap, AlertDataKind } from 'src/store/types'
+import { IsLoading, BooksMap, AlertDataKind, TeamsMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
@@ -24,7 +24,7 @@ type Props = {
     isLoading: IsLoading
     booksMap: BooksMap
   }
-  teams: Map<number, Team>
+  teams: TeamsMap
   isEditingUnlocked: boolean
   fetchBooksMap: () => void
   addAlert: (kind: AlertDataKind, message: string) => void

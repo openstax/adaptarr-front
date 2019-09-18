@@ -7,6 +7,7 @@ import Team, { TeamID } from 'src/api/team'
 import Process, { ProcessSlot, ProcessStep, ProcessStructure, SlotPermission } from 'src/api/process'
 
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import ProcessSlots from '../ProcessSlots'
 import ProcessSteps from '../ProcessSteps'
@@ -19,7 +20,7 @@ import './index.css'
 export type ProcessFormProps = {
   structure?: ProcessStructure | null
   process?: Process
-  teams: Map<number, Team>
+  teams: TeamsMap
   onSubmit: (structure: ProcessStructure, team: TeamID) => any
   onCancel: () => any
 }

@@ -11,6 +11,7 @@ import { setTeams } from 'src/store/actions/app'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers'
 import { UsersMap } from 'src/store/types'
+import { TeamsMap } from 'src/store/types'
 
 import AddTeam from './components/AddTeam'
 import RoleManager from './components/RoleManager'
@@ -25,7 +26,7 @@ import Icon from 'src/components/ui/Icon'
 import './index.css'
 
 export type TeamsProps = {
-  teams: Map<number, Team>
+  teams: TeamsMap
   users: UsersMap
   match: match<{ id: string, tab: string }>
   history: History

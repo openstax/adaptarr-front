@@ -2,9 +2,9 @@ import * as React from 'react'
 import { History } from 'history'
 import { connect } from 'react-redux'
 
-import { User, Team } from 'src/api'
+import { User } from 'src/api'
 
-import { UsersMap } from 'src/store/types'
+import { UsersMap, TeamsMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 import Section from 'src/components/Section'
@@ -25,7 +25,7 @@ export type ProfileProps = {
   history: History
   user: User
   users: UsersMap
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ user: { user, users }, app: { teams } }: State) => {

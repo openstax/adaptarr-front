@@ -3,12 +3,13 @@ import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import { Draft, User, Role, Team, TeamMember } from 'src/api'
+import { Draft, User, Role, TeamMember } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { updateUserInUsersMap } from 'src/store/actions/User'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import confirmDialog from 'src/helpers/confirmDialog'
@@ -27,7 +28,7 @@ import './index.css'
 type Props = {
   user: User
   currentUser: User
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ user: { user }, app: { teams } }: State) => {

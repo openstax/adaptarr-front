@@ -4,11 +4,12 @@ import { Link } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import { Resource, Team } from 'src/api'
+import { Resource } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import LimitedUI from 'src/components/LimitedUI'
 import Spinner from 'src/components/Spinner'
@@ -26,7 +27,7 @@ import './index.css'
 export type ResourceCardProps = {
   resource: Resource
   isEditingUnlocked: boolean
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ app: { teams } }: State) => {

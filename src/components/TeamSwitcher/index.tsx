@@ -2,11 +2,12 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { User, Team } from 'src/api'
+import { User } from 'src/api'
 
 import store from 'src/store'
 import { setSelectedTeams } from 'src/store/actions/app'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import SelectList from 'src/components/ui/SelectList'
 import Icon from 'src/components/ui/Icon'
@@ -16,7 +17,7 @@ import './index.css'
 type Props = {
   user: User
   selectedTeams: number[]
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ user: { user }, app: { selectedTeams, teams } }: State) => {

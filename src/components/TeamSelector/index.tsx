@@ -6,13 +6,14 @@ import User from 'src/api/user'
 import Team, { TeamPermission } from 'src/api/team'
 
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 export type TeamSelectorProps = {
   // Filter user teams against specific permission.
   permission?: TeamPermission
   isDisabled?: boolean
   team?: Team
-  teams: Map<number, Team>
+  teams: TeamsMap
   user: User
   onChange: (team: Team) => void
 }

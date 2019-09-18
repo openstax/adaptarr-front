@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { Process, Module, User, Team } from 'src/api'
+import { Process, Module, User } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
@@ -10,6 +10,7 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchModulesMap } from 'src/store/actions/Modules'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import ConfigureSlots from './ConfigureSlots'
 import ProcessSelector from 'src/components/ProcessSelector'
@@ -20,7 +21,7 @@ import './index.css'
 export type BeginProcessProps = {
   // All modules should belongs to one team.
   modules: Module[]
-  teams: Map<number, Team>
+  teams: TeamsMap
   onClose: () => any
   afterUpdate?: (errors: Module[]) => void
 }

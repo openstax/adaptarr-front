@@ -11,6 +11,7 @@ import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
@@ -26,7 +27,7 @@ import ProcessPreview from 'src/containers/ProcessPreview'
 import './index.css'
 
 export type ProcessesProps = {
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ app: { teams } }: State) => {

@@ -8,6 +8,7 @@ import {
   SET_TEAMS,
 } from 'src/store/constants'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
+import { TeamsMap } from 'src/store/types'
 
 import { Process, Team } from 'src/api'
 
@@ -60,7 +61,7 @@ export interface FetchTeams {
 
 export interface SetTeams {
   type: SET_TEAMS
-  data: Map<number, Team>
+  data: TeamsMap
 }
 
 export interface SetSelectedTeams {
@@ -114,7 +115,7 @@ export const fetchTeams = (): FetchTeams => {
   }
 }
 
-export const setTeams = (teams: Team[] | Map<number, Team>): SetTeams => {
+export const setTeams = (teams: Team[] | TeamsMap): SetTeams => {
   const teamMap = teams instanceof Map ? teams : new Map(teams.map(t => ([t.id, t])))
   return {
     type: SET_TEAMS,

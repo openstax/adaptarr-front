@@ -2,12 +2,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { Process, Team } from 'src/api'
+import { Process } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
 import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -17,7 +18,7 @@ import './index.css'
 
 export type ProcessInfoProps = {
   process: Process
-  teams: Map<number, Team>
+  teams: TeamsMap
   onProcessEdit: (process: Process) => any
   onProcessPreview: (process: Process) => any
 }

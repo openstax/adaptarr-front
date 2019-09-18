@@ -1,11 +1,12 @@
 import { Book, Module, User, Notification } from 'src/api'
+import Team, { TeamID } from 'src/api/team'
 
 export type IsLoading = boolean
 export type RequestStatus = {status: string, message?: string | {}}
 
 
 export type UsersMap = Map<number, User>
-
+export type TeamsMap = Map<TeamID, Team>
 
 
 export type BooksMap = Map<string, Book>

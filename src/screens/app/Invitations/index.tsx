@@ -10,6 +10,7 @@ import Team, { TeamPermission } from 'src/api/team'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/'
+import { TeamsMap } from 'src/store/types'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
@@ -21,7 +22,7 @@ import Input from 'src/components/ui/Input'
 import './index.css'
 
 export type InvitationsProps = {
-  teams: Map<number, Team>
+  teams: TeamsMap
 }
 
 const mapStateToProps = ({ app: { teams } }: State) => {
