@@ -10,6 +10,8 @@ import { State } from 'src/store/reducers'
 export type TeamSelectorProps = {
   // Filter user teams against specific permission.
   permission?: TeamPermission
+  isDisabled?: boolean
+  team?: Team
   teams: Map<number, Team>
   user: User
   onChange: (team: Team) => void
@@ -58,6 +60,21 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
     return options
   }
 
+  componentDidUpdate(prevProps: TeamSelectorProps) {
+    if (
+      typeof prevProps.team !== typeof this.props.team ||
+      (prevProps.team && this.props.team && prevProps.team.id !== this.props.team.id)
+    ) {
+      this.setState({ selectedTeam: this.props.team })
+    }
+  }
+
+  componentDidMount() {
+    if (this.props.team) {
+      this.setState({ selectedTeam: this.props.team })
+    }
+  }
+
   public render() {
     const { selectedTeam } = this.state
     const options = this.options()
@@ -65,6 +82,7 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
     return (
       <Select
         className="react-select team-selector"
+        isDisabled={this.props.isDisabled}
         value={selectedTeam ? { value: selectedTeam, label: selectedTeam.name } : null}
         options={options}
         onChange={this.handleChange}
