@@ -124,7 +124,7 @@ class App extends React.Component<Props> {
                   <Route path="/settings" component={Settings}/>
                   <Route path="/helpdesk" component={Helpdesk}/>
                   <SecureRoute path="/invitations" component={Invitations} routeGuard={this.InvitationsGuard} redirectToPathWhenFail="/" />
-                  <SecureRoute path="/teams" component={Teams} routeGuard={this.TeamsGuard} redirectToPathWhenFail="/"/>
+                  <SecureRoute path="/teams/:id?/:tab?" component={Teams} routeGuard={this.TeamsGuard} redirectToPathWhenFail="/"/>
                   <SecureRoute path="/processes" component={Processes} routeGuard={this.ProcessesGuard} redirectToPathWhenFail="/"/>
                   <Route component={Error404}/>
                 </Switch>

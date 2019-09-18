@@ -38,11 +38,11 @@ class RoleManager extends React.Component<Props> {
 
   private openRemoveRoleDialog = async () => {
     const res = await confirmDialog({
-      title: 'role-delete-title',
+      title: 'role-manager-delete-title',
       $name: this.props.role.name,
       buttons: {
-        cancel: 'role-delete-cancel',
-        confirm: 'role-remove',
+        cancel: 'role-manager-delete-cancel',
+        confirm: 'role-manager-delete-confirm',
       },
       showCloseButton: false,
     })

@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
+import { match } from 'react-router'
+import { History } from 'history'
 
 import { Team, TeamMember } from 'src/api'
 
@@ -22,9 +24,11 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-type Props = {
+export type TeamsProps = {
   teams: Map<number, Team>
   users: UsersMap
+  match: match<{ id: string, tab: string }>
+  history: History
 }
 
 const mapStateToProps = ({ app: { teams }, user: { users } }: State) => {
@@ -34,14 +38,14 @@ const mapStateToProps = ({ app: { teams }, user: { users } }: State) => {
   }
 }
 
-type TeamsState = {
+export type TeamsState = {
   isLoading: boolean
   selectedTeam: Team | undefined
   members: TeamMember[]
   activeTab: 'roles' | 'members'
 }
 
-class Teams extends React.Component<Props> {
+class Teams extends React.Component<TeamsProps> {
   state: TeamsState = {
     isLoading: true,
     selectedTeam: undefined,
@@ -58,10 +62,17 @@ class Teams extends React.Component<Props> {
     }
   }
 
-  private selectTeam = async (id: number) => {
+  private selectTeam = async (id: number, tab: string = 'roles') => {
     const team = this.props.teams.get(id)!
-    const members = await team.members()
-    this.setState({ selectedTeam: team, members })
+    if (
+      !this.state.selectedTeam ||
+      this.state.selectedTeam.id !== team.id ||
+      this.state.activeTab !== tab
+    ) {
+      const members = await team.members()
+      this.setState({ selectedTeam: team, members, activeTab: tab })
+      this.props.history.push(`/teams/${id}/${tab}`)
+    }
   }
 
   private unselectTeam = () => {
@@ -69,11 +80,22 @@ class Teams extends React.Component<Props> {
   }
 
   private activateRolesTab = () => {
-    this.setState({ activeTab: 'roles' })
+    if (this.state.activeTab !== 'roles') {
+      this.setState({ activeTab: 'roles' })
+      this.props.history.push(`/teams/${this.props.match.params.id}/roles`)
+    }
   }
 
   private activateMembersTab = () => {
-    this.setState({ activeTab: 'members' })
+    if (this.state.activeTab !== 'members') {
+      this.setState({ activeTab: 'members' })
+      this.props.history.push(`/teams/${this.props.match.params.id}/members`)
+    }
+  }
+
+  private fetchRoles = () => {
+    this.state.selectedTeam!.getRoles()
+      .then(() => this.forceUpdate())
   }
 
   private fetchTeams = async () => {
@@ -86,10 +108,37 @@ class Teams extends React.Component<Props> {
         store.dispatch(addAlert('error', 'teams-error-fetch'))
       })
     this.setState({ isLoading: false })
+    return true
   }
 
-  componentDidMount() {
-    this.fetchTeams()
+  componentDidUpdate(prevProps: TeamsProps) {
+    const { id: prevId, tab: prevTab } = prevProps.match.params
+    const { id, tab } = this.props.match.params
+    if (prevId !== id) {
+      this.selectTeam(Number(id), tab)
+    } else {
+      if (prevTab !== tab && tab === 'roles') {
+        this.activateRolesTab()
+      } else if (prevTab !== tab && tab === 'members') {
+        this.activateMembersTab()
+      }
+    }
+  }
+
+  async componentDidMount() {
+    await this.fetchTeams()
+      .then(() => {
+        const { id, tab } = this.props.match.params
+        if (id) {
+          this.selectTeam(Number(id), tab)
+        } else {
+          if (tab && tab === 'roles') {
+            this.activateRolesTab()
+          } else if (tab && tab === 'members') {
+            this.activateMembersTab()
+          }
+        }
+      })
   }
 
   public render() {
@@ -163,12 +212,12 @@ class Teams extends React.Component<Props> {
                     {
                       selectedTeam.roles.map(r => (
                         <li key={r.id} className="teams__role">
-                          <RoleManager role={r} onUpdate={this.fetchTeams} onDelete={this.fetchTeams} />
+                          <RoleManager role={r} onUpdate={this.fetchRoles} onDelete={this.fetchRoles} />
                         </li>
                       ))
                     }
                   </ul>
-                  <AddRole team={selectedTeam} onSuccess={this.fetchTeams} />
+                  <AddRole team={selectedTeam} onSuccess={this.fetchRoles} />
                 </div>
               </Section>
             :
