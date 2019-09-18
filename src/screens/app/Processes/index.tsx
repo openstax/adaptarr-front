@@ -291,11 +291,6 @@ class Processes extends React.Component<ProcessesProps> {
                 />
               :
                 <>
-                  <ProcessesList
-                    onProcessEdit={this.onProcessEdit}
-                    onShowPreview={this.onShowPreview}
-                    activePreview={process ? process.id : undefined}
-                  />
                   <div className="processes__create-new">
                     <Button clickHandler={this.showForm}>
                       <Localized id="processes-view-add">
@@ -303,6 +298,11 @@ class Processes extends React.Component<ProcessesProps> {
                       </Localized>
                     </Button>
                   </div>
+                  <ProcessesList
+                    onProcessEdit={this.onProcessEdit}
+                    onShowPreview={this.onShowPreview}
+                    activePreview={process ? process.id : undefined}
+                  />
                 </>
             }
           </div>
