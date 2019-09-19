@@ -196,11 +196,13 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
 
     case 'wrapInline':
       let wrapType
+      let data
 
       if (typeof command.args[0] === 'string') {
         wrapType = command.args[0]
       } else if (typeof command.args[0] === 'object') {
         wrapType = command.args[0].type
+        data = command.args[0].data
       }
 
       if (SUGGESTION_TYPES.includes(wrapType) || !wrapType) return next()
@@ -214,6 +216,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
 
       const node = Inline.create({
         type: wrapType,
+        data: data ? data : {},
         nodes: List([Text.create(text)]),
       })
       editor.insertInline({
