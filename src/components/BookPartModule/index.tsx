@@ -2,14 +2,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import ProcessVersion from 'src/api/processversion'
 import { ProcessStructure } from 'src/api/process'
-import { addAlert } from 'src/store/actions/Alerts'
 
 import * as types from 'src/store/types'
+import store from 'src/store'
 import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/Alerts'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
@@ -24,30 +23,36 @@ import UpdateSlots from 'src/containers/UpdateSlots'
 
 import './index.css'
 
-type Props = {
+type ModuleProps = {
   item: api.BookPart
   modulesMap: types.ModulesMap
   processes: Map<number, api.Process>
+  teams: Map<number, api.Team>
   isEditingUnlocked: boolean
   highlightText: string
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
 }
 
-const mapStateToProps = ({ modules: { modulesMap }, app: { processes } }: State) => ({
+const mapStateToProps = ({ modules: { modulesMap }, app: { processes, teams } }: State) => ({
   modulesMap,
   processes,
+  teams,
 })
 
-class Module extends React.Component<Props> {
-  state: {
-    showBeginProcess: boolean
-    processStructure: ProcessStructure | null
-    module: api.Module | undefined
-  } = {
+export type ModuleState = {
+  showBeginProcess: boolean
+  processStructure: ProcessStructure | null
+  module: api.Module | undefined
+  team: api.Team | null
+}
+
+class Module extends React.Component<ModuleProps> {
+  state: ModuleState = {
     showBeginProcess: false,
     processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
+    team: null,
   }
 
   private showRemoveModuleDialog = async () => {
@@ -92,13 +97,19 @@ class Module extends React.Component<Props> {
 
   private showProcessDetails = async () => {
     const { process: processId, version } = this.state.module!.process!
-    const process = await ProcessVersion.load(processId, version)
+    const { processes } = this.props
+    const process = await api.ProcessVersion.load(processId, version)
     const structure = await process.structure()
-    this.setState({ processStructure: structure })
+    const team = this.props.teams.get(processes.get(processId)!.team)
+    if (!team) {
+      console.error(`Couldn't find team for process: ${process.id}`)
+      return
+    }
+    this.setState({ processStructure: structure, team })
   }
 
   private closeProcessDetails = () => {
-    this.setState({ processStructure: null })
+    this.setState({ processStructure: null, team: null })
   }
 
   private showCancelProcess = async () => {
@@ -137,7 +148,7 @@ class Module extends React.Component<Props> {
     this.props.afterAction()
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ModuleProps) {
     if (this.props.item !== prevProps.item) {
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
     }
@@ -149,6 +160,7 @@ class Module extends React.Component<Props> {
       showBeginProcess,
       processStructure,
       module: mod,
+      team,
     } = this.state
 
     let titleWithHighlights = ''
@@ -231,7 +243,7 @@ class Module extends React.Component<Props> {
           : null
         }
         {
-          processStructure ?
+          processStructure && team ?
             <Dialog
               l10nId="book-process-preview-title"
               placeholder="Process details:"
@@ -240,8 +252,10 @@ class Module extends React.Component<Props> {
             >
               <UpdateSlots
                 module={this.state.module}
+                team={team}
               />
               <ProcessPreview
+                team={team}
                 structure={processStructure}
               />
               <div className="dialog__buttons dialog__buttons--center">

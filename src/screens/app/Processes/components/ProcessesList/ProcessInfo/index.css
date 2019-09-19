@@ -1,3 +1,14 @@
+.processes__name-wrapper {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.processes__team {
+  font-size: 14px;
+  margin: 3px 0;
+}
+
 form.processes__name {
   display: flex;
   flex: 1;

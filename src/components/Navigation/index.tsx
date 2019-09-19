@@ -8,6 +8,7 @@ import { Notification } from 'src/api'
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
+import TeamSwitcher from 'src/components/TeamSwitcher'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Tooltip from 'src/components/ui/Tooltip'
@@ -37,7 +38,6 @@ const isActive = (location: any, pathnames: string[]): boolean => {
 }
 
 class Navigation extends React.Component<RouteComponentProps & Props> {
-
   state: {
     toggleSidebar: boolean,
   } = {
@@ -75,6 +75,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </Localized>
           </Button>
         </div>
+        <TeamSwitcher />
         <nav className="nav">
           <ul>
             <li className="nav__link">
@@ -221,7 +222,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </NavLink>
               </Tooltip>
             </li>
-            <LimitedUI permissions="user:invite">
+            <LimitedUI permissions="member:add">
               <li className="nav__link">
                 <Tooltip l10nId="navigation-invite" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/invitations" activeClassName="active">
@@ -237,15 +238,15 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </Tooltip>
               </li>
             </LimitedUI>
-            <LimitedUI permissions="role:edit">
+            <LimitedUI permissions="team:manage">
               <li className="nav__link">
-                <Tooltip l10nId="navigation-roles" direction="right" isDisabled={!toggleSidebar}>
-                  <NavLink to="/roles" activeClassName="active">
+                <Tooltip l10nId="navigation-teams" direction="right" isDisabled={!toggleSidebar}>
+                  <NavLink to="/teams" activeClassName="active">
                     <span className="nav__content">
                       <Icon size="medium" name="users" />
                       <span className="nav__text">
-                        <Localized id="navigation-roles">
-                          Manage roles
+                        <Localized id="navigation-teams">
+                          Manage teams
                         </Localized>
                       </span>
                     </span>

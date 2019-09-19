@@ -254,7 +254,7 @@ class Group extends React.Component<Props> {
       showBeginProcess,
       modules,
     } = this.state
-    const { isEditingUnlocked, collapseIcon, item, showStatsFor } = this.props
+    const { isEditingUnlocked, collapseIcon, item, showStatsFor, book } = this.props
     const partsNotInProcess = item.parts!.some(p => p.kind === 'module' && !p.process)
     const modStatuses = this.getModStatuses()
 
@@ -354,7 +354,10 @@ class Group extends React.Component<Props> {
               size="medium"
               onClose={this.closeAddModuleDialog}
             >
-              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker
+                team={book.team}
+                onModuleClick={this.handleModuleClick}
+              />
             </Dialog>
           : null
         }

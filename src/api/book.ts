@@ -3,11 +3,14 @@ import axios from 'src/config/axios'
 import Base from './base'
 import BookPart from './bookpart'
 import User from './user'
+import { TeamID } from './team'
+
 import { elevated, elevate } from './utils'
 
 export type BookData = {
   id: string,
   title: string,
+  team: TeamID
 }
 
 export type Diff = {
@@ -69,24 +72,26 @@ export default class Book extends Base<BookData> {
    * This function requires elevated permissions.
    *
    * @param title   title of the book
+   * @param team   ID of team in which book should be created
    * @param content file containing initial contents of the book, in format
    * compatible with Connexion's ZIP export
    */
-  static async create(title: string, content?: File): Promise<Book> {
+  static async create(title: string, team: number, content?: File): Promise<Book> {
     const session = await User.session()
     if (!session.is_elevated) {
       await elevate()
     }
 
-    let data: FormData | { title: string }
+    let data: FormData | { title: string, team: number }
     let config: { headers: { 'Content-Type': string } }
     if (content) {
       data = new FormData()
       data.append('title', title)
+      data.append('team', team.toString())
       data.append('file', content)
       config = { headers: { 'Content-Type': 'multipart' } }
     } else {
-      data = { title }
+      data = { title, team }
       config = { headers: { 'Content-Type': 'application/json' } }
     }
 
@@ -103,6 +108,11 @@ export default class Book extends Base<BookData> {
    * Book's title.
    */
   title: string
+
+  /**
+   * ID of team for which this book belongs.
+   */
+  team: TeamID
 
   /**
    * Fetch this book's structure.

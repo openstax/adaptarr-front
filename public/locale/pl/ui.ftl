@@ -109,7 +109,7 @@ book-unassign-user-alert-success = Użytkownik został usunięty z { $module }
 
 
 
-## Screens - book view - “Edit book” dialog
+## Screens - book view - „Edit book” dialog
 
 book-edit-dialog-title = Modyfikuj książkę
 
@@ -221,7 +221,7 @@ book-list-empty = Nie znaleziono książek.
 #
 # Variables:
 # - $title (string): title of the book to be deleted
-book-delete-title = Usunąć książkę "{ $title }"?
+book-delete-title = Usunąć książkę „{ $title }”?
 
 book-delete-confirm = Potwierdź
 
@@ -365,7 +365,7 @@ draft-details-import-error = Nie udało się zaimportować pliku. Szczegóły: {
 
 ## Screens - dashboard - draft deletion dialog
 
-dashboard-delete-draft-dialog-title = Usunąć szkic "{ $title }"?
+dashboard-delete-draft-dialog-title = Usunąć szkic „{ $title }”?
 
 dashboard-delete-draft-confirm = Usuń
 
@@ -385,6 +385,10 @@ invitation-email =
   .placeholder = Adres e-mail
 
 invitation-email-validation-invalid = To nie jest poprawny adres e-mail.
+
+invitation-select-language = Wybierz język
+
+invitation-select-role = Wybierz rolę
 
 invitation-send =
   .value = Wyślij zaproszenie
@@ -446,7 +450,7 @@ user-profile-view-title-your = Mój profil
 # - $name (string): user's name
 user-profile-view-title-named = Profil { $name }
 
-user-profile-section-team = Mój zespół
+user-profile-section-teams-members = Członkowie twoich zespołów
 
 user-profile-section-bio = Bio:
 
@@ -455,6 +459,15 @@ user-profile-section-contact = Kontakt
 user-profile-section-role = Rola użytkownika
 
 user-profile-role-unknown = Nieznana rola
+
+# Variables:
+# - $role (string): role name
+# - $team (string): team name
+user-profile-role-in-team = { $role } w zespole { $team }
+
+# Variables:
+# - $team (string): team name
+user-profile-no-role-in-team = Brak roli w zespole { $team }
 
 ## Variables
 # $role: (string) - new role name
@@ -491,6 +504,16 @@ user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi.
 user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }.
 
 user-profile-users-drafts = Teksty użytkownika
+
+user-profile-system-permissions = Systemowe uprawnienia użytkownika
+
+user-profile-system-permissions-change-success = Pomyślnie zaktualizowano uprawnienia.
+
+user-profile-system-permissions-change-error = Nie udało się zaktualizować uprawnień.
+
+# Variables:
+# - $team (string): team name.
+user-profile-team-list-team-members = Członkowie zespołu { $team }
 
 # Placeholder text for team search box.
 user-profile-team-list-search =
@@ -541,6 +564,10 @@ resources-add-confirm = Potwierdź
 resources-add-success = Pomyślnie dodano nowy zasób
 
 resources-add-error = Nie udało się dodać zasobu
+
+# Variables:
+# - $team (string): team in which this resource exists.
+resources-card-team = Zespół: { $team }
 
 resources-card-edit = Edytuj
 
@@ -636,72 +663,140 @@ helpdesk-import-error = Nie udało się zaktualizować bazy danych. Szczegóły:
 
 
 
-## Screens - roles
+## Screens - teams
 
-role-view-title = Role
+teams-section-manage-teams-title = Zarządzaj zespołami
 
-role-section-add = Dodaj nową rolę
+teams-error-fetch = Nie udało się pobrać listy zespołów.
 
-role-section-manage = Zarządzaj rolami
+teams-add-team =
+  .value = Dodaj zespół
 
-role-name = Nazwa roli
+teams-add-team-placeholder =
+  .placeholder = Nazwa zespołu
 
-role-create =
+# Variables:
+# - $name (string): name of created team.
+teams-add-team-success = Pomyślnie utworzono zespół { $name }.
+
+teams-add-team-error = Nie udało się utworzyć zespołu.
+
+teams-update-name-success = Pomyślnie zaktualizowano nazwę zespołu.
+
+teams-update-name-error = Nie udało się zaktualizować nazwy zespołu.
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-roles-title = Zarządzaj rolami w: { $team }
+
+teams-role-name =
+  .placeholder = Nazwa roli
+
+teams-role-create =
   .value = Utwórz rolę
-
-role-edit = Edycja
-
-role-remove = Usuń
 
 # Alert displayed when role has been created.
 #
 # Variables:
 # - $name (string): name of role which user created.
-role-create-success = Rola "{ $name }" została utworzona.
+teams-role-create-success = Rola „{ $name }” została utworzona.
 
 # Alert displayed when role has not been created.
 #
 # Variables:
 # - $details (string): error details.
-role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+teams-role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+
+teams-tab-roles = Role
+
+teams-tab-members = Zespół
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-members-title = Zarządzaj członkami zespołu: { $team }
+
+teams-no-members = Brak użytkowników w tym zespole.
+
+teams-member-cancel = Anuluj
+
+teams-member-remove = Usuń
+
+# Variables:
+# - $user (string): name of user to remove.
+# - $team (string): name of team from which user will be removed.
+teams-member-remove-confirm-dialog = Chcesz usunąć użytkownika { $user } z zespołu { $team }?
+
+teams-member-remove-success = Pomyślnie usunięto użytkownika z zespołu.
+
+teams-member-remove-error = Nie udało się usunąć użytkownika z zespołu.
+
+teams-member-role-change-success = Pomyślnie zmieniono rolę użytkownika.
+
+teams-member-role-change-error = Nie udało się zmienić roli użytkownika.
+
+teams-select-user = Wybierz użytkownika
+
+teams-select-role = Wybierz rolę
+
+teams-member-add =
+  .value = Zaproś użytkownika
+
+teams-member-add-success = Pomyślnie wysłano zaproszenie.
+
+teams-member-add-error = Nie udało się wysłać zaproszenia.
+
+
+
+## Reusable components - team selector
+
+team-selector-placeholder = Wybierz zespół
+
+
+
+## Reusable components - role manager
+
+role-manager-edit = Edycja
+
+role-manager-remove = Usuń
 
 # Dialog displayed when user want to delete role.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
-role-delete-title = Usunąć rolę "{ $name }"?
+role-manager-delete-title = Usunąć rolę „{ $name }”?
 
-role-delete-confirm = Potwierdź
+role-manager-delete-confirm = Potwierdź
 
-role-delete-cancel = Anuluj
+role-manager-delete-cancel = Anuluj
 
 # Alert displayed when role has been deleted.
 #
 # Variables:
 # - $name (string): name of role which user deleted.
-role-delete-success = Rola "{ $name }" została usunięta.
+role-manager-delete-success = Rola „{ $name }” została usunięta.
 
 # Alert displayed when role has not been deleted.
 #
 # Variables:
 # - $details (string): error details.
-role-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+role-manager-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
 
 # Alert displayed when role has been updated.
 #
 # Variables:
 # - $name (string): name of role which user updated.
-role-update-success = Rola "{ $name }" została zaktualizowana.
+role-manager-update-success = Rola „{ $name }” została zaktualizowana.
 
 # Alert displayed when role has not been updated.
 #
 # Variables:
 # - $details (string): error details.
-role-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
+role-manager-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
 
-role-update-confirm = Zaktualizuj rolę
+role-manager-update-confirm =
+  .value = Zaktualizuj rolę
 
-role-update-cancel = Anuluj
+role-manager-update-cancel = Anuluj
 
 
 
@@ -763,6 +858,10 @@ process-create-version-success = Wersja „{ $name }” została utworzona.
 # - $details (string): error details.
 process-create-version-error = Nie udało się utworzyć nowej wersji. Szczegóły: { $details }.
 
+# Variables:
+# - $team (string): team in which this process exists.
+processes-team = Zespół: { $team }
+
 
 
 ## Components for creating and updating process
@@ -776,6 +875,8 @@ process-form-cancel = Anuluj
 process-form-remove = Usuń
 
 process-form-process-name = Nazwa procesu
+
+process-form-process-team = Zespół
 
 process-form-process-starting-step = Krok początkowy
 
@@ -818,6 +919,8 @@ process-form-step-link-to = Następny krok:
 process-form-step-link-slot = Funkcja, która może używać tego linku:
 
 process-form-step-link-remove = Usuń link
+
+process-form-error-team = Określ w jakim zespole chcesz utworzyć proces.
 
 process-form-error-name = Proszę podać nazwę procesu.
 
@@ -1105,11 +1208,14 @@ step-changer-dialog-wrong-target-suggestions = Liczba sugestii w dokumencie: { $
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user-invite] Zapraszanie użytkowników
-  [user-delete] Usuwanie użytkowników
   [user-edit] Edytuj profile użytkowników
   [user-edit-permissions] Edycja uprawnień użytkowników
-  [user-assign-role] Przypisywanie ról do użytkowników
+  [user-delete] Usuwanie użytkowników
+  [team-manage] Zarządzanie zespołami
+  [member-add] Dodawanie członków zespołu
+  [member-remove] Usuwanie członków zespołu
+  [member-assign-role] Przypisywanie roli członkom zespołu
+  [member-edit-permissions] Edycja uprawnień członków zespołu
   [book-edit] Tworzenie, usuwanie i edycja książek
   [module-edit] Tworzenie, usuwanie i edycja modułów
   [role-edit] Tworzenie, usuwanie i edycja ról
@@ -1150,7 +1256,24 @@ navigation-invite = Zaproszenia
 
 navigation-roles = Role
 
+navigation-teams = Zespoły i role
+
 navigation-processes = Procesy
+
+
+
+## Reusable components - team switcher
+##
+## This component is displayed at all times and allows user to swich team for which
+## he should see resources.
+
+team-switcher-select-placeholder = Wybierz zespoły
+
+
+
+## Reusable components - select list
+
+select-list-select-all = Zaznacz wszystkie
 
 
 
@@ -1353,6 +1476,10 @@ load-error-persistance = Jeżeli używasz trybu prywatnego (incognito), edytor
 
 
 ## Reusable components - book card
+
+# Variables:
+# - $team (string): team in which this book exists.
+book-card-team = Zespół: { $team }
 
 book-card-edit = Edycja
 
@@ -1761,7 +1888,7 @@ editor-tools-definition-remove-definition = Usuń definicję
 
 editor-tools-definition-insert-meaning = Dodaj znaczenie
 
-editor-tools-definition-insert-seealso = Dodaj "zobacz również"
+editor-tools-definition-insert-seealso = Dodaj „zobacz również”
 
 
 

@@ -1,31 +1,35 @@
 import * as React from 'react'
-import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import Process, { ProcessStructure } from 'src/api/process'
+
 import { State } from 'src/store/reducers'
 
 import ProcessInfo from './ProcessInfo'
 
 import './index.css'
 
-type Props = {
+export type ProcessesListProps = {
   processes: Map<number, Process>
+  selectedTeams: number[]
   activePreview?: number
   onProcessEdit: (process: Process) => void
   onShowPreview: (process: Process) => void
 }
 
-const mapStateToProps = ({ app: { processes } }: State) => {
+const mapStateToProps = ({ app: { processes, selectedTeams } }: State) => {
   return {
     processes,
+    selectedTeams,
   }
 }
 
-class ProcessesList extends React.Component<Props> {
-  state: {
-    structure: ProcessStructure | null
-  } = {
+export type ProcessesListState = {
+  structure: ProcessStructure | null
+}
+
+class ProcessesList extends React.Component<ProcessesListProps> {
+  state: ProcessesListState = {
     structure: null,
   }
 
@@ -38,12 +42,13 @@ class ProcessesList extends React.Component<Props> {
   }
 
   public render() {
-    const { activePreview } = this.props
+    const { activePreview, selectedTeams } = this.props
 
     return (
       <ul className="processes__list">
         {
           Array.from(this.props.processes.values()).map(p => {
+            if (!selectedTeams.includes(p.team)) return null
             return (
               <li key={p.id} className={`processes__item ${p.id === activePreview ? 'active' : ''}`}>
                 <ProcessInfo

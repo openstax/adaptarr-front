@@ -5,7 +5,7 @@ import { Localized } from 'fluent-react/compat'
 
 import { Book } from 'src/api'
 
-import { IsLoading, BooksMap, AlertDataKind } from 'src/store/types'
+import { IsLoading, BooksMap, AlertDataKind, TeamsMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/index'
@@ -24,14 +24,16 @@ type Props = {
     isLoading: IsLoading
     booksMap: BooksMap
   }
+  teams: TeamsMap
   isEditingUnlocked: boolean
   fetchBooksMap: () => void
   addAlert: (kind: AlertDataKind, message: string) => void
 }
 
-export const mapStateToProps = ({ booksMap }: State) => {
+export const mapStateToProps = ({ app: { teams }, booksMap }: State) => {
   return {
     booksMap,
+    teams,
   }
 }
 
@@ -88,6 +90,23 @@ class BookCard extends React.Component<Props> {
     this.setState({ showEditBook: false })
   }
 
+  private cardTitle = () => (
+    <h2 className="card__title">
+      <span className="card__book-name">
+        {this.props.book.title}
+      </span>
+      {
+        this.props.teams.has(this.props.book.team) ?
+          <span className="card__book-team">
+            <Localized id="book-card-team" $team={this.props.teams.get(this.props.book.team)!.name}>
+              Team: ...
+            </Localized>
+          </span>
+        : null
+      }
+    </h2>
+  )
+
   public render() {
     const { showEditBook } = this.state
     const { book, isEditingUnlocked } = this.props
@@ -97,9 +116,9 @@ class BookCard extends React.Component<Props> {
         {
           isEditingUnlocked ?
             <div className="card__content">
-              <h2 className="card__title">{book.title}</h2>
+              {this.cardTitle()}
               <div className="card__buttons">
-                <LimitedUI permissions="book:edit">
+                <LimitedUI team={book.team} permissions="book:edit">
                   <Button clickHandler={this.showEditBook}>
                     <Localized id="book-card-edit">
                       Edit
@@ -115,7 +134,7 @@ class BookCard extends React.Component<Props> {
             </div>
           :
             <Link to={`books/${book.id}`} className="card__content">
-              <h2 className="card__title">{book.title}</h2>
+              {this.cardTitle()}
             </Link>
         }
         {

@@ -1,11 +1,12 @@
 import { Book, Module, User, Notification } from 'src/api'
+import Team, { TeamID } from 'src/api/team'
 
 export type IsLoading = boolean
 export type RequestStatus = {status: string, message?: string | {}}
 
 
-export type TeamMap = Map<number, User>
-
+export type UsersMap = Map<number, User>
+export type TeamsMap = Map<TeamID, Team>
 
 
 export type BooksMap = Map<string, Book>
@@ -72,12 +73,3 @@ export type AlertNotification = {
 }
 
 export type Alert = AlertInfo | AlertNotification
-
-
-
-export type ConversationInfo = { title: string, timestamp: string, }
-export type Message = { user: User, message: string, timestamp: string, }
-export type Conversation = {
-  info: ConversationInfo
-  messages: Message[]
-}

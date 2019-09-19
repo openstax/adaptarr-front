@@ -1,15 +1,26 @@
 import { AppAction, ConfirmDialogOptions } from 'src/store/actions/app'
-import { SET_LOCALE, SET_AVAILABLE_LOCALES, SET_ROLES, SET_PROCESSES, SHOW_CONFIRM_DIALOG, CLOSE_CONFIRM_DIALOG } from 'src/store/constants'
-import Role from 'src/api/role'
-import Process from 'src/api/process'
+import {
+  SET_LOCALE,
+  SET_AVAILABLE_LOCALES,
+  SET_PROCESSES,
+  SHOW_CONFIRM_DIALOG,
+  CLOSE_CONFIRM_DIALOG,
+  SET_TEAM,
+  SET_TEAMS,
+  SET_SELECTED_TEAMS,
+} from 'src/store/constants'
+
+import { Process } from 'src/api'
+import { TeamsMap } from 'src/store/types'
 
 export interface State {
-  locale: string[],
-  availableLocales: string[],
-  roles: Role[],
-  processes: Map<number, Process>,
+  locale: string[]
+  availableLocales: string[]
+  processes: Map<number, Process>
   showConfirmDialog: boolean
   confirmDialogOptions: ConfirmDialogOptions
+  teams: TeamsMap
+  selectedTeams: number[]
 }
 
 const DEFAULT_CONFIRM_DIALOG_OPTIONS: ConfirmDialogOptions = {
@@ -25,10 +36,11 @@ const DEFAULT_CONFIRM_DIALOG_OPTIONS: ConfirmDialogOptions = {
 export const initialState: State = {
   locale: Array.from(navigator.languages),
   availableLocales: [],
-  roles: [],
   processes: new Map(),
   showConfirmDialog: false,
   confirmDialogOptions: DEFAULT_CONFIRM_DIALOG_OPTIONS,
+  teams: new Map(),
+  selectedTeams: [],
 }
 
 export function reducer(state: State = initialState, action: AppAction) {
@@ -43,12 +55,6 @@ export function reducer(state: State = initialState, action: AppAction) {
     return {
       ...state,
       availableLocales: action.data,
-    }
-
-  case SET_ROLES:
-    return {
-      ...state,
-      roles: action.data.sort(sortRoles),
     }
 
   case SET_PROCESSES:
@@ -71,17 +77,25 @@ export function reducer(state: State = initialState, action: AppAction) {
       confirmDialogOptions: DEFAULT_CONFIRM_DIALOG_OPTIONS,
     }
 
+  case SET_TEAM:
+    return {
+      ...state,
+      teams: new Map(state.teams.set(action.data.id, action.data)),
+    }
+
+  case SET_TEAMS:
+    return {
+      ...state,
+      teams: action.data,
+    }
+
+  case SET_SELECTED_TEAMS:
+    return {
+      ...state,
+      selectedTeams: action.data,
+    }
+
   default:
     return state
-  }
-}
-
-const sortRoles = (a: Role, b: Role) => {
-  if (a.id > b.id) {
-    return 1
-  } else if (a.id < b.id) {
-    return -1
-  } else {
-    return 0
   }
 }

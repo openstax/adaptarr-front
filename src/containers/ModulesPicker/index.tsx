@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import { Module } from 'src/api'
+import { Module, Team } from 'src/api'
 
 import * as modulesActions from 'src/store/actions/Modules'
 import { AlertDataKind } from 'src/store/types'
@@ -22,7 +22,9 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import './index.css'
 
-type Props = {
+export type ModulesPickerProps = {
+  // Show only modules from specific team
+  team?: Team | number
   onModuleClick: (mod: Module) => any
   addModuleToMap: (mod: Module) => any
   removeModuleFromMap: (id: string) => any
@@ -51,13 +53,15 @@ const mapDispatchToProps = (dispatch: any) => {
   }
 }
 
-class ModuleList extends React.Component<Props> {
-  state: {
-    moduleTitleValue: string
-    moduleLanguage: SelectOption
-    files: File[]
-    filterInput: string
-  } = {
+export type ModulesPickerState = {
+  moduleTitleValue: string
+  moduleLanguage: SelectOption
+  files: File[]
+  filterInput: string
+}
+
+class ModulesPicker extends React.Component<ModulesPickerProps> {
+  state: ModulesPickerState = {
     moduleTitleValue: '',
     moduleLanguage: LANGUAGES.find(lng => lng.value === getCurrentLng('iso')) || LANGUAGES[0],
     files: [],
@@ -178,6 +182,7 @@ class ModuleList extends React.Component<Props> {
           />
         </div>
         <ModulesList
+          team={this.props.team}
           filter={this.state.filterInput}
           onModuleClick={this.handleModuleClick}
           onModuleRemoveClick={this.showRemoveModuleDialog}
@@ -187,4 +192,4 @@ class ModuleList extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModuleList)
+export default connect(mapStateToProps, mapDispatchToProps)(ModulesPicker)

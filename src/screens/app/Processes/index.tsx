@@ -1,13 +1,17 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import User from 'src/api/user'
+import Team, { TeamID } from 'src/api/team'
 import Process, { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { fetchProcesses } from 'src/store/actions/app'
+import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
@@ -22,17 +26,31 @@ import ProcessPreview from 'src/containers/ProcessPreview'
 
 import './index.css'
 
-class Processes extends React.Component<{}> {
-  state: {
-    showForm: boolean
-    structure: ProcessStructure | null
-    process: Process | null
-    showPreview: boolean
-    previewStructure: ProcessStructure | null
-  } = {
+export type ProcessesProps = {
+  teams: TeamsMap
+}
+
+const mapStateToProps = ({ app: { teams } }: State) => {
+  return {
+    teams,
+  }
+}
+
+export type ProcessesState = {
+  showForm: boolean
+  structure: ProcessStructure | null
+  process: Process | null
+  team: Team | null
+  showPreview: boolean
+  previewStructure: ProcessStructure | null
+}
+
+class Processes extends React.Component<ProcessesProps> {
+  state: ProcessesState = {
     showForm: false,
     structure: null,
     process: null,
+    team: null,
     showPreview: false,
     previewStructure: null,
   }
@@ -50,10 +68,10 @@ class Processes extends React.Component<{}> {
     this.setState({ showForm: true, structure, process: p })
   }
 
-  private createProcess = async (structure: ProcessStructure) => {
+  private createProcess = async (structure: ProcessStructure, team: TeamID) => {
     // Create new process if we are not editing existing one.
     if (!this.state.process) {
-      Process.create(structure)
+      Process.create(structure, team)
         .then(() => {
           this.closeForm()
           store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
@@ -96,6 +114,9 @@ class Processes extends React.Component<{}> {
   private showConfirmNewVersionCreation = async (structure: ProcessStructure) => {
     const res = await confirmDialog({
       title: 'process-update-warning-new-version',
+      content: <Localized id="process-update-warning-new-version-content" p={<p/>}>
+        <div className="process__dialog-content"></div>
+      </Localized>,
       buttons: {
         cancel: 'process-update-warning-new-version-cancel',
         confirm: 'process-update-warning-new-version-confirm',
@@ -123,12 +144,14 @@ class Processes extends React.Component<{}> {
   }
 
   private closePreview = () => {
-    this.setState({ showPreview: false, previewStructure: null })
+    this.setState({ showPreview: false, previewStructure: null, team: null })
   }
 
   private onShowPreview = async (p: Process) => {
     const previewStructure = await p.structure()
-    this.setState({ showPreview: true, previewStructure, })
+    const team = this.props.teams.get(p.team)
+    if (!team) return console.error(`Couldn't find team with id: ${p.team}`)
+    this.setState({ showPreview: true, previewStructure, team })
   }
 
   private compareOldWithNew = (oldStructure: ProcessStructure, newStructure: ProcessStructure): {
@@ -255,7 +278,7 @@ class Processes extends React.Component<{}> {
   }
 
   public render() {
-    const { showForm, structure, showPreview, previewStructure, process } = this.state
+    const { showForm, structure, showPreview, previewStructure, process, team } = this.state
 
     return (
       <div className={`container ${showPreview ? 'container--splitted' : ''}`}>
@@ -266,16 +289,12 @@ class Processes extends React.Component<{}> {
               showForm ?
                 <ProcessForm
                   structure={structure}
+                  process={process ? process : undefined}
                   onSubmit={this.createProcess}
                   onCancel={this.closeForm}
                 />
               :
                 <>
-                  <ProcessesList
-                    onProcessEdit={this.onProcessEdit}
-                    onShowPreview={this.onShowPreview}
-                    activePreview={process ? process.id : undefined}
-                  />
                   <div className="processes__create-new">
                     <Button clickHandler={this.showForm}>
                       <Localized id="processes-view-add">
@@ -283,12 +302,17 @@ class Processes extends React.Component<{}> {
                       </Localized>
                     </Button>
                   </div>
+                  <ProcessesList
+                    onProcessEdit={this.onProcessEdit}
+                    onShowPreview={this.onShowPreview}
+                    activePreview={process ? process.id : undefined}
+                  />
                 </>
             }
           </div>
         </Section>
         {
-          showPreview && previewStructure ?
+          showPreview && previewStructure && team ?
             <Section>
               <Header
                 l10nId="processes-view-preview"
@@ -299,7 +323,10 @@ class Processes extends React.Component<{}> {
                 </Button>
               </Header>
               <div className="section__content">
-                <ProcessPreview structure={previewStructure} />
+                <ProcessPreview
+                  structure={previewStructure}
+                  team={team}
+                />
               </div>
             </Section>
           : null
@@ -309,7 +336,7 @@ class Processes extends React.Component<{}> {
   }
 }
 
-export default Processes
+export default connect(mapStateToProps)(Processes)
 
 function numberArrayDiff(a: number[], b: number[]) {
   if (a.length > b.length) {

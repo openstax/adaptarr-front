@@ -10,11 +10,11 @@ export type FETCH_USER_FAILURE = typeof FETCH_USER_FAILURE
 export const CLEAR_USER_DATA = 'CLEAR_USER_DATA'
 export type CLEAR_USER_DATA = typeof CLEAR_USER_DATA
 
-export const SET_TEAM_MAP = 'SET_TEAM_MAP'
-export type SET_TEAM_MAP = typeof SET_TEAM_MAP
+export const SET_USERS_MAP = 'SET_USERS_MAP'
+export type SET_USERS_MAP = typeof SET_USERS_MAP
 
-export const SET_USER_IN_TEAM_MAP = 'SET_USER_IN_TEAM_MAP'
-export type SET_USER_IN_TEAM_MAP = typeof SET_USER_IN_TEAM_MAP
+export const SET_USER_IN_USERS_MAP = 'SET_USER_IN_USERS_MAP'
+export type SET_USER_IN_USERS_MAP = typeof SET_USER_IN_USERS_MAP
 
 
 
@@ -70,21 +70,11 @@ export type REMOVE_ALERT = typeof REMOVE_ALERT
 
 
 
-export const SET_CONVERSATION = 'SET_CONVERSATION'
-export type SET_CONVERSATION = typeof SET_CONVERSATION
-
-export const PUSH_MSG_TO_CONVERSATION = 'PUSH_MSG_TO_CONVERSATION'
-export type PUSH_MSG_TO_CONVERSATION = typeof PUSH_MSG_TO_CONVERSATION
-
-
 export const SET_LOCALE = 'SET_LOCALE'
 export type SET_LOCALE = typeof SET_LOCALE
 
 export const SET_AVAILABLE_LOCALES = 'SET_AVAILABLE_LOCALES'
 export type SET_AVAILABLE_LOCALES = typeof SET_AVAILABLE_LOCALES
-
-export const SET_ROLES = 'SET_ROLES'
-export type SET_ROLES = typeof SET_ROLES
 
 export const SET_PROCESSES = 'SET_PROCESSES'
 export type SET_PROCESSES = typeof SET_PROCESSES
@@ -95,6 +85,14 @@ export type SHOW_CONFIRM_DIALOG = typeof SHOW_CONFIRM_DIALOG
 export const CLOSE_CONFIRM_DIALOG = 'CLOSE_CONFIRM_DIALOG'
 export type CLOSE_CONFIRM_DIALOG = typeof CLOSE_CONFIRM_DIALOG
 
+export const SET_SELECTED_TEAMS = 'SET_SELECTED_TEAMS'
+export type SET_SELECTED_TEAMS = typeof SET_SELECTED_TEAMS
+
+export const SET_TEAM = 'SET_TEAM'
+export type SET_TEAM = typeof SET_TEAM
+
+export const SET_TEAMS = 'SET_TEAMS'
+export type SET_TEAMS = typeof SET_TEAMS
 
 
 export const SET_CURRENT_DRAFT_LANG = 'SET_CURRENT_DRAFT_LANG'

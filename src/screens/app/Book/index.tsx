@@ -36,18 +36,14 @@ type Props = {
     }
   }
   history: History
-  team: {
-    teamMap: types.TeamMap
-  }
   modules: {
     modulesMap: types.ModulesMap
   }
   addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
+const mapStateToProps = ({ modules }: State) => {
   return {
-    team,
     modules,
   }
 }
@@ -428,6 +424,7 @@ class Book extends React.Component<Props> {
           </Header>
           <ProcessSelector
             title="book-statistics-choose-process"
+            team={book ? book.team : undefined}
             onChange={this.handleProcessChange}
           />
           {
@@ -525,7 +522,10 @@ class Book extends React.Component<Props> {
               size="medium"
               onClose={this.closeAddModuleDialog}
             >
-              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker
+                onModuleClick={this.handleModuleClick}
+                team={book!.team}
+              />
             </Dialog>
           : null
         }

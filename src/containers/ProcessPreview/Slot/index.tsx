@@ -1,22 +1,14 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { connect } from 'react-redux'
 
-import { ProcessSlot } from 'src/api/process'
 import Role from 'src/api/role'
-import { State } from 'src/store/reducers'
+import { ProcessSlot } from 'src/api/process'
 
 import './index.css'
 
 type SlotProps = {
   roles: Role[]
   slot: ProcessSlot
-}
-
-const mapStateToProps = ({ app: { roles } }: State) => {
-  return {
-    roles,
-  }
 }
 
 class Slot extends React.Component<SlotProps> {
@@ -67,4 +59,4 @@ class Slot extends React.Component<SlotProps> {
   }
 }
 
-export default connect(mapStateToProps)(Slot)
+export default Slot

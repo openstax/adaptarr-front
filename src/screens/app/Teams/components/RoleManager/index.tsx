@@ -1,30 +1,35 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import Role, { Permission } from 'src/api/role'
+import Role from 'src/api/role'
+import { TeamPermission } from 'src/api/team'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
-import Permissions from 'src/components/Permissions'
+import TeamPermissions from 'src/components/TeamPermissions'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
+import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-type Props = {
+export type RoleManagerProps = {
   role: Role
-  afterAction: () => any
+  onUpdate: (role: Role) => void
+  onDelete: () => void
 }
 
-class RoleManager extends React.Component<Props> {
-  state: {
-    isEditing: boolean
-    roleName: string
-    permissions: Permission[]
-  } = {
+export type RoleManagerState = {
+  isEditing: boolean
+  roleName: string
+  permissions: TeamPermission[]
+}
+
+class RoleManager extends React.Component<RoleManagerProps> {
+  state: RoleManagerState = {
     isEditing: false,
     roleName: '',
     permissions: [],
@@ -36,11 +41,11 @@ class RoleManager extends React.Component<Props> {
 
   private openRemoveRoleDialog = async () => {
     const res = await confirmDialog({
-      title: 'role-delete-title',
+      title: 'role-manager-delete-title',
       $name: this.props.role.name,
       buttons: {
-        cancel: 'role-delete-cancel',
-        confirm: 'role-remove',
+        cancel: 'role-manager-delete-cancel',
+        confirm: 'role-manager-delete-confirm',
       },
       showCloseButton: false,
     })
@@ -53,11 +58,15 @@ class RoleManager extends React.Component<Props> {
   private removeRole = () => {
     this.props.role.delete()
       .then(() => {
-        this.props.afterAction()
-        store.dispatch(addAlert('success', 'role-delete-success', {name: this.props.role.name}))
+        this.props.onDelete()
+        store.dispatch(addAlert('success', 'role-manager-delete-success', {
+          name: this.props.role.name,
+        }))
       })
       .catch((e) => {
-        store.dispatch(addAlert('error', 'role-delete-error', {details: e.response.data.error}))
+        store.dispatch(addAlert('error', 'role-manager-delete-error', {
+          details: e.response.data.error,
+        }))
       })
   }
 
@@ -65,7 +74,7 @@ class RoleManager extends React.Component<Props> {
     this.setState({ roleName })
   }
 
-  private handleChange = (permissions: Permission[]) => {
+  private handleChange = (permissions: TeamPermission[]) => {
     this.setState({ permissions })
   }
 
@@ -74,7 +83,7 @@ class RoleManager extends React.Component<Props> {
 
     const { roleName, permissions } = this.state
 
-    let data: {name?: string, permissions?: Permission[]} = {}
+    let data: { name?: string, permissions?: TeamPermission[] } = {}
     if (roleName !== this.props.role.name) {
       data.name = roleName
     }
@@ -83,12 +92,16 @@ class RoleManager extends React.Component<Props> {
     }
 
     this.props.role.update(data)
-      .then(() => {
-        this.props.afterAction()
-        store.dispatch(addAlert('success', 'role-update-success', {name: this.props.role.name}))
+      .then((r) => {
+        this.props.onUpdate(r)
+        store.dispatch(addAlert('success', 'role-manager-update-success', {
+          name: this.props.role.name,
+        }))
       })
       .catch((e) => {
-        store.dispatch(addAlert('error', 'role-update-error', {details: e.response.data.error}))
+        store.dispatch(addAlert('error', 'role-manager-update-error', {
+          details: e.response.data.error,
+        }))
       })
   }
 
@@ -100,7 +113,7 @@ class RoleManager extends React.Component<Props> {
     })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: RoleManagerProps) {
     const prevRole = prevProps.role
     const currRole = this.props.role
 
@@ -128,39 +141,41 @@ class RoleManager extends React.Component<Props> {
             {
               isEditing ?
                 <Input
-                  l10nId="role-name"
+                  l10nId="role-manager-name"
                   value={roleName}
                   onChange={this.onRoleNameChange}
                 />
               : role.name
             }
           </span>
-          <span className="role-manager__controls">
-            <Button clickHandler={this.toggleEditMode}>
-              <Localized id="role-edit">
-                Edit
-              </Localized>
-            </Button>
-            <Button type="danger" clickHandler={this.openRemoveRoleDialog}>
-              <Localized id="role-remove">
-                Remove
-              </Localized>
-            </Button>
-          </span>
+          <LimitedUI team={role.team} permissions="role:edit">
+            <span className="role-manager__controls">
+              <Button clickHandler={this.toggleEditMode}>
+                <Localized id="role-manager-edit">
+                  Edit
+                </Localized>
+              </Button>
+              <Button type="danger" clickHandler={this.openRemoveRoleDialog}>
+                <Localized id="role-manager-remove">
+                  Remove
+                </Localized>
+              </Button>
+            </span>
+          </LimitedUI>
         </div>
         <div
           className={`role-manager__content ${isEditing ? 'active' : ''}`}
         >
           <form onSubmit={this.updateRole}>
-            <Permissions
+            <TeamPermissions
               selected={permissions}
               onChange={this.handleChange}
             />
-            <Localized id="role-update-confirm" attrs={{ value: true }}>
+            <Localized id="role-manager-update-confirm" attrs={{ value: true }}>
               <input type="submit" value="Update role" disabled={!roleName} />
             </Localized>
             <Button type="danger" clickHandler={this.cancelEditing}>
-              <Localized id="role-update-cancel">
+              <Localized id="role-manager-update-cancel">
                 Cancel
               </Localized>
             </Button>

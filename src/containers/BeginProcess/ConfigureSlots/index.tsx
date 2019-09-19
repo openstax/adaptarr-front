@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import User from 'src/api/user'
+import Team from 'src/api/team'
 import { ProcessStructure, ProcessSlot } from 'src/api/process'
 import { SlotId, UserId } from '../index'
 
@@ -13,21 +14,25 @@ import Dialog from 'src/components/ui/Dialog'
 
 import './index.css'
 
-type Props = {
+export type ConfigureSlotsProps = {
   structure: ProcessStructure
+  team: Team
   onChange: (slots: Map<SlotId, UserId>) => any
 }
 
-class ConfigureSlots extends React.Component<Props> {
-  state: {
-    slots: Map<SlotId, UserId>
-    currentSlot: ProcessSlot | null
-    showAssignUser: boolean
-  } = {
+export type ConfigureSlotsState = {
+  slots: Map<SlotId, UserId>
+  currentSlot: ProcessSlot | null
+  showAssignUser: boolean
+}
+
+class ConfigureSlots extends React.Component<ConfigureSlotsProps> {
+  state: ConfigureSlotsState = {
     slots: new Map(),
     currentSlot: null,
     showAssignUser: false,
   }
+
   public render() {
     const { slots, currentSlot, showAssignUser } = this.state
 
@@ -43,6 +48,7 @@ class ConfigureSlots extends React.Component<Props> {
             >
               <UsersList
                 allowedRoles={currentSlot.roles}
+                team={this.props.team}
                 onUserClick={this.handleUserClick}
               />
             </Dialog>

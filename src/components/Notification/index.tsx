@@ -1,37 +1,34 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 import { Notification, User, Module } from 'src/api'
+
+import { UsersMap, ModulesMap, NotificationStatus } from 'src/store/types'
+import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
+import { State } from 'src/store/reducers'
+
+import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
 
 import DateDiff from 'src/components/DateDiff'
 import Avatar from 'src/components/ui/Avatar'
 
-import { TeamMap, ModulesMap, NotificationStatus } from 'src/store/types'
-import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
-import { State } from 'src/store/reducers'
+import './index.css'
 
 type Props = {
-  team: {
-    teamMap: TeamMap
-  }
-  modules: {
-    modulesMap: ModulesMap
-  }
+  users: UsersMap
+  modules: ModulesMap
   notification: Notification
   avatarSize?: 'small' | 'medium' | 'big'
   disableLink?: boolean
   changeNotificationStatus: (noti: Notification, status: NotificationStatus) => any
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
+const mapStateToProps = ({ user: { users }, modules: { modulesMap } }: State) => {
   return {
-    team,
-    modules,
+    users,
+    modules: modulesMap,
   }
 }
 
@@ -56,11 +53,10 @@ class NotificationComp extends React.Component<Props> {
   }
 
   public render() {
-    const { teamMap } = this.props.team
-    const { modulesMap } = this.props.modules
+    const { users, modules } = this.props
     const noti = this.props.notification
-    const who: User | undefined = teamMap.get(noti.who!)
-    const mod = noti.module ? modulesMap.get(noti.module) : undefined
+    const who: User | undefined = users.get(noti.who!)
+    const mod = noti.module ? modules.get(noti.module) : undefined
     let linkToNotification: string
     // if (noti.conversation) {
     //   linkToNotification = '/conversations/' + noti.conversation

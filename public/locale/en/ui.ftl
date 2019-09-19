@@ -386,6 +386,10 @@ invitation-email =
 
 invitation-email-validation-invalid = This is not valid email address.
 
+invitation-select-language = Select language
+
+invitation-select-role = Select role
+
 invitation-send =
   .value = Send invitation
 
@@ -446,13 +450,22 @@ user-profile-view-title-your = Your profile
 # - $name (string): user's name
 user-profile-view-title-named = { $name }'s profile
 
-user-profile-section-team = Your team
+user-profile-section-teams-members = Your teams' members
 
 user-profile-section-bio = Bio
 
 user-profile-section-contact = Contact
 
 user-profile-section-role = User's role
+
+# Variables:
+# - $role (string): role name
+# - $team (string): team name
+user-profile-role-in-team = { $role } in team { $team }
+
+# Variables:
+# - $team (string): team name
+user-profile-no-role-in-team = No role in team { $team }
 
 user-profile-role-unknown = Unknown role
 
@@ -491,6 +504,16 @@ user-profile-unassign-role-success = Successfully unassigned user from role.
 user-profile-unassign-role-error = Something went wrong. Details: { $details }.
 
 user-profile-users-drafts = User's drafts
+
+user-profile-system-permissions = User's system permissions
+
+user-profile-system-permissions-change-success = Successfully updated user's permissions.
+
+user-profile-system-permissions-change-error = Couldn't update user's permissions.
+
+# Variables:
+# - $team (string): team name.
+user-profile-team-list-team = Members of team { $team }
 
 # Placeholder text for team search box.
 user-profile-team-list-search =
@@ -541,6 +564,10 @@ resources-add-confirm = Confirm
 resources-add-success = Successfully added new resource
 
 resources-add-error = We couldn't add this resource
+
+# Variables:
+# - $team (string): team in which this resource exists.
+resources-card-team = Team: { $team }
 
 resources-card-edit = Edit
 
@@ -637,72 +664,152 @@ helpdesk-import-error = We couldn't replace this database. Details: { $details }
 
 
 
-## Screens - roles
+## Screens - teams
 
-role-view-title = Roles
+teams-section-manage-teams-title = Manage teams
 
-role-section-add = Add new role
+teams-error-fetch = Couldn't fetch teams.
 
-role-section-manage = Manage roles
+teams-add-team =
+  .value = Add team
 
-role-name = Role name
+teams-add-team-placeholder =
+  .placeholder = Team name
 
-role-create =
+# Variables:
+# - $name (string): name of created team.
+teams-add-team-success = Successfully created { $name } team.
+
+teams-add-team-error = Couldn't create new team.
+
+teams-update-name-success = Successfully updated team name.
+
+teams-update-name-error = Couldn't update team name.
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-roles-title = Manage roles in: { $team }
+
+teams-role-name =
+  .placeholder = Role name
+
+teams-role-create =
   .value = Create role
-
-role-edit = Edit
-
-role-remove = Remove
 
 # Alert displayed when role has been created.
 #
 # Variables:
 # - $name (string): name of role which user created.
-role-create-success = New role "{ $name }" created successfully.
+teams-role-create-success = New role “{ $name }” created successfully.
 
 # Alert displayed when role has not been created.
 #
 # Variables:
 # - $details (string): error details.
-role-create-error = Couldn't create new role. Details: { $details }.
+teams-role-create-error = Couldn't create new role. Details: { $details }.
+
+teams-tab-roles = Roles
+
+teams-tab-members = Team members
+
+# Variables:
+# - $team (string): name of selected team.
+teams-section-manage-members-title = Manage members in: { $team }
+
+teams-no-members = This team doesn't have members.
+
+teams-member-cancel = Cancel
+
+teams-member-remove = Remove
+
+# Variables:
+# - $user (string): name of user to remove.
+# - $team (string): name of team from which user will be removed.
+teams-member-remove-confirm-dialog = Do you want to remove { $user } from team { $team }?
+
+teams-member-remove-success = Successfully removed user from team.
+
+teams-member-remove-error = Couldn't remove user from team.
+
+teams-member-role-change-success = Successfully change user's role.
+
+teams-member-role-change-error = Couldn't change user's role.
+
+teams-select-user = Select user
+
+teams-select-role = Select role
+
+teams-member-add =
+  .value = Invite user
+
+teams-member-add-success = Successfully sent invitation.
+
+teams-member-add-error = Couldn't sent invitation.
+
+
+
+## Reusable components - team selector
+
+team-selector-placeholder = Select team
+
+
+
+## Reusable components - role manager
+
+role-manager-edit = Edit
+
+role-manager-remove = Remove
+
+# Alert displayed when role has been created.
+#
+# Variables:
+# - $name (string): name of role which user created.
+role-manager-create-success = New role “{ $name }” created successfully.
+
+# Alert displayed when role has not been created.
+#
+# Variables:
+# - $details (string): error details.
+role-manager-create-error = Couldn't create new role. Details: { $details }.
 
 # Dialog displayed when user want to delete role.
 #
 # Variables:
 # - $name (string): name of role which user want to delete.
-role-delete-title = Are you sure you want to delete "{ $name }" role?
+role-manager-delete-title = Are you sure you want to delete “{ $name }” role?
 
-role-delete-confirm = Confirm
+role-manager-delete-confirm = Confirm
 
-role-delete-cancel = Cancel
+role-manager-delete-cancel = Cancel
 
 # Alert displayed when role has been deleted.
 #
 # Variables:
 # - $name (string): name of role which user deleted.
-role-delete-success = Role "{ $name }" has been deleted.
+role-manager-delete-success = Role “{ $name }” has been deleted.
 
 # Alert displayed when role has not been deleted.
 #
 # Variables:
 # - $details (string): error details.
-role-delete-error = Couldn't delete role. Details: { $details }.
+role-manager-delete-error = Couldn't delete role. Details: { $details }.
 
 # Alert displayed when role has been updated.
 #
 # Variables:
 # - $name (string): name of role which user updated.
-role-update-success = Role "{ $name }" has been updated.
+role-manager-update-success = Role “{ $name }” has been updated.
 
 # Alert displayed when role has not been updated.
 #
 # Variables:
 # - $details (string): error details.
-role-update-error = Couldn't update role. Details: { $details }.
+role-manager-update-error = Couldn't update role. Details: { $details }.
 
-role-update-confirm = Update role
+role-manager-update-confirm =
+  .value = Update role
 
-role-update-cancel = Cancel
+role-manager-update-cancel = Cancel
 
 
 
@@ -764,6 +871,10 @@ process-create-version-success = Version “{ $name }” has been created.
 # - $details (string): error details.
 process-create-version-error = Couldn't create new version. Details: { $details }.
 
+# Variables:
+# - $team (string): team in which this process exists.
+processes-team = Team: { $team }
+
 
 
 ## Components for creating and updating process
@@ -777,6 +888,8 @@ process-form-cancel = Cancel
 process-form-remove = Remove
 
 process-form-process-name = Process name
+
+process-form-process-team = Team
 
 process-form-process-starting-step = Starting step
 
@@ -819,6 +932,8 @@ process-form-step-link-to = Next step:
 process-form-step-link-slot = Slot allowed to use this link:
 
 process-form-step-link-remove = Remove link
+
+process-form-error-team = Please specify in which team you want create process.
 
 process-form-error-name = Please specify name of this process.
 
@@ -1106,11 +1221,14 @@ step-changer-dialog-wrong-target-suggestions = You have { $document } suggestion
 # Variables:
 # - $name (string): name of permission.
 permission-label = { $name ->
-  [user-invite] Invite users
-  [user-delete] Delete users
   [user-edit] Edit user's profiles
   [user-edit-permissions] Edit user's permissions
-  [user-assign-role] Assign roles to users
+  [user-delete] Delete users
+  [team-manage] Manage teams
+  [member-add] Add team members
+  [member-remove] Remove team members
+  [member-assign-role] Assign roles to team members
+  [member-edit-permissions] Edit team members permissions
   [book-edit] Create, delete and edit book content
   [module-edit] Create, delete and edit modules
   [role-edit] Create, delete and edit roles
@@ -1151,7 +1269,25 @@ navigation-invite = Invitations
 
 navigation-roles = Roles
 
+navigation-teams = Teams and roles
+
 navigation-processes = Editing processes
+
+
+
+## Reusable components - team switcher
+##
+## This component is displayed at all times and allows user to swich team for which
+## he should see resources.
+
+team-switcher-select-placeholder = Select teams
+
+
+
+## Reusable components - select list
+
+select-list-select-all = Select all
+
 
 
 
@@ -1354,6 +1490,10 @@ load-error-persistance = If you are using incognito mode, please be aware that
 
 
 ## Reusable components - book card
+
+# Variables:
+# - $team (string): team in which this book exists.
+book-card-team = Team: { $team }
 
 book-card-edit = Edit
 
@@ -1738,7 +1878,7 @@ editor-tools-definition-remove-definition = Remove definition
 
 editor-tools-definition-insert-meaning = Add meaning
 
-editor-tools-definition-insert-seealso = Add "see also"
+editor-tools-definition-insert-seealso = Add “see also”
 
 
 

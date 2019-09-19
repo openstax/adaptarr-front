@@ -1,10 +1,12 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import Process, { FreeSlot } from 'src/api/process'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
+import { State } from 'src/store/reducers'
 
 import confirmDialog from 'src/helpers/confirmDialog'
 
@@ -12,14 +14,23 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-type Props = {
+export type FreeSlotsProps = {
+  selectedTeams: number[]
   onUpdate: (freeSlots: FreeSlot[]) => any
 }
 
-class FreeSlots extends React.Component<Props> {
-  state: {
-    freeSlots: FreeSlot[]
-  } = {
+const mapStateToProps = ({ app: { selectedTeams } }: State) => {
+  return {
+    selectedTeams,
+  }
+}
+
+export type FreeSlotsState = {
+  freeSlots: FreeSlot[]
+}
+
+class FreeSlots extends React.Component<FreeSlotsProps> {
+  state: FreeSlotsState = {
     freeSlots: [],
   }
 
@@ -54,6 +65,7 @@ class FreeSlots extends React.Component<Props> {
   }
   public render() {
     const { freeSlots } = this.state
+    const { selectedTeams } = this.props
 
     return (
       <div className="free-slots">
@@ -62,6 +74,8 @@ class FreeSlots extends React.Component<Props> {
             <ul className="list free-slots__list">
               {
                 freeSlots.map(slot => {
+                  if (!selectedTeams.includes(slot.draft.team)) return null
+
                   return (
                     <li key={`${slot.id}-${slot.draft.module}`} className="list__item free-slots__item">
                       <div className="free-slots__top-bar">
@@ -120,4 +134,4 @@ class FreeSlots extends React.Component<Props> {
   }
 }
 
-export default FreeSlots
+export default connect(mapStateToProps)(FreeSlots)

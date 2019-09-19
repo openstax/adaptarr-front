@@ -3,8 +3,16 @@
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
+  display: inline-block;
+  width: 100%;
+  padding: 5px 0;
+  cursor: pointer;
 }
 
 .permissions__input {
   margin-right: 5px;
+}
+
+.permissions__item.disabled {
+  cursor: not-allowed;
 }

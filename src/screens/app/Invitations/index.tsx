@@ -1,54 +1,84 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
-import { Localized } from 'fluent-react/compat'
+import { Localized, withLocalization, GetString } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
+import Role from 'src/api/role'
+import User from 'src/api/user'
+import Invitation, { InvitationData } from 'src/api/invitation'
+import Team, { TeamPermission } from 'src/api/team'
+
 import store from 'src/store'
-import { Invitation, Role } from 'src/api'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/'
+
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
+import TeamPermissions, { TEAM_PERMISSIONS } from 'src/components/TeamPermissions'
+import TeamSelector from 'src/components/TeamSelector'
 import Input from 'src/components/ui/Input'
 
-type Props = {
-  roles: Role[]
+import './index.css'
+
+export type InvitationsProps = {
+  user: User
+  getString: GetString
 }
 
-const mapStateToProps = ({ app: { roles } }: State) => {
+const mapStateToProps = ({ user: { user } }: State) => {
   return {
-    roles,
+    user,
   }
 }
 
-class Invitations extends React.Component<Props> {
+export type InvitationsState = {
+  emailValue: string
+  isEmailVaild: boolean
+  language: typeof LANGUAGES[0]
+  team: Team | null
+  role: Role | null
+  permissions: TeamPermission[]
+}
 
-  state: {
-    emailValue: string
-    isEmailVaild: boolean
-    language: typeof LANGUAGES[0]
-    role: Role | null
-  } = {
+class Invitations extends React.Component<InvitationsProps> {
+  state: InvitationsState = {
     emailValue: '',
     isEmailVaild: false,
     language: LANGUAGES[0],
+    team: null,
     role: null,
+    permissions: [],
   }
 
   private sendInvitation = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { emailValue: email, isEmailVaild, language, role } = this.state
+    const { emailValue: email, isEmailVaild, language, role, team, permissions } = this.state
 
-    if (!isEmailVaild) return
+    if (!isEmailVaild || !team) return
 
-    Invitation.create({ email, role: role ? role.id : null, language: language.code })
+    let data: InvitationData = {
+      email,
+      language: language.code,
+      team: team.id,
+      permissions,
+    }
+
+    if (role) {
+      data.role = role.id
+    }
+
+    Invitation.create(data)
       .then(() => {
-        this.setState({ emailValue: '', role: null })
+        this.setState({
+          emailValue: '',
+          role: null,
+          team: null,
+          permissions: [],
+          language: LANGUAGES[0],
+        })
         this.input!.unTouch()
         store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
       })
@@ -74,8 +104,16 @@ class Invitations extends React.Component<Props> {
     this.setState({ language: value })
   }
 
-  private handleRoleChange = ({ value }: { value: Role, label: string }) => {
-    this.setState({ role: value })
+  private handleTeamChange = (team: Team) => {
+    this.setState({ team, permissions: [] })
+  }
+
+  private handleRoleChange = (option: { value: Role, label: string } | null) => {
+    this.setState({ role: option ? option.value : option })
+  }
+
+  private handlePermissionsChange = (permissions: TeamPermission[]) => {
+    this.setState({ permissions })
   }
 
   input: Input | null
@@ -83,7 +121,21 @@ class Invitations extends React.Component<Props> {
   private setInputRef = (el: Input | null) => el && (this.input = el)
 
   public render() {
-    const { emailValue, isEmailVaild, language, role } = this.state
+    const { emailValue, isEmailVaild, language, role, team, permissions } = this.state
+    const { user, getString } = this.props
+
+    // User can give another user only subset of his permission in team
+    let disabledPermissions: TeamPermission[] = TEAM_PERMISSIONS
+    if (team) {
+      if (user.is_super) {
+        disabledPermissions = []
+      } else {
+        const usrTeam = user.teams.find(t => t.id === team.id)
+        if (usrTeam && usrTeam.role && usrTeam.role.permissions) {
+          disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.role!.permissions!.includes(p))
+        }
+      }
+    }
 
     return (
       <div className="container">
@@ -104,17 +156,30 @@ class Invitations extends React.Component<Props> {
                 />
                 <Select
                   className="react-select"
+                  placeholder={getString('invitation-select-language')}
                   value={{ value: language, label: language.name }}
                   options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
                   formatOptionLabel={option => option.label}
                   onChange={this.setLanguage}
                 />
+                <TeamSelector
+                  permission="member:add"
+                  onChange={this.handleTeamChange}
+                />
                 <Select
                   className="react-select"
+                  placeholder={getString('invitation-select-role')}
+                  isClearable={true}
+                  isDisabled={!team}
                   value={role ? { value: role, label: role.name } : null}
-                  options={this.props.roles.map(role => ({ value: role, label: role.name}))}
+                  options={team ? team.roles.map(role => ({ value: role, label: role.name})) : []}
                   formatOptionLabel={option => option.label}
                   onChange={this.handleRoleChange}
+                />
+                <TeamPermissions
+                  selected={permissions}
+                  disabled={disabledPermissions}
+                  onChange={this.handlePermissionsChange}
                 />
                 <Localized id="invitation-send" attrs={{ value: true }}>
                   <input type="submit" value="Send invitation" disabled={!isEmailVaild || !emailValue} />
@@ -128,4 +193,4 @@ class Invitations extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(Invitations)
+export default connect(mapStateToProps)(withLocalization(Invitations))

@@ -5,6 +5,8 @@ import Base from './base'
 import Module from './module'
 import { SlotPermission, ProcessSingleStep } from './process'
 import { UserData } from './user'
+import { TeamID } from './team'
+
 import { elevated } from './utils'
 
 /**
@@ -19,6 +21,7 @@ export type DraftData = {
   permissions?: SlotPermission[],
   step?: ProcessSingleStep,
   books: string[],
+  team: TeamID
 }
 
 /**
@@ -122,6 +125,11 @@ export default class Draft extends Base<DraftData> {
    * All books ids in which this draft occurs.
    */
   books: string[]
+
+  /**
+   * ID of team for which this draft belongs.
+   */
+  team: TeamID
 
   /**
    * Advance this draft to the next step.
