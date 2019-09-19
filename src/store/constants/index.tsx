@@ -88,6 +88,9 @@ export type CLOSE_CONFIRM_DIALOG = typeof CLOSE_CONFIRM_DIALOG
 export const SET_SELECTED_TEAMS = 'SET_SELECTED_TEAMS'
 export type SET_SELECTED_TEAMS = typeof SET_SELECTED_TEAMS
 
+export const SET_TEAM = 'SET_TEAM'
+export type SET_TEAM = typeof SET_TEAM
+
 export const SET_TEAMS = 'SET_TEAMS'
 export type SET_TEAMS = typeof SET_TEAMS
 

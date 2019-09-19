@@ -5,6 +5,7 @@ import {
   SET_PROCESSES,
   SHOW_CONFIRM_DIALOG,
   CLOSE_CONFIRM_DIALOG,
+  SET_TEAM,
   SET_TEAMS,
   SET_SELECTED_TEAMS,
 } from 'src/store/constants'
@@ -74,6 +75,12 @@ export function reducer(state: State = initialState, action: AppAction) {
       ...state,
       showConfirmDialog: false,
       confirmDialogOptions: DEFAULT_CONFIRM_DIALOG_OPTIONS,
+    }
+
+  case SET_TEAM:
+    return {
+      ...state,
+      teams: new Map(state.teams.set(action.data.id, action.data)),
     }
 
   case SET_TEAMS:

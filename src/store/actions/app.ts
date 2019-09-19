@@ -5,6 +5,7 @@ import {
   SHOW_CONFIRM_DIALOG,
   CLOSE_CONFIRM_DIALOG,
   SET_SELECTED_TEAMS,
+  SET_TEAM,
   SET_TEAMS,
 } from 'src/store/constants'
 import { addAlert, AddAlert } from 'src/store/actions/Alerts'
@@ -59,6 +60,11 @@ export interface FetchTeams {
   (dispatch: any): void
 }
 
+export interface SetTeam {
+  type: SET_TEAM
+  data: Team
+}
+
 export interface SetTeams {
   type: SET_TEAMS
   data: TeamsMap
@@ -69,7 +75,7 @@ export interface SetSelectedTeams {
   data: number[]
 }
 
-export type AppAction = SetLocale | SetAvailableLocales | SetProcesses | ShowConfirmDialog | CloseConfirmDialog | SetTeams | SetSelectedTeams
+export type AppAction = SetLocale | SetAvailableLocales | SetProcesses | ShowConfirmDialog | CloseConfirmDialog | SetTeam | SetTeams | SetSelectedTeams
 
 export const setLocale = (locale: string[]): SetLocale => ({
   type: SET_LOCALE,
@@ -112,6 +118,13 @@ export const fetchTeams = (): FetchTeams => {
       .catch(() => {
         dispatch(addAlert('error', 'teams-error-fetch'))
       })
+  }
+}
+
+export const setTeam = (team: Team): SetTeam => {
+  return {
+    type: SET_TEAM,
+    data: team,
   }
 }
 
