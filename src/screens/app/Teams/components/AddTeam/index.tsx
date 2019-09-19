@@ -6,7 +6,7 @@ import Team from 'src/api/team'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
-import Button from 'src/components/ui/Button'
+import LimitedUI from 'src/components/LimitedUI'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
@@ -46,20 +46,22 @@ export default class AddTeam extends React.Component<AddTeamProps> {
 
   public render() {
     return (
-      <form className="add-team" onSubmit={this.addTeam}>
-        <Input
-          value={this.state.name}
-          l10nId="teams-add-team-placeholder"
-          onChange={this.handleNameChange}
-        />
-        <Localized id="teams-add-team" attrs={{ value: true }}>
-          <input
-            disabled={!this.state.name.length}
-            type="submit"
-            value="Add team"
+      <LimitedUI permissions="team:manage">
+        <form className="add-team" onSubmit={this.addTeam}>
+          <Input
+            value={this.state.name}
+            l10nId="teams-add-team-placeholder"
+            onChange={this.handleNameChange}
           />
-        </Localized>
-      </form>
+          <Localized id="teams-add-team" attrs={{ value: true }}>
+            <input
+              disabled={!this.state.name.length}
+              type="submit"
+              value="Add team"
+            />
+          </Localized>
+        </form>
+      </LimitedUI>
     )
   }
 }

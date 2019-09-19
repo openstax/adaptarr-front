@@ -12,21 +12,24 @@ import confirmDialog from 'src/helpers/confirmDialog'
 import TeamPermissions from 'src/components/TeamPermissions'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
+import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-type Props = {
+export type RoleManagerProps = {
   role: Role
   onUpdate: (role: Role) => void
   onDelete: () => void
 }
 
-class RoleManager extends React.Component<Props> {
-  state: {
-    isEditing: boolean
-    roleName: string
-    permissions: TeamPermission[]
-  } = {
+export type RoleManagerState = {
+  isEditing: boolean
+  roleName: string
+  permissions: TeamPermission[]
+}
+
+class RoleManager extends React.Component<RoleManagerProps> {
+  state: RoleManagerState = {
     isEditing: false,
     roleName: '',
     permissions: [],
@@ -110,7 +113,7 @@ class RoleManager extends React.Component<Props> {
     })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: RoleManagerProps) {
     const prevRole = prevProps.role
     const currRole = this.props.role
 
@@ -145,18 +148,20 @@ class RoleManager extends React.Component<Props> {
               : role.name
             }
           </span>
-          <span className="role-manager__controls">
-            <Button clickHandler={this.toggleEditMode}>
-              <Localized id="role-manager-edit">
-                Edit
-              </Localized>
-            </Button>
-            <Button type="danger" clickHandler={this.openRemoveRoleDialog}>
-              <Localized id="role-manager-remove">
-                Remove
-              </Localized>
-            </Button>
-          </span>
+          <LimitedUI team={role.team} permissions="role:edit">
+            <span className="role-manager__controls">
+              <Button clickHandler={this.toggleEditMode}>
+                <Localized id="role-manager-edit">
+                  Edit
+                </Localized>
+              </Button>
+              <Button type="danger" clickHandler={this.openRemoveRoleDialog}>
+                <Localized id="role-manager-remove">
+                  Remove
+                </Localized>
+              </Button>
+            </span>
+          </LimitedUI>
         </div>
         <div
           className={`role-manager__content ${isEditing ? 'active' : ''}`}

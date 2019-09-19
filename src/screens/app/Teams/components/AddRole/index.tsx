@@ -9,6 +9,7 @@ import { addAlert } from 'src/store/actions/Alerts'
 
 import TeamPermissions from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'
+import LimitedUI from 'src/components/LimitedUI'
 
 type AddRoleProps = {
   team: Team
@@ -60,20 +61,22 @@ class AddRole extends React.Component<AddRoleProps> {
     const { roleName, permissions } = this.state
 
     return (
-      <form className="teams__role-add" onSubmit={this.addRole}>
-        <Input
-          l10nId="teams-role-name"
-          value={roleName}
-          onChange={this.onRoleNameChange}
-        />
-        <TeamPermissions
-          selected={permissions}
-          onChange={this.handlePermissionsChange}
-        />
-        <Localized id="teams-role-create" attrs={{ value: true }}>
-          <input type="submit" value="Create role" disabled={!roleName} />
-        </Localized>
-      </form>
+      <LimitedUI team={this.props.team} permissions="role:edit">
+        <form className="teams__role-add" onSubmit={this.addRole}>
+          <Input
+            l10nId="teams-role-name"
+            value={roleName}
+            onChange={this.onRoleNameChange}
+          />
+          <TeamPermissions
+            selected={permissions}
+            onChange={this.handlePermissionsChange}
+          />
+          <Localized id="teams-role-create" attrs={{ value: true }}>
+            <input type="submit" value="Create role" disabled={!roleName} />
+          </Localized>
+        </form>
+      </LimitedUI>
     )
   }
 }
