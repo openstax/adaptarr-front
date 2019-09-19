@@ -40,6 +40,10 @@
   background-color: var(--dark-bg);
 }
 
+.teams__team--selected .icon svg {
+  fill: #fff;
+}
+
 .teams__role-add .permissions {
   margin-bottom: 10px;
   background-color: #fff;

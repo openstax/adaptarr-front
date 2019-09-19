@@ -4,7 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import { match } from 'react-router'
 import { History } from 'history'
 
-import { Team, TeamMember } from 'src/api'
+import { Team, TeamMember, User } from 'src/api'
 
 import store from 'src/store'
 import { setTeams } from 'src/store/actions/app'
@@ -20,6 +20,7 @@ import MembersManager from './components/MembersManager'
 import Header from 'src/components/Header'
 import Section from 'src/components/Section'
 import Spinner from 'src/components/Spinner'
+import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
@@ -27,14 +28,16 @@ import './index.css'
 
 export type TeamsProps = {
   teams: TeamsMap
+  user: User
   users: UsersMap
   match: match<{ id: string, tab: string }>
   history: History
 }
 
-const mapStateToProps = ({ app: { teams }, user: { users } }: State) => {
+const mapStateToProps = ({ app: { teams }, user: { user, users } }: State) => {
   return {
     teams,
+    user,
     users,
   }
 }
@@ -54,12 +57,11 @@ class Teams extends React.Component<TeamsProps> {
     activeTab: 'roles',
   }
 
-  private onTeamClick = (ev: React.MouseEvent) => {
-    const teamId = Number((ev.target as HTMLLIElement).dataset.id)
-    if (this.state.selectedTeam && this.state.selectedTeam.id === teamId) {
+  private onTeamClick = (team: Team) => {
+    if (this.state.selectedTeam && this.state.selectedTeam.id === team.id) {
       this.unselectTeam()
     } else {
-      this.selectTeam(teamId)
+      this.selectTeam(team.id)
     }
   }
 
@@ -78,6 +80,18 @@ class Teams extends React.Component<TeamsProps> {
 
   private unselectTeam = () => {
     this.setState({ selectedTeam: undefined, members: [] })
+  }
+
+  private updateTeamName = (name: string, team: Team) => {
+    team.update({ name })
+      .then(() => {
+        store.dispatch(addAlert('success', 'teams-update-name-success'))
+        team.name = name
+        this.forceUpdate()
+      })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'teams-update-name-error'))
+      })
   }
 
   private activateRolesTab = () => {
@@ -144,7 +158,7 @@ class Teams extends React.Component<TeamsProps> {
 
   public render() {
     const { isLoading, selectedTeam, activeTab } = this.state
-    const { teams } = this.props
+    const { teams, user } = this.props
 
     if (isLoading) return <Spinner />
 
@@ -181,14 +195,21 @@ class Teams extends React.Component<TeamsProps> {
               {
                 Array.from(teams.values()).map(t => {
                   const isActive = selectedTeam && t.id === selectedTeam.id
+                  const isEditable = user.is_super || user.permissions.has('team:manage')
                   return (
                     <li
                       key={t.id}
                       className={`teams__team ${isActive ? 'teams__team--selected' : ''}`}
-                      onClick={this.onTeamClick}
-                      data-id={t.id}
+                      onClick={() => this.onTeamClick(t)}
                     >
-                      {t.name}
+                      {
+                        isEditable ?
+                          <EditableText
+                            text={t.name}
+                            onAccept={(name: string) => this.updateTeamName(name, t)}
+                          />
+                        : t.name
+                      }
                     </li>
                   )
                 })

@@ -677,6 +677,10 @@ teams-add-team-success = Pomyślnie utworzono zespół { $name }.
 
 teams-add-team-error = Nie udało się utworzyć zespołu.
 
+teams-update-name-success = Pomyślnie zaktualizowano nazwę zespołu.
+
+teams-update-name-error = Nie udało się zaktualizować nazwy zespołu.
+
 # Variables:
 # - $team (string): name of selected team.
 teams-section-manage-roles-title = Zarządzaj rolami w: { $team }

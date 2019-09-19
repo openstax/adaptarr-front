@@ -678,6 +678,10 @@ teams-add-team-success = Successfully created { $name } team.
 
 teams-add-team-error = Couldn't create new team.
 
+teams-update-name-success = Successfully updated team name.
+
+teams-update-name-error = Couldn't update team name.
+
 # Variables:
 # - $team (string): name of selected team.
 teams-section-manage-roles-title = Manage roles in: { $team }
