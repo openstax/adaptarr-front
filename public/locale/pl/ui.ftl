@@ -1105,6 +1105,8 @@ draft-info-permission = { $permission ->
 
 ## Reusable components - free slots
 
+free-slots-not-assigned = Nie przypisano do żadnej książki
+
 free-slots-view-draft = Pokaż tekst
 
 free-slots-not-avaible = Obecnie nie ma żadnych wolnych funkcji do objęcia.
