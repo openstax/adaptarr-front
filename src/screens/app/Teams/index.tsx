@@ -7,7 +7,7 @@ import { History } from 'history'
 import { Team, TeamMember, User } from 'src/api'
 
 import store from 'src/store'
-import { setTeams } from 'src/store/actions/app'
+import { setTeam, setTeams } from 'src/store/actions/app'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers'
 import { UsersMap } from 'src/store/types'
@@ -82,12 +82,11 @@ class Teams extends React.Component<TeamsProps> {
     this.setState({ selectedTeam: undefined, members: [] })
   }
 
-  private updateTeamName = (name: string, team: Team) => {
-    team.update({ name })
-      .then(() => {
+  private updateTeamName = async (name: string, team: Team) => {
+    await team.update({ name })
+      .then((team) => {
         store.dispatch(addAlert('success', 'teams-update-name-success'))
-        team.name = name
-        this.forceUpdate()
+        store.dispatch(setTeam(team))
       })
       .catch(() => {
         store.dispatch(addAlert('error', 'teams-update-name-error'))
