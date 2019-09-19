@@ -12,7 +12,7 @@ interface CustomPlugin extends Plugin {
   normalizeNode?: (node: Node, editor: Editor, next: () => any) => any
 }
 
-const ALLOWED_INLINES = ['code', 'link', 'source_element', 'term', 'xref']
+const ALLOWED_INLINES = ['code', 'docref', 'link', 'source_element', 'term', 'xref']
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }
 

@@ -19,7 +19,7 @@ export type Props = {
   /**
    * Function to call when user selects a reference target.
    */
-  onSelect: (target: ReferenceTarget, source: api.Module | null) => void,
+  onSelect: (target: ReferenceTarget | null, source: api.Module | null) => void,
 }
 
 export default class XrefTargetSelector extends React.Component<Props> {

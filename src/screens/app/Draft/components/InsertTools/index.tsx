@@ -266,9 +266,26 @@ class InsertTools extends React.Component<Props> {
     }
   }
 
-  private insertReference = (target: ReferenceTarget, source: api.Module | null) => {
+  private insertReference = (target: ReferenceTarget | null, source: api.Module | null) => {
     this.xrefModal!.close()
-    this.props.editor.insertXref(target.id, source ? source.id : undefined)
+    const { editor } = this.props
+
+    if (!target && source) {
+      const ref = Inline.create({
+        type: 'docref',
+        data: {
+          document: source.id,
+        },
+        nodes: List([Text.create(source.title)]),
+      })
+      if (editor.value.selection.isCollapsed) {
+        editor.insertInline(ref)
+        return
+      }
+      editor.wrapInline(ref)
+      return
+    }
+    editor.insertXref(target!.id, source ? source.id : undefined)
   }
 
   private insertCode = () => {
