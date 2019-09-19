@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Localized } from 'fluent-react/compat'
+import { Localized, withLocalization, GetString } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import Role from 'src/api/role'
@@ -11,25 +11,24 @@ import Team, { TeamPermission } from 'src/api/team'
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers/'
-import { TeamsMap } from 'src/store/types'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import TeamPermissions, { TEAM_PERMISSIONS } from 'src/components/TeamPermissions'
+import TeamSelector from 'src/components/TeamSelector'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
 
 export type InvitationsProps = {
-  teams: TeamsMap
   user: User
+  getString: GetString
 }
 
-const mapStateToProps = ({ app: { teams }, user: { user } }: State) => {
+const mapStateToProps = ({ user: { user } }: State) => {
   return {
-    teams,
     user,
   }
 }
@@ -105,12 +104,12 @@ class Invitations extends React.Component<InvitationsProps> {
     this.setState({ language: value })
   }
 
-  private handleTeamChange = ({ value }: { value: Team, label: string }) => {
-    this.setState({ team: value, permissions: [] })
+  private handleTeamChange = (team: Team) => {
+    this.setState({ team, permissions: [] })
   }
 
-  private handleRoleChange = ({ value }: { value: Role, label: string }) => {
-    this.setState({ role: value })
+  private handleRoleChange = (option: { value: Role, label: string } | null) => {
+    this.setState({ role: option ? option.value : option })
   }
 
   private handlePermissionsChange = (permissions: TeamPermission[]) => {
@@ -123,7 +122,7 @@ class Invitations extends React.Component<InvitationsProps> {
 
   public render() {
     const { emailValue, isEmailVaild, language, role, team, permissions } = this.state
-    const { teams, user } = this.props
+    const { user, getString } = this.props
 
     // User can give another user only subset of his permission in team
     let disabledPermissions: TeamPermission[] = TEAM_PERMISSIONS
@@ -157,20 +156,20 @@ class Invitations extends React.Component<InvitationsProps> {
                 />
                 <Select
                   className="react-select"
+                  placeholder={getString('invitation-select-language')}
                   value={{ value: language, label: language.name }}
                   options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
                   formatOptionLabel={option => option.label}
                   onChange={this.setLanguage}
                 />
-                <Select
-                  className="react-select"
-                  value={team ? { value: team, label: team.name } : null}
-                  options={Array.from(teams.values()).map(team => ({ value: team, label: team.name }))}
-                  formatOptionLabel={option => option.label}
+                <TeamSelector
+                  permission="member:add"
                   onChange={this.handleTeamChange}
                 />
                 <Select
                   className="react-select"
+                  placeholder={getString('invitation-select-role')}
+                  isClearable={true}
                   isDisabled={!team}
                   value={role ? { value: role, label: role.name } : null}
                   options={team ? team.roles.map(role => ({ value: role, label: role.name})) : []}
@@ -194,4 +193,4 @@ class Invitations extends React.Component<InvitationsProps> {
   }
 }
 
-export default connect(mapStateToProps)(Invitations)
+export default connect(mapStateToProps)(withLocalization(Invitations))

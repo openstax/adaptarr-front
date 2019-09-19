@@ -386,6 +386,10 @@ invitation-email =
 
 invitation-email-validation-invalid = To nie jest poprawny adres e-mail.
 
+invitation-select-language = Wybierz język
+
+invitation-select-role = Wybierz rolę
+
 invitation-send =
   .value = Wyślij zaproszenie
 
@@ -730,12 +734,22 @@ teams-member-role-change-success = Pomyślnie zmieniono rolę użytkownika.
 
 teams-member-role-change-error = Nie udało się zmienić roli użytkownika.
 
+teams-select-user = Wybierz użytkownika
+
+teams-select-role = Wybierz rolę
+
 teams-member-add =
   .value = Zaproś użytkownika
 
 teams-member-add-success = Pomyślnie wysłano zaproszenie.
 
 teams-member-add-error = Nie udało się wysłać zaproszenia.
+
+
+
+## Reusable components - team selector
+
+team-selector-placeholder = Wybierz zespół
 
 
 

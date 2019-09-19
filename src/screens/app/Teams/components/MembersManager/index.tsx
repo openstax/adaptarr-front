@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
-import { Localized } from 'fluent-react/compat'
+import { Localized, withLocalization, GetString } from 'fluent-react/compat'
 
 import { Team, TeamMember, Role, User } from 'src/api'
 
@@ -23,6 +23,7 @@ import LimitedUI from 'src/components/LimitedUI'
 export type MembersManagerProps = {
   team: Team
   users: UsersMap
+  getString: GetString
 }
 
 const mapStateToProps = ({ user: { users } }: State) => {
@@ -82,12 +83,12 @@ class MembersManager extends React.Component<MembersManagerProps> {
     this.setState({ members: await this.props.team.members(false) })
   }
 
-  private handleUserChange = ({ value }: { value: User, label: string }) => {
-    this.setState({ selectedUser: value })
+  private handleUserChange = (option: { value: User, label: string } | null) => {
+    this.setState({ selectedUser: option ? option.value : option })
   }
 
-  private handleRoleChange = ({ value }: { value: Role, label: string }) => {
-    this.setState({ selectedRole: value })
+  private handleRoleChange = (option: { value: Role, label: string } | null) => {
+    this.setState({ selectedRole: option ? option.value : option })
   }
 
   private addMember = (ev: React.FormEvent) => {
@@ -129,7 +130,7 @@ class MembersManager extends React.Component<MembersManagerProps> {
 
     if (isLoading) return <Spinner />
 
-    const { team, users } = this.props
+    const { team, users, getString } = this.props
     const usersToAdd = Array.from(users.values())
       .filter(u => u.teams.length && !u.teams.find(t => t.id === team.id))
       .map(user => ({ value: user, label: user.name }))
@@ -144,6 +145,7 @@ class MembersManager extends React.Component<MembersManagerProps> {
             <Select
               className="react-select"
               isClearable={true}
+              placeholder={getString('teams-select-user')}
               value={selectedUser ? { value: selectedUser, label: selectedUser.name } : null}
               options={usersToAdd}
               onChange={this.handleUserChange}
@@ -152,6 +154,7 @@ class MembersManager extends React.Component<MembersManagerProps> {
               <Select
                 className="react-select"
                 isClearable={true}
+                placeholder={getString('teams-select-role')}
                 value={selectedRole ? { value: selectedRole, label: selectedRole.name } : null}
                 options={team.roles.map(r => ({ value: r, label: r.name }))}
                 onChange={this.handleRoleChange}
@@ -210,4 +213,4 @@ class MembersManager extends React.Component<MembersManagerProps> {
   }
 }
 
-export default connect(mapStateToProps)(MembersManager)
+export default connect(mapStateToProps)(withLocalization(MembersManager))

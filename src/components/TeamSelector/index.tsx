@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
+import { withLocalization, GetString } from 'fluent-react/compat'
 
 import User from 'src/api/user'
 import Team, { TeamPermission } from 'src/api/team'
@@ -15,6 +16,7 @@ export type TeamSelectorProps = {
   team?: Team
   teams: TeamsMap
   user: User
+  getString: GetString
   onChange: (team: Team) => void
 }
 
@@ -84,6 +86,7 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
       <Select
         className="react-select team-selector"
         isDisabled={this.props.isDisabled}
+        placeholder={this.props.getString('team-selector-placeholder')}
         value={selectedTeam ? { value: selectedTeam, label: selectedTeam.name } : null}
         options={options}
         onChange={this.handleChange}
@@ -92,4 +95,4 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
   }
 }
 
-export default connect(mapStateToProps)(TeamSelector)
+export default connect(mapStateToProps)(withLocalization(TeamSelector))
