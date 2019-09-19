@@ -149,8 +149,8 @@ class Processes extends React.Component<ProcessesProps> {
 
   private onShowPreview = async (p: Process) => {
     const previewStructure = await p.structure()
-    const team = this.props.teams.get(p.id)
-    if (!team) return console.error(`Couldn't find team with id: ${p.id}`)
+    const team = this.props.teams.get(p.team)
+    if (!team) return console.error(`Couldn't find team with id: ${p.team}`)
     this.setState({ showPreview: true, previewStructure, team })
   }
 
