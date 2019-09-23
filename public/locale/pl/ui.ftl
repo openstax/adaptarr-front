@@ -1870,6 +1870,16 @@ editor-tools-link-cancel = Anuluj
 editor-tools-link-confirm = Potwierdź
 
 
+
+## Editor toolboxes - code
+
+editor-tools-code-title = Kod
+
+editor-tools-code-lang =
+  .placeholder = Język programowania
+
+
+
 ## Editor toolboxes - terms
 
 editor-tools-term-title = Termin
