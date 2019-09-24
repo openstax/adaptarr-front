@@ -132,7 +132,7 @@ class MembersManager extends React.Component<MembersManagerProps> {
 
     const { team, users, getString } = this.props
     const usersToAdd = Array.from(users.values())
-      .filter(u => u.teams.length && !u.teams.find(t => t.id === team.id))
+      .filter(u => !u.teams.find(t => t.id === team.id))
       .map(user => ({ value: user, label: user.name }))
 
     return (
