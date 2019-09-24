@@ -4,6 +4,7 @@ import { AxiosResponse } from 'axios'
 import Base from './base'
 import ProcessVersion from './processversion'
 import { TeamID } from './team'
+import { DraftData } from './draft'
 
 import { elevated } from './utils'
 
@@ -95,12 +96,7 @@ export type Link = {
 export type FreeSlot = {
   id: number
   name: string
-  draft: {
-    module: string
-    title: string
-    languages: string
-    team: TeamID
-  },
+  draft: DraftData
 }
 
 export default class Process extends Base<ProcessData> {

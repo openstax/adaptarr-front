@@ -4,7 +4,6 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
-
 import * as api from 'src/api'
 import { PartData, GroupData } from 'src/api/bookpart'
 
@@ -148,8 +147,6 @@ class DraftsList extends React.Component<DraftsListProps> {
     this.setState({ isLoading: true })
     this.fetchBooks()
   }
-
-  nestable = React.createRef<Nestable>()
 
   public render() {
     const { isLoading, books } = this.state
