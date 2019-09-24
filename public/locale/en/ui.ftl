@@ -1860,6 +1860,15 @@ editor-tools-link-confirm = Confirm
 
 
 
+## Editor toolboxes - code
+
+editor-tools-code-title = Code
+
+editor-tools-code-lang =
+  .placeholder = Programming language
+
+
+
 ## Editor toolboxes - terms
 
 editor-tools-term-title = Term

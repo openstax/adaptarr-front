@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Editor, Value, Node, Document, Block, Inline } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
+import CodeTools from '../CodeTools'
 import DocumentTools from '../DocumentTools'
 import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
@@ -25,7 +26,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'suggestionsTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
+type ToolName = 'insertTools' | 'suggestionsTools' | 'codeTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -34,6 +35,7 @@ type State = {
   // Togglers for components:
   insertTools: boolean
   suggestionsTools: boolean
+  codeTools: boolean
   termTools: boolean
   linkTools: boolean
   xrefTools: boolean
@@ -54,6 +56,7 @@ type State = {
 const DEFAULT_TOGGLERS = {
   insertTools: false,
   suggestionsTools: true,
+  codeTools: true,
   termTools: true,
   linkTools: true,
   xrefTools: true,
@@ -130,6 +133,12 @@ class Toolbox extends React.Component<Props> {
           onToggle={this.toggleTool}
         />
 
+        <CodeTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.codeTools}
+          onToggle={this.toggleTool}
+        />
         <TermTools
           editor={editor}
           value={value}
@@ -250,7 +259,10 @@ class Toolbox extends React.Component<Props> {
       case 'suggestion_delete':
         newState.suggestionsTools = true
         newState.insertTools = false
-      	break
+        break
+      case 'code':
+        newState.codeTools = true
+        break
       case 'term':
         newState.termTools = true
         break
