@@ -174,7 +174,7 @@ class FreeSlots extends React.Component<FreeSlotsProps> {
 
   public render() {
     const { selectedTeams } = this.props
-    const { isLoading, books, freeSlots } = this.state
+    const { isLoading, books } = this.state
 
     return (
       <div className="free-slots">
@@ -296,6 +296,9 @@ type NestableProps = {
 const NestableCustomized = ({ parts, freeSlots, onTakeSlot }: NestableProps) => {
   const renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
     const slot = item.kind === 'module' ? freeSlots.find(s => s.draft.module === item.id) : null
+    // "slot" may not be found because when user will take slot we are updating freeSlots
+    // instead of fetching new list from the server.
+    if (item.kind === 'module' && !slot) return null
     return (
         <div className={`bookpart__item bookpart__item--${item.kind} freeSlotsList__item--${item.kind}`}>
           {
