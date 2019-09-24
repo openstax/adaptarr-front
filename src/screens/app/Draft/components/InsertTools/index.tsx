@@ -47,7 +47,7 @@ class InsertTools extends React.Component<Props> {
 
     return (
       <ToolGroup
-        title="editor-tools-insert-title"
+        title="editor-tools-insert-tools-title"
         toggleState={this.props.toggleState}
         onToggle={() => this.props.onToggle('insertTools')}
       >
