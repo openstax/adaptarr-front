@@ -16,6 +16,12 @@ export type Props = {
   showSwitchableTypes?: boolean,
 }
 
+const INVALID_FORMAT_TOOLS_PARENTS = [
+  'code',
+  'media_alt',
+  'source_element',
+]
+
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
 
 const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code', 'term']
@@ -25,11 +31,13 @@ const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exerc
 export default class FormatTools extends React.Component<Props> {
   render() {
     const { editor, value, showSwitchableTypes = true } = this.props
-    const { startBlock } = value
-    const code = startBlock && startBlock.type === 'code' ? startBlock : null
-    const sourceElement = startBlock && startBlock.type === 'source_element' ? startBlock : null
+    const { startBlock, startInline } = value
 
-    if (!startBlock || editor.isVoid(startBlock) || code || sourceElement) {
+    if (
+      !startBlock ||
+      editor.isVoid(startBlock) ||
+      INVALID_FORMAT_TOOLS_PARENTS.includes(startBlock.type) ||
+      (startInline && INVALID_FORMAT_TOOLS_PARENTS.includes(startInline.type))) {
       return null
     }
 
