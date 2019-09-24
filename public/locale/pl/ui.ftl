@@ -1708,6 +1708,8 @@ editor-tools-insert-quotation = Cytat
 
 editor-tools-insert-link = WWW
 
+editor-tools-insert-preformat = Tekst pre- formatowany
+
 editor-tools-insert-source = Kod źródłowy
 
 
@@ -1933,6 +1935,23 @@ editor-tools-seealso-title = Zobacz również
 editor-tools-seealso-add-term = Dodaj termin
 
 editor-tools-seealso-remove-term = Usuń termin
+
+
+
+## Editor toolboxes - preformat
+
+editor-tools-preformat-title = Tekst preformatowany
+
+editor-tools-preformat-type-label = Wyświetlaj element jako:
+
+# Entry on the list of possible source types.
+#
+# Variables:
+# - $type (string): source's type. Possible values are 'inline' and 'block'
+editor-tools-source-type = { $type ->
+ *[inline] Linia
+  [block] Blok
+}
 
 
 

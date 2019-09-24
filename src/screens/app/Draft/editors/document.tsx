@@ -63,6 +63,9 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
         code: {
           inlines: SUGGESTION_TYPES,
         },
+        preformat: {
+          inlines: SUGGESTION_TYPES.concat(['code', 'docref', 'highlight', 'link', 'term', 'xref']),
+        },
         term: {
           inlines: SUGGESTION_TYPES,
         },

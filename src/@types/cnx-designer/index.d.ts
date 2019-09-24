@@ -143,6 +143,9 @@ declare module 'cnx-designer' {
     code?: {
       inlines: string[],
     },
+    preformat?: {
+      inlines: string[],
+    },
     term?: {
       inlines: string[],
     },
