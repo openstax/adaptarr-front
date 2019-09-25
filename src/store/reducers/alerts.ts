@@ -1,5 +1,5 @@
 import { Alert } from 'src/store/types'
-import { AlertsAction } from 'src/store/actions/Alerts'
+import { AlertsAction } from 'src/store/actions/alerts'
 import {
   PUSH_ALERT,
   REMOVE_ALERT,

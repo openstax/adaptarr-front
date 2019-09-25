@@ -1,6 +1,6 @@
 import User from 'src/api/user'
 
-import { UserDataAction } from 'src/store/actions/User'
+import { UserDataAction } from 'src/store/actions/user'
 import { IsLoading, UsersMap } from 'src/store/types'
 import {
   FETCH_USER_BEGIN,

@@ -1,12 +1,12 @@
 import { combineReducers } from 'redux'
 
 import * as fromApp from './app'
-import * as fromUser from './User'
-import * as fromNotifications from './Notifications'
-import * as fromBooks from './Books'
-import * as fromModules from './Modules'
-import * as fromAlerts from './Alerts'
-import * as fromDrafts from './Drafts'
+import * as fromUser from './user'
+import * as fromNotifications from './notifications'
+import * as fromBooks from './books'
+import * as fromModules from './modules'
+import * as fromAlerts from './alerts'
+import * as fromDrafts from './drafts'
 
 /*
  * This is the root state of the app
