@@ -7,11 +7,11 @@ import { Team, TeamMember, Role, User } from 'src/api'
 
 import store from 'src/store'
 import { UsersMap } from 'src/store/types'
-import { addAlert } from 'src/store/actions/Alerts'
-import { fetchUsersMap } from 'src/store/actions/User'
+import { addAlert } from 'src/store/actions/alerts'
+import { fetchUsersMap } from 'src/store/actions/user'
 import { State } from 'src/store/reducers'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Spinner from 'src/components/Spinner'
 import Avatar from 'src/components/ui/Avatar'

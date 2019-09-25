@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import Draft from 'src/api/draft'
 
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import store from 'src/store'
 
 import EditableText from 'src/components/EditableText'

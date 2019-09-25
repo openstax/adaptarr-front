@@ -3,11 +3,12 @@ import { match } from 'react-router'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import saveAs from 'src/helpers/saveAsFile'
-
 import Draft from 'src/api/draft'
+
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
+
+import { saveAsFile as saveAs } from 'src/helpers'
 
 import Load from 'src/components/Load'
 import Header from 'src/components/Header'

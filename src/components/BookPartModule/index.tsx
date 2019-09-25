@@ -8,9 +8,9 @@ import { ProcessStructure } from 'src/api/process'
 import * as types from 'src/store/types'
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'

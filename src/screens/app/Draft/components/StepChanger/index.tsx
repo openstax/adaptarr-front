@@ -5,8 +5,8 @@ import { Value } from 'slate'
 import { connect } from 'react-redux'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
-import { addModuleToMap } from 'src/store/actions/Modules'
+import { addAlert } from 'src/store/actions/alerts'
+import { addModuleToMap } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers'
 
 import ProcessVersion from 'src/api/processversion'

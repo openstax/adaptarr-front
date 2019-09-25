@@ -6,11 +6,11 @@ import { Localized } from 'fluent-react/compat'
 import { Book } from 'src/api'
 
 import { IsLoading, BooksMap, AlertDataKind, TeamsMap } from 'src/store/types'
-import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
-import { addAlert, AddAlert } from 'src/store/actions/Alerts'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/books'
+import { addAlert, AddAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers/index'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import EditBook from 'src/components/EditBook'

@@ -7,7 +7,7 @@ import { FilesError } from 'react-files'
 import { Resource } from 'src/api'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
 

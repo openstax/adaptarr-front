@@ -6,15 +6,14 @@ import { History } from 'history'
 import { Value, KeyUtils } from 'slate'
 import { connect } from 'react-redux'
 
-import timeout from 'src/helpers/timeout'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, timeout } from 'src/helpers'
 
 import store from 'src/store'
 import * as api from 'src/api'
 import { SlotPermission } from 'src/api/process'
 import { State } from 'src/store/reducers'
-import { fetchReferenceTargets } from 'src/store/actions/Modules'
-import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/Drafts'
+import { fetchReferenceTargets } from 'src/store/actions/modules'
+import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/drafts'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'

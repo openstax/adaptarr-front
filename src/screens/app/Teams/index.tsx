@@ -8,7 +8,7 @@ import { Team, TeamMember, User } from 'src/api'
 
 import store from 'src/store'
 import { setTeam, setTeams } from 'src/store/actions/app'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 import { UsersMap } from 'src/store/types'
 import { TeamsMap } from 'src/store/types'
