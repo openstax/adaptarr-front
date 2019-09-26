@@ -29,7 +29,7 @@ const mapStateToProps = ({ modules }: State) => {
 }
 
 const ModulesList = (props: ModulesListProps) => {
-  const filterReg = new RegExp('^' + props.filter, 'i')
+  const filterReg = new RegExp(props.filter, 'gi')
   let modules: Module[] = []
   props.modules.modulesMap.forEach(mod => {
     if (filterReg.test(mod.title)) {
