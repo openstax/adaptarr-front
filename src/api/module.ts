@@ -156,7 +156,11 @@ export default class Module extends Base<Data> {
    * Fetch contents of a file.
    */
   async read(name: string): Promise<string> {
-    return (await axios.get(`modules/${this.id}/files/${name}`)).data
+    return (await axios.get(`modules/${this.id}/files/${name}`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })).data
   }
 
   /**
