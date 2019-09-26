@@ -37,7 +37,7 @@ book-begin-process-title = Skonfiguruj i rozpocznij proces
 
 book-begin-process-no-modules = Wszystkie moduły w tym rozdziale są już przypisane do procesu.
 
-book-begin-process-no-modules-ok = Ok
+book-begin-process-no-modules-ok = OK
 
 book-process-preview-title = Szczegóły procesu:
 
@@ -48,7 +48,7 @@ book-process-cancel-button = Przerwij proces
 book-process-cancel-button-cancel = Anuluj
 
 # Alert displayed when process has been finished.
-book-process-cancel-success = Pomyślnie przerwano proces.
+book-process-cancel-success = Pomyślnie przerwano proces
 
 # Alert displayed when process could not be finished.
 #
@@ -84,22 +84,22 @@ book-remove-module-cancel = Anuluj
 #
 # Variables:
 # - $title (string): module's title
-book-remove-module-alert-success = Moduł { $title } został usunięty.
+book-remove-module-alert-success = Moduł { $title } został usunięty
 
 
 
 ## Screens - book view - user assignment dialog
 
-book-assign-user-title = Wybierz użytkownika z listy, aby go przypisać.
+book-assign-user-title = Wybierz użytkownika z listy, aby go przypisać
 
 # Alert displayed when a user was assigned to a module.
 #
 # Variables:
 # - $user (string): user's name
 # - $module (string): module's title
-book-assign-user-alert-success = { $user } został/a przypisany do { $module }.
+book-assign-user-alert-success = { $user } został/a przypisany do { $module }
 
-book-assign-user-alert-error = Błędny użytkownik lub moduł.
+book-assign-user-alert-error = Błędny użytkownik lub moduł
 
 # Alert displayed when a user was unassigned from a module.
 #
@@ -120,7 +120,7 @@ book-edit-title =
 book-edit-submit =
   .value = Potwierdź
 
-book-edit-alert-success = Książka została zaktualizowana.
+book-edit-alert-success = Książka została zaktualizowana
 
 
 
@@ -136,13 +136,13 @@ book-part-step-statistic = { $step }: { $counter }
 # Variables:
 # - $item (string): title of the module or thee group that was moved
 # - $target (string): title of the group into which it was moved
-book-part-moving-alert-success = { $item } został przeniesiony do { $target }.
+book-part-moving-alert-success = { $item } został przeniesiony do { $target }
 
 
 
 ## Screens - book view - add group dialog
 
-book-add-group-dialog-title = Podaj nazwę rozdziału.
+book-add-group-dialog-title = Podaj nazwę rozdziału
 
 book-add-group-title =
   .placeholder = Tytuł
@@ -152,7 +152,7 @@ book-add-group-confirm =
 
 book-add-group-cancel = Anuluj
 
-book-add-group-alert-success = Nowy rozdział został dodany.
+book-add-group-alert-success = Nowy rozdział został dodany
 
 
 
@@ -168,13 +168,13 @@ book-remove-group-cancel = Anuluj
 #
 # Variables:
 # - $title (string): group's title
-book-remove-group-alert-success = Rozdział { $title } został usunięty.
+book-remove-group-alert-success = Rozdział { $title } został usunięty
 
 
 
 ## Screens - book view - change group title dialog
 
-book-group-change-title-dialog-title = Zmień nazwę rozdziału.
+book-group-change-title-dialog-title = Zmień nazwę rozdziału
 
 # Placeholder text for group title
 book-group-change-title-value =
@@ -191,19 +191,19 @@ book-group-change-title-cancel = Anuluj
 # - $from (string): old title
 # - $to (string): new title
 book-group-change-title-alert-success =
-  Nazwa rozdziału została zmieniona z { $from } na { $to }.
+  Nazwa rozdziału została zmieniona z { $from } na { $to }
 
 
 
 ## Screens book view - add module to a group
 
-book-group-add-module-dialog-title = Wybierz moduł lub utwórz nowy.
+book-group-add-module-dialog-title = Wybierz moduł lub utwórz nowy
 
 # Alert displayed when module was added to a group.
 #
 # Variables:
 # - $title (string): module's title
-book-group-add-module-alert-success = { $title } został dodany do rozdziału.
+book-group-add-module-alert-success = { $title } został dodany do rozdziału
 
 
 
@@ -211,7 +211,7 @@ book-group-add-module-alert-success = { $title } został dodany do rozdziału.
 
 book-list-view-title = Książki
 
-book-list-empty = Nie znaleziono książek.
+book-list-empty = Nie znaleziono książek
 
 
 
@@ -228,13 +228,13 @@ book-delete-confirm = Potwierdź
 book-delete-cancel = Anuluj
 
 # Alert displayed when a book was deleted.
-book-delete-alert-success = Książka została usunięta.
+book-delete-alert-success = Książka została usunięta
 
 
 
 ## Screens - list of books - adding book dialog
 
-book-list-add-book-dialog-title = Dodaj nową książkę.
+book-list-add-book-dialog-title = Dodaj nową książkę
 
 # Placeholder text for book title.
 book-list-add-book-title =
@@ -246,7 +246,7 @@ book-list-add-book-confirm =
 book-list-add-book-cancel = Anuluj
 
 # Alert displayed when a book was created.
-book-list-add-book-alert-success = Książka została dodana.
+book-list-add-book-alert-success = Książka została dodana
 
 
 
@@ -264,9 +264,7 @@ dashboard-assigned-view-module = Zobacz moduł
 
 dashboard-assigned-empty = Brak przypisanych tekstów
 
-dashboard-assigned-section-not-assigned = Brak przypisanych książek
-
-dashboard-section-drafts = Szybki dostęp do moich tekstów
+dashboard-section-drafts = Dostęp do moich tekstów
 
 dashboard-drafts-section-not-assigned = Nie przypisano do żadnej książki
 
@@ -279,7 +277,7 @@ dashboard-drafts-empty = Brak tekstów do wyświetlenia
 dashboard-drafts-details = Szczegóły
 
 # Alert displayed when draft of a module was created.
-dashboard-create-draft-alert-success = Szkic został utworzony.
+dashboard-create-draft-alert-success = Szkic został utworzony
 
 dashboard-section-free-slots = Wolne funkcje do podjęcia
 
@@ -301,9 +299,9 @@ draft-style-switcher-info-box = Widok roboczy. Niektóre elementy w ostatecznej 
 
 draft-loading-message = Ładowanie wersji roboczej może potrwać nawet kilka minut.
 
-draft-remove-glossary-dialog = Usunąć skorowidz?
+draft-remove-glossary-dialog = Usunąć glosariusz?
 
-draft-add-glossary = Dodaj skorowidz
+draft-add-glossary = Dodaj glosariusz
 
 draft-remove-glossary = Usuń
 
@@ -355,7 +353,7 @@ draft-details-button-cancel = Anuluj
 
 draft-details-button-confirm = Potwierdź
 
-draft-details-import-success = Pomyślnie zaimportowano plik.
+draft-details-import-success = Pomyślnie zaimportowano plik
 
 # Variables:
 # - $details (string): error details.
@@ -372,7 +370,7 @@ dashboard-delete-draft-confirm = Usuń
 dashboard-delete-draft-cancel = Anuluj
 
 # Alert displayed when a draft was deleted.
-dashboard-delete-draft-alert-success = Szkic został usunięty.
+dashboard-delete-draft-alert-success = Szkic został usunięty
 
 
 
@@ -427,7 +425,7 @@ module-create-draft = Nowy szkic
 module-open-draft = Zobacz szkic
 
 # Alert displayed when draft of a module was created.
-module-create-draft-alert-success = Szkic został utworzony.
+module-create-draft-alert-success = Szkic został utworzony
 
 
 
@@ -435,7 +433,7 @@ module-create-draft-alert-success = Szkic został utworzony.
 
 notification-centre-view-title = Powiadomienia
 
-notification-centre-empty = Brak nowych powiadomień.
+notification-centre-empty = Brak nowych powiadomień
 
 
 
@@ -487,29 +485,29 @@ user-profile-section-role-unassign =  Usuń rolę użytkownikowi
 #
 # Variables:
 # - $name (string): name of role which has been assigned to user.
-user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name }.
+user-profile-change-role-success = Rola została pomyślnie zmieniona na { $name }
 
 # Alert displayed when error occurred when changing user's role.
 #
 # Variables:
 # - $details (string): error details.
-user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }.
+user-profile-change-role-error = Coś poszło nie tak. Szczegóły: { $details }
 
-user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi.
+user-profile-unassign-role-success = Pomyślnie usunięto rolę użytkownikowi
 
 # Alert displayed when error occurred when unassiging user from role.
 #
 # Variables:
 # - $details (string): error details.
-user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }.
+user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details }
 
 user-profile-users-drafts = Teksty użytkownika
 
 user-profile-system-permissions = Systemowe uprawnienia użytkownika
 
-user-profile-system-permissions-change-success = Pomyślnie zaktualizowano uprawnienia.
+user-profile-system-permissions-change-success = Pomyślnie zaktualizowano uprawnienia
 
-user-profile-system-permissions-change-error = Nie udało się zaktualizować uprawnień.
+user-profile-system-permissions-change-error = Nie udało się zaktualizować uprawnień
 
 # Variables:
 # - $team (string): team name.
@@ -519,28 +517,28 @@ user-profile-team-list-team-members = Członkowie zespołu { $team }
 user-profile-team-list-search =
   .placeholder = Szukaj użytkownika
 
-user-profile-team-list-no-results = Brak wyników dla określonych kryteriów.
+user-profile-team-list-no-results = Brak wyników dla określonych kryteriów
 
 
 
 ## Screens - user's profile - update dialog
 
-user-profile-update-name-success = Imię zostało zmienione.
+user-profile-update-name-success = Nazwa użytkownika została zmieniona
 
-user-profile-update-name-error = Nie udało się zmienić imienia.
+user-profile-update-name-error = Nie udało się zmienić nazwy użytkownika
 
-user-profile-update-avatar-title = Wgraj swoje zdjęcie.
+user-profile-update-avatar-title = Wgraj swoje zdjęcie
 
-user-profile-update-name-title = Zmień imię.
+user-profile-update-name-title = Zmień nazwę użytkownika
 
 # Placeholder text for name input.
 user-profile-update-name =
-  .placeholder = Imię
+  .placeholder = Nazwa użytkownika
 
 user-profile-update-confirm = Potwierdź
 
 # Message displayed below name input when it has fewer than three characters.
-user-profile-name-validation-error = Imię musi mieć co najmniej 3 znaki.
+user-profile-name-validation-error = Nazwa użytkownika musi mieć co najmniej 3 znaki.
 
 
 
@@ -614,10 +612,10 @@ settings-password-change =
   .value = Potwierdź
 
 # Alert displayed when password was changed.
-settings-change-password-alert-success = Hasło zostało zmienione.
+settings-change-password-alert-success = Hasło zostało zmienione
 
 # Alert displayed when password could not be changed.
-settings-change-password-alert-error = Hasło nie zostało zmienione.
+settings-change-password-alert-error = Hasło nie zostało zmienione
 
 
 
@@ -653,9 +651,9 @@ helpdesk-import-cancel = Anuluj
 
 helpdesk-import-database = Importuj bazę
 
-helpdesk-import-success = Pomyślnie zaktualizowano bazę danych.
+helpdesk-import-success = Pomyślnie zaktualizowano bazę danych
 
-helpdesk-import-error-uploaded-database = Nie udało się odczytać treści przesłanego pliku.
+helpdesk-import-error-uploaded-database = Nie udało się odczytać treści przesłanego pliku
 
 # Variables:
 # - $details (string): error details
@@ -667,7 +665,7 @@ helpdesk-import-error = Nie udało się zaktualizować bazy danych. Szczegóły:
 
 teams-section-manage-teams-title = Zarządzaj zespołami
 
-teams-error-fetch = Nie udało się pobrać listy zespołów.
+teams-error-fetch = Nie udało się pobrać listy zespołów
 
 teams-add-team =
   .value = Dodaj zespół
@@ -677,13 +675,13 @@ teams-add-team-placeholder =
 
 # Variables:
 # - $name (string): name of created team.
-teams-add-team-success = Pomyślnie utworzono zespół { $name }.
+teams-add-team-success = Pomyślnie utworzono zespół { $name }
 
-teams-add-team-error = Nie udało się utworzyć zespołu.
+teams-add-team-error = Nie udało się utworzyć zespołu
 
-teams-update-name-success = Pomyślnie zaktualizowano nazwę zespołu.
+teams-update-name-success = Pomyślnie zaktualizowano nazwę zespołu
 
-teams-update-name-error = Nie udało się zaktualizować nazwy zespołu.
+teams-update-name-error = Nie udało się zaktualizować nazwy zespołu
 
 # Variables:
 # - $team (string): name of selected team.
@@ -699,13 +697,13 @@ teams-role-create =
 #
 # Variables:
 # - $name (string): name of role which user created.
-teams-role-create-success = Rola „{ $name }” została utworzona.
+teams-role-create-success = Rola „{ $name }” została utworzona
 
 # Alert displayed when role has not been created.
 #
 # Variables:
 # - $details (string): error details.
-teams-role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }.
+teams-role-create-error = Nie udało się utworzyć roli. Szczegóły: { $details }
 
 teams-tab-roles = Role
 
@@ -715,7 +713,7 @@ teams-tab-members = Zespół
 # - $team (string): name of selected team.
 teams-section-manage-members-title = Zarządzaj członkami zespołu: { $team }
 
-teams-no-members = Brak użytkowników w tym zespole.
+teams-no-members = Brak użytkowników w tym zespole
 
 teams-member-cancel = Anuluj
 
@@ -726,24 +724,24 @@ teams-member-remove = Usuń
 # - $team (string): name of team from which user will be removed.
 teams-member-remove-confirm-dialog = Chcesz usunąć użytkownika { $user } z zespołu { $team }?
 
-teams-member-remove-success = Pomyślnie usunięto użytkownika z zespołu.
+teams-member-remove-success = Pomyślnie usunięto użytkownika z zespołu
 
-teams-member-remove-error = Nie udało się usunąć użytkownika z zespołu.
+teams-member-remove-error = Nie udało się usunąć użytkownika z zespołu
 
-teams-member-role-change-success = Pomyślnie zmieniono rolę użytkownika.
+teams-member-role-change-success = Pomyślnie zmieniono rolę użytkownika
 
-teams-member-role-change-error = Nie udało się zmienić roli użytkownika.
+teams-member-role-change-error = Nie udało się zmienić roli użytkownika
 
 teams-select-user = Wybierz użytkownika
 
 teams-select-role = Wybierz rolę
 
 teams-member-add =
-  .value = Zaproś użytkownika
+  .value = Zaproś
 
-teams-member-add-success = Pomyślnie wysłano zaproszenie.
+teams-member-add-success = Pomyślnie wysłano zaproszenie
 
-teams-member-add-error = Nie udało się wysłać zaproszenia.
+teams-member-add-error = Nie udało się wysłać zaproszenia
 
 
 
@@ -773,25 +771,25 @@ role-manager-delete-cancel = Anuluj
 #
 # Variables:
 # - $name (string): name of role which user deleted.
-role-manager-delete-success = Rola „{ $name }” została usunięta.
+role-manager-delete-success = Rola „{ $name }” została usunięta
 
 # Alert displayed when role has not been deleted.
 #
 # Variables:
 # - $details (string): error details.
-role-manager-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }.
+role-manager-delete-error = Nie udało się usunąć roli. Szczegóły: { $details }
 
 # Alert displayed when role has been updated.
 #
 # Variables:
 # - $name (string): name of role which user updated.
-role-manager-update-success = Rola „{ $name }” została zaktualizowana.
+role-manager-update-success = Rola „{ $name }” została zaktualizowana
 
 # Alert displayed when role has not been updated.
 #
 # Variables:
 # - $details (string): error details.
-role-manager-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }.
+role-manager-update-error = Nie udało się zaktualizować roli. Szczegóły: { $details }
 
 role-manager-update-confirm =
   .value = Zaktualizuj rolę
@@ -812,34 +810,34 @@ processes-view-preview = Podgląd procesu
 #
 # Variables:
 # - $name (string): name of process which was created.
-process-create-success = Proces „{ $name }” został utworzony.
+process-create-success = Proces „{ $name }” został utworzony
 
 # Alert displayed when process has not been created.
 #
 # Variables:
 # - $details (string): error details.
-process-create-error = Nie udało się utworzyć procesu. Szczegóły: { $details }.
+process-create-error = Nie udało się utworzyć procesu. Szczegóły: { $details }
 
 # Alert displayed when name of process has been updated.
-process-update-name-success = Nazwa została zaktualizowana.
+process-update-name-success = Nazwa została zaktualizowana
 
 # Alert displayed when name has not beed updated.
 #
 # Variables:
 # - $details (string): error details.
-process-update-name-error = Nazwa nie została zaktualizowana. Szczegóły: { $details }.
+process-update-name-error = Nazwa nie została zaktualizowana. Szczegóły: { $details }
 
-process-update-success = Proces został zaktualizowany.
+process-update-success = Proces został zaktualizowany
 
-process-update-error = Niektóre zmiany nie mogłby zostać zapisane.
+process-update-error = Niektóre zmiany nie zostały zapisane
 
-process-update-warning-new-version = Ostrzeżenie! Zostanie utworzona nowa wersja.
+process-update-warning-new-version = Ostrzeżenie! Zostanie utworzona nowa wersja
 
 # Fragments:
 # - <p> ... </p>: paragraph content
 process-update-warning-new-version-content =
-  <p>Zmiany, które zostały wprowadzone, wymagają utworzenia nowej wersji procesu.</p>
-  <p>Wszystkie szkice będące w obecnym procesie nie ulegną zmianie.</p>
+  <p>Wprowadzenie zaproponowanych zmian wymaga utworzenia nowej wersji procesu.</p>
+  <p>Wszystkie szkice w obecnym procesie nie ulegną zmianie.</p>
   <p>Wprowadzone zmiany będą widoczne tylko dla nowo utworzonych szkiców w tej wersji procesu.</p>
 
 process-update-warning-new-version-cancel = Anuluj
@@ -850,13 +848,13 @@ process-update-warning-new-version-confirm = Utwórz nową wersję
 #
 # Variables:
 # - $name (string): name of new version which was created.
-process-create-version-success = Wersja „{ $name }” została utworzona.
+process-create-version-success = Wersja „{ $name }” została utworzona
 
 # Alert displayed when version has not been created.
 #
 # Variables:
 # - $details (string): error details.
-process-create-version-error = Nie udało się utworzyć nowej wersji. Szczegóły: { $details }.
+process-create-version-error = Nie udało się utworzyć nowej wersji. Szczegóły: { $details }
 
 # Variables:
 # - $team (string): team in which this process exists.
@@ -920,7 +918,7 @@ process-form-step-link-slot = Funkcja, która może używać tego linku:
 
 process-form-step-link-remove = Usuń link
 
-process-form-error-team = Określ w jakim zespole chcesz utworzyć proces.
+process-form-error-team = Określ, w jakim zespole chcesz utworzyć proces.
 
 process-form-error-name = Proszę podać nazwę procesu.
 
@@ -958,7 +956,7 @@ process-form-error-step-slot-permission-or-slot =
   Każde uprawnienie musi mieć przypisaną funkcję.
 
 process-form-error-step-link-to-or-slot =
-  Każdy link musi wskazywać na krok oraz mieć przypisaną funkcję, która może go
+  Każdy link musi wskazywać na krok oraz mieć przypisaną funkcję, która może tego linku
   używać.
 
 
@@ -1028,15 +1026,15 @@ begin-process-start = Rozpocznij proces
 # - $process (string): name of process which was started.
 # - $success (number): number of modules for which process was started.
 # - $total (number): total number of modules for which process should be started.
-begin-process-success = Rozpoczęto proces „{ $process }” dla { $success }/{ $total } modułów.
+begin-process-success = Rozpoczęto proces „{ $process }” dla { $success }/{ $total } modułów
 
 # Alert displayed when process has not been started.
 #
 # Variables:
 # - $module (string): title of module for which process wasn't started.
-begin-process-error = Nie udało się rozpocząć procesu dla „{ $module }”.
+begin-process-error = Nie udało się rozpocząć procesu dla „{ $module }”
 
-begin-process-assign-user-title = Wybierz użytkownika dla danej funkcji.
+begin-process-assign-user-title = Wybierz użytkownika dla danej funkcji
 
 begin-process-slots-title = Skonfiguruj funkcje:
 
@@ -1109,7 +1107,7 @@ free-slots-not-assigned = Nie przypisano do żadnej książki
 
 free-slots-view-draft = Pokaż tekst
 
-free-slots-not-avaible = Obecnie nie ma żadnych wolnych funkcji do objęcia.
+free-slots-not-avaible = Obecnie nie ma żadnych wolnych funkcji do podjęcia.
 
 free-slots-take-slot = Biorę to zadanie
 
@@ -1118,14 +1116,14 @@ free-slots-take-slot = Biorę to zadanie
 # Variables:
 # - $slot (string): name of slot which was taken.
 # - $draft (string): draft name for which user was assigned.
-free-slots-success = Zostałeś przypisany do „{ $draft }” w funkcji { $slot }.
+free-slots-success = Zostałeś przypisany do „{ $draft }” w funkcji { $slot }
 
 # Alert displayed when there was an error while taking free slot.
 #
 # Variables:
 # - $details (string): error details.
 free-slots-error = Nie udało się objąć funkcji. { $details ->
- *[string] Szczegóły: { $details }.
+ *[string] Szczegóły: { $details }
   [none] {""}
 }
 
@@ -1146,14 +1144,14 @@ step-changer-main-button = Przekazuję pracę do kolejnego etapu
 
 step-changer-choose = Wybierz link:
 
-step-changer-move = Przenieś używając wybranego linku
+step-changer-move = Przenieś, używając wybranego linku
 
 # Alert displayed when draft was advanced to the next step.
 #
 # Variables:
 # - $code (string): draft-process-advanced or draft-process-finished
 step-changer-success = { $code ->
-  [draft-process-advanced] Szkic został przeniesiony do następnego kroku.
+  [draft-process-advanced] Szkic został przeniesiony do następnego kroku
   [draft-process-finished] Proces został zakończony. Zapisano szkic jako moduł.
  *[notavalidvalue] { $code }
 }
@@ -1162,13 +1160,13 @@ step-changer-success = { $code ->
 #
 # Variables:
 # - $details (string): error details.
-step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }.
+step-changer-error = Nie udało się przenieść szkicu. Szczegóły: { $details }
 
 step-changer-details-dialog-title = Wybierz następny krok
 
 step-changer-confirm-dialog-title = Przenieść szkic do następnego kroku?
 
-step-changer-unsaved-changes = Masz niezapisane zmiany.
+step-changer-unsaved-changes = Masz niezapisane zmiany
 
 step-changer-advance = Przenieś
 
@@ -1182,26 +1180,28 @@ step-changer-save-advance = Zapisz i przenieś
 #
 # Variables:
 # - $details (string): error details.
-step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu. Szczegóły: { $details }.
+step-changer-save-advance-error = Nie udało się zapisać i przenieść szkicu. Szczegóły: { $details }
 
-step-changer-dialog-suggestions = Proszę zaakceptować lub odrzucić wszystkie sugestie.
+step-changer-dialog-suggestions = Proszę zaakceptować lub odrzucić  widoczne zmiany
 
 # Variables:
 # - $document (number): number of suggestions inside document.
 # - $glossary (number): number of suggestions inside glossary.
-step-changer-dialog-suggestions-info = Liczba sugestii w dokumencie: { $document }. Liczba sugestii w glosariuszu { $glossary }. Proszę zaakceptować lub odrzucić wszystkie z nich.
+step-changer-dialog-suggestions-info = Liczba widocznych zmian w dokumencie: { $document }. Liczba widocznych zmian w glosariuszu { $glossary }. Proszę wszystkie zaakceptować lub odrzucić.
 
-step-changer-dialog-suggestions-ok = Ok
+step-changer-dialog-suggestions-ok = OK
 
 step-changer-dialog-wrong-target-title = Niepoprawny link
 
-step-changer-dialog-wrong-target = Nie znaleźliśmy wybranego celu. Spróbuj ponownie później
+step-changer-dialog-wrong-target = Nie znaleźliśmy wybranego kroku. Spróbuj ponownie później
   lub skontaktuj się z administratorem.
 
-step-changer-dialog-wrong-target-suggestions = Liczba sugestii w dokumencie: { $document }.
-  Liczba sugestii w glosariuszu { $glossary }. Możesz przenieść tę wersję roboczą do kroku,
-  który zawiera uprawnienie do akceptowania zmian lub musisz rozwiązać wszystkie
-  sugestie, aby przenieść szkic do innego kroku.
+# Variables:
+# - $document (number): number of suggestions inside document.
+# - $glossary (number): number of suggestions inside glossary.
+# - $total (number): total number of suggestions inside draft.
+step-changer-dialog-wrong-target-suggestions = Przejście do tego kroku jest niemożliwe,
+  ponieważ szkic zawiera { $total } widoczne zmiany.
 
 
 
@@ -1266,7 +1266,7 @@ navigation-processes = Procesy
 
 ## Reusable components - team switcher
 ##
-## This component is displayed at all times and allows user to swich team for which
+## This component is displayed at all times and allows user to switch team for which
 ## he should see resources.
 
 team-switcher-select-placeholder = Wybierz zespoły
@@ -1311,7 +1311,7 @@ notification = { $kind ->
   [assigned] <actor>{ $actor }</actor> przypisał/a Cię do <module>{ $module }</module>
   [process_ended] Proces redakcyjny dla <module>{ $module }</module> zakończył się.
   [slot_filled] Zostałeś/aś przypisany/a do funkcji w <module>{ $module }</module>.
-  [slot_vacated] Zostałeś/aś usunięta z funkcji w <module>{ $module }</module>.
+  [slot_vacated] Zostałeś/aś usunięty/a z funkcji w <module>{ $module }</module>.
   [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
  *[notavalidkind] Nieznana akcja
 }
@@ -1395,13 +1395,13 @@ module-list-add-module-submit =
 #
 # Variables:
 # - $title (string): new module's title
-module-list-add-module-alert-success = Moduł { $title } został dodany.
+module-list-add-module-alert-success = Moduł { $title } został dodany
 
 
 
 ## Reusable components - list of modules - module deletion dialog
 
-module-list-delete-module-title = Usunięcie modułu jest nieodwracalne.
+module-list-delete-module-title = Usunięcie modułu jest nieodwracalne
 
 module-list-delete-module-confirm = Usuń
 
@@ -1411,19 +1411,19 @@ module-list-delete-module-cancel = Anuluj
 #
 # Variables:
 # - $title (string): module's title
-module-list-delete-module-alert-success = { $title } został usunięty.
+module-list-delete-module-alert-success = { $title } został usunięty
 
 
 
 ## Reusable components - chat and message input
 
 message-input-textarea =
-  .placeholder = Napisz swoją wiadomość...
+  .placeholder = Napisz wiadomość...
 
 message-input-send = Wyślij
 
 message-input-alert-select-user-error =
-  Coś poszło nie tak podczas wybierania użytkownika.
+  Coś poszło nie tak podczas wybierania użytkownika
 
 
 
@@ -1450,12 +1450,9 @@ error-boundary-title = Coś poszło nie tak
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
-  <p>Aby zapobiec uszkodzeniu dokumentu przez błędy, wyłączyliśmy edycję, dopóki
-  nie przeładujesz strony. Nie martw się o swoją pracę. Została ona automatycznie
-  zapisana i zostanie przywrócona po ponownym załadowaniu.</p>
+  <p>Chwilowo wyłączyliśmy edycję tego dokumentu, a Twoja praca została automatycznie zachowana. Przeładuj stronę, by bezpiecznie powrócić do pracy.</p>
   { $hasReport ->
-    [true] <p>Otrzymaliśmy automatyczny raport o błędzie, ale docenilibyśmy,
-    gdybyś mógł/mogła poświęcić trochę czasu i opisać go bardziej szczegółowo.</p>
+    [true] <p>Automatyczny raport o błędzie już został do nas wysłany. Łatwiej nam będzie wyeliminować ten błąd w przyszłości, gdy teraz dodatkowo dostaniemy od Ciebie bardziej szczegółowy opis zdarzenia. Dziękujemy za pomoc!</p>
    *[false] {""}
   }
 
@@ -1470,12 +1467,13 @@ error-boundary-button-fill-report = Wypełnij raport
 ## Reusable components - load component
 
 load-error-message =
-  <p>Wystąpił błąd podczas ładowania części tej strony.</p>
+  <p>Wystąpił błąd podczas ładowania tej strony.</p>
   <p>Odśwież tę stronę.</p>
   <p>Jeśli błąd nadal występuje, skontaktuj się z administratorem.</p>
 
-load-error-persistance = Jeżeli używasz trybu prywatnego (incognito), edytor
-  nie będzie w nim działał.
+load-error-persistance = Prawdopodobnie masz włączony tryb prywatny (incognito) w przeglądarce.
+  Prosimy o przełączenie na tryb zwykły, by uruchomić Adaptarr. Jeśli komunikat pojawia się przy
+  pracy w trybie zwykłym, skontaktuj się z helpdesk@openstax.pl
 
 
 
@@ -1519,10 +1517,10 @@ editor-document-title-value =
   .placeholder = Tytuł szkicu
 
 # Alert displayed when document title was changed.
-editor-document-title-save-alert-success = Tytuł został zmieniony.
+editor-document-title-save-alert-success = Tytuł został zmieniony
 
 # Alert displayed when document title could not be changed.
-editor-document-title-save-alert-error = Nie udało się zmienić tytułu.
+editor-document-title-save-alert-error = Nie udało się zmienić tytułu
 
 
 
@@ -1530,8 +1528,7 @@ editor-document-title-save-alert-error = Nie udało się zmienić tytułu.
 
 editor-toolbox-no-selection = Proszę kliknąć w tekst, wtedy wyświetlą się dostępne narzędzia.
 
-editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze
-  wspierane
+editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze wspierane.
 
 
 
@@ -1540,10 +1537,10 @@ editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze
 editor-tools-save = Zapisz
 
 # Alert displayed when document was saved.
-editor-tools-save-alert-success = Szkic został zapisany.
+editor-tools-save-alert-success = Szkic został zapisany
 
 # Alert displayed when document could not be saved.
-editor-tools-save-alert-error = Nie udało się zapisać szkicu.
+editor-tools-save-alert-error = Nie udało się zapisać szkicu
 
 editor-tools-save-error-title = Tworzenie kopii zapasowej
 
@@ -1564,7 +1561,7 @@ editor-tools-save-error-export = Pobierz kopię zapasową
 editor-tools-save-export-title = Wyślij pobrany plik do administratora
   jeżeli chcesz przekazać pracę do kolejnego etapu.
 
-editor-tools-save-export-ok = Ok
+editor-tools-save-export-ok = OK
 
 
 
@@ -1602,7 +1599,7 @@ editor-tools-document-select-language = Język dokumentu:
 
 ## Editor toolboxes - glossary settings
 
-editor-tools-glossary-title = Skorowidz
+editor-tools-glossary-title = Glosariusz
 
 
 
@@ -1680,7 +1677,7 @@ editor-tools-figure-alt-text = Alternatywny tekst:
 
 ## Editor toolboxes - insertion tools
 
-editor-tools-insert-title = Wstaw
+editor-tools-insert-tools-title = Wstaw
 
 editor-tools-insert-reference = Połącz
 
@@ -1731,7 +1728,7 @@ editor-tools-xref-case = Wybierz przypadek
 
 editor-tools-xref-change = Wybierz cel
 
-editor-tools-xref-hover-tooltip = Kliknij z wciśniętym klawiszem control aby
+editor-tools-xref-hover-tooltip = Kliknij z wciśniętym klawiszem control, aby
   przejść do elementu docelowego
 
 # Text to display when target of a local (in document) reference doesn't exist.
@@ -1947,13 +1944,13 @@ editor-tools-source-type = { $type ->
 
 # Variables:
 # - $counter (number): total number of suggestions.
-editor-tools-suggestions-title = Sugestie ({ $counter })
+editor-tools-suggestions-title = Zmiany ({ $counter })
 
 editor-tools-suggestion-accept-all = Akceptuj wszystkie
 
 editor-tools-suggestion-reject-all = Odrzuć wszystkie
 
-editor-tools-suggestion-undefined = Nieznana sugestia
+editor-tools-suggestion-undefined = Nieznana zmiana
 
 # Variables:
 # - $insert (string): text to insert.
@@ -1984,4 +1981,4 @@ editor-tools-suggestion-change =
 
 confirm-dialog-button-cancel = Anuluj
 
-confirm-dialog-button-ok = Ok
+confirm-dialog-button-ok = OK

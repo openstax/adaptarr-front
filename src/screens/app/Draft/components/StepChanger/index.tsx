@@ -152,6 +152,7 @@ class StepChanger extends React.Component<Props> {
                   id={wrongTargetL10n}
                   $document={documentSuggestions}
                   $glossary={glossarySuggestions}
+                  $total={documentSuggestions + glossarySuggestions}
                 >
                   We couldn't find target which you selected. Please try again later or contact administrator.
                 </Localized>
