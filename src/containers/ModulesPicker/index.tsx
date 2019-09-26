@@ -23,8 +23,10 @@ import FilesUploader from 'src/containers/FilesUploader'
 import './index.css'
 
 export type ModulesPickerProps = {
-  // Show only modules from specific team
-  team?: Team | number
+  // Team in which new module will be created.
+  team: Team | number
+  // Show only modules from specific team.
+  filterByTeam?: Team | number
   onModuleClick: (mod: Module) => any
   addModuleToMap: (mod: Module) => any
   removeModuleFromMap: (id: string) => any
@@ -49,7 +51,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     addModuleToMap: (mod: Module) => dispatch(modulesActions.addModuleToMap(mod)),
     removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
-    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
+    addAlert: (kind: AlertDataKind, message: string, args: {}) => dispatch(addAlert(kind, message, args)),
   }
 }
 
@@ -84,8 +86,10 @@ class ModulesPicker extends React.Component<ModulesPickerProps> {
     e.preventDefault()
 
     const { moduleTitleValue: title, files, moduleLanguage: lang } = this.state
+    const { team } = this.props
+    const teamId = team instanceof Team ? team.id : team
 
-    ;(files.length ? Module.createFromZip(title, files[0]) : Module.create(title, lang.value))
+    ;(files.length ? Module.createFromZip(title, files[0], teamId) : Module.create(title, lang.value, teamId))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)

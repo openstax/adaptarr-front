@@ -523,8 +523,9 @@ class Book extends React.Component<Props> {
               onClose={this.closeAddModuleDialog}
             >
               <ModulesPicker
-                onModuleClick={this.handleModuleClick}
                 team={book!.team}
+                filterByTeam={book!.team}
+                onModuleClick={this.handleModuleClick}
               />
             </Dialog>
           : null

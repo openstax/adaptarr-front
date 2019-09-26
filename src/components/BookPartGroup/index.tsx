@@ -356,6 +356,7 @@ class Group extends React.Component<Props> {
             >
               <ModulesPicker
                 team={book.team}
+                filterByTeam={book.team}
                 onModuleClick={this.handleModuleClick}
               />
             </Dialog>

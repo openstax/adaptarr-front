@@ -96,9 +96,10 @@ export default class Module extends Base<Data> {
    *
    * @param title
    * @param language - ISO language tag
+   * @param team - team ID in which module should be created.
    */
-  static async create(title: string, language: string): Promise<Module> {
-    const rsp = await elevated(() => axios.post('modules', { title, language }, {
+  static async create(title: string, language: string, team: TeamID): Promise<Module> {
+    const rsp = await elevated(() => axios.post('modules', { title, language, team }, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -112,10 +113,11 @@ export default class Module extends Base<Data> {
    *
    * This function requires elevated permissions.
    */
-  static async createFromZip(title: string, file: File): Promise<Module> {
+  static async createFromZip(title: string, file: File, team: TeamID): Promise<Module> {
     const data = new FormData()
     data.append('title', title)
     data.append('file', file)
+    data.append('team', team.toString())
     const rsp = await elevated(() => axios.post('modules', data))
     return new Module(rsp.data)
   }
