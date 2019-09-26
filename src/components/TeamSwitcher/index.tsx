@@ -110,15 +110,15 @@ class TeamSwitcher extends React.Component<Props> {
   }
 
   private onKeyDown = (ev: KeyboardEvent) => {
-    if (ev.key === 'Escape') {
-      if (this.selectList.current!.state.isListOpen) {
+    if (ev.key === 'Escape' && this.selectList.current) {
+      if (this.selectList.current.state.isListOpen) {
         this.selectList.current!.close()
       }
     }
   }
 
   private clickOutside = (ev: MouseEvent) => {
-    if (!this.teamSwitcher.current!.contains(ev.target as HTMLElement)) {
+    if (this.teamSwitcher.current && !this.teamSwitcher.current.contains(ev.target as HTMLElement)) {
       if (this.selectList.current!.state.isListOpen) {
         this.selectList.current!.close()
       }
