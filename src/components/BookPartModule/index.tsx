@@ -136,6 +136,7 @@ class Module extends React.Component<ModuleProps> {
       await draft.cancelProcess()
 
       this.props.modulesMap.set(mod!.id, new api.Module({...mod!, process: null}))
+      this.props.item.process = null
       store.dispatch(addAlert('success', 'book-process-cancel-success'))
       this.closeProcessDetails()
     } catch (e) {
