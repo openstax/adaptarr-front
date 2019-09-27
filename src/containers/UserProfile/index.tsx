@@ -199,19 +199,21 @@ class UserProfile extends React.Component<UserProfileProps> {
                 <div className="profile__roles">
                   {
                     user.teams.map(team => {
+                      // We want to check if current (logged) user can change role for user's
+                      // profile which he is now viewing.
                       const currUsrTeam = currentUser.teams.find(t => t.id === team.id)
                       let isEditable = false
                       let options: { value: Role, label: string }[] = []
                       if (
-                        (currentUser.is_super || currentUser.permissions.has('user:edit')) ||
-                        (currUsrTeam && currUsrTeam.role && currUsrTeam.role.permissions)
+                        currentUser.is_super ||
+                        (
+                          currUsrTeam &&
+                          currUsrTeam.role &&
+                          currUsrTeam.role.permissions &&
+                          currUsrTeam.role.permissions.includes('member:assign-role')
+                        )
                       ) {
-                        if (
-                          (currentUser.is_super || currentUser.permissions.has('user:edit')) ||
-                          currUsrTeam!.role!.permissions!.includes('member:assign-role')
-                        ) {
-                          isEditable = true
-                        }
+                        isEditable = true
 
                         if (teams.has(team.id)) {
                           options = teams.get(team.id)!.roles.map(role => ({ value: role, label: role.name }))
