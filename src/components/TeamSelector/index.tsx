@@ -44,6 +44,10 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
 
   private options = (): { value: Team, label: string }[] => {
     const { permission, teams, user } = this.props
+
+    // If teams.size === 0 probably means that team list is still fetching.
+    if (teams.size === 0) return []
+
     let options: { value: Team, label: string }[] = []
     if (permission) {
       options = user.teams.filter(t => {
