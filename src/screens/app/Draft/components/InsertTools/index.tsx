@@ -231,7 +231,7 @@ class InsertTools extends React.Component<Props> {
         data: {
           type: 'note',
         },
-        nodes: fragment.nodes,
+        nodes: fragment.nodes as List<Block | Inline | Text>,
       }))
     }
   }
@@ -314,7 +314,7 @@ class InsertTools extends React.Component<Props> {
       }))
       editor.insertBlock(Block.create({
         type: 'quotation',
-        nodes: fragment.nodes,
+        nodes: fragment.nodes as List<Block | Inline | Text>,
       }))
     }
   }
@@ -355,6 +355,10 @@ class InsertTools extends React.Component<Props> {
 
 const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
   const path = editor.value.document.getPath(node.key)
+  if (!path) {
+    console.warn(`unwrapChildrenFromNode: couldn't find path for node: ${node.toJS()}`)
+    return
+  }
   if (node.object === 'text') return
   node.nodes.forEach(n => {
     if (n && n.object === 'block' && n.type === 'title') {
