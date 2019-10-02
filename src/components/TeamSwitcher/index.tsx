@@ -32,7 +32,6 @@ class TeamSwitcher extends React.Component<Props> {
   private onSelectListChange = (selected: Set<number>) => {
     const teamsIds = [...selected]
     store.dispatch(setSelectedTeams(teamsIds))
-    localStorage.setItem('selectedTeams', JSON.stringify(teamsIds))
   }
 
   private toggleList = () => {
@@ -46,7 +45,10 @@ class TeamSwitcher extends React.Component<Props> {
 
   componentDidMount() {
     let selTeamsFromLS = localStorage.getItem('selectedTeams')
+    // Filter value saved in localStorage since it can change when user will log
+    // to another account.
     let selectedTeams: number[] = JSON.parse(selTeamsFromLS || '[]')
+      .filter((tId: number) => this.props.user.teams.find(t => t.id === tId))
     if (selectedTeams.length === 0 && this.props.user.teams.length > 0) {
       selectedTeams = this.props.user.teams.map(t => t.id)
     }

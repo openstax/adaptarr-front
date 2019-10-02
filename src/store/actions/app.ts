@@ -136,7 +136,10 @@ export const setTeams = (teams: Team[] | TeamsMap): SetTeams => {
   }
 }
 
-export const setSelectedTeams = (teams: number[]): SetSelectedTeams => ({
-  type: SET_SELECTED_TEAMS,
-  data: teams,
-})
+export const setSelectedTeams = (teams: number[]): SetSelectedTeams => {
+  localStorage.setItem('selectedTeams', JSON.stringify(teams))
+  return {
+    type: SET_SELECTED_TEAMS,
+    data: teams,
+  }
+}
