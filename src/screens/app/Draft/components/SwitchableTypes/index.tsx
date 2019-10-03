@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Block, Document, Range } from 'slate'
+import { Editor, Value, Block, Document, Range, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import './index.css'
@@ -30,7 +30,7 @@ export default class SwitchableTypes extends React.Component<Props> {
       if (parent.object === 'document' && blockType === 'title') {
         const index = parent.nodes.findIndex(n => n!.key === startBlock.key)
         const last = parent.nodes.findLast(
-          (node, inx) => node!.type !== 'section' && inx! >= index)
+          (node: Block | Inline, inx) => node!.type !== 'section' && inx! >= index)
 
         editor.moveStartToStartOfNode(startBlock)
         editor.moveEndToEndOfNode(last)

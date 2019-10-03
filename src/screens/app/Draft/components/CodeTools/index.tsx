@@ -31,7 +31,7 @@ export default class CodeTools extends React.Component<Props> {
     if (!start.path) return null
 
     let node: Document | Inline | Block = document
-    for (const index of start.path) {
+    for (const index of start.path as unknown as Iterable<number>) {
       node = node.nodes.get(+index) as Inline | Block
 
       if (node.type === 'code') {

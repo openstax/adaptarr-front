@@ -3,7 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { PersistDB, DocumentDB, uuid } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
-import { Value, KeyUtils } from 'slate'
+import { Block, Value, KeyUtils } from 'slate'
 import { connect } from 'react-redux'
 
 import timeout from 'src/helpers/timeout'
@@ -122,7 +122,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
       glossary = await documentDbGlossary.restore()
     } else {
       // Reset glossary if it have invalid content
-      if (glossary.document.nodes.get(0).type !== 'definition') {
+      if ((glossary.document.nodes.get(0) as Block).type !== 'definition') {
         glossary = Value.fromJS({
           object: 'value',
           document: {
@@ -168,7 +168,7 @@ class Draft extends React.Component<Props> {
     showInfoBox: false,
     valueDocument: this.props.document,
     valueGlossary: this.props.glossary,
-    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || this.props.glossary.document.nodes.get(0).type !== 'definition',
+    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || (this.props.glossary.document.nodes.get(0) as Block).type !== 'definition',
   }
 
   draftPermissions = new Set(this.props.draft.permissions || [])
@@ -194,7 +194,8 @@ class Draft extends React.Component<Props> {
   }
 
   onChangeGlossary = (value: Value) => {
-    const isGlossaryEmpty = !value.document.nodes.has(0) || value.document.nodes.get(0).type !== 'definition'
+    const isGlossaryEmpty = !value.document.nodes.has(0) ||
+      (value.document.nodes.get(0) as Block).type !== 'definition'
     this.setState({ valueGlossary: value, isGlossaryEmpty })
   }
 

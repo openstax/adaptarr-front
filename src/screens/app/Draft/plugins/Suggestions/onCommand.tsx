@@ -42,7 +42,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         // Add new text at then end of remove suggestion
         const nextNodePath = startBlock.getPath(highestSuggestion.key)
         // getNextNode always return Node, because after Inline there is always Slate~Text
-        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         editor.insertInline(inlineProps)
         break
       }
@@ -161,7 +161,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
 
     case 'insertFragment':
       const fragment = command.args[0]
-      const nodes: List<Node> = getTextsAndInlines(fragment)
+      const nodes = getTextsAndInlines(fragment)
       const inline = Inline.create({
         type: 'suggestion_insert',
         nodes: nodes,
@@ -173,7 +173,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         const newHighestSuggestion = getHighestSuggestion(editor)
         if (newHighestSuggestion && newHighestSuggestion.type === 'suggestion_delete') {
           const nextNodePath = startBlock.getPath(newHighestSuggestion.key)
-          editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+          editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         }
         editor.insertInline(inline)
         break
@@ -186,7 +186,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
 
       if (highestSuggestion.type === 'suggestion_delete') {
         const nextNodePath = startBlock.getPath(highestSuggestion.key)
-        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         editor.insertInline(inline)
         break
       }

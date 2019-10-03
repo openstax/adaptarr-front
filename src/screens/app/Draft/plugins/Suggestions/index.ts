@@ -6,34 +6,28 @@ import onCommand from './onCommand'
 import make_schema from './schema'
 import normalizeNode from './normalizeNode'
 
-interface CustomPlugin extends Plugin {
-  schema: object
-  onCommand?: (command: Command, editor: Editor, next: () => any) => any
-  normalizeNode?: (node: Node, editor: Editor, next: () => any) => any
-}
-
 const ALLOWED_INLINES = ['code', 'docref', 'link', 'source_element', 'term', 'xref']
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }
 
-const Suggestions = (options: Options): CustomPlugin => {
+const Suggestions = (options: Options): Plugin => {
   const { isActive = true } = options
   const allowedInlines = [
     ...(options.allowedInlines || []),
     ...ALLOWED_INLINES,
   ]
 
-  let plugin: CustomPlugin = {
+  let plugin = {
     schema: make_schema({ allowedInlines }),
     renderInline,
-  }
+  } as any
 
   if (isActive) {
     plugin.onCommand = onCommand
     plugin.normalizeNode = normalizeNode
   }
 
-  return plugin
+  return plugin as Plugin
 }
 
 export default Suggestions

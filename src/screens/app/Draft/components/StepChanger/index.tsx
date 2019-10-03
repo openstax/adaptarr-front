@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { DocumentDB } from 'cnx-designer'
-import { Value } from 'slate'
+import { Block, Value } from 'slate'
 import { connect } from 'react-redux'
 
 import store from 'src/store'
@@ -299,8 +299,8 @@ class StepChanger extends React.Component<Props> {
     const { storage, document, glossary, documentDbContent, documentDbGlossary } = this.props
 
     try {
-      const isGlossaryEmpty = !this.props.glossary.document.nodes.has(0) ||
-        this.props.glossary.document.nodes.get(0).type !== 'definition'
+      const isGlossaryEmpty = !glossary.document.nodes.has(0) ||
+        (glossary.document.nodes.get(0) as Block).type !== 'definition'
       await storage.write(document, isGlossaryEmpty ? null : glossary)
       await documentDbContent.save(document, storage.tag)
       await documentDbGlossary.save(glossary, storage.tag)

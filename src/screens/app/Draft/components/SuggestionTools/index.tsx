@@ -181,7 +181,8 @@ class SuggestionsTools extends React.Component<Props> {
     const { document } = this.props.value
     const prevSuggInline = prevSugg.type === 'insert' ? prevSugg.insert : prevSugg.delete
     const suggInline = sugg.type === 'insert' ? sugg.insert : sugg.delete
-    let suggPrevSibling = document.getPreviousSibling(document.getPath(suggInline.key))
+    const path = document.getPath(suggInline.key)
+    let suggPrevSibling = path ? document.getPreviousSibling(path) : null
 
     // Check if previous sibling of @param sugg is the same Node as @param prevSugg
 
@@ -191,7 +192,8 @@ class SuggestionsTools extends React.Component<Props> {
     ) {
       // Slate is inserting empty Slate~Text Nodes before / after inlines
       // so we have to check one sibling further.
-      suggPrevSibling = document.getPreviousSibling(document.getPath(suggPrevSibling.key))
+      const path = document.getPath(suggPrevSibling.key)
+      suggPrevSibling = path ? document.getPreviousSibling(path) : null
     }
 
     if (
@@ -317,6 +319,10 @@ class SuggestionsTools extends React.Component<Props> {
     switch (suggestion.type) {
       case 'insert': {
         const path = document.getPath(suggestion.insert.key)
+        if (!path) {
+          console.warn(`onAccept: Couldn't find path for suggestion: ${suggestion}`)
+          return
+        }
         editor.unwrapChildrenByPath(path)
         break
       }
@@ -326,6 +332,10 @@ class SuggestionsTools extends React.Component<Props> {
       }
       case 'change': {
         const path = document.getPath(suggestion.insert.key)
+        if (!path) {
+          console.warn(`onAccept: Couldn't find path for suggestion: ${suggestion}`)
+          return
+        }
         editor.withoutNormalizing(() => {
           editor.unwrapChildrenByPath(path)
           editor.removeNodeByKey(suggestion.delete.key)
@@ -354,11 +364,19 @@ class SuggestionsTools extends React.Component<Props> {
       }
       case 'delete': {
         const path = document.getPath(suggestion.delete.key)
+        if (!path) {
+          console.warn(`onDecline: Couldn't find path for suggestion: ${suggestion}`)
+          return
+        }
         editor.unwrapChildrenByPath(path)
         break
       }
       case 'change': {
         const path = document.getPath(suggestion.delete.key)
+        if (!path) {
+          console.warn(`onDecline: Couldn't find path for suggestion: ${suggestion}`)
+          return
+        }
         editor.withoutNormalizing(() => {
           editor.unwrapChildrenByPath(path)
           editor.removeNodeByKey(suggestion.insert.key)
