@@ -9,7 +9,7 @@ Build with `yarn build`. All files will be moved to `./build/*`
 
 ## Starting dev server
 
-1. Install and start `adaptarr-server` https://github.com/openstax-poland/adaptarr-server/
+1. Install and start [adaptarr-server](https://github.com/openstax-poland/adaptarr-server/)
 2. Run `yarn start`
 
 Please make sure that you have configured nginx to handle server and web app on the same domain.
@@ -29,19 +29,19 @@ server {
   try_files $uri @front;
   client_max_body_size 400M;
   location @front {
-      proxy_set_header X-Forwarded_Proto $scheme;
-      proxy_set_header Host $http_host;
-      proxy_pass http://front;
-      proxy_read_timeout 300s;
-      proxy_send_timeout 300s;
-      proxy_redirect http:// $scheme://;
+    proxy_set_header X-Forwarded_Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_pass http://front;
+    proxy_read_timeout 300s;
+    proxy_send_timeout 300s;
+    proxy_redirect http:// $scheme://;
   }
   location ~ ^/api/v1/(events|conversations/.+/socket) {
-  proxy_set_header X-Forwarded_Proto $scheme;
-  proxy_set_header Host $http_host;
-  proxy_pass http://adaptarr;
-  proxy_http_version 1.1;
-  proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header X-Forwarded_Proto $scheme;
+    proxy_set_header Host $http_host;
+    proxy_pass http://adaptarr;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "Upgrade";
   }
   location ~ ^/(login|logout|api|register|reset|elevate|join) {
@@ -55,56 +55,60 @@ server {
 }
 ```
 
+Please notice that port which we've used for adaptarr server: `8080` should correspond to
+configuration in `config.toml` in `adaptarr-server`. The same applies for other variables like `server_name` which will correspond with `domain` in configuration file for server. This domain should be also added in `/etc/hosts`.
+
 ## Folder structure and some importat files
+```
 ├── config - webpack config folder.
-│----└── jest
+│    └── jest
 ├── public - files which should be included in build folder.
-│----├── images
-│----└── locale - localization files
-│--------├── en
-│--------│----├── document.ftl
-│--------│----└── ui.ftl
-│--------└── pl
-│-------------├── document.ftl
-│-------------└── ui.flt
+│    ├── images
+│    └── locale - localization files
+│        ├── en
+│        │    ├── document.ftl
+│        │    └── ui.ftl
+│        └── pl
+│             ├── document.ftl
+│             └── ui.flt
 ├── scripts - webpack standard scripts.
 ├── src
-│----├── @types - types declaration for modules which doesn't provide them or our modification of those which does.
-│----├── api - declarations of classes which we use to handle api endpoints.
-│----├── assets - global assets for entire application. For now there are only global styles.
-│----├── components - components which will be used in more than one place.
-│----├── config - we hold here custom axios instance and sentry configuration files.
-│----├── containers - large components which are kind of containers for many different components.
-│----├── helpers - small helper functions for different components.
-│----├── locale
-│----│----└── data.json - cases, languages (used in app), allLanguages - code and names for all languages.
-│----└── screens - folder with components handling routes.
-│----│----└── app
-│----│--------├── Book - `/book/:id`
-│----│--------├── Books - `/books`
-│----│--------├── Dashboard - `/`
-│----│--------├── DraftDetails - `/draft/:id`
-│----│--------├── Draft - `/draft/:id/:action` - `action: 'edit' | 'view`
-│----│--------├── Error404 - `/*`
-│----│--------├── Helpdesk - `/helpdesk`
-│----│--------├── Invitations -`/invitations`
-│----│--------├── Modules - `/modules`
-│----│--------├── NotificationsCentre - `/notifications`
-│----│--------├── Processes - `/processes`
-│----│--------├── Profile - `/users/:id`
-│----│--------├── Resources - `/resources`
-│----│--------├── Settings - `/settings`
-│----│--------└── Teams `/teams/:id?/:tab?` - `tab: 'members' | 'roles'`
-│----├── store - redux store.
-│----│----├── actions
-│----│----├── constants
-│----│----├── reducers
-│----│----└── types
-│----├── App.test.tsx - not used yet.
-│----├── App.tsx - main app component.
-│----├── index.tsx - entry file for whole application.
-│----├── l10n.tsx - main component for localization.
-│----└── registerServiceWorker.ts
+│    ├── @types - types declaration for modules which doesn't provide them or our modification of those which does.
+│    ├── api - declarations of classes which we use to handle api endpoints.
+│    ├── assets - global assets for entire application. For now there are only global styles.
+│    ├── components - components which will be used in more than one place.
+│    ├── config - we hold here custom axios instance and sentry configuration files.
+│    ├── containers - large components which are kind of containers for many different components.
+│    ├── helpers - small helper functions for different components.
+│    ├── locale
+│    │    └── data.json - cases, languages (used in app), allLanguages - code and names for all languages.
+│    └── screens - folder with components handling routes.
+│    │    └── app
+│    │        ├── Book - `/book/:id`
+│    │        ├── Books - `/books`
+│    │        ├── Dashboard - `/`
+│    │        ├── DraftDetails - `/draft/:id`
+│    │        ├── Draft - `/draft/:id/:action` - `action: 'edit' | 'view`
+│    │        ├── Error404 - `/*`
+│    │        ├── Helpdesk - `/helpdesk`
+│    │        ├── Invitations -`/invitations`
+│    │        ├── Modules - `/modules`
+│    │        ├── NotificationsCentre - `/notifications`
+│    │        ├── Processes - `/processes`
+│    │        ├── Profile - `/users/:id`
+│    │        ├── Resources - `/resources`
+│    │        ├── Settings - `/settings`
+│    │        └── Teams `/teams/:id?/:tab?` - `tab: 'members' | 'roles'`
+│    ├── store - redux store.
+│    │    ├── actions
+│    │    ├── constants
+│    │    ├── reducers
+│    │    └── types
+│    ├── App.test.tsx - not used yet.
+│    ├── App.tsx - main app component.
+│    ├── index.tsx - entry file for whole application.
+│    ├── l10n.tsx - main component for localization.
+│    └── registerServiceWorker.ts
 ├── images.d.ts
 ├── package.json
 ├── README.md
@@ -113,6 +117,7 @@ server {
 ├── tsconfig.test.json
 ├── tslint.yaml
 └── yarn.lock
+```
 
 ## Typescript configuration
 
@@ -148,7 +153,7 @@ Please be aware that not all of current files meet those standards yet. If you w
 
 ## Localization
 
-We are using Fluent (https://projectfluent.org/) for localization. All files with texts are hold in `plublic/locale/` in proper folders. We are using separate files for texts inside web application - `ui.ftl` and in the document (`/drafts/:id/:action`) - `document.ftl`.
+We are using [Fluent](https://projectfluent.org) for localization. All files with texts are hold in `plublic/locale/` in proper folders. We are using separate files for texts inside web application - `ui.ftl` and in the document (`/drafts/:id/:action`) - `document.ftl`.
 
 When you are adding new text to the application, please remember about adding placeholder value:
 `<Localized id="l10nId">Placeholder value</Localized>`
@@ -192,7 +197,7 @@ Store is divided to `actions`, `constants`, `reducers`, `types` folders and have
 ### How to import from the store:
 
 Dispatch actions directly by importig `store` and given `action`:
-```
+```js
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/Alerts'
 
@@ -200,7 +205,7 @@ store.dispatch(addAlert('success', 'l10n-id-for-success-message'))
 ```
 
 Add imported values as props to the component:
-```
+```js
 import { connect } from 'react-redux'
 import { State } from 'src/store/reducers/'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
@@ -243,9 +248,9 @@ export default connect(mapStateToProps, mapDispatchToProps)(ComponentName)
 
 ## Sentry
 
-We are using sentry (httpscreate://sentry.naukosfera.com/) to monitor exceptions on staging and production server.
+We are using [Sentry](https://sentry.io/welcome/) to monitor exceptions on staging and production server.
 
-Config file is in `src/config/sentry.ts`. Variables `SENTRY_DSN` and `SENTRY_RELEASE` are automatically added when deploying by our deployment server.
+Config file is in `src/config/sentry.ts`.
 
 Unhandled errors will be catched by `ErrorBoundary` component which will send an error to the server and give user possibilty to attach report.
 
@@ -279,7 +284,7 @@ at then end partial imports: `import { xxx } from 'xxx'`.
 
 4. Declare and export type for component' props, ex: `export type MyComponentProps = {...}`.
 
-5. If you are will be using redux, please declare `mapStateToProps` / `mapDispatchToProps` in this place.
+5. If you will be using redux, please declare `mapStateToProps` / `mapDispatchToProps` in this place.
 
 6. Write your component. If it will be class component, remember of `private` and `public` keywords befor methods.
 
