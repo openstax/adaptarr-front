@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import User, { SystemPermission } from 'src/api/user'
+import User from 'src/api/user'
 import Team, { TeamPermission } from 'src/api/team'
 
 import { IsLoading } from 'src/store/types'
@@ -9,13 +9,18 @@ import { State } from 'src/store/reducers'
 
 import './index.css'
 
+// permissions or onePermissionFrom is required if onlyUser is not set to true
 type Props = {
   user: {
     isLoading: IsLoading
     user: User
   }
   // User has to have one or more permissions to see hidden UI.
-  permissions: SystemPermission | TeamPermission | (SystemPermission | TeamPermission)[]
+  permissions?: TeamPermission | TeamPermission[]
+  // User has to have one permission from given array.
+  onePermissionFrom?: TeamPermission[]
+  // Only users with isInSuperMode: true can see this component
+  onlySuper?: boolean
   // If specified then user has to have permissions in this team.
   team?: Team | number
 }
@@ -27,45 +32,50 @@ const mapStateToProps = ({ user }: State) => {
 }
 
 class LimitedUI extends React.Component<Props> {
+  state = {
+    userHasPermissions: false,
+  }
+
+  /**
+   * Render component only if user have proper permissions or if it is super user.
+   */
+  private userHasPermissions = (): boolean => {
+    const { user: { user }, permissions, onePermissionFrom, onlySuper, team } = this.props
+
+    if (onlySuper) {
+      if (user.isInSuperMode) return true
+      return false
+    }
+
+    if (!permissions && !onePermissionFrom) {
+      throw new Error('LimitedUI component require permissions or onePermissionFrom prop.')
+    }
+
+    if (user.isInSuperMode) return true
+
+    if (team) {
+      const teamId = typeof team === 'number' ? team : team.id
+      return user.hasPermissionsInTeam(
+          (permissions || onePermissionFrom) as TeamPermission | TeamPermission[],
+          teamId
+        )
+    }
+
+    if (permissions) {
+      if (typeof permissions === 'string') {
+        return user.allPermissions.has(permissions)
+      } else {
+        return permissions.every(p => user.allPermissions.has(p))
+      }
+    } else if (onePermissionFrom) {
+      return onePermissionFrom.some(p => user.allPermissions.has(p))
+    }
+
+    return false
+  }
 
   public render() {
-    const { user: { user }, permissions, team } = this.props
-
-    // Render component only if user have proper permissions
-    // or if it is super user.
-    if (!user.is_super) {
-      if (typeof permissions === 'string') {
-        if (team) {
-          const usrTeam = user.teams.find(t => t.id === (typeof team === 'number' ? team : team.id))
-          if (
-            !usrTeam ||
-            !usrTeam.role ||
-            !usrTeam.role.permissions ||
-            !usrTeam.role.permissions.includes(permissions as TeamPermission)
-          ) return null
-        } else if (!user.allPermissions.has(permissions)) {
-          return null
-        }
-      } else {
-        if (team) {
-          const usrTeam = user.teams.find(t => t.id === (typeof team === 'number' ? team : team.id))
-          if (
-            !usrTeam ||
-            !usrTeam.role ||
-            !usrTeam.role.permissions ||
-            !permissions.every(p => usrTeam.role!.permissions!.includes(p as TeamPermission))
-          ) return null
-        } else {
-          let noAccess = permissions.some(p => {
-            if (!user.allPermissions.has(p)) {
-              return true
-            }
-            return false
-          })
-          if (noAccess) return null
-        }
-      }
-    }
+    if (!this.userHasPermissions()) return null
 
     return (
       <div className="limitedui">

@@ -8,7 +8,7 @@ import { TeamPermission } from 'src/api/team'
 
 import store from 'src/store'
 import { UsersMap } from 'src/store/types'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 
 import { confirmDialog } from 'src/helpers'
@@ -106,18 +106,16 @@ class Member extends React.Component<MemberProps> {
     const { showPermissions } = this.state
     const usrTeam = loggedUser.teams.find(t => t.id === team.id)
 
-    const isUserAbleToChangePermissions = loggedUser.is_super ||
+    const isUserAbleToChangePermissions = loggedUser.isInSuperMode ||
       loggedUser.hasPermissionsInTeam('member:edit-permissions', team)
 
     // User can give another user only permissions which he has in a team.
     let disabledPermissions: TeamPermission[] = []
     if (usrTeam && showPermissions) {
-      if (loggedUser.is_super) {
+      if (loggedUser.isInSuperMode) {
         disabledPermissions = []
       } else {
-        if (usrTeam && usrTeam.role && usrTeam.role.permissions) {
-          disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.role!.permissions!.includes(p))
-        }
+        disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.allPermissions.has(p))
       }
     }
 

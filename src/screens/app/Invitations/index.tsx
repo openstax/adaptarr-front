@@ -127,7 +127,7 @@ class Invitations extends React.Component<InvitationsProps> {
     // User can give another user only subset of his permission in team
     let disabledPermissions: TeamPermission[] = TEAM_PERMISSIONS
     if (team) {
-      if (user.is_super) {
+      if (user.isInSuperMode) {
         disabledPermissions = []
       } else {
         const usrTeam = user.teams.find(t => t.id === team.id)

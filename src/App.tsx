@@ -4,6 +4,7 @@ import { SecureRoute } from 'react-route-guard'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
+import { TeamPermission } from 'src/api/team'
 
 import Alerts from 'src/components/Alerts'
 import Navigation from 'src/components/Navigation'
@@ -69,25 +70,36 @@ const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActio
   }
 }
 
+/**
+ * One of those permissions is required to go to the /teams route since in this screen
+ * user can add, remove and manage users in teams.
+ */
+export const ROUTE_TEAMS_PERMISSIONS: TeamPermission[] = [
+  'member:add',
+  'member:assign-role',
+  'member:edit-permissions',
+  'member:remove',
+]
+
 class App extends React.Component<Props> {
   private InvitationsGuard = {
     shouldRoute: () => {
       const user = this.props.user.user
-      return user.is_super || user.allPermissions.has('member:add')
+      return user.isInSuperMode || user.allPermissions.has('member:add')
     }
   }
 
   private TeamsGuard = {
     shouldRoute: () => {
       const user = this.props.user.user
-      return user.is_super || user.allPermissions.has('team:manage')
+      return user.isInSuperMode || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
     }
   }
 
   private ProcessesGuard = {
     shouldRoute: () => {
       const user = this.props.user.user
-      return user.is_super || user.allPermissions.has('editing-process:edit')
+      return user.isInSuperMode || user.allPermissions.has('editing-process:edit')
     }
   }
 

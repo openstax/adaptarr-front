@@ -16,7 +16,6 @@ export type UserData = {
   name: string
   is_super: boolean
   language: string
-  permissions?: SystemPermission[] // Returned for users with user:edit-permissions` permission.
   teams: {
     id: TeamID
     name: string
@@ -41,13 +40,7 @@ export type UserTeam = {
 export type SessionInfo = {
   expires: string
   is_elevated: boolean
-  permission: SystemPermission[]
 }
-
-/**
- * System permissions which users can have besides permissions from his role in team.
- */
-export type SystemPermission = 'team:manage' | 'user:edit' | 'user:edit-permissions' | 'user:delete'
 
 export default class User extends Base<UserData> {
   /**
@@ -137,19 +130,21 @@ export default class User extends Base<UserData> {
   apiId: string
 
   /**
-   * User's system permissions.
-   */
-  permissions: Set<SystemPermission>
-
-  /**
    * All user's permissions across all teams and system.
    */
-  allPermissions: Set<SystemPermission | TeamPermission>
+  allPermissions: Set<TeamPermission>
 
   /**
    * Teams for which this users is member of.
   */
   teams: UserTeam[]
+
+  private _session?: SessionInfo
+
+  /**
+   * Determine if user is in super session so he have access to hidden UIs.
+   */
+  isInSuperMode: boolean
 
   constructor(data: UserData, apiId?: string) {
     super(data)
@@ -167,9 +162,7 @@ export default class User extends Base<UserData> {
       }
     })
 
-    this.permissions = new Set(data.permissions)
-
-    let allPermissions: Set<TeamPermission | SystemPermission> = new Set(data.permissions)
+    let allPermissions: Set<TeamPermission> = new Set()
     for (const team of this.teams) {
       if (team.role && team.role.permissions) {
         for (const p of team.role.permissions) {
@@ -179,6 +172,8 @@ export default class User extends Base<UserData> {
     }
 
     this.allPermissions = allPermissions
+
+    this.checkForSuperMode()
   }
 
   /**
@@ -198,20 +193,39 @@ export default class User extends Base<UserData> {
   }
 
   /**
+   * Return true if user is_super: true and is_elevated: true
+   *
+   * If user is in super mode he will be able to see all hidden UIs.
+   * This will work only for user with apiId === 'me'
+   *
+   * This function will set properly this.isInSuperMode prop.
+   */
+  async checkForSuperMode(): Promise<boolean> {
+    let res = false
+
+    if (this.apiId === 'me' && this.is_super) {
+      const now = new Date()
+      if (!this._session || new Date(this._session.expires) < now) {
+        this._session = await User.session()
+      }
+
+      if (this._session.is_elevated) {
+        res = true
+      }
+    }
+
+    this.isInSuperMode = res
+    return res
+  }
+
+  /**
    * Change name
    *
-   * Require 'users:edit' permission to change other users name.
+   * Require is_super to change other users name.
    * No permissions required to change own name.
    */
   async changeName(name: string): Promise<AxiosResponse> {
     return await elevated(() => axios.put(`users/${this.apiId}`, { name }))
-  }
-
-  /**
-   * Change system permissions.
-   */
-  async changePermissions(permissions: SystemPermission[]): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`users/${this.apiId}`, { permissions }))
   }
 
   /**

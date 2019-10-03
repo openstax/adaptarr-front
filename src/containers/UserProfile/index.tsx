@@ -4,7 +4,6 @@ import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import { Draft, User, Role, TeamMember } from 'src/api'
-import { SystemPermission } from 'src/api/user'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'
@@ -19,7 +18,6 @@ import Header from 'src/components/Header'
 import Load from 'src/components/Load'
 import DraftsList from 'src/components/DraftsList'
 import EditableText from 'src/components/EditableText'
-import SystemPermissions from 'src/components/SystemPermissions'
 import Button from 'src/components/ui/Button'
 import Avatar from 'src/components/ui/Avatar'
 import LimitedUI from 'src/components/LimitedUI'
@@ -48,14 +46,12 @@ async function loader({ userId }: { userId: string }) {
 export type UserProfileState = {
   userName: string
   drafts: Draft[]
-  systemPermissions: SystemPermission[]
 }
 
 class UserProfile extends React.Component<UserProfileProps> {
   state: UserProfileState = {
     userName: this.props.user.name,
     drafts: [],
-    systemPermissions: [],
   }
 
   private handleNameChange = (name: string) => {
@@ -129,20 +125,9 @@ class UserProfile extends React.Component<UserProfileProps> {
       })
   }
 
-  private handleSystemPermissionsChange = (permissions: SystemPermission[]) => {
-    this.props.user.changePermissions(permissions)
-      .then(() => {
-        store.dispatch(addAlert('success', 'user-profile-system-permissions-change-success'))
-        this.setState({ systemPermissions: permissions })
-      })
-      .catch(() => {
-        store.dispatch(addAlert('error', 'user-profile-system-permissions-change-error'))
-      })
-  }
-
   async componentDidUpdate(prevProps: UserProfileProps) {
     if (prevProps.user.id !== this.props.user.id) {
-      this.setState({ userName: this.props.user.name, systemPermissions: [...this.props.user.permissions] })
+      this.setState({ userName: this.props.user.name })
       if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
         const usersDrafts: Draft[] = await this.props.user.drafts()
         this.setState({ drafts: usersDrafts })
@@ -151,7 +136,6 @@ class UserProfile extends React.Component<UserProfileProps> {
   }
 
   async componentDidMount() {
-    this.setState({ systemPermissions: [...this.props.user.permissions] })
     if (this.props.currentUser.allPermissions.has('editing-process:manage')) {
       const usersDrafts: Draft[] = await this.props.user.drafts()
       this.setState({ drafts: usersDrafts })
@@ -159,7 +143,7 @@ class UserProfile extends React.Component<UserProfileProps> {
   }
 
   public render() {
-    const { drafts, userName, systemPermissions } = this.state
+    const { drafts, userName } = this.state
     const { user, currentUser, teams } = this.props
 
     let header
@@ -185,7 +169,7 @@ class UserProfile extends React.Component<UserProfileProps> {
               <div className="profile__main-info">
                 <h2 className="profile__name">
                   {
-                    user.id === currentUser.id || currentUser.permissions.has('user:edit') ?
+                    user.id === currentUser.id || currentUser.isInSuperMode ?
                       <EditableText
                         text={userName}
                         onAccept={this.handleNameChange}
@@ -204,12 +188,10 @@ class UserProfile extends React.Component<UserProfileProps> {
                       let isEditable = false
                       let options: { value: Role, label: string }[] = []
                       if (
-                        currentUser.is_super ||
+                        currentUser.isInSuperMode ||
                         (
                           currUsrTeam &&
-                          currUsrTeam.role &&
-                          currUsrTeam.role.permissions &&
-                          currUsrTeam.role.permissions.includes('member:assign-role')
+                          currUsrTeam.allPermissions.has('member:assign-role')
                         )
                       ) {
                         isEditable = true
@@ -276,19 +258,6 @@ class UserProfile extends React.Component<UserProfileProps> {
                   <Localized id="user-profile-users-drafts">User's drafts</Localized>
                 </h3>
                 <DraftsList drafts={drafts} />
-              </LimitedUI>
-            </div>
-            <div className="profile__permissions">
-              <LimitedUI permissions="user:edit-permissions">
-                <h3 className="profile__title">
-                  <Localized id="user-profile-system-permissions">
-                    User's system permissions
-                  </Localized>
-                </h3>
-                <SystemPermissions
-                  selected={systemPermissions}
-                  onChange={this.handleSystemPermissionsChange}
-                />
               </LimitedUI>
             </div>
           </div>

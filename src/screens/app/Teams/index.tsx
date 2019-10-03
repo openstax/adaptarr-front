@@ -10,8 +10,7 @@ import store from 'src/store'
 import { setTeam, setTeams } from 'src/store/actions/app'
 import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
-import { UsersMap } from 'src/store/types'
-import { TeamsMap } from 'src/store/types'
+import { UsersMap, TeamsMap } from 'src/store/types'
 
 import AddTeam from './components/AddTeam'
 import RoleManager from './components/RoleManager'
@@ -194,7 +193,7 @@ class Teams extends React.Component<TeamsProps> {
               {
                 Array.from(teams.values()).map(t => {
                   const isActive = selectedTeam && t.id === selectedTeam.id
-                  const isEditable = user.is_super || user.permissions.has('team:manage')
+                  const isEditable = user.isInSuperMode
                   return (
                     <li
                       key={t.id}

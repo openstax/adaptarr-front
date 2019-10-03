@@ -51,9 +51,9 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
     let options: { value: Team, label: string }[] = []
     if (permission) {
       options = user.teams.filter(t => {
-        if (user.is_super) return true
-        if (!t.role || !t.role.permissions || !t.role.permissions.includes(permission)) return false
-        return true
+        if (user.isInSuperMode) return true
+        if (t.allPermissions.has(permission)) return true
+        return false
       }).map(ut => {
         const team = teams.get(ut.id)!
         return { value: team, label: team.name }
