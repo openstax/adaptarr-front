@@ -26,7 +26,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       if (!selection.isCollapsed) {
         // User want to replace current selection with new text
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         editor.insertInline(inlineProps)
         break
       }
@@ -52,7 +52,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
     case 'deleteCharBackward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToStartOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -102,15 +102,20 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         return editor.moveBackward(1)
       }
 
+      // Select current suggestion_delete and one char before so slate can properly
+      // split nodes.
       editor.moveAnchorBackward()
+      editor.moveFocusToEndOfNode(highestSuggestion)
+      editor.moveFocusToStartOfNextText()
+      const sel = editor.value.selection.anchor
       editor.wrapInline('suggestion_delete')
-      editor.moveToAnchor()
+      editor.moveTo(sel.path!, sel.offset)
       break
 
     case 'deleteCharForward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -155,7 +160,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       // When cutting text
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToFocus()
+        editor.moveToEnd()
       }
       break
 

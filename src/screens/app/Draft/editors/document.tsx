@@ -13,6 +13,7 @@ import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxDocument from '../components/ToolboxDocument'
 
 import Docref from '../plugins/Docref'
+import Footnotes from '../plugins/Footnotes'
 import StorageContext from '../plugins/Storage'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
@@ -48,6 +49,7 @@ class EditorDocument extends React.Component<Props> {
     || this.props.stepPermissions.has('accept-changes') ?
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
       : {},
+    Footnotes(),
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
@@ -57,6 +59,9 @@ class EditorDocument extends React.Component<Props> {
           inlines: SUGGESTION_TYPES,
         },
         term: {
+          inlines: SUGGESTION_TYPES,
+        },
+        footnote: {
           inlines: SUGGESTION_TYPES,
         },
       },

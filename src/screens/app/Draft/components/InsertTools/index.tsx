@@ -141,6 +141,16 @@ class InsertTools extends React.Component<Props> {
             Source element
           </Localized>
         </Button>
+        <Button
+          clickHandler={this.insertFootnote}
+          className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'footnote'])}
+        >
+          <Icon size="small" name="footnote" />
+          <Localized id="editor-tools-insert-footnote">
+            Footnote
+          </Localized>
+        </Button>
         <Modal
           ref={this.setFigureModal}
           content={this.renderFigureModal}
@@ -337,6 +347,15 @@ class InsertTools extends React.Component<Props> {
 
   private insertSourceElement = () => {
     this.props.editor.insertInline({ type: 'source_element', nodes: List([Text.create(' ')]) })
+    this.props.editor.moveBackward()
+  }
+
+  private insertFootnote = () => {
+    this.props.editor.insertInline({
+      type: 'footnote',
+      data: { collapse: false },
+      nodes: List([Text.create(' ')]),
+    })
     this.props.editor.moveBackward()
   }
 
