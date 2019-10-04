@@ -4,7 +4,7 @@ import { AxiosResponse } from 'axios'
 import Base from './base'
 import Role, { RoleData } from './role'
 import Draft, { DraftData } from './draft'
-import { TeamID, TeamPermission } from './team'
+import Team, { TeamID, TeamPermission } from './team'
 
 import { elevated } from './utils'
 
@@ -20,8 +20,19 @@ export type UserData = {
   teams: {
     id: TeamID
     name: string
+    permissions: TeamPermission[]
     role: RoleData | null
   }[]
+}
+
+export type UserTeam = {
+  id: TeamID
+  name: string
+  // Permissions not related to role.
+  permissions: TeamPermission[]
+  // All permissions which user has in team.
+  allPermissions: Set<TeamPermission>
+  role: Role | null
 }
 
 /**
@@ -138,16 +149,23 @@ export default class User extends Base<UserData> {
   /**
    * Teams for which this users is member of.
   */
-  teams: { id: TeamID, name: string, role: Role | null }[]
+  teams: UserTeam[]
 
   constructor(data: UserData, apiId?: string) {
     super(data)
 
     this.apiId = apiId || data.id.toString()
 
-    this.teams = data.teams.map(t => ({
-      ...t, role: t.role ? new Role(t.role, t.id) : null,
-    }))
+    this.teams = data.teams.map(t => {
+      const role = t.role ? new Role(t.role, t.id) : null
+      const rolePermissions = role ? role.permissions || [] : []
+      const allPermissions = new Set([...t.permissions, ...rolePermissions])
+      return {
+        ...t,
+        role,
+        allPermissions,
+      }
+    })
 
     this.permissions = new Set(data.permissions)
 
@@ -161,6 +179,22 @@ export default class User extends Base<UserData> {
     }
 
     this.allPermissions = allPermissions
+  }
+
+  /**
+   * Check if user has one or more permissions in specific team.
+   *
+   * @param permission
+   * @param team
+   */
+  hasPermissionsInTeam(permissions: TeamPermission | TeamPermission[], team: Team | TeamID): boolean {
+    const teamId = typeof team === 'number' ? team : team.id
+    const targetTeam = this.teams.find(t => t.id === teamId)
+    if (!targetTeam) return false
+    if (typeof permissions === 'string') {
+      return targetTeam.allPermissions.has(permissions)
+    }
+    return permissions.every(p => targetTeam.allPermissions.has(p))
   }
 
   /**
