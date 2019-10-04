@@ -24,6 +24,7 @@
 .teams__member {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   padding: 10px;
 }
 
@@ -46,8 +47,13 @@
   display: flex;
   align-items: center;
   flex: 1;
+  cursor: pointer;
 }
 
 .teams__user .avatar {
   margin-right: 10px;
+}
+
+.teams__member-permissions {
+  width: 100%;
 }

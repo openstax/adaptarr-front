@@ -11,14 +11,11 @@ import { addAlert } from 'src/store/actions/Alerts'
 import { fetchUsersMap } from 'src/store/actions/User'
 import { State } from 'src/store/reducers'
 
-import confirmDialog from 'src/helpers/confirmDialog'
-
+import Member from './Member'
 import Spinner from 'src/components/Spinner'
-import Avatar from 'src/components/ui/Avatar'
-import Button from 'src/components/ui/Button'
+import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
-import LimitedUI from 'src/components/LimitedUI'
 
 export type MembersManagerProps = {
   team: Team
@@ -47,42 +44,6 @@ class MembersManager extends React.Component<MembersManagerProps> {
     selectedRole: null,
   }
 
-  private removeMember = async (member: TeamMember) => {
-    const res = await confirmDialog({
-      title: 'teams-member-remove-confirm-dialog',
-      $user: this.props.users.get(member.user)!.name,
-      $team: this.props.team.name,
-      showCloseButton: false,
-      buttons: {
-        cancel: 'teams-member-cancel',
-        confirm: 'teams-member-remove',
-      },
-    })
-    if (res === 'confirm') {
-      member.delete()
-        .then(() => {
-          store.dispatch(addAlert('success', 'teams-member-remove-success'))
-          this.setState({
-            members: this.state.members.filter(m => m.user !== member.user)
-          })
-        })
-        .catch(() => {
-          store.dispatch(addAlert('error', 'teams-member-remove-error'))
-        })
-    }
-  }
-
-  private handleMemberRoleChange = async ({ value: { member, role } }: { value: { member: TeamMember, role: Role }, label: string }) => {
-    await member.update({ role: role.id })
-      .then(() => {
-        store.dispatch(addAlert('success', 'teams-member-role-change-success'))
-      })
-      .catch(() => {
-        store.dispatch(addAlert('error', 'teams-member-role-change-error'))
-      })
-    this.setState({ members: await this.props.team.members(false) })
-  }
-
   private handleUserChange = (option: { value: User, label: string } | null) => {
     this.setState({ selectedUser: option ? option.value : option })
   }
@@ -105,6 +66,30 @@ class MembersManager extends React.Component<MembersManagerProps> {
       store.dispatch(addAlert('success', 'teams-member-add-success'))
     }).catch(() => {
       store.dispatch(addAlert('error', 'teams-member-add-error'))
+    })
+  }
+
+  private onMemberRemove = (member: TeamMember) => {
+    this.setState({
+      members: this.state.members.filter(m => m.user !== member.user),
+    })
+  }
+
+  private onMemberRoleChange = (member: TeamMember) => {
+    this.setState({
+      members: this.state.members.map(m => {
+        if (m.user !== member.user) return m
+        return member
+      }),
+    })
+  }
+
+  private onMemberPermissionsChange = (member: TeamMember) => {
+    this.setState({
+      members: this.state.members.map(m => {
+        if (m.user !== member.user) return m
+        return member
+      }),
     })
   }
 
@@ -173,39 +158,14 @@ class MembersManager extends React.Component<MembersManagerProps> {
                   This team doesn't have members.
                 </Localized>
               </span>
-            :
-              members.map(m => {
-                const user = users.get(m.user)
-                if (!user) return null
-                return (
-                  <li
-                    key={m.user}
-                    className="teams__member"
-                  >
-                    <div className="teams__user">
-                      <Avatar user={user} />
-                      <div className="teams__user-name">{user.name}</div>
-                    </div>
-                    <div className="teams__member-controls">
-                      <LimitedUI team={team} permissions="member:assign-role">
-                        <Select
-                          className="react-select"
-                          value={m.role ? { value: { member: m, role: m.role }, label: m.role.name } : null}
-                          options={team.roles.map(r => ({ value: { member: m, role: r }, label: r.name }))}
-                          onChange={this.handleMemberRoleChange}
-                        />
-                      </LimitedUI>
-                      <LimitedUI team={team} permissions="member:remove">
-                        <Button clickHandler={() => this.removeMember(m)}>
-                          <Localized id="teams-member-remove">
-                            Remove
-                          </Localized>
-                        </Button>
-                      </LimitedUI>
-                    </div>
-                  </li>
-                )
-              })
+            : members.map(m => <Member
+                key={m.user}
+                member={m}
+                team={team}
+                onMemberRemove={this.onMemberRemove}
+                onMemberRoleChange={this.onMemberRoleChange}
+                onMemberPermissionsChange={this.onMemberPermissionsChange}
+              />)
           }
         </ul>
       </>

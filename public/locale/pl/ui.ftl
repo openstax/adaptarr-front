@@ -715,6 +715,8 @@ teams-section-manage-members-title = Zarządzaj członkami zespołu: { $team }
 
 teams-no-members = Brak użytkowników w tym zespole
 
+teams-member-missing-user = Nie udało się znaleźć użytkownika powiązanego z danym członkiem zespołu
+
 teams-member-cancel = Anuluj
 
 teams-member-remove = Usuń
@@ -731,6 +733,10 @@ teams-member-remove-error = Nie udało się usunąć użytkownika z zespołu
 teams-member-role-change-success = Pomyślnie zmieniono rolę użytkownika
 
 teams-member-role-change-error = Nie udało się zmienić roli użytkownika
+
+teams-member-permissions-change-success = Pomyślnie zmieniono uprawnienia użytkownika
+
+teams-member-permissions-change-error = Nie udało się zmienić uprawnień użytkownika
 
 teams-select-user = Wybierz użytkownika
 
