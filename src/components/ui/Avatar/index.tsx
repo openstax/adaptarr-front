@@ -8,7 +8,7 @@ import * as api from 'src/api'
 import { UsersMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { decodeHtmlEntity } from 'src/helpers'
 
 import './index.css'
 

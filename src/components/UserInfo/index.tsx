@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import { User } from 'src/api'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { decodeHtmlEntity } from 'src/helpers'
 
 import Avatar from 'src/components/ui/Avatar'
 

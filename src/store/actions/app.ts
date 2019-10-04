@@ -8,7 +8,7 @@ import {
   SET_TEAM,
   SET_TEAMS,
 } from 'src/store/constants'
-import { addAlert, AddAlert } from 'src/store/actions/Alerts'
+import { addAlert, AddAlert } from 'src/store/actions/alerts'
 import { TeamsMap } from 'src/store/types'
 
 import { Process, Team } from 'src/api'

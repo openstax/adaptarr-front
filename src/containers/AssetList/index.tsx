@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Storage, { FileDescription } from 'src/api/storage'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 import { SlotPermission } from 'src/api/process'
 
@@ -14,7 +14,7 @@ import AssetPreview from 'src/components/AssetPreview'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import mimeToRegExp from 'src/helpers/mimeToRegExp'
+import { mimeToRegExp } from 'src/helpers'
 
 import './index.css'
 

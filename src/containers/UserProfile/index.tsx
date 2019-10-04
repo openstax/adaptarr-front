@@ -7,13 +7,12 @@ import { Draft, User, Role, TeamMember } from 'src/api'
 import { SystemPermission } from 'src/api/user'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
-import { updateUserInUsersMap } from 'src/store/actions/User'
+import { addAlert } from 'src/store/actions/alerts'
+import { updateUserInUsersMap } from 'src/store/actions/user'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, decodeHtmlEntity } from 'src/helpers'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'

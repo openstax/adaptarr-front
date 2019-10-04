@@ -3,7 +3,7 @@ import './index.css'
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import validateEmail from 'src/helpers/validateEmail'
+import { validateEmail } from 'src/helpers'
 
 const leadingSpace = new RegExp(/^\s+/)
 

@@ -4,12 +4,12 @@ import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
 import * as api from 'src/api'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import store from 'src/store'
 import { IsLoading, BooksMap } from 'src/store/types'
-import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
-import { fetchModulesMap } from 'src/store/actions/Modules'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/books'
+import { fetchModulesMap } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers/index'
 
 import Section from 'src/components/Section'

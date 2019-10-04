@@ -1,10 +1,10 @@
 import { Notification } from 'src/api'
 
-import validateL20nArgs from 'src/helpers/validateL20nArgs'
+import { validateL20nArgs } from 'src/helpers'
 
 import { PUSH_ALERT, REMOVE_ALERT } from 'src/store/constants'
 import { Alert, AlertDataKind } from 'src/store/types'
-import { pushNotificationToStore, PushNotificationToStore } from './Notifications'
+import { pushNotificationToStore, PushNotificationToStore } from './notifications'
 
 export interface AddAlert {
   (dispatch: any): void

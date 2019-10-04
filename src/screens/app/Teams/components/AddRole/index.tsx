@@ -5,7 +5,7 @@ import Team, { TeamPermission } from 'src/api/team'
 import Role from 'src/api/role'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import TeamPermissions from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'

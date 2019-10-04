@@ -4,9 +4,9 @@ import { FilesError } from 'react-files'
 import { PersistDB, PersistDBData } from 'cnx-designer'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-import saveAs from 'src/helpers/saveAsFile'
+import { saveAsFile as saveAs } from 'src/helpers'
 
 import Header from 'src/components/Header'
 import Section from 'src/components/Section'

@@ -1,5 +1,5 @@
 import { IsLoading, BooksMap } from 'src/store/types'
-import { BooksAction } from 'src/store/actions/Books'
+import { BooksAction } from 'src/store/actions/books'
 import {
   FETCH_BOOKS_MAP_BEGIN,
   FETCH_BOOKS_MAP_SUCCESS,

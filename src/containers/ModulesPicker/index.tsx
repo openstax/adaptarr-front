@@ -6,13 +6,12 @@ import { FilesError } from 'react-files'
 
 import { Module, Team } from 'src/api'
 
-import * as modulesActions from 'src/store/actions/Modules'
+import * as modulesActions from 'src/store/actions/modules'
 import { AlertDataKind } from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-import confirmDialog from 'src/helpers/confirmDialog'
-import getCurrentLng from 'src/helpers/getCurrentLng'
+import { confirmDialog, getCurrentLng } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import ModulesList from 'src/components/ModulesList'

@@ -5,9 +5,9 @@ import Role from 'src/api/role'
 import { TeamPermission } from 'src/api/team'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import TeamPermissions from 'src/components/TeamPermissions'
 import Button from 'src/components/ui/Button'

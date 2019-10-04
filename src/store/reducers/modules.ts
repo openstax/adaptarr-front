@@ -1,7 +1,7 @@
-import sortRefTargets from 'src/helpers/sortRefTargets'
+import { sortRefTargets } from 'src/helpers'
 
 import { ModulesMap, ReferenceTargets } from 'src/store/types'
-import { ModulesAction } from 'src/store/actions/Modules'
+import { ModulesAction } from 'src/store/actions/modules'
 import {
   SET_MODULES_MAP,
   ADD_MODULE_TO_MAP,

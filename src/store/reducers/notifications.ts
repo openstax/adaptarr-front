@@ -1,6 +1,6 @@
 import { Notification } from 'src/api'
 
-import { NotificationsAction } from 'src/store/actions/Notifications'
+import { NotificationsAction } from 'src/store/actions/notifications'
 import { IsLoading } from 'src/store/types'
 import {
   FETCH_NOTIFICATIONS_BEGIN,

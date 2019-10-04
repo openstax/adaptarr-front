@@ -9,7 +9,7 @@ import { List } from 'immutable'
 import { Storage } from 'src/api'
 import { SlotPermission } from 'src/api/process'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 

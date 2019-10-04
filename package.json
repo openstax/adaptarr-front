@@ -1,6 +1,7 @@
 {
   "name": "adaptar",
   "version": "0.1.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.5.0",
