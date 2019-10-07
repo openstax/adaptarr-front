@@ -716,8 +716,6 @@ teams-section-manage-members-title = Manage members in: { $team }
 
 teams-no-members = This team doesn't have any members
 
-teams-member-missing-user = Couldnt' find user associated with this team member
-
 teams-member-cancel = Cancel
 
 teams-member-remove = Remove

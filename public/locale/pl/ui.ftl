@@ -715,8 +715,6 @@ teams-section-manage-members-title = Zarządzaj członkami zespołu: { $team }
 
 teams-no-members = Brak użytkowników w tym zespole
 
-teams-member-missing-user = Nie udało się znaleźć użytkownika powiązanego z danym członkiem zespołu
-
 teams-member-cancel = Anuluj
 
 teams-member-remove = Usuń

@@ -100,15 +100,8 @@ class Member extends React.Component<MemberProps> {
     const { member: m, team, users, user: loggedUser } = this.props
     const memberUser = users.get(m.user)
 
-    if (!memberUser) return (
-      <li className="teams__member">
-        <div className="teams__user" onClick={this.togglePermissions}>
-          <Localized id="teams-member-missing-user">
-            Couldn't find user associated with this team member
-          </Localized>
-        </div>
-      </li>
-    )
+    // If other user added member our global state can be out of sync.
+    if (!memberUser) return null
 
     const { showPermissions } = this.state
     const usrTeam = loggedUser.teams.find(t => t.id === team.id)
