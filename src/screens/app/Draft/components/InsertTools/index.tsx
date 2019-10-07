@@ -54,7 +54,7 @@ class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"
-          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+          isDisabled={this.validateParents(['image', 'media_alt', 'figure', 'inline'])}
         >
           <Icon size="small" name="link" />
           <Localized id="editor-tools-insert-reference">
@@ -64,7 +64,7 @@ class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.handleInsertLink}
           className="toolbox__button--insert"
-          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+          isDisabled={this.validateParents(['image', 'media_alt', 'figure', 'inline'])}
         >
           <Icon size="small" name="www" />
           <Localized id="editor-tools-insert-link">

@@ -87,6 +87,7 @@ declare module 'cnx-designer' {
     increaseSectionDepth(): EditorAug
     insertAdmonition(kind: AdmonitionKind): EditorAug
     insertExercise(): EditorAug
+    insertMediaAlt(): EditorAug
     insertSolution(): EditorAug
     insertCommentary(): EditorAug
     insertFigure(media: MediaDescription): EditorAug
@@ -105,6 +106,7 @@ declare module 'cnx-designer' {
     getActiveAdmonition(value: Value): Block | null
     getActiveExercise(value: Value): Block | null
     getActiveFigure(value: Value): Block | null
+    getActiveMedia(value: Value): Block | null
     getActiveSubfigure(value: Value): Block | null
     getActiveDefinition(value: Value): Block | null
     getActiveDefinitionMeaning(value: Value): Block | null
@@ -140,7 +142,7 @@ declare module 'cnx-designer' {
 
   export function TextContent(options?: {marks?: string[]}): Plugin[]
 
-  type TextOptions = {
+  export type TextOptions = {
     code?: {
       inlines: string[],
     },
@@ -152,10 +154,15 @@ declare module 'cnx-designer' {
     },
   }
 
+  export type MediaOptions = {
+    inlines: string[]
+  }
+
   export function Document(options?: {
     content?: string[],
     document_content?: string[],
     marks?: string[],
+    media?: MediaOptions,
     text?: TextOptions,
     list?: any,
   }): Plugin[]

@@ -50,6 +50,21 @@ const I10nPlugin: Plugin = {
     case 'figure_caption':
       return <Caption {...props} />
 
+    case 'media_alt':
+      return <Labelled
+        className="media__alt"
+        l10nKey="media-alt-label"
+        textFromUI={true}
+        {...props}
+        />
+
+    case 'media_text':
+      return <Labelled
+        className="media__text"
+        l10nKey="media-text-label"
+        {...props}
+        />
+
     case 'definition':
       return <Labelled
         className="definition"
