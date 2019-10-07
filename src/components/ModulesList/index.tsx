@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import { Module, Team } from 'src/api'
-import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
+import { sortArrayByTitle } from 'src/helpers'
 
 import ModuleInfo from 'src/components/ModuleInfo'
 import Button from 'src/components/ui/Button'

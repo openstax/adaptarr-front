@@ -2,7 +2,7 @@ import { Notification } from 'src/api'
 
 import * as constants from 'src/store/constants'
 import { NotificationStatus } from 'src/store/types'
-import { addAlert } from './Alerts'
+import { addAlert } from './alerts'
 
 export interface FetchNotifications {
   (dispatch: any): void

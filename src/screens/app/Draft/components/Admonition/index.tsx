@@ -1,15 +1,14 @@
 import * as React from 'react'
 import { InjectedProps, withLocalization } from 'fluent-react/compat'
-import { Block, Node } from 'slate'
+import { Block } from 'slate'
 import { RenderBlockProps } from 'slate-react'
-import { List } from 'immutable';
 
 type Props = RenderBlockProps & InjectedProps
 
 function Labelled({ children, attributes, getString, node }: Props) {
   const type = node.data.get('type')
   const message = getString('admonition-label', { type })
-  const hasTitle = ((node.nodes as List<Node>).get(0) as Block).type === 'title'
+  const hasTitle = (node.nodes.get(0) as unknown as Block).type === 'title'
 
   return <div
     className="admonition"

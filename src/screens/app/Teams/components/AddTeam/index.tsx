@@ -4,7 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import Team from 'src/api/team'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import LimitedUI from 'src/components/LimitedUI'
 import Input from 'src/components/ui/Input'

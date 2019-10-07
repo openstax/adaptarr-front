@@ -5,7 +5,7 @@ import { Localized } from 'fluent-react/compat'
 import { Process } from 'src/api'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { fetchProcesses } from 'src/store/actions/app'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'

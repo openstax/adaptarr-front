@@ -195,7 +195,7 @@ class Toolbox extends React.Component<Props> {
       case 'definition_term':
         // Toggle depends on parent
         const path = this.props.value.document.getPath(node.key)
-        const titleParent = this.props.value.document.getParent(path) as Block | null
+        const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
         if (titleParent) {
           if (titleParent.type === 'definition') {
             newState.definitionTools = true

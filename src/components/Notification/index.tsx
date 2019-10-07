@@ -6,10 +6,10 @@ import { Localized } from 'fluent-react/compat'
 import { Notification, User, Module } from 'src/api'
 
 import { UsersMap, ModulesMap, NotificationStatus } from 'src/store/types'
-import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
+import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/notifications'
 import { State } from 'src/store/reducers'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
+import { decodeHtmlEntity } from 'src/helpers'
 
 import DateDiff from 'src/components/DateDiff'
 import Avatar from 'src/components/ui/Avatar'

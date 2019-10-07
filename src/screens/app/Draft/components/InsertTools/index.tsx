@@ -54,7 +54,7 @@ class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.openXrefModal}
           className="toolbox__button--insert"
-          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+          isDisabled={this.validateParents(['image', 'media_alt', 'figure', 'inline'])}
         >
           <Icon size="small" name="link" />
           <Localized id="editor-tools-insert-reference">
@@ -64,7 +64,7 @@ class InsertTools extends React.Component<Props> {
         <Button
           clickHandler={this.handleInsertLink}
           className="toolbox__button--insert"
-          isDisabled={this.validateParents(['image', 'figure', 'inline'])}
+          isDisabled={this.validateParents(['image', 'media_alt', 'figure', 'inline'])}
         >
           <Icon size="small" name="www" />
           <Localized id="editor-tools-insert-link">
@@ -139,6 +139,16 @@ class InsertTools extends React.Component<Props> {
           <Icon size="small" name="file-code" />
           <Localized id="editor-tools-insert-source">
             Source element
+          </Localized>
+        </Button>
+        <Button
+          clickHandler={this.insertFootnote}
+          className="toolbox__button--insert"
+          isDisabled={this.validateParents(['image', 'footnote'])}
+        >
+          <Icon size="small" name="footnote" />
+          <Localized id="editor-tools-insert-footnote">
+            Footnote
           </Localized>
         </Button>
         <Modal
@@ -231,7 +241,7 @@ class InsertTools extends React.Component<Props> {
         data: {
           type: 'note',
         },
-        nodes: fragment.nodes,
+        nodes: fragment.nodes as List<Block | Inline | Text>,
       }))
     }
   }
@@ -314,7 +324,7 @@ class InsertTools extends React.Component<Props> {
       }))
       editor.insertBlock(Block.create({
         type: 'quotation',
-        nodes: fragment.nodes,
+        nodes: fragment.nodes as List<Block | Inline | Text>,
       }))
     }
   }
@@ -340,6 +350,15 @@ class InsertTools extends React.Component<Props> {
     this.props.editor.moveBackward()
   }
 
+  private insertFootnote = () => {
+    this.props.editor.insertInline({
+      type: 'footnote',
+      data: { collapse: false },
+      nodes: List([Text.create(' ')]),
+    })
+    this.props.editor.moveBackward()
+  }
+
   private validateParents = (validParents: string[]): boolean => {
     const { selectionParent: sp, value: { selection, anchorInline, focusInline } } = this.props
     if (!sp) return false
@@ -355,6 +374,10 @@ class InsertTools extends React.Component<Props> {
 
 const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
   const path = editor.value.document.getPath(node.key)
+  if (!path) {
+    console.warn(`unwrapChildrenFromNode: couldn't find path for node: ${node.toJS()}`)
+    return
+  }
   if (node.object === 'text') return
   node.nodes.forEach(n => {
     if (n && n.object === 'block' && n.type === 'title') {

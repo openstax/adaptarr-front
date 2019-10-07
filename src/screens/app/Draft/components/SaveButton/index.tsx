@@ -5,15 +5,14 @@ import { DocumentDB } from 'cnx-designer'
 import { isKeyHotkey } from 'is-hotkey'
 
 import Storage from 'src/api/storage'
-import saveAsFile from 'src/helpers/saveAsFile'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, saveAsFile } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 import Spinner from 'src/components/Spinner'
 
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import store from 'src/store'
 
 import './index.css'

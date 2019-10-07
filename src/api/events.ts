@@ -1,5 +1,5 @@
 import store from 'src/store'
-import { addNotification } from 'src/store/actions/Alerts'
+import { addNotification } from 'src/store/actions/alerts'
 
 export default class Events {
   private static instance: Events | null = null

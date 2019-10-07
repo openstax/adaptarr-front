@@ -1675,7 +1675,7 @@ editor-tools-figure-remove-subfigure = Usuń ilustrację
 
 editor-tools-figure-add-caption = Dodaj opis
 
-editor-tools-figure-alt-text = Alternatywny tekst:
+media-alt-label = Tekst alternatywny:
 
 
 
@@ -1978,6 +1978,16 @@ editor-tools-suggestion-delete = <action>Usuń</action> <content>{ $delete }</co
 # - <content> ... </content>: content.
 editor-tools-suggestion-change =
   <action>Zastąp</action> <content>{ $delete }</content> tekstem <content>{ $insert }</content>
+
+
+
+## Editor toolboxes - footnote
+
+editor-tools-footnote-title = Przypis
+
+editor-tools-footnote-show = Pokaż treść
+
+editor-tools-footnote-hide = Ukryj treść
 
 
 

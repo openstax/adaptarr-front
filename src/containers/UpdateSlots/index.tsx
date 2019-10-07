@@ -5,7 +5,7 @@ import { Draft, Module, User, Role, Team } from 'src/api'
 import { SlotDetails, ProcessDetails } from 'src/api/draft'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import { SlotId, UserId } from '../BeginProcess'
 

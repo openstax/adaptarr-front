@@ -8,6 +8,7 @@ import DocumentTools from '../DocumentTools'
 import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
+import FootnoteTools from '../FootnoteTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
 import SectionTools from '../SectionTools'
@@ -26,7 +27,7 @@ export type Props = {
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'suggestionsTools' | 'codeTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
+type ToolName = 'insertTools' | 'suggestionsTools' | 'codeTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'footnoteTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -40,6 +41,7 @@ type State = {
   linkTools: boolean
   xrefTools: boolean
   docrefTools: boolean
+  footnoteTools: boolean
   sourceTools: boolean
   listTools: boolean
   quotationTools: boolean
@@ -61,6 +63,7 @@ const DEFAULT_TOGGLERS = {
   linkTools: true,
   xrefTools: true,
   docrefTools: true,
+  footnoteTools: true,
   sourceTools: true,
   listTools: false,
   quotationTools: false,
@@ -161,6 +164,12 @@ class Toolbox extends React.Component<Props> {
           editor={editor}
           value={value}
           toggleState={this.state.docrefTools}
+          onToggle={this.toggleTool}
+        />
+        <FootnoteTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.footnoteTools}
           onToggle={this.toggleTool}
         />
         <SourceTools
@@ -275,6 +284,9 @@ class Toolbox extends React.Component<Props> {
       case 'docref':
         newState.docrefTools = true
         break
+      case 'footnote':
+        newState.footnoteTools = true
+        break
       case 'source_element':
         newState.sourceTools = true
         break
@@ -294,7 +306,9 @@ class Toolbox extends React.Component<Props> {
       case 'figure':
       case 'figure_caption':
       case 'image':
+      case 'media_alt':
         newState.figureTools = true
+        newState.insertTools = false
         break
       case 'section':
         newState.sectionTools = true
@@ -302,7 +316,7 @@ class Toolbox extends React.Component<Props> {
       case 'title':
         // Toggle depends on parent
         const path = this.props.value.document.getPath(node.key)
-        const titleParent = this.props.value.document.getParent(path) as Block | null
+        const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
         if (titleParent) {
           if (titleParent.type === 'admonition') {
             newState.admonitionTools = true

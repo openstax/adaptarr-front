@@ -16,7 +16,7 @@ import RefTargets from 'src/containers/ReferenceTargets'
 
 import { ModulesMap, ReferenceTarget, ReferenceTargets, BooksMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { fetchReferenceTargets } from 'src/store/actions/Modules'
+import { fetchReferenceTargets } from 'src/store/actions/modules'
 
 import './index.css'
 

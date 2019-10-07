@@ -1,4 +1,4 @@
-import { DraftsAction } from 'src/store/actions/Drafts'
+import { DraftsAction } from 'src/store/actions/drafts'
 import { SET_CURRENT_DRAFT_LANG, SET_CURRENT_DRAFT_PERMISSIONS } from 'src/store/constants'
 import { SlotPermission } from 'src/api/process'
 

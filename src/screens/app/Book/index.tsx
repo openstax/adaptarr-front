@@ -9,7 +9,7 @@ import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
 
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'

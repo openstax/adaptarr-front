@@ -7,7 +7,7 @@ import Team from 'src/api/team'
 import Resource, { ResourceKind } from 'src/api/resource'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 
 import Header from 'src/components/Header'

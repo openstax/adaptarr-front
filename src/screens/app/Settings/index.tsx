@@ -6,10 +6,10 @@ import { connect } from 'react-redux'
 import User from 'src/api/user'
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { setLocale } from 'src/store/actions/app'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Header from 'src/components/Header'
 import Input from 'src/components/ui/Input'

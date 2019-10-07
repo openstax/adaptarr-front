@@ -5,7 +5,7 @@ import { Localized } from 'fluent-react/compat'
 import store from 'src/store'
 import { Alert, AlertInfo } from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { removeAlert } from 'src/store/actions/Alerts'
+import { removeAlert } from 'src/store/actions/alerts'
 
 import Notification from 'src/components/Notification'
 import Icon from 'src/components/ui/Icon'

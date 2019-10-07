@@ -8,11 +8,11 @@ import Process, { FreeSlot } from 'src/api/process'
 import { TeamID } from 'src/api/team'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Spinner from 'src/components/Spinner'
 import Button from 'src/components/ui/Button'

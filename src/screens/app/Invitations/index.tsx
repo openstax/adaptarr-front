@@ -9,7 +9,7 @@ import Invitation, { InvitationData } from 'src/api/invitation'
 import Team, { TeamPermission } from 'src/api/team'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers/'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'

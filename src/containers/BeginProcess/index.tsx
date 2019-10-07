@@ -7,8 +7,8 @@ import { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
-import { fetchModulesMap } from 'src/store/actions/Modules'
+import { addAlert } from 'src/store/actions/alerts'
+import { fetchModulesMap } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
 

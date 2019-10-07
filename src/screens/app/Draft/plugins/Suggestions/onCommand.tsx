@@ -26,7 +26,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       if (!selection.isCollapsed) {
         // User want to replace current selection with new text
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         editor.insertInline(inlineProps)
         break
       }
@@ -42,7 +42,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         // Add new text at then end of remove suggestion
         const nextNodePath = startBlock.getPath(highestSuggestion.key)
         // getNextNode always return Node, because after Inline there is always Slate~Text
-        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         editor.insertInline(inlineProps)
         break
       }
@@ -52,7 +52,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
     case 'deleteCharBackward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToStartOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -102,15 +102,20 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         return editor.moveBackward(1)
       }
 
+      // Select current suggestion_delete and one char before so slate can properly
+      // split nodes.
       editor.moveAnchorBackward()
+      editor.moveFocusToEndOfNode(highestSuggestion)
+      editor.moveFocusToStartOfNextText()
+      const sel = editor.value.selection.anchor
       editor.wrapInline('suggestion_delete')
-      editor.moveToAnchor()
+      editor.moveTo(sel.path!, sel.offset)
       break
 
     case 'deleteCharForward':
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToEndOfInline()
+        editor.moveToEnd()
         break
       }
 
@@ -155,13 +160,13 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       // When cutting text
       if (!selection.isCollapsed) {
         editor.wrapInline('suggestion_delete')
-        editor.moveToFocus()
+        editor.moveToEnd()
       }
       break
 
     case 'insertFragment':
       const fragment = command.args[0]
-      const nodes: List<Node> = getTextsAndInlines(fragment)
+      const nodes = getTextsAndInlines(fragment)
       const inline = Inline.create({
         type: 'suggestion_insert',
         nodes: nodes,
@@ -173,7 +178,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
         const newHighestSuggestion = getHighestSuggestion(editor)
         if (newHighestSuggestion && newHighestSuggestion.type === 'suggestion_delete') {
           const nextNodePath = startBlock.getPath(newHighestSuggestion.key)
-          editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+          editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         }
         editor.insertInline(inline)
         break
@@ -186,7 +191,7 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
 
       if (highestSuggestion.type === 'suggestion_delete') {
         const nextNodePath = startBlock.getPath(highestSuggestion.key)
-        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath)!)
+        editor.moveToStartOfNode(startBlock.getNextNode(nextNodePath!)!)
         editor.insertInline(inline)
         break
       }

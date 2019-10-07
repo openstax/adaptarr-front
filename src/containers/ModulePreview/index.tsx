@@ -5,10 +5,10 @@ import { connect } from 'react-redux'
 
 import * as api from 'src/api'
 
-import updateImgSrcs from 'src/helpers/updateImgSrcs'
+import { updateImgSrcs } from 'src/helpers'
 
 import { AlertDataKind } from 'src/store/types'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 type Props = {
   moduleId: string

@@ -1692,7 +1692,7 @@ editor-tools-figure-remove-subfigure = Remove subfigure
 
 editor-tools-figure-add-caption = Add caption
 
-editor-tools-figure-alt-text = Alternative text:
+media-alt-label = Alternative text:
 
 
 
@@ -1971,6 +1971,16 @@ editor-tools-suggestion-delete = <action>Remove</action> <content>{ $delete }</c
 # - <content> ... </content>: content.
 editor-tools-suggestion-change =
   <action>Replace</action> <content>{ $delete }</content> with <content>{ $insert }</content>
+
+
+
+## Editor toolboxes - footnote
+
+editor-tools-footnote-title = Footnote
+
+editor-tools-footnote-show = Show content
+
+editor-tools-footnote-hide = Hide content
 
 
 
