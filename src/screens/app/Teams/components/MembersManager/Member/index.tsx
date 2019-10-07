@@ -11,7 +11,7 @@ import { UsersMap } from 'src/store/types'
 import { addAlert } from 'src/store/actions/Alerts'
 import { State } from 'src/store/reducers'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import Avatar from 'src/components/ui/Avatar'
