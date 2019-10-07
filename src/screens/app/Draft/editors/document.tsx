@@ -64,9 +64,6 @@ class EditorDocument extends React.Component<Props> {
         term: {
           inlines: SUGGESTION_TYPES,
         },
-        footnote: {
-          inlines: SUGGESTION_TYPES,
-        },
       },
     }),
     Shortcuts(),

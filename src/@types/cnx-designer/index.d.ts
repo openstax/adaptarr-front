@@ -149,9 +149,6 @@ declare module 'cnx-designer' {
     term?: {
       inlines: string[],
     },
-    footnote?: {
-      inlines: string[],
-    },
   }
 
   export type MediaOptions = {
