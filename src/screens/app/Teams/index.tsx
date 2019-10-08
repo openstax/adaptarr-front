@@ -4,7 +4,7 @@ import { Localized } from 'fluent-react/compat'
 import { match } from 'react-router'
 import { History } from 'history'
 
-import { Team, User } from 'src/api'
+import { Team, User, Role } from 'src/api'
 
 import store from 'src/store'
 import { setTeam, setTeams } from 'src/store/actions/app'
@@ -48,6 +48,7 @@ type Tab = 'roles' | 'members'
 const Teams = (props: TeamsProps) => {
   const [isLoading, setIsLoading] = React.useState(true)
   const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null)
+  const [selectedTeamRoles, setSelectedTeamRoles] = React.useState<Role[]>([])
   const [activeTab, setActiveTab] = React.useState<Tab>('roles')
   const isInSuperMode = useIsInSuperMode(props.user)
 
@@ -61,6 +62,7 @@ const Teams = (props: TeamsProps) => {
 
   const unselectTeam = () => {
     setSelectedTeam(null)
+    setSelectedTeamRoles([])
   }
 
   const selectTeam = async (id: number, tab: Tab = 'roles') => {
@@ -71,6 +73,8 @@ const Teams = (props: TeamsProps) => {
       activeTab !== tab
     ) {
       setSelectedTeam(team)
+      const roles = await team.getRoles()
+      setSelectedTeamRoles(roles)
       setActiveTab(tab as Tab)
       props.history.push(`/teams/${id}/${tab}`)
     }
@@ -221,7 +225,7 @@ const Teams = (props: TeamsProps) => {
               <div className="section__content">
                 <ul className="teams__rolesList">
                   {
-                    selectedTeam.roles.map(r => (
+                    selectedTeamRoles.map(r => (
                       <li key={r.id} className="teams__role">
                         <RoleManager role={r} onUpdate={fetchRoles} onDelete={fetchRoles} />
                       </li>
