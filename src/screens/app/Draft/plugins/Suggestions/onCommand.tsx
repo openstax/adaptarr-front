@@ -200,6 +200,12 @@ export default function onCommand(command: Command, editor: Editor, next: () => 
       break
 
     case 'wrapInline':
+      // If user is doing something in suggestion then let him do it.
+      // Ex. when inserting term / code inline inside suggestion.insert
+      if (highestSuggestion) {
+        return next()
+      }
+
       let wrapType
       let data
 
