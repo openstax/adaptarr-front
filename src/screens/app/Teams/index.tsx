@@ -139,7 +139,9 @@ const Teams = (props: TeamsProps) => {
 
   React.useEffect(() => {
     const { id, tab } = props.match.params
-    selectTeam(Number(id), tab as Tab)
+    if (id) {
+      selectTeam(Number(id), tab as Tab)
+    }
 
     if (tab === 'roles') {
       activateRolesTab()
