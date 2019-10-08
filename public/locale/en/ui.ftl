@@ -1328,6 +1328,7 @@ asset-list-add-error = Couldn't add media. Details: { $details }
 notification = { $kind ->
   [assigned] <actor>{ $actor }</actor> assigned you to <module>{ $module }</module>
   [process_ended] Editing process for <module>{ $module }</module> has ended.
+  [process_cancelled] Editing process for <module>{ $module }</module> has been canceled.
   [slot_filled] You were assigned to slot in <module>{ $module }</module>.
   [slot_vacated] You were removed from slot in <module>{ $module }</module>.
   [draft_advanced] Step in <module>{ $module }</module> has changed.
