@@ -8,6 +8,8 @@ import Team, { TeamID, TeamPermission } from './team'
 
 import { elevated } from './utils'
 
+import { addMinutesToDate } from 'src/helpers'
+
 /**
  * User data as returned by the API.
  */
@@ -139,12 +141,10 @@ export default class User extends Base<UserData> {
   */
   teams: UserTeam[]
 
-  private _session?: SessionInfo
-
-  /**
-   * Determine if user is in super session so he have access to hidden UIs.
-   */
-  isInSuperMode: boolean
+  private _cacheSession?: {
+    lastUpdate: Date
+    data: SessionInfo & { elevated_expires?: Date }
+  }
 
   constructor(data: UserData, apiId?: string) {
     super(data)
@@ -172,8 +172,6 @@ export default class User extends Base<UserData> {
     }
 
     this.allPermissions = allPermissions
-
-    this.checkForSuperMode()
   }
 
   /**
@@ -193,29 +191,25 @@ export default class User extends Base<UserData> {
   }
 
   /**
-   * Return true if user is_super: true and is_elevated: true
+   * Determine if user is in super session so he have access to hidden UIs.
    *
-   * If user is in super mode he will be able to see all hidden UIs.
-   * This will work only for user with apiId === 'me'
-   *
-   * This function will set properly this.isInSuperMode prop.
+   * @param {boolean} fromCache - if set to false data will be fetched from the server. Default: true
    */
-  async checkForSuperMode(): Promise<boolean> {
-    let res = false
-
+  async isInSuperMode(fromCache = true): Promise<boolean> {
     if (this.apiId === 'me' && this.is_super) {
       const now = new Date()
-      if (!this._session || new Date(this._session.expires) < now) {
-        this._session = await User.session()
+      if (!fromCache || !this._cacheSession || !(addMinutesToDate(this._cacheSession.lastUpdate, 5) > now)) {
+        this._cacheSession = {
+          lastUpdate: now,
+          data: await User.session(),
+        }
       }
 
-      if (this._session.is_elevated) {
-        res = true
+      if (this._cacheSession.data.is_elevated) {
+        return true
       }
     }
-
-    this.isInSuperMode = res
-    return res
+    return false
   }
 
   /**
