@@ -56,11 +56,6 @@ export default class Resource extends Base<ResourceData> {
       data.append('file', file)
     }
 
-    const session = await User.session()
-    if (!session.is_elevated) {
-      await elevate()
-    }
-
     let res = await axios.post('resources', data)
     return new Resource(res.data)
   }

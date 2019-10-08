@@ -77,11 +77,6 @@ export default class Book extends Base<BookData> {
    * compatible with Connexion's ZIP export
    */
   static async create(title: string, team: number, content?: File): Promise<Book> {
-    const session = await User.session()
-    if (!session.is_elevated) {
-      await elevate()
-    }
-
     let data: FormData | { title: string, team: number }
     let config: { headers: { 'Content-Type': string } }
     if (content) {
