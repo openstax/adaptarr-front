@@ -11,17 +11,22 @@ import { useIsInSuperMode } from 'src/hooks'
 
 import './index.css'
 
-// permissions or onePermissionFrom is required if onlyUser is not set to true
+/**
+ * permissions or onePermissionFrom prop is required if onlySuper is not set to true.
+ *
+ * We've tried to require those by creating separate interfaces but typescript
+ * wasn't cooperating.
+ */
 type Props = {
   user: {
     isLoading: IsLoading
     user: User
   }
-  // User has to have one or more permissions to see hidden UI.
+  // User has to have all of passed permissions.
   permissions?: TeamPermission | TeamPermission[]
   // User has to have one permission from given array.
   onePermissionFrom?: TeamPermission[]
-  // Only users with isInSuperMode: true can see this component
+  // Component will show only for users in super session.
   onlySuper?: boolean
   // If specified then user has to have permissions in this team.
   team?: Team | number
