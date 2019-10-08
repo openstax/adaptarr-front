@@ -75,7 +75,10 @@ export const fetchUser = () => {
         if (user === null) {
           window.location.href = `/login?next=${window.location.pathname}`
         } else {
-          dispatch(fetchUserSuccess(user))
+          user.isInSuperMode()
+            .then(() => {
+              dispatch(fetchUserSuccess(user))
+            })
         }
       })
       .catch(e => {
