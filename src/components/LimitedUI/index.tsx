@@ -7,6 +7,8 @@ import Team, { TeamPermission } from 'src/api/team'
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
+import { useIsInSuperMode } from 'src/hooks'
+
 import './index.css'
 
 // permissions or onePermissionFrom is required if onlyUser is not set to true
@@ -31,58 +33,67 @@ const mapStateToProps = ({ user }: State) => {
   }
 }
 
-class LimitedUI extends React.Component<Props> {
-  state = {
-    userHasPermissions: false,
-  }
+const LimitedUI = (props: Props & { children: React.ReactNode }) => {
+  const [userHasPermissions, setUserHasPermissions] = React.useState(false)
+  const isInSuperMode = useIsInSuperMode(props.user.user)
 
   /**
-   * Render component only if user have proper permissions or if it is super user.
+   * Check whether user has proper permissions.
    */
-  private userHasPermissions = (): boolean => {
-    const { user: { user }, permissions, onePermissionFrom, onlySuper, team } = this.props
+  const checkUserPermissions = () => {
+    const { user: { user }, permissions, onePermissionFrom, onlySuper, team } = props
 
     if (onlySuper) {
-      if (user.isInSuperMode) return true
-      return false
+      setUserHasPermissions(isInSuperMode)
+      return
     }
 
     if (!permissions && !onePermissionFrom) {
       throw new Error('LimitedUI component require permissions or onePermissionFrom prop.')
     }
 
-    if (user.isInSuperMode) return true
+    if (isInSuperMode) {
+      setUserHasPermissions(isInSuperMode)
+      return
+    }
 
     if (team) {
       const teamId = typeof team === 'number' ? team : team.id
-      return user.hasPermissionsInTeam(
+      setUserHasPermissions(user.hasPermissionsInTeam(
           (permissions || onePermissionFrom) as TeamPermission | TeamPermission[],
           teamId
         )
+      )
+      return
     }
 
     if (permissions) {
       if (typeof permissions === 'string') {
-        return user.allPermissions.has(permissions)
+        setUserHasPermissions(user.allPermissions.has(permissions))
       } else {
-        return permissions.every(p => user.allPermissions.has(p))
+        setUserHasPermissions(permissions.every(p => user.allPermissions.has(p)))
       }
+      return
     } else if (onePermissionFrom) {
-      return onePermissionFrom.some(p => user.allPermissions.has(p))
+      setUserHasPermissions(onePermissionFrom.some(p => user.allPermissions.has(p)))
+      return
     }
 
-    return false
+    setUserHasPermissions(false)
+    return
   }
 
-  public render() {
-    if (!this.userHasPermissions()) return null
+  React.useEffect(() => {
+    checkUserPermissions()
+  })
 
-    return (
-      <div className="limitedui">
-        {this.props.children}
-      </div>
-    )
-  }
+  if (!userHasPermissions) return null
+
+  return (
+    <div className="limitedui">
+      {props.children}
+    </div>
+  )
 }
 
 export default connect(mapStateToProps)(LimitedUI)

@@ -13,6 +13,8 @@ import { State } from 'src/store/reducers'
 
 import { confirmDialog } from 'src/helpers'
 
+import { useIsInSuperMode } from 'src/hooks'
+
 import LimitedUI from 'src/components/LimitedUI'
 import Avatar from 'src/components/ui/Avatar'
 import Button from 'src/components/ui/Button'
@@ -35,22 +37,21 @@ const mapStateToProps = ({ user: { user, users } }: State) => {
   }
 }
 
-export type MemberState = {
-  showPermissions: boolean
-}
+const Member = (props: MemberProps) => {
+  const [showPermissions, setShowPermissions] = React.useState(false)
+  const isInSuperMode = useIsInSuperMode(props.user)
 
-class Member extends React.Component<MemberProps> {
-  state: MemberState = {
-    showPermissions: false
+  const togglePermissions = () => {
+    setShowPermissions(!showPermissions)
   }
 
-  private removeMember = async () => {
-    const member = this.props.member
+  const removeMember = async () => {
+    const member = props.member
 
     const res = await confirmDialog({
       title: 'teams-member-remove-confirm-dialog',
-      $user: this.props.users.get(member.user)!.name,
-      $team: this.props.team.name,
+      $user: props.users.get(member.user)!.name,
+      $team: props.team.name,
       showCloseButton: false,
       buttons: {
         cancel: 'teams-member-cancel',
@@ -62,7 +63,7 @@ class Member extends React.Component<MemberProps> {
       member.delete()
         .then(() => {
           store.dispatch(addAlert('success', 'teams-member-remove-success'))
-          this.props.onMemberRemove(member)
+          props.onMemberRemove(member)
         })
         .catch(() => {
           store.dispatch(addAlert('error', 'teams-member-remove-error'))
@@ -70,97 +71,90 @@ class Member extends React.Component<MemberProps> {
     }
   }
 
-  private handleMemberRoleChange = async ({ value: { member, role } }: { value: { member: TeamMember, role: Role }, label: string }) => {
+  const handleMemberRoleChange = async ({ value: { member, role } }: { value: { member: TeamMember, role: Role }, label: string }) => {
     await member.update({ role: role.id })
       .then(m => {
         store.dispatch(addAlert('success', 'teams-member-role-change-success'))
-        this.props.onMemberRoleChange(m)
+        props.onMemberRoleChange(m)
       })
       .catch(() => {
         store.dispatch(addAlert('error', 'teams-member-role-change-error'))
       })
   }
 
-  private handleMemberPermissionsChange = async (permissions: TeamPermission[]) => {
-    await this.props.member.update({ permissions })
+  const handleMemberPermissionsChange = async (permissions: TeamPermission[]) => {
+    await props.member.update({ permissions })
       .then(m => {
         store.dispatch(addAlert('success', 'teams-member-permissions-change-success'))
-        this.props.onMemberPermissionsChange(m)
+        props.onMemberPermissionsChange(m)
       })
       .catch(() => {
         store.dispatch(addAlert('error', 'teams-member-permissions-change-error'))
       })
   }
 
-  private togglePermissions = () => {
-    this.setState({ showPermissions: !this.state.showPermissions })
-  }
+  const { member: m, team, users, user: loggedUser } = props
+  const memberUser = users.get(m.user)
 
-  public render() {
-    const { member: m, team, users, user: loggedUser } = this.props
-    const memberUser = users.get(m.user)
+  // If other user added member our global state can be out of sync.
+  if (!memberUser) return null
 
-    // If other user added member our global state can be out of sync.
-    if (!memberUser) return null
+  const usrTeam = loggedUser.teams.find(t => t.id === team.id)
 
-    const { showPermissions } = this.state
-    const usrTeam = loggedUser.teams.find(t => t.id === team.id)
+  const isUserAbleToChangePermissions = isInSuperMode ||
+    loggedUser.hasPermissionsInTeam('member:edit-permissions', team)
 
-    const isUserAbleToChangePermissions = loggedUser.isInSuperMode ||
-      loggedUser.hasPermissionsInTeam('member:edit-permissions', team)
-
-    // User can give another user only permissions which he has in a team.
-    let disabledPermissions: TeamPermission[] = []
-    if (usrTeam && showPermissions) {
-      if (loggedUser.isInSuperMode) {
-        disabledPermissions = []
-      } else {
-        disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.allPermissions.has(p))
-      }
+  // User can give another user only permissions which he has in a team.
+  let disabledPermissions: TeamPermission[] = []
+  if (usrTeam && showPermissions) {
+    if (isInSuperMode) {
+      disabledPermissions = []
+    } else {
+      disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.allPermissions.has(p))
     }
-
-    return (
-      <li className="teams__member">
-        <div
-          className={`teams__user ${isUserAbleToChangePermissions ? 'clickable' : ''}`}
-          onClick={this.togglePermissions}
-        >
-          <Avatar user={memberUser} />
-          <div className="teams__user-name">{memberUser.name}</div>
-        </div>
-        <div className="teams__member-controls">
-          <LimitedUI team={team} permissions="member:assign-role">
-            <Select
-              className="react-select"
-              value={m.role ? { value: { member: m, role: m.role }, label: m.role.name } : null}
-              options={team.roles.map(r => ({ value: { member: m, role: r }, label: r.name }))}
-              onChange={this.handleMemberRoleChange}
-            />
-          </LimitedUI>
-          <LimitedUI team={team} permissions="member:remove">
-            <Button clickHandler={this.removeMember}>
-              <Localized id="teams-member-remove">
-                Remove
-              </Localized>
-            </Button>
-          </LimitedUI>
-        </div>
-        {
-          isUserAbleToChangePermissions && showPermissions ?
-            <LimitedUI team={team} permissions="member:edit-permissions">
-              <div className="teams__member-permissions">
-                <TeamPermissions
-                  selected={m.permissions}
-                  disabled={disabledPermissions}
-                  onChange={this.handleMemberPermissionsChange}
-                />
-              </div>
-            </LimitedUI>
-          : null
-        }
-      </li>
-    )
   }
+
+  return (
+    <li className="teams__member">
+      <div
+        className={`teams__user ${isUserAbleToChangePermissions ? 'clickable' : ''}`}
+        onClick={togglePermissions}
+      >
+        <Avatar user={memberUser} />
+        <div className="teams__user-name">{memberUser.name}</div>
+      </div>
+      <div className="teams__member-controls">
+        <LimitedUI team={team} permissions="member:assign-role">
+          <Select
+            className="react-select"
+            value={m.role ? { value: { member: m, role: m.role }, label: m.role.name } : null}
+            options={team.roles.map(r => ({ value: { member: m, role: r }, label: r.name }))}
+            onChange={handleMemberRoleChange}
+          />
+        </LimitedUI>
+        <LimitedUI team={team} permissions="member:remove">
+          <Button clickHandler={removeMember}>
+            <Localized id="teams-member-remove">
+              Remove
+            </Localized>
+          </Button>
+        </LimitedUI>
+      </div>
+      {
+        isUserAbleToChangePermissions && showPermissions ?
+          <LimitedUI team={team} permissions="member:edit-permissions">
+            <div className="teams__member-permissions">
+              <TeamPermissions
+                selected={m.permissions}
+                disabled={disabledPermissions}
+                onChange={handleMemberPermissionsChange}
+              />
+            </div>
+          </LimitedUI>
+        : null
+      }
+    </li>
+  )
 }
 
 export default connect(mapStateToProps)(Member)
