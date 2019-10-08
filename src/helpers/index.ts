@@ -1,3 +1,4 @@
+export { default as addMinutesToDate } from './addMinutesToDate'
 export { default as capitalize } from './capitalize'
 export { default as confirmDialog } from './confirmDialog'
 export { default as decodeHtmlEntity } from './decodeHtmlEntity'

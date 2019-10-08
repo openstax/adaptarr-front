@@ -4,14 +4,15 @@ import { Localized } from 'fluent-react/compat'
 import { match } from 'react-router'
 import { History } from 'history'
 
-import { Team, TeamMember, User } from 'src/api'
+import { Team, User, Role } from 'src/api'
 
 import store from 'src/store'
 import { setTeam, setTeams } from 'src/store/actions/app'
 import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
-import { UsersMap } from 'src/store/types'
-import { TeamsMap } from 'src/store/types'
+import { UsersMap, TeamsMap } from 'src/store/types'
+
+import { useIsInSuperMode } from 'src/hooks'
 
 import AddTeam from './components/AddTeam'
 import RoleManager from './components/RoleManager'
@@ -42,47 +43,44 @@ const mapStateToProps = ({ app: { teams }, user: { user, users } }: State) => {
   }
 }
 
-export type TeamsState = {
-  isLoading: boolean
-  selectedTeam: Team | undefined
-  members: TeamMember[]
-  activeTab: 'roles' | 'members'
-}
+type Tab = 'roles' | 'members'
 
-class Teams extends React.Component<TeamsProps> {
-  state: TeamsState = {
-    isLoading: true,
-    selectedTeam: undefined,
-    members: [],
-    activeTab: 'roles',
-  }
+const Teams = (props: TeamsProps) => {
+  const [isLoading, setIsLoading] = React.useState(true)
+  const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null)
+  const [selectedTeamRoles, setSelectedTeamRoles] = React.useState<Role[]>([])
+  const [activeTab, setActiveTab] = React.useState<Tab>('roles')
+  const isInSuperMode = useIsInSuperMode(props.user)
 
-  private onTeamClick = (team: Team) => {
-    if (this.state.selectedTeam && this.state.selectedTeam.id === team.id) {
-      this.unselectTeam()
+  const onTeamClick = (team: Team) => {
+    if (selectedTeam && selectedTeam.id === team.id) {
+      unselectTeam()
     } else {
-      this.selectTeam(team.id)
+      selectTeam(team.id)
     }
   }
 
-  private selectTeam = async (id: number, tab: string = 'roles') => {
-    const team = this.props.teams.get(id)!
+  const unselectTeam = () => {
+    setSelectedTeam(null)
+    setSelectedTeamRoles([])
+  }
+
+  const selectTeam = async (id: number, tab: Tab = 'roles') => {
+    const team = props.teams.get(id)!
     if (
-      !this.state.selectedTeam ||
-      this.state.selectedTeam.id !== team.id ||
-      this.state.activeTab !== tab
+      !selectedTeam ||
+      selectedTeam.id !== team.id ||
+      activeTab !== tab
     ) {
-      const members = await team.members()
-      this.setState({ selectedTeam: team, members, activeTab: tab })
-      this.props.history.push(`/teams/${id}/${tab}`)
+      setSelectedTeam(team)
+      const roles = await team.getRoles()
+      setSelectedTeamRoles(roles)
+      setActiveTab(tab as Tab)
+      props.history.push(`/teams/${id}/${tab}`)
     }
   }
 
-  private unselectTeam = () => {
-    this.setState({ selectedTeam: undefined, members: [] })
-  }
-
-  private updateTeamName = async (name: string, team: Team) => {
+  const updateTeamName = async (name: string, team: Team) => {
     await team.update({ name })
       .then((team) => {
         store.dispatch(addAlert('success', 'teams-update-name-success'))
@@ -93,173 +91,168 @@ class Teams extends React.Component<TeamsProps> {
       })
   }
 
-  private activateRolesTab = () => {
-    if (this.state.activeTab !== 'roles') {
-      this.setState({ activeTab: 'roles' })
-      this.props.history.push(`/teams/${this.props.match.params.id}/roles`)
+  const activateRolesTab = () => {
+    if (activeTab !== 'roles') {
+      setActiveTab('roles')
+      props.history.push(`/teams/${props.match.params.id}/roles`)
     }
   }
 
-  private activateMembersTab = () => {
-    if (this.state.activeTab !== 'members') {
-      this.setState({ activeTab: 'members' })
-      this.props.history.push(`/teams/${this.props.match.params.id}/members`)
+  const activateMembersTab = () => {
+    if (activeTab !== 'members') {
+      setActiveTab('members')
+      props.history.push(`/teams/${props.match.params.id}/members`)
     }
   }
 
-  private fetchRoles = () => {
-    this.state.selectedTeam!.getRoles()
-      .then(() => this.forceUpdate())
+  const fetchRoles = () => {
+    selectedTeam!.getRoles()
+      .then(() => {
+        // Force update of component
+        setActiveTab(activeTab)
+      })
   }
 
-  private fetchTeams = async () => {
-    this.setState({ isLoading: true })
+  const fetchTeams = async () => {
+    setIsLoading(true)
     await Team.all()
       .then(teams => {
         store.dispatch(setTeams(teams))
+        const { id, tab } = props.match.params
+        if (id) {
+          selectTeam(Number(id), tab as Tab)
+          return
+        }
+
+        if (tab && tab === 'roles') {
+          activateRolesTab()
+        } else if (tab && tab === 'members') {
+          activateMembersTab()
+        }
       })
-      .catch(e => {
+      .catch(() => {
         store.dispatch(addAlert('error', 'teams-error-fetch'))
       })
-    this.setState({ isLoading: false })
+    setIsLoading(false)
     return true
   }
 
-  componentDidUpdate(prevProps: TeamsProps) {
-    const { id: prevId, tab: prevTab } = prevProps.match.params
-    const { id, tab } = this.props.match.params
-    if (prevId !== id) {
-      this.selectTeam(Number(id), tab)
-    } else {
-      if (prevTab !== tab && tab === 'roles') {
-        this.activateRolesTab()
-      } else if (prevTab !== tab && tab === 'members') {
-        this.activateMembersTab()
-      }
+  React.useEffect(() => {
+    const { id, tab } = props.match.params
+    selectTeam(Number(id), tab as Tab)
+
+    if (tab === 'roles') {
+      activateRolesTab()
+    } else if (tab === 'members') {
+      activateMembersTab()
     }
-  }
+  }, [props.match.params.id, props.match.params.tab])
 
-  async componentDidMount() {
-    await this.fetchTeams()
-      .then(() => {
-        const { id, tab } = this.props.match.params
-        if (id) {
-          this.selectTeam(Number(id), tab)
-        } else {
-          if (tab && tab === 'roles') {
-            this.activateRolesTab()
-          } else if (tab && tab === 'members') {
-            this.activateMembersTab()
+  React.useEffect(() => {
+    fetchTeams()
+  }, [])
+
+  const { teams } = props
+
+  if (isLoading) return <Spinner />
+
+  return (
+    <div className={`container ${selectedTeam ? 'container--splitted' : ''}`}>
+      <Section className="teams">
+        <Header l10nId="teams-section-manage-teams-title" title="Manage teams">
+          {
+            selectedTeam ?
+              <div className="tabs-controls">
+                <Button
+                  withBorder={true}
+                  className={activeTab === 'roles' ? 'active' : ''}
+                  clickHandler={activateRolesTab}>
+                  <Localized id="teams-tab-roles">
+                    Roles
+                  </Localized>
+                </Button>
+                <Button
+                  withBorder={true}
+                  className={activeTab === 'members' ? 'active' : ''}
+                  clickHandler={activateMembersTab}>
+                  <Localized id="teams-tab-members">
+                    Team members
+                  </Localized>
+                </Button>
+              </div>
+            : null
           }
-        }
-      })
-  }
-
-  public render() {
-    const { isLoading, selectedTeam, activeTab } = this.state
-    const { teams, user } = this.props
-
-    if (isLoading) return <Spinner />
-
-    return (
-      <div className={`container ${selectedTeam ? 'container--splitted' : ''}`}>
-        <Section className="teams">
-          <Header l10nId="teams-section-manage-teams-title" title="Manage teams">
+        </Header>
+        <div className="section__content">
+          <AddTeam onSuccess={fetchTeams} />
+          <ul className="teams__list">
             {
-              selectedTeam ?
-                <div className="tabs-controls">
-                  <Button
-                    withBorder={true}
-                    className={activeTab === 'roles' ? 'active' : ''}
-                    clickHandler={this.activateRolesTab}>
-                    <Localized id="teams-tab-roles">
-                      Roles
-                    </Localized>
-                  </Button>
-                  <Button
-                    withBorder={true}
-                    className={activeTab === 'members' ? 'active' : ''}
-                    clickHandler={this.activateMembersTab}>
-                    <Localized id="teams-tab-members">
-                      Team members
-                    </Localized>
-                  </Button>
-                </div>
-              : null
-            }
-          </Header>
-          <div className="section__content">
-            <AddTeam onSuccess={this.fetchTeams} />
-            <ul className="teams__list">
-              {
-                Array.from(teams.values()).map(t => {
-                  const isActive = selectedTeam && t.id === selectedTeam.id
-                  const isEditable = user.is_super || user.permissions.has('team:manage')
-                  return (
-                    <li
-                      key={t.id}
-                      className={`teams__team ${isActive ? 'teams__team--selected' : ''}`}
-                      onClick={() => this.onTeamClick(t)}
-                    >
-                      {
-                        isEditable ?
-                          <EditableText
-                            text={t.name}
-                            onAccept={(name: string) => this.updateTeamName(name, t)}
-                          />
-                        : t.name
-                      }
-                    </li>
-                  )
-                })
-              }
-            </ul>
-          </div>
-        </Section>
-        {
-          selectedTeam ?
-            activeTab === 'roles' ?
-              <Section className="teams">
-                <Header
-                  l10nId="teams-section-manage-roles-title"
-                  $team={selectedTeam.name}
-                  title="Manage roles">
-                  <Button clickHandler={this.unselectTeam} className="close-button">
-                    <Icon name="close" />
-                  </Button>
-                </Header>
-                <div className="section__content">
-                  <ul className="teams__rolesList">
+              Array.from(teams.values()).map(t => {
+                const isActive = selectedTeam && t.id === selectedTeam.id
+                return (
+                  <li
+                    key={t.id}
+                    className={`teams__team ${isActive ? 'teams__team--selected' : ''}`}
+                    onClick={() => onTeamClick(t)}
+                  >
                     {
-                      selectedTeam.roles.map(r => (
-                        <li key={r.id} className="teams__role">
-                          <RoleManager role={r} onUpdate={this.fetchRoles} onDelete={this.fetchRoles} />
-                        </li>
-                      ))
+                      isInSuperMode ?
+                        <EditableText
+                          text={t.name}
+                          onAccept={(name: string) => updateTeamName(name, t)}
+                        />
+                      : t.name
                     }
-                  </ul>
-                  <AddRole team={selectedTeam} onSuccess={this.fetchRoles} />
-                </div>
-              </Section>
-            :
-              <Section className="teams">
-                <Header
-                  l10nId="teams-section-manage-members-title"
-                  $team={selectedTeam.name}
-                  title="Manage members">
-                  <Button clickHandler={this.unselectTeam} className="close-button">
-                    <Icon name="close" />
-                  </Button>
-                </Header>
-                <div className="section__content">
-                  <MembersManager team={selectedTeam} />
-                </div>
-              </Section>
-          : null
-        }
-      </div>
-    )
-  }
+                  </li>
+                )
+              })
+            }
+          </ul>
+        </div>
+      </Section>
+      {
+        selectedTeam ?
+          activeTab === 'roles' ?
+            <Section className="teams">
+              <Header
+                l10nId="teams-section-manage-roles-title"
+                $team={selectedTeam.name}
+                title="Manage roles">
+                <Button clickHandler={unselectTeam} className="close-button">
+                  <Icon name="close" />
+                </Button>
+              </Header>
+              <div className="section__content">
+                <ul className="teams__rolesList">
+                  {
+                    selectedTeamRoles.map(r => (
+                      <li key={r.id} className="teams__role">
+                        <RoleManager role={r} onUpdate={fetchRoles} onDelete={fetchRoles} />
+                      </li>
+                    ))
+                  }
+                </ul>
+                <AddRole team={selectedTeam} onSuccess={fetchRoles} />
+              </div>
+            </Section>
+          :
+            <Section className="teams">
+              <Header
+                l10nId="teams-section-manage-members-title"
+                $team={selectedTeam.name}
+                title="Manage members">
+                <Button clickHandler={unselectTeam} className="close-button">
+                  <Icon name="close" />
+                </Button>
+              </Header>
+              <div className="section__content">
+                <MembersManager team={selectedTeam} />
+              </div>
+            </Section>
+        : null
+      }
+    </div>
+  )
 }
 
 export default connect(mapStateToProps)(Teams)

@@ -5,6 +5,8 @@ import { Localized } from 'fluent-react/compat'
 
 import { Notification } from 'src/api'
 
+import { ROUTE_TEAMS_PERMISSIONS } from 'src/App'
+
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
@@ -238,7 +240,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </Tooltip>
               </li>
             </LimitedUI>
-            <LimitedUI permissions="team:manage">
+            <LimitedUI onePermissionFrom={ROUTE_TEAMS_PERMISSIONS}>
               <li className="nav__link">
                 <Tooltip l10nId="navigation-teams" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/teams" activeClassName="active">

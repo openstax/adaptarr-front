@@ -8,6 +8,8 @@ import Team, { TeamID, TeamPermission } from './team'
 
 import { elevated } from './utils'
 
+import { addMinutesToDate } from 'src/helpers'
+
 /**
  * User data as returned by the API.
  */
@@ -16,7 +18,6 @@ export type UserData = {
   name: string
   is_super: boolean
   language: string
-  permissions?: SystemPermission[] // Returned for users with user:edit-permissions` permission.
   teams: {
     id: TeamID
     name: string
@@ -41,13 +42,7 @@ export type UserTeam = {
 export type SessionInfo = {
   expires: string
   is_elevated: boolean
-  permission: SystemPermission[]
 }
-
-/**
- * System permissions which users can have besides permissions from his role in team.
- */
-export type SystemPermission = 'team:manage' | 'user:edit' | 'user:edit-permissions' | 'user:delete'
 
 export default class User extends Base<UserData> {
   /**
@@ -137,19 +132,19 @@ export default class User extends Base<UserData> {
   apiId: string
 
   /**
-   * User's system permissions.
-   */
-  permissions: Set<SystemPermission>
-
-  /**
    * All user's permissions across all teams and system.
    */
-  allPermissions: Set<SystemPermission | TeamPermission>
+  allPermissions: Set<TeamPermission>
 
   /**
    * Teams for which this users is member of.
   */
   teams: UserTeam[]
+
+  private _cacheSession?: {
+    lastUpdate: Date
+    data: SessionInfo & { elevated_expires?: Date }
+  }
 
   constructor(data: UserData, apiId?: string) {
     super(data)
@@ -167,9 +162,7 @@ export default class User extends Base<UserData> {
       }
     })
 
-    this.permissions = new Set(data.permissions)
-
-    let allPermissions: Set<TeamPermission | SystemPermission> = new Set(data.permissions)
+    let allPermissions: Set<TeamPermission> = new Set()
     for (const team of this.teams) {
       if (team.role && team.role.permissions) {
         for (const p of team.role.permissions) {
@@ -198,20 +191,35 @@ export default class User extends Base<UserData> {
   }
 
   /**
+   * Determine if user is in super session so he have access to hidden UIs.
+   *
+   * @param {boolean} fromCache - if set to false data will be fetched from the server. Default: true
+   */
+  async isInSuperMode(fromCache = true): Promise<boolean> {
+    if (this.apiId === 'me' && this.is_super) {
+      const now = new Date()
+      if (!fromCache || !this._cacheSession || !(addMinutesToDate(this._cacheSession.lastUpdate, 5) > now)) {
+        this._cacheSession = {
+          lastUpdate: now,
+          data: await User.session(),
+        }
+      }
+
+      if (this._cacheSession.data.is_elevated) {
+        return true
+      }
+    }
+    return false
+  }
+
+  /**
    * Change name
    *
-   * Require 'users:edit' permission to change other users name.
+   * Require is_super to change other users name.
    * No permissions required to change own name.
    */
   async changeName(name: string): Promise<AxiosResponse> {
     return await elevated(() => axios.put(`users/${this.apiId}`, { name }))
-  }
-
-  /**
-   * Change system permissions.
-   */
-  async changePermissions(permissions: SystemPermission[]): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`users/${this.apiId}`, { permissions }))
   }
 
   /**

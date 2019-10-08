@@ -46,7 +46,7 @@ export default class AddTeam extends React.Component<AddTeamProps> {
 
   public render() {
     return (
-      <LimitedUI permissions="team:manage">
+      <LimitedUI onlySuper={true}>
         <form className="add-team" onSubmit={this.addTeam}>
           <Input
             value={this.state.name}

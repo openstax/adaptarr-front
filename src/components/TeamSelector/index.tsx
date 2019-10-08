@@ -9,6 +9,8 @@ import Team, { TeamPermission } from 'src/api/team'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
 
+import { useIsInSuperMode } from 'src/hooks'
+
 export type TeamSelectorProps = {
   // Filter user teams against specific permission.
   permission?: TeamPermission
@@ -27,33 +29,31 @@ const mapStateToProps = ({ app: { teams }, user: { user } }: State) => {
   }
 }
 
-export type TeamSelectorState = {
-  selectedTeam: Team | null
-}
+const TeamSelector = (props: TeamSelectorProps) => {
+  const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null)
+  const isInSuperMode = useIsInSuperMode(props.user)
 
-class TeamSelector extends React.Component<TeamSelectorProps> {
-  state: TeamSelectorState = {
-    selectedTeam: null,
+  const handleChange = ({ value }: { value: Team, label: string }) => {
+    setSelectedTeam(value)
+    props.onChange(value)
   }
 
-  private handleChange = ({ value }: { value: Team, label: string }) => {
-    this.setState({ selectedTeam: value }, () => {
-      this.props.onChange(value)
-    })
-  }
-
-  private options = (): { value: Team, label: string }[] => {
-    const { permission, teams, user } = this.props
+  const options = (): { value: Team, label: string }[] => {
+    const { permission, teams, user } = props
 
     // If teams.size === 0 probably means that team list is still fetching.
     if (teams.size === 0) return []
 
     let options: { value: Team, label: string }[] = []
+    if (isInSuperMode) {
+      options = Array.from(teams.values()).map(t => ({ value: t, label: t.name }))
+      return options
+    }
+
     if (permission) {
       options = user.teams.filter(t => {
-        if (user.is_super) return true
-        if (!t.role || !t.role.permissions || !t.role.permissions.includes(permission)) return false
-        return true
+        if (t.allPermissions.has(permission)) return true
+        return false
       }).map(ut => {
         const team = teams.get(ut.id)!
         return { value: team, label: team.name }
@@ -67,36 +67,24 @@ class TeamSelector extends React.Component<TeamSelectorProps> {
     return options
   }
 
-  componentDidUpdate(prevProps: TeamSelectorProps) {
-    if (
-      typeof prevProps.team !== typeof this.props.team ||
-      (prevProps.team && this.props.team && prevProps.team.id !== this.props.team.id)
-    ) {
-      this.setState({ selectedTeam: this.props.team })
+  React.useEffect(() => {
+    if (props.team) {
+      setSelectedTeam(props.team)
     }
-  }
+  }, [props.team])
 
-  componentDidMount() {
-    if (this.props.team) {
-      this.setState({ selectedTeam: this.props.team })
-    }
-  }
+  const selectOptions = options()
 
-  public render() {
-    const { selectedTeam } = this.state
-    const options = this.options()
-
-    return (
-      <Select
-        className="react-select team-selector"
-        isDisabled={this.props.isDisabled}
-        placeholder={this.props.getString('team-selector-placeholder')}
-        value={selectedTeam ? { value: selectedTeam, label: selectedTeam.name } : null}
-        options={options}
-        onChange={this.handleChange}
-      />
-    )
-  }
+  return (
+    <Select
+      className="react-select team-selector"
+      isDisabled={props.isDisabled}
+      placeholder={props.getString('team-selector-placeholder')}
+      value={selectedTeam ? { value: selectedTeam, label: selectedTeam.name } : null}
+      options={selectOptions}
+      onChange={handleChange}
+    />
+  )
 }
 
 export default connect(mapStateToProps)(withLocalization(TeamSelector))
