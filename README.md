@@ -80,6 +80,7 @@ configuration in `config.toml` in `adaptarr-server`. The same applies for other 
 │    ├── config - we hold here custom axios instance and sentry configuration files.
 │    ├── containers - large components which are kind of containers for many different components.
 │    ├── helpers - small helper functions for different components.
+│    ├── hooks - our custom react hooks used across application.
 │    ├── locale
 │    │    └── data.json - cases, languages (used in app), allLanguages - code and names for all languages.
 │    └── screens - folder with components handling routes.
@@ -273,6 +274,7 @@ We were using service worker but it was disabled for now since it was causing to
 - npm modules,
 - api classes,
 - redux store actions, types,
+- helpers and hooks,
 - local components,
 - global components,
 - containers,
