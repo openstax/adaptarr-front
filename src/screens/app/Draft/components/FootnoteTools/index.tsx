@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Editor, Value, Inline } from 'slate'
+import { Editor, Value, Document, Inline } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
@@ -45,8 +45,20 @@ export default class FootnoteTools extends React.Component<Props> {
   }
 
   private getActiveFootnote = (): Inline | null => {
-    const first = this.props.value.inlines.first()
-    return first && first.type === 'footnote' ? first : null
+    const { document, selection: { start } } = this.props.value
+
+    if (!start.path) return null
+
+    let node: Document | Inline = document
+    for (const index of start.path as unknown as Iterable<number>) {
+      node = node.nodes.get(+index) as Inline
+
+      if (node.type === 'footnote') {
+        return node
+      }
+    }
+
+    return null
   }
 
   private showText = () => {
