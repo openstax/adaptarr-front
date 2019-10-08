@@ -45,9 +45,13 @@ const TeamSelector = (props: TeamSelectorProps) => {
     if (teams.size === 0) return []
 
     let options: { value: Team, label: string }[] = []
+    if (isInSuperMode) {
+      options = Array.from(teams.values()).map(t => ({ value: t, label: t.name }))
+      return options
+    }
+
     if (permission) {
       options = user.teams.filter(t => {
-        if (isInSuperMode) return true
         if (t.allPermissions.has(permission)) return true
         return false
       }).map(ut => {
