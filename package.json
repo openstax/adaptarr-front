@@ -100,6 +100,11 @@
     "@types/react-dom": "^16.0.11",
     "@types/slate": "^0.47.1",
     "@types/slate-react": "^0.22.1",
+    "@typescript-eslint/eslint-plugin": "^2.3.3",
+    "@typescript-eslint/parser": "^2.3.3",
+    "eslint": "^6.5.1",
+    "eslint-config-openstax-poland": "https://github.com/openstax-poland/eslint-config-openstax-poland.git",
+    "eslint-plugin-react": "^7.16.0",
     "fluent-syntax": "^0.10.0",
     "typescript": "^3.2.1"
   },
