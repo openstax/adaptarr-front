@@ -83,23 +83,26 @@ export const ROUTE_TEAMS_PERMISSIONS: TeamPermission[] = [
 
 class App extends React.Component<Props> {
   private InvitationsGuard = {
-    shouldRoute: () => {
+    shouldRoute: async () => {
       const user = this.props.user.user
-      return user.isInSuperMode || user.allPermissions.has('member:add')
+      const isSuper = await user.isInSuperMode()
+      return isSuper || user.allPermissions.has('member:add')
     }
   }
 
   private TeamsGuard = {
-    shouldRoute: () => {
+    shouldRoute: async () => {
       const user = this.props.user.user
-      return user.isInSuperMode || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
+      const isSuper = await user.isInSuperMode()
+      return isSuper || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
     }
   }
 
   private ProcessesGuard = {
-    shouldRoute: () => {
+    shouldRoute: async () => {
       const user = this.props.user.user
-      return user.isInSuperMode || user.allPermissions.has('editing-process:edit')
+      const isSuper = await user.isInSuperMode()
+      return isSuper || user.allPermissions.has('editing-process:edit')
     }
   }
 
