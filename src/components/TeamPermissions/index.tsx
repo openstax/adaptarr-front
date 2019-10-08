@@ -5,17 +5,22 @@ import { TeamPermission } from 'src/api/team'
 
 import './index.css'
 
-export type TeamPermissionsProps = {
+interface TeamPermissionsProps {
   selected?: TeamPermission[]
   disabled?: TeamPermission[]
   onChange: (permissions: TeamPermission[]) => void
 }
 
 export const TEAM_PERMISSIONS: TeamPermission[] = [
-  'member:add', 'member:remove',
-  'member:assign-role', 'member:edit-permissions',
-  'role:edit', 'book:edit', 'module:edit',
-  'editing-process:edit', 'editing-process:manage',
+  'member:add',
+  'member:remove',
+  'member:assign-role',
+  'member:edit-permissions',
+  'role:edit',
+  'book:edit',
+  'module:edit',
+  'editing-process:edit',
+  'editing-process:manage',
   'resources:manage',
 ]
 
@@ -24,13 +29,13 @@ class TeamPermissions extends React.Component<TeamPermissionsProps> {
     selected: TeamPermission[]
     permissions: TeamPermission[]
   } = {
-    selected: [],
-    permissions: TEAM_PERMISSIONS
+    selected: this.props.selected || [],
+    permissions: TEAM_PERMISSIONS,
   }
 
   private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const p = e.target.value as TeamPermission
-    let selected = new Set(this.state.selected)
+    const selected = new Set(this.state.selected)
     if (selected.has(p)) {
       selected.delete(p)
     } else {
@@ -42,13 +47,10 @@ class TeamPermissions extends React.Component<TeamPermissionsProps> {
   }
 
   componentDidUpdate(prevProps: TeamPermissionsProps) {
-    if (JSON.stringify(prevProps.selected) !== JSON.stringify(this.props.selected)) {
+    if (!compareSelected(prevProps.selected, this.props.selected)) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ selected: this.props.selected || [] })
     }
-  }
-
-  componentDidMount() {
-    this.setState({ selected: this.props.selected || [] })
   }
 
   public render() {
@@ -87,3 +89,19 @@ class TeamPermissions extends React.Component<TeamPermissionsProps> {
 }
 
 export default TeamPermissions
+
+/**
+ * Return true if args are the same. Return false otherwise.
+ */
+const compareSelected = (
+  arr1: TeamPermission[] | undefined,
+  arr2: TeamPermission[] | undefined
+) => {
+  if (Array.isArray(arr1) && Array.isArray(arr2)) {
+    if (arr1.length !== arr2.length) return false
+    return arr1.every((val, i) => val === arr2[i]) && arr2.every((val, i) => val === arr1[i])
+  }
+
+  if (arr1 === arr2) return true
+  return false
+}

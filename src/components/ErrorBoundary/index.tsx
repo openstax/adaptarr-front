@@ -6,8 +6,13 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-export default class ErrorBoundary extends React.Component {
-  state = {
+interface ErrorBoundaryState {
+  error: null
+  eventId?: string
+}
+
+export default class ErrorBoundary extends React.Component<{ children: React.ReactNode }> {
+  state: ErrorBoundaryState = {
     error: null,
     eventId: undefined,
   }
@@ -26,8 +31,12 @@ export default class ErrorBoundary extends React.Component {
     this.setState({ error: null, eventId: undefined })
   }
 
+  private showReportDialog = () => {
+    Sentry.showReportDialog({ eventId: this.state.eventId })
+  }
+
   render() {
-    const hasReport = this.state.eventId ? true : false
+    const hasReport = this.state.eventId ? 'true' : 'false'
 
     if (this.state.error) {
       return (
@@ -37,8 +46,8 @@ export default class ErrorBoundary extends React.Component {
               Something went wrong
             </Localized>
           </h1>
-          <Localized id="error-boundary-info" p={<p/>} $hasReport={hasReport.toString()}>
-            <div></div>
+          <Localized id="error-boundary-info" p={<p/>} $hasReport={hasReport}>
+            <div />
           </Localized>
           <div className="buttons">
             <Button clickHandler={this.moveToDashboard}>
@@ -46,21 +55,19 @@ export default class ErrorBoundary extends React.Component {
                 Go to dashboard
               </Localized>
             </Button>
-            <Button clickHandler={() => window.location.reload()}>
+            <Button clickHandler={window.location.reload}>
               <Localized id="error-boundary-button-reload">
                 Reload page
               </Localized>
             </Button>
             {
               hasReport ?
-                <Button
-                  clickHandler={() => Sentry.showReportDialog({ eventId: this.state.eventId })}
-                >
+                <Button clickHandler={this.showReportDialog} >
                   <Localized id="error-boundary-button-fill-report">
                     Fill out a report
                   </Localized>
                 </Button>
-              : null
+                : null
             }
           </div>
         </div>

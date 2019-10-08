@@ -8,10 +8,8 @@ import * as fromModules from './modules'
 import * as fromAlerts from './alerts'
 import * as fromDrafts from './drafts'
 
-/*
- * This is the root state of the app
- * It contains every substate of the app
- */
+// This is the root state of the app
+// It contains every substate of the app
 export interface State {
   app: fromApp.State
   user: fromUser.State
@@ -22,9 +20,7 @@ export interface State {
   draft: fromDrafts.State
 }
 
-/*
- * initialState of the app
- */
+// initialState of the app
 export const initialState: State = {
   app: fromApp.initialState,
   user: fromUser.initialState,
@@ -35,10 +31,8 @@ export const initialState: State = {
   draft: fromDrafts.initialState,
 }
 
-/*
- * Root reducer of the app
- * Returned reducer will be of type Reducer<State>
- */
+// Root reducer of the app
+// Returned reducer will be of type Reducer<State>
 export const reducer = combineReducers<State>({
   app: fromApp.reducer,
   user: fromUser.reducer,

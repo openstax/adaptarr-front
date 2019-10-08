@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { Process, Module, User } from 'src/api'
+import { Module, Process, User } from 'src/api'
 import { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
@@ -18,7 +18,7 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-export type BeginProcessProps = {
+interface BeginProcessProps {
   // All modules should belongs to one team.
   modules: Module[]
   teams: TeamsMap
@@ -26,16 +26,14 @@ export type BeginProcessProps = {
   afterUpdate?: (errors: Module[]) => void
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
 export type SlotId = number
 export type UserId = number
 
-export type BeginProcessState = {
+interface BeginProcessState {
   process: Process | null
   structure: ProcessStructure | null
   slots: Map<SlotId, UserId>
@@ -67,7 +65,7 @@ class BeginProcess extends React.Component<BeginProcessProps> {
               team={team}
               onChange={this.handleConfigureSlotsChange}
             />
-          : null
+            : null
         }
         <p>
           <strong>
@@ -86,7 +84,7 @@ class BeginProcess extends React.Component<BeginProcessProps> {
                 Start process
               </Localized>
             </Button>
-          : null
+            : null
         }
       </div>
     )
@@ -108,9 +106,8 @@ class BeginProcess extends React.Component<BeginProcessProps> {
 
     const errors: Module[] = []
 
-    await Promise.all(this.props.modules.map(m =>
-        m.beginProcess(processData)
-          .catch(() => errors.push(m))))
+    await Promise.all(this.props.modules.map(m => m.beginProcess(processData)
+      .catch(() => errors.push(m))))
       .then(() => {
         store.dispatch(fetchModulesMap())
         store.dispatch(addAlert('success', 'begin-process-success', {
@@ -122,7 +119,7 @@ class BeginProcess extends React.Component<BeginProcessProps> {
       })
 
     errors.forEach(m => {
-      store.dispatch(addAlert('error', 'begin-process-error', {module: m.title}))
+      store.dispatch(addAlert('error', 'begin-process-error', { module: m.title }))
     })
 
     if (this.props.afterUpdate) {

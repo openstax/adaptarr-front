@@ -18,19 +18,17 @@ import { mimeToRegExp } from 'src/helpers'
 
 import './index.css'
 
-export type Props = {
+interface AssetListProps {
   filter?: string,
   onSelect?: (asset: FileDescription) => void,
   draftPermissions: SlotPermission[],
 }
 
-const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
-  return {
-    draftPermissions: currentDraftPermissions,
-  }
-}
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
+  draftPermissions: currentDraftPermissions,
+})
 
-class AssetList extends React.Component<Props> {
+class AssetList extends React.Component<AssetListProps> {
   static contextTypes = {
     storage: PropTypes.instanceOf(Storage),
   }
@@ -69,8 +67,7 @@ class AssetList extends React.Component<Props> {
                 onClick={this.onClickAsset}
               />
             </li>
-          ))
-        }
+          ))}
       </ul>
     )
   }

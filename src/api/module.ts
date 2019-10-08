@@ -191,8 +191,8 @@ export default class Module extends Base<Data> {
    * @param process processId
    * @param slots array of pairs [slotId, userId]
    */
-  async beginProcess(data: { process: number, slots: [number, number][]}): Promise<AxiosResponse> {
-    return await elevated(() => axios.post(`modules/${this.id}`, data))
+  beginProcess(data: { process: number, slots: [number, number][]}): Promise<AxiosResponse> {
+    return elevated(() => axios.post(`modules/${this.id}`, data))
   }
 
   /**

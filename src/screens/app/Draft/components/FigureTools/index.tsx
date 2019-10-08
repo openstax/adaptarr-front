@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Block, Editor, Value, BlockProperties } from 'slate'
+import { Block, BlockProperties, Editor, Value } from 'slate'
 import { MediaDescription } from 'cnx-designer'
 
 import { FileDescription } from 'src/api/storage'
@@ -18,16 +18,21 @@ import { OnToggle } from '../ToolboxDocument'
 
 import './index.css'
 
-export type Props = {
+interface FigureToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class FigureTools extends React.Component<Props> {
+export default class FigureTools extends React.Component<FigureToolsProps> {
   modal: Modal | null = null
+
   action: ((asset: MediaDescription) => void) | null = null
+
+  private onClickToggle = () => {
+    this.props.onToggle('figureTools')
+  }
 
   render() {
     const { editor, value } = this.props
@@ -35,7 +40,8 @@ export default class FigureTools extends React.Component<Props> {
 
     if (figure === null) return null
 
-    const subfigure = editor.getActiveSubfigure(value) // This will return figure if there is no subfigure
+    // This will return figure if there is no subfigure
+    const subfigure = editor.getActiveSubfigure(value)
     const image = (subfigure!.nodes.first() as Block).nodes.first() as Block
     const src = image.data.get('src')
 
@@ -43,19 +49,22 @@ export default class FigureTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-figure-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('figureTools')}
+        onToggle={this.onClickToggle}
       >
         <div className="assetPreview">
           <AssetPreview
             asset={{ name: src, mime: 'image/any' }}
             onClick={this.changeSubfigure}
           />
-          {figure !== subfigure && <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
-            <Icon size="small" name="close" />
-            <Localized id="editor-tools-figure-remove-subfigure">
-              Remove subfigure
-            </Localized>
-          </Button>}
+          {
+            figure !== subfigure &&
+            <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
+              <Icon size="small" name="close" />
+              <Localized id="editor-tools-figure-remove-subfigure">
+                Remove subfigure
+              </Localized>
+            </Button>
+          }
         </div>
         <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
           <Icon size="small" name="image" />

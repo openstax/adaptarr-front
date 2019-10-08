@@ -2,7 +2,7 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import Role from './role'
-import { TeamPermission, TeamID } from './team'
+import { TeamID, TeamPermission } from './team'
 
 import { elevated } from './utils'
 
@@ -21,8 +21,12 @@ export type NewTeamMemberData = {
   role?: number
 }
 
-export default class TeamMember extends Base<TeamMemberData> {
+export type TeamMemberUpdateData = {
+  permissions?: TeamPermission[]
+  role?: number | null
+}
 
+export default class TeamMember extends Base<TeamMemberData> {
   /**
    * Fetch specific team member from the server.
    */
@@ -82,7 +86,7 @@ export default class TeamMember extends Base<TeamMemberData> {
    *
    * @param data - object with data to update
    */
-  async update(data: { permissions?: TeamPermission[], role?: number | null }): Promise<TeamMember> {
+  async update(data: TeamMemberUpdateData): Promise<TeamMember> {
     const rsp = await elevated(() => axios.put(`teams/${this.team}/members/${this.user}`, data))
     return new TeamMember(rsp.data, this.team)
   }

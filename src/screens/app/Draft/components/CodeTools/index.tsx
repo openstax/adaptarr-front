@@ -1,28 +1,34 @@
 import * as React from 'react'
-import { Editor, Value, Block, BlockProperties, Document, Inline, InlineProperties } from 'slate'
+import { Block, BlockProperties, Document, Editor, Inline, InlineProperties, Value } from 'slate'
 
 import ToolGroup from '../ToolGroup'
 import Input from 'src/components/ui/Input'
 
 import { OnToggle } from '../ToolboxDocument'
 
-export type Props = {
+interface CodeToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class CodeTools extends React.Component<Props> {
+export default class CodeTools extends React.Component<CodeToolsProps> {
   private onChange = (val: string) => {
     const code = this.getActiveCode()
     if (!code) return
 
-    this.props.editor.setNodeByKey(code.key, {
+    this.props.editor.setNodeByKey(
+      code.key,
+      {
         ...code,
         data: val ? { lang: val } : {},
       } as BlockProperties | InlineProperties,
     )
+  }
+
+  private onClickToggle = () => {
+    this.props.onToggle('codeTools')
   }
 
   private getActiveCode = () => {
@@ -32,7 +38,7 @@ export default class CodeTools extends React.Component<Props> {
 
     let node: Document | Inline | Block = document
     for (const index of start.path as unknown as Iterable<number>) {
-      node = node.nodes.get(+index) as Inline | Block
+      node = node.nodes.get(Number(index)) as Inline | Block
 
       if (node.type === 'code') {
         return node
@@ -50,7 +56,7 @@ export default class CodeTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-code-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('codeTools')}
+        onToggle={this.onClickToggle}
       >
         <Input
           l10nId="editor-tools-code-lang"

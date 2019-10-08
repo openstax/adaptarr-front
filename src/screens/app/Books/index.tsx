@@ -7,7 +7,7 @@ import * as api from 'src/api'
 import { addAlert } from 'src/store/actions/alerts'
 
 import store from 'src/store'
-import { IsLoading, BooksMap } from 'src/store/types'
+import { BooksMap, IsLoading } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/books'
 import { fetchModulesMap } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers/index'
@@ -27,7 +27,7 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import './index.css'
 
-export type BooksProps = {
+interface BooksProps {
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
@@ -37,21 +37,17 @@ export type BooksProps = {
   fetchModulesMap: () => void
 }
 
-export const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => {
-  return {
-    booksMap,
-    selectedTeams,
-  }
-}
+export const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => ({
+  booksMap,
+  selectedTeams,
+})
 
-export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
-  return {
-    fetchBooksMap: () => dispatch(fetchBooksMap()),
-    fetchModulesMap: () => dispatch(fetchModulesMap()),
-  }
-}
+export const mapDispatchToProps = (dispatch: FetchBooksMap) => ({
+  fetchBooksMap: () => dispatch(fetchBooksMap()),
+  fetchModulesMap: () => dispatch(fetchModulesMap()),
+})
 
-export type BooksState = {
+interface BooksState {
   titleInput: string
   showAddBook: boolean
   files: File[]
@@ -70,7 +66,7 @@ class Books extends React.Component<BooksProps> {
     team: null,
   }
 
-  private addBook = async (e: React.FormEvent) => {
+  private addBook = (e: React.FormEvent) => {
     e.preventDefault()
 
     const { titleInput: title, files, team } = this.state
@@ -87,13 +83,13 @@ class Books extends React.Component<BooksProps> {
         store.dispatch(addAlert('success', 'book-list-add-book-alert-success'))
         this.closeAddBookDialog()
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
         this.closeAddBookDialog()
       })
   }
 
-  private showAddBookDialog = ()  => {
+  private showAddBookDialog = () => {
     this.setState({ showAddBook: true, uploading: false })
   }
 
@@ -118,7 +114,7 @@ class Books extends React.Component<BooksProps> {
   }
 
   private toggleEditing = () => {
-    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
+    this.setState((prevState: BooksState) => ({ isEditingUnlocked: !prevState.isEditingUnlocked }))
   }
 
   public render() {
@@ -133,7 +129,7 @@ class Books extends React.Component<BooksProps> {
               {
                 isEditingUnlocked ?
                   <Icon size="medium" name="unlock" />
-                : <Icon size="medium" name="lock" />
+                  : <Icon size="medium" name="lock" />
               }
             </Button>
             {
@@ -141,7 +137,7 @@ class Books extends React.Component<BooksProps> {
                 <Button clickHandler={this.showAddBookDialog}>
                   <Icon size="medium" name="plus"/>
                 </Button>
-              : null
+                : null
             }
           </LimitedUI>
         </Header>
@@ -156,13 +152,13 @@ class Books extends React.Component<BooksProps> {
               {
                 uploading ?
                   <Spinner />
-                :
+                  :
                   <form onSubmit={this.addBook}>
                     <Input
                       l10nId="book-list-add-book-title"
                       value={this.state.titleInput}
                       onChange={this.updateTitleInput}
-                      validation={{minLength: 3}}
+                      validation={{ minLength: 3 }}
                     />
                     <TeamSelector
                       permission="book:edit"
@@ -192,7 +188,7 @@ class Books extends React.Component<BooksProps> {
                   </form>
               }
             </Dialog>
-          : null
+            : null
         }
         {
           !isLoading ?
@@ -209,12 +205,12 @@ class Books extends React.Component<BooksProps> {
                       />
                     )
                   })
-                : <Localized id="book-list-empty">
+                  : <Localized id="book-list-empty">
                   No books found.
-                </Localized>
+                  </Localized>
               }
             </div>
-          :
+            :
             <Spinner/>
         }
       </Section>

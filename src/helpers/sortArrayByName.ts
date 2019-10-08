@@ -7,9 +7,8 @@ const sortArrayByName = (a: Obj, b: Obj): number => {
     return -1
   } else if (a.name < b.name) {
     return 1
-  } else {
-    return 0
   }
+  return 0
 }
 
 export default sortArrayByName

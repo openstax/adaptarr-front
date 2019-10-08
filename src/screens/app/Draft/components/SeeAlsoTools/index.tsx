@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
@@ -10,14 +8,20 @@ import Icon from 'src/components/ui/Icon'
 
 import { OnToggle } from '../ToolboxGlossary'
 
-type Props = {
-  editor: Editor,
-  value: Value,
-  toggleState: boolean,
-  onToggle: OnToggle,
+import './index.css'
+
+interface SeeAlsoToolsProps {
+  editor: Editor
+  value: Value
+  toggleState: boolean
+  onToggle: OnToggle
 }
 
-class SeeAlsoTools extends React.Component<Props> {
+class SeeAlsoTools extends React.Component<SeeAlsoToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('seeAlsoTools')
+  }
+
   render() {
     const seealso = this.getActiveSeeAlso()
 
@@ -25,7 +29,7 @@ class SeeAlsoTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-seealso-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('seeAlsoTools')}
+        onToggle={this.onClickToggle}
       >
         <Button
           clickHandler={this.insertTerm}

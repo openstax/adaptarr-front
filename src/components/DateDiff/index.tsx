@@ -9,9 +9,9 @@ const oposite = (n: number): number => {
 }
 
 const DateDiff = ({ dateString }: { dateString: string }) => {
-  let from = new Date(dateString)
+  const from = new Date(dateString)
   from.setTime(from.getTime() + oposite(from.getTimezoneOffset() * 60 * 1000))
-  let now = new Date()
+  const now = new Date()
   const timeDiff = Math.abs(now.getTime() - from.getTime())
   const diffMinutes = Math.ceil(timeDiff / (1000 * 60 * 1))
   const diffHours = Math.ceil(timeDiff / (1000 * 3600 * 1))
@@ -27,7 +27,7 @@ const DateDiff = ({ dateString }: { dateString: string }) => {
     return <Localized id="date-diff-hours" $hours={diffHours}>
       {`{ $hours } hours ago`}
     </Localized>
-  } else if (diffDays >= 1 ) {
+  } else if (diffDays >= 1) {
     return <Localized id="date-diff-days" $days={diffDays}>
       {`{ $days } days ago`}
     </Localized>

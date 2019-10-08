@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
-import { Block, Editor, Value } from 'slate'
+import { Editor, Value } from 'slate'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,16 +11,20 @@ import Classes from '../Classes'
 
 import { OnToggle } from '../ToolboxDocument'
 
-const LIST_STYLES: string[] = ['ol_list','ul_list']
+const LIST_STYLES: string[] = ['ol_list', 'ul_list']
 
-export type Props = {
-  editor: Editor,
-  value: Value,
-  toggleState: boolean,
-  onToggle: OnToggle,
+interface ListToolsProps {
+  editor: Editor
+  value: Value
+  toggleState: boolean
+  onToggle: OnToggle
 }
 
-export default class ListTools extends React.Component<Props> {
+export default class ListTools extends React.Component<ListToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('listTools')
+  }
+
   render() {
     const { editor, value } = this.props
     const list = editor.getCurrentList(value)
@@ -31,13 +35,13 @@ export default class ListTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-list-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('listTools')}
+        onToggle={this.onClickToggle}
       >
         <Select
           className="toolbox__select react-select"
-          value={{value: list.type, label: list.type}}
+          value={{ value: list.type, label: list.type }}
           onChange={this.changeListStyle}
-          options={LIST_STYLES.map(t => {return {value: t, label: t}})}
+          options={LIST_STYLES.map(t => ({ value: t, label: t }))}
           formatOptionLabel={OptionLabel}
         />
         <Button
@@ -63,7 +67,7 @@ export default class ListTools extends React.Component<Props> {
     )
   }
 
-  private changeListStyle = ({value}: {value: string, label: string}) => {
+  private changeListStyle = ({ value }: {value: string, label: string}) => {
     this.props.editor.changeListType(value)
   }
 
@@ -78,6 +82,6 @@ export default class ListTools extends React.Component<Props> {
   }
 }
 
-function OptionLabel({value: style}: {value: string, label: string}) {
+function OptionLabel({ value: style }: { value: string, label: string }) {
   return <Localized id="editor-tools-list-style" $style={style}>{style}</Localized>
 }

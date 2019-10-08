@@ -19,7 +19,7 @@ const TYPE_MAP: { [key: string]: ReferenceTargetType } = {
   subfigure: 'figure',
 }
 
-export type Props = {
+interface LocalResourceTargetsProps {
   /**
    * Editor session for the document for which to display reference targets.
    */
@@ -38,7 +38,7 @@ const mapStateToProps = ({ draft: { currentDraftLang } }: State) => ({
 /**
  * Display list of reference targets in an editor session.
  */
-class LocalResourceTargets extends React.PureComponent<Props> {
+class LocalResourceTargets extends React.PureComponent<LocalResourceTargetsProps> {
   state: {
     countersMap: Map<string, Map<string, number>>
   } = {
@@ -50,7 +50,9 @@ class LocalResourceTargets extends React.PureComponent<Props> {
     const counters: Map<string, number> = new Map() // Map<type, counter>
 
     const setCounterForElement = (e: Element, customCounter?: number) => {
-      const type = e.tagName.toLowerCase() === 'figure' ? 'figure' : e.className.replace('adr-', '').replace(/-/g, '_')
+      const type = e.tagName.toLowerCase() === 'figure'
+        ? 'figure'
+        : e.className.replace('adr-', '').replace(/-/g, '_')
       const key = e.getAttribute('data-key') || ''
 
       if (typeof customCounter !== 'number') {
@@ -65,16 +67,16 @@ class LocalResourceTargets extends React.PureComponent<Props> {
 
       if (countersMap.has(key)) {
         if (countersMap.get(key)!.has(type)) {
-          let newMap = countersMap.get(key)!
+          const newMap = countersMap.get(key)!
           newMap.set(type, counter)
           countersMap.set(key, newMap)
         } else {
-          let newMap = countersMap.get(key)!
+          const newMap = countersMap.get(key)!
           newMap.set(type, counter)
           countersMap.set(key, newMap)
         }
       } else {
-        let newMap = new Map([[type, counter]])
+        const newMap = new Map([[type, counter]])
         countersMap.set(key, newMap)
       }
     }
@@ -98,7 +100,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
     this.setState({ countersMap })
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setCounters()
   }
 
@@ -117,7 +119,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
             onSelect={onSelect}
           />
         </LocalizationLoader>
-      : null
+        : null
     )
   }
 
@@ -130,10 +132,11 @@ class LocalResourceTargets extends React.PureComponent<Props> {
 
       switch (child.type) {
       case 'admonition':
-        type = 'note'//child.data.get('type')
-        // fall-through
+        type = 'note'// child.data.get('type')
+        // falls through
 
       case 'example':
+        // falls through
       case 'exercise_commentary':
       case 'exercise_solution':
         description = child.nodes.first().text
@@ -149,8 +152,8 @@ class LocalResourceTargets extends React.PureComponent<Props> {
         description = (child.nodes.first() as Block).nodes.first().text
         break
 
-      case 'table':
-        let tableDesc = child.nodes.find(n => {
+      case 'table': {
+        const tableDesc = child.nodes.find(n => {
           if (!n || n.object !== 'block') return false
           if (n.type === 'table_title' || n.type === 'table_caption') {
             return true
@@ -159,6 +162,7 @@ class LocalResourceTargets extends React.PureComponent<Props> {
         })
         description = tableDesc ? tableDesc.text : null
         break
+      }
 
       case 'section':
         yield* this.mapBlockToTargets(child)

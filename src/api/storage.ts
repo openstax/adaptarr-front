@@ -53,12 +53,19 @@ export type FileDescription = {
 
 export default class Storage extends StorageBase {
   id: string
+
   url: string
+
   title: string
+
   language: string = 'en'
+
   files: FileDescription[]
+
   tag: string
+
   document: Value | null = null
+
   glossary: Value | null = null
 
   /**
@@ -76,10 +83,11 @@ export default class Storage extends StorageBase {
     self.url = '/api/v1/drafts/' + id
     self.document = null
 
-    const [data, files]: [AxiosResponse<DraftData>, AxiosResponse<FileDescription[]>] = await Promise.all([
-      axios.get(`drafts/${id}`),
-      axios.get(`drafts/${id}/files`),
-    ])
+    const [data, files]: [AxiosResponse<DraftData>, AxiosResponse<FileDescription[]>] =
+      await Promise.all([
+        axios.get(`drafts/${id}`),
+        axios.get(`drafts/${id}/files`),
+      ])
 
     self.title = data.data.title
     self.files = files.data
@@ -110,11 +118,19 @@ export default class Storage extends StorageBase {
         language: this.language,
       })
 
-      const rsp = await axios.put(`drafts/${this.id}/files/index.cnxml`, text, overwrite ? undefined : {
-        headers: {
-          'If-Match': this.tag,
-        },
-      })
+      const rsp = await axios.put(
+        `drafts/${this.id}/files/index.cnxml`,
+        text,
+        overwrite
+          ?
+          undefined
+          :
+          {
+            headers: {
+              'If-Match': this.tag,
+            },
+          }
+      )
 
       this.document = document
       this.glossary = glossary
@@ -144,7 +160,10 @@ export default class Storage extends StorageBase {
    * Check if a {@link Value} is current.
    */
   current(document: Value, glossary: Value) {
-    return this.document !== null && this.document.document.equals(document.document) && this.glossary !== null && this.glossary.document.equals(glossary.document)
+    return this.document !== null &&
+      this.document.document.equals(document.document) &&
+      this.glossary !== null &&
+      this.glossary.document.equals(glossary.document)
   }
 
   /**
@@ -165,13 +184,20 @@ export default class Storage extends StorageBase {
   }
 
   static serializer = new CNXML({
-    documentRules: [tablesDeserialize, tablesSerialize, sourceElementsDeserialize, sourceElementsSerialize, suggestionRules],
+    documentRules: [
+      tablesDeserialize,
+      tablesSerialize,
+      sourceElementsDeserialize,
+      sourceElementsSerialize,
+      suggestionRules,
+    ],
     glossaryRules: [suggestionRules],
   })
 }
 
 export class Index {
   version: string
+
   content: string
 
   constructor(version: string, content: string) {

@@ -1,13 +1,13 @@
 import { AppAction, ConfirmDialogOptions } from 'src/store/actions/app'
 import {
-  SET_LOCALE,
-  SET_AVAILABLE_LOCALES,
-  SET_PROCESSES,
-  SHOW_CONFIRM_DIALOG,
   CLOSE_CONFIRM_DIALOG,
+  SET_AVAILABLE_LOCALES,
+  SET_LOCALE,
+  SET_PROCESSES,
+  SET_SELECTED_TEAMS,
   SET_TEAM,
   SET_TEAMS,
-  SET_SELECTED_TEAMS,
+  SHOW_CONFIRM_DIALOG,
 } from 'src/store/constants'
 
 import { Process } from 'src/api'
@@ -43,6 +43,7 @@ export const initialState: State = {
   selectedTeams: [],
 }
 
+// eslint-disable-next-line default-param-last
 export function reducer(state: State = initialState, action: AppAction) {
   switch (action.type) {
   case SET_LOCALE:

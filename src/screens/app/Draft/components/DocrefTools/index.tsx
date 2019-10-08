@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Text, Inline } from 'slate'
+import { Editor, Inline, Text, Value } from 'slate'
 import { List } from 'immutable'
 
 import { Module } from 'src/api'
@@ -17,15 +17,19 @@ import { OnToggle } from '../ToolboxDocument'
 
 import './index.css'
 
-export type Props = {
+interface XrefToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class XrefTools extends React.Component<Props> {
+export default class XrefTools extends React.Component<XrefToolsProps> {
   xrefModal: Modal | null = null
+
+  private onClickToggle = () => {
+    this.props.onToggle('docrefTools')
+  }
 
   public render() {
     const docref = this.getActiveDocref()
@@ -36,7 +40,7 @@ export default class XrefTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-docref-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('docrefTools')}
+        onToggle={this.onClickToggle}
       >
         <Button clickHandler={this.openXrefModal} className="toolbox__button--insert">
           <Icon size="small" name="pencil" />

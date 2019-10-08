@@ -137,8 +137,8 @@ export default class Process extends Base<ProcessData> {
   /**
    * Assign self to a free slot.
    */
-  static async takeSlot(data: { draft: string, slot: number }): Promise<AxiosResponse> {
-    return await axios.post('processes/slots', data)
+  static takeSlot(data: { draft: string, slot: number }): Promise<AxiosResponse> {
+    return axios.post('processes/slots', data)
   }
 
   /**
@@ -200,8 +200,8 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/slots/${slot}`, data))
+  updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`processes/${this.id}/slots/${slot}`, data))
   }
 
   /**
@@ -209,8 +209,8 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateStepName(step: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}`, { name }))
+  updateStepName(step: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`processes/${this.id}/steps/${step}`, { name }))
   }
 
   /**
@@ -218,8 +218,11 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}/links/${slot}/${target}`, { name }))
+  updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(
+      `processes/${this.id}/steps/${step}/links/${slot}/${target}`,
+      { name },
+    ))
   }
 
   /**

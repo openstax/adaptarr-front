@@ -16,40 +16,33 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-export type ProcessInfoProps = {
+interface ProcessInfoProps {
   process: Process
   teams: TeamsMap
   onProcessEdit: (process: Process) => any
   onProcessPreview: (process: Process) => any
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
-export type ProcessInfoState = {
-  name: string,
-  focused: boolean,
+interface ProcessInfoState {
+  name: string
 }
 
 class ProcessInfo extends React.Component<ProcessInfoProps> {
   state: ProcessInfoState = {
-    name: '',
-    focused: false,
+    name: this.props.process.name,
   }
 
   componentDidUpdate(prevProps: ProcessInfoProps) {
     const prevName = prevProps.process.name
     const name = this.props.process.name
     if (prevName !== name) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ name: this.props.process.name })
     }
-  }
-
-  componentDidMount() {
-    this.setState({ name: this.props.process.name })
   }
 
   nameRef: React.RefObject<HTMLSpanElement> = React.createRef()
@@ -71,7 +64,7 @@ class ProcessInfo extends React.Component<ProcessInfoProps> {
               onKeyDown={this.onKeyDown}
               dangerouslySetInnerHTML={{ __html: process.name }}
               ref={this.nameRef}
-            ></span>
+            />
             {
               this.state.name !== process.name ?
                 <div className="process__controls">
@@ -88,7 +81,7 @@ class ProcessInfo extends React.Component<ProcessInfoProps> {
                     <Icon name="close" />
                   </span>
                 </div>
-              : null
+                : null
             }
           </form>
           <span className="processes__team">
@@ -129,15 +122,15 @@ class ProcessInfo extends React.Component<ProcessInfoProps> {
 
   private onKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     switch (e.key) {
-      case 'Enter':
-        e.preventDefault()
-        this.onSubmit()
-        break
-      case 'Escape':
-        this.cancelEdit()
-        break
-      default:
-        return
+    case 'Enter':
+      e.preventDefault()
+      this.onSubmit()
+      break
+    case 'Escape':
+      this.cancelEdit()
+      break
+    default:
+      break
     }
   }
 
@@ -148,8 +141,14 @@ class ProcessInfo extends React.Component<ProcessInfoProps> {
           store.dispatch(addAlert('success', 'process-update-name-success'))
           store.dispatch(fetchProcesses())
         })
-        .catch((e) => {
-          store.dispatch(addAlert('error', 'process-update-name-error', {details: e.response.data.raw}))
+        .catch(e => {
+          store.dispatch(
+            addAlert(
+              'error',
+              'process-update-name-error',
+              { details: e.response.data.raw }
+            )
+          )
         })
     }
   }

@@ -1,7 +1,7 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
-import { withLocalization, GetString } from 'fluent-react/compat'
+import { GetString, withLocalization } from 'fluent-react/compat'
 
 import User from 'src/api/user'
 import Team, { TeamPermission } from 'src/api/team'
@@ -11,7 +11,7 @@ import { TeamsMap } from 'src/store/types'
 
 import { useIsInSuperMode } from 'src/hooks'
 
-export type TeamSelectorProps = {
+interface TeamSelectorProps {
   // Filter user teams against specific permission.
   permission?: TeamPermission
   isDisabled?: boolean
@@ -22,12 +22,10 @@ export type TeamSelectorProps = {
   onChange: (team: Team) => void
 }
 
-const mapStateToProps = ({ app: { teams }, user: { user } }: State) => {
-  return {
-    teams,
-    user,
-  }
-}
+const mapStateToProps = ({ app: { teams }, user: { user } }: State) => ({
+  teams,
+  user,
+})
 
 const TeamSelector = (props: TeamSelectorProps) => {
   const [selectedTeam, setSelectedTeam] = React.useState<Team | null>(null)

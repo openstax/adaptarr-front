@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { negotiateLanguages } from 'fluent-langneg/compat'
-import { FluentBundle } from 'fluent/compat';
+import { FluentBundle } from 'fluent/compat'
 import { LocalizationProvider } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
@@ -23,7 +23,6 @@ const mapStateToProps = ({ app }: State) => ({ locale: app.locale })
 async function loader(
   { locale }: { locale: string[]},
 ): Promise<{ bundles: FluentBundle[] }> {
-  
   const user = await User.me()
   if (user && user.language !== locale[0]) {
     store.dispatch(setLocale([user.language]))
@@ -47,18 +46,15 @@ async function loader(
   return { bundles }
 }
 
-type Props = {
-  bundles: FluentBundle[],
+interface LocalizationLoaderProps {
+  bundles: FluentBundle[]
+  children: React.ReactNode
 }
 
-class LocalizationLoader extends React.Component<Props> {
-  render() {
-    const { bundles, children } = this.props
-
-    return <LocalizationProvider bundles={bundles.values()}>
-      {children}
-    </LocalizationProvider>
-  }
-}
+const LocalizationLoader = (
+  { bundles, children }: LocalizationLoaderProps
+) => <LocalizationProvider bundles={bundles.values()}>
+  {children}
+</LocalizationProvider>
 
 export default connect(mapStateToProps)(Load(loader, ['locale'])<{}>(LocalizationLoader))

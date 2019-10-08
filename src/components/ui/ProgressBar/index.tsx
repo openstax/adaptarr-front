@@ -1,8 +1,8 @@
-import './index.css'
-
 import * as React from 'react'
 
-type Props = {
+import './index.css'
+
+interface ProgressBarProps {
   max: number
   value: number
   className?: string
@@ -10,8 +10,8 @@ type Props = {
   color?: 'red' | 'orange' | 'green' | 'blue'
 }
 
-const progressBar = ({ max, value, className, animate, color }: Props) => {
-  let classes = ['progressBar']
+const ProgressBar = ({ max, value, className, animate, color }: ProgressBarProps) => {
+  const classes = ['progressBar']
   if (className) {
     classes.push(className)
   }
@@ -24,9 +24,9 @@ const progressBar = ({ max, value, className, animate, color }: Props) => {
 
   return (
     <div className={classes.join(' ')}>
-      <span style={{width: `${(value/max)*100}%`}}><span></span></span>
+      <span style={{ width: `${(value/max)*100}%` }}><span /></span>
     </div>
   )
 }
 
-export default progressBar
+export default ProgressBar

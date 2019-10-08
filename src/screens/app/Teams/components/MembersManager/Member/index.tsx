@@ -3,7 +3,7 @@ import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import { Role, TeamMember, Team, User } from 'src/api'
+import { Role, Team, TeamMember, User } from 'src/api'
 import { TeamPermission } from 'src/api/team'
 
 import store from 'src/store'
@@ -20,7 +20,7 @@ import Avatar from 'src/components/ui/Avatar'
 import Button from 'src/components/ui/Button'
 import TeamPermissions, { TEAM_PERMISSIONS } from 'src/components/TeamPermissions'
 
-export type MemberProps = {
+interface MemberProps {
   member: TeamMember
   team: Team
   user: User
@@ -30,12 +30,10 @@ export type MemberProps = {
   onMemberPermissionsChange: (member: TeamMember) => void
 }
 
-const mapStateToProps = ({ user: { user, users } }: State) => {
-  return {
-    user,
-    users,
-  }
-}
+const mapStateToProps = ({ user: { user, users } }: State) => ({
+  user,
+  users,
+})
 
 const Member = (props: MemberProps) => {
   const [showPermissions, setShowPermissions] = React.useState(false)
@@ -71,7 +69,10 @@ const Member = (props: MemberProps) => {
     }
   }
 
-  const handleMemberRoleChange = async ({ value: { member, role } }: { value: { member: TeamMember, role: Role }, label: string }) => {
+  const handleMemberRoleChange = async (
+    { value: { member, role } }: { value: { member: TeamMember, role: Role },
+    label: string }
+  ) => {
     await member.update({ role: role.id })
       .then(m => {
         store.dispatch(addAlert('success', 'teams-member-role-change-success'))
@@ -151,7 +152,7 @@ const Member = (props: MemberProps) => {
               />
             </div>
           </LimitedUI>
-        : null
+          : null
       }
     </li>
   )

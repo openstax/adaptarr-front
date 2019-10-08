@@ -1,13 +1,13 @@
-import './index.css'
-
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import { validateEmail } from 'src/helpers'
 
+import './index.css'
+
 const leadingSpace = new RegExp(/^\s+/)
 
-type Props = {
+interface InputProps {
   onChange: (value: string | boolean) => void
   isValid?: (status: boolean) => void
   l10nId?: string,
@@ -26,7 +26,7 @@ type Props = {
   }
 }
 
-class Input extends React.Component<Props> {
+class Input extends React.Component<InputProps> {
   state: {
     touched: boolean
     inputVal: string
@@ -73,7 +73,7 @@ class Input extends React.Component<Props> {
     const validation = this.props.validation
 
     let status = true
-    let classes = ['input']
+    const classes = ['input']
 
     if (validation) {
       if (touched) {
@@ -119,19 +119,22 @@ class Input extends React.Component<Props> {
       classes.push('focused')
     }
 
-    return {status, classes: classes.join(' ')}
+    return { status, classes: classes.join(' ') }
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: InputProps) => {
     const { value, trim } = this.props
     if (prevProps.value !== value) {
       if (typeof value === 'string') {
         if (trim) {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({ inputVal: value.replace(leadingSpace, '') })
         } else {
+          // eslint-disable-next-line react/no-did-update-set-state
           this.setState({ inputVal: value })
         }
       } else {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ inputVal: this.props.value })
       }
     }
@@ -142,11 +145,14 @@ class Input extends React.Component<Props> {
     if (value) {
       if (typeof value === 'string') {
         if (trim) {
+          // eslint-disable-next-line react/no-did-mount-set-state
           this.setState({ inputVal: value.replace(leadingSpace, '') })
         } else {
+          // eslint-disable-next-line react/no-did-mount-set-state
           this.setState({ inputVal: value })
         }
       } else {
+        // eslint-disable-next-line react/no-did-mount-set-state
         this.setState({ inputVal: this.props.value })
       }
     }
@@ -158,15 +164,16 @@ class Input extends React.Component<Props> {
 
     const classes = this.validateInput().classes
 
-    let input = <input
-      type={type ? type : 'text'}
-      value={inputVal}
-      autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
-      onChange={this.changeInputVal}
-      onFocus={this.onFocus}
-      onBlur={this.onBlur}
-      disabled={disabled}
-    />
+    let input =
+                <input
+                  type={type ? type : 'text'}
+                  value={inputVal}
+                  autoFocus={typeof autoFocus === 'boolean' ? autoFocus : false}
+                  onChange={this.changeInputVal}
+                  onFocus={this.onFocus}
+                  onBlur={this.onBlur}
+                  disabled={disabled}
+                />
 
     if (l10nId) {
       input = <Localized id={l10nId} attrs={{ placeholder: true }}>
@@ -179,8 +186,12 @@ class Input extends React.Component<Props> {
         {input}
         {
           touched && !this.validateInput().status && errorMessage ?
-            <span className="input__error"><Localized id={errorMessage}>{errorMessage}</Localized></span>
-          : null
+            <span className="input__error">
+              <Localized id={errorMessage}>
+                {errorMessage}
+              </Localized>
+            </span>
+            : null
         }
       </div>
     )

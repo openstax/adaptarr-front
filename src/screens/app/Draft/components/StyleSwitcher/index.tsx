@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
@@ -7,15 +5,19 @@ import Icon from 'src/components/ui/Icon'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
-type Props = {
-  onChange: (style: string) => any
+import './index.css'
+
+interface StyleSwitcherProps {
+  onChange: (style: string) => void
 }
 
-class StyleSwitcher extends React.Component<Props> {
-  state: {
-    style: string
-    open: boolean
-  } = {
+interface StyleSwitcherState {
+  style: string
+  open: boolean
+}
+
+class StyleSwitcher extends React.Component<StyleSwitcherProps> {
+  state: StyleSwitcherState = {
     style: 'default',
     open: false,
   }
@@ -23,7 +25,7 @@ class StyleSwitcher extends React.Component<Props> {
   styles = ['default', 'webview', 'pdf']
 
   private toggleSwitcher = () => {
-    this.setState({ open: !this.state.open })
+    this.setState((prevState: StyleSwitcherState) => ({ open: !prevState.open }))
   }
 
   private onClick = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -69,7 +71,7 @@ class StyleSwitcher extends React.Component<Props> {
                 }
               </div>
             </Dialog>
-          : null
+            : null
         }
       </div>
     )

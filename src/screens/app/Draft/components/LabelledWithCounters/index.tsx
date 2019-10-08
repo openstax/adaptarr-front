@@ -1,13 +1,15 @@
 import * as React from 'react'
-import { WithCounters, CounterProps } from 'slate-counters'
+import { CounterProps, WithCounters } from 'slate-counters'
 
-import Labelled, { Props as LabelledProps } from '../Labelled'
+import Labelled, { LabelledProps } from '../Labelled'
 
-export type Props = LabelledProps & {
+interface LabelledWithCountersProps extends LabelledProps {
   counterMap: { [key: string]: string },
 }
 
-function LabelledWithCounters({ counterMap, counters, ...props }: Props & CounterProps) {
+function LabelledWithCounters(
+  { counterMap, counters, ...props }: LabelledWithCountersProps & CounterProps
+) {
   const args = {}
 
   for (const [name, from] of Object.entries(counterMap)) {
@@ -17,4 +19,4 @@ function LabelledWithCounters({ counterMap, counters, ...props }: Props & Counte
   return <Labelled args={args} {...props} />
 }
 
-export default WithCounters<Props>(({ node }) => node.key)(LabelledWithCounters)
+export default WithCounters<LabelledWithCountersProps>(({ node }) => node.key)(LabelledWithCounters)

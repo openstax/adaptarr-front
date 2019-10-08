@@ -7,11 +7,11 @@ const getCurrentLng = (format: Format = 'i18n') => {
   if (!currentLng) return defaultLng[format]
 
   switch (format) {
-    case 'iso':
-      return currentLng.split('-')[0]
-    
-    default:
-      return currentLng
+  case 'iso':
+    return currentLng.split('-')[0]
+
+  default:
+    return currentLng
   }
 }
 

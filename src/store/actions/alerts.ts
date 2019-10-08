@@ -26,55 +26,53 @@ export interface RemoveAlert {
 
 export type AlertsAction = PushAlert | RemoveAlert
 
-export const addAlert = (kind: AlertDataKind, message: string, args: object = {}): AddAlert => {
-  return (dispatch: React.Dispatch<AlertsAction>) => {
-    const alert: Alert = {
-      id: new Date().getTime(),
-      kind: 'alert',
-      data: {
-        kind,
-        message,
-        arguments: validateL20nArgs(args),
-      },
-    }
-
-    dispatch(pushAlert(alert))
-
-    // Do not hide alert with error messages.
-    if (kind !== 'error') {
-      setTimeout(() => {
-        dispatch(removeAlert(alert))
-      }, 7000)
-    }
+export const addAlert = (
+  kind: AlertDataKind,
+  message: string,
+  args: object = {}
+): AddAlert => (dispatch: React.Dispatch<AlertsAction>) => {
+  const alert: Alert = {
+    id: new Date().getTime(),
+    kind: 'alert',
+    data: {
+      kind,
+      message,
+      arguments: validateL20nArgs(args),
+    },
   }
-}
 
-export const addNotification = (data: Notification): AddNotification => {
-  return (dispatch: React.Dispatch<AlertsAction | PushNotificationToStore>) => {
-    const alert: Alert = {
-      id: new Date().getTime(),
-      kind: 'notification',
-      data,
-    }
+  dispatch(pushAlert(alert))
 
-    dispatch(pushAlert(alert))
-    dispatch(pushNotificationToStore(data))
+  // Do not hide alert with error messages.
+  if (kind !== 'error') {
     setTimeout(() => {
       dispatch(removeAlert(alert))
-    }, 5000)
+    }, 7000)
   }
 }
 
-export const pushAlert = (alert: Alert): PushAlert => {
-  return {
-    type: PUSH_ALERT,
-    data: alert,
+export const addNotification = (
+  data: Notification
+): AddNotification => (dispatch: React.Dispatch<AlertsAction | PushNotificationToStore>) => {
+  const alert: Alert = {
+    id: new Date().getTime(),
+    kind: 'notification',
+    data,
   }
+
+  dispatch(pushAlert(alert))
+  dispatch(pushNotificationToStore(data))
+  setTimeout(() => {
+    dispatch(removeAlert(alert))
+  }, 5000)
 }
 
-export const removeAlert = (alert: Alert): RemoveAlert => {
-  return {
-    type: REMOVE_ALERT,
-    data: alert,
-  }
-}
+export const pushAlert = (alert: Alert): PushAlert => ({
+  type: PUSH_ALERT,
+  data: alert,
+})
+
+export const removeAlert = (alert: Alert): RemoveAlert => ({
+  type: REMOVE_ALERT,
+  data: alert,
+})

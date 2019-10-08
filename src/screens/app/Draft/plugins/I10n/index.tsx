@@ -18,78 +18,96 @@ const I10nPlugin: Plugin = {
       return <Admonition {...props} />
 
     case 'exercise':
-      return <Labelled
-        className="exercise"
-        l10nKey="exercise-label"
-        {...props}
+      return (
+        <Labelled
+          className="exercise"
+          l10nKey="exercise-label"
+          {...props}
         />
+      )
 
     case 'exercise_problem':
-      return <LabelledWithCounters
-        counterMap={EXERCISE_COUNTERS}
-        className="exercise-problem"
-        l10nKey="exercise-problem-label"
-        {...props}
+      return (
+        <LabelledWithCounters
+          counterMap={EXERCISE_COUNTERS}
+          className="exercise-problem"
+          l10nKey="exercise-problem-label"
+          {...props}
         />
+      )
 
     case 'exercise_solution':
-      return <LabelledWithCounters
-        counterMap={SOLUTION_COUNTERS}
-        className="exercise-solution"
-        l10nKey="exercise-solution-label"
-        {...props}
+      return (
+        <LabelledWithCounters
+          counterMap={SOLUTION_COUNTERS}
+          className="exercise-solution"
+          l10nKey="exercise-solution-label"
+          {...props}
         />
+      )
 
     case 'exercise_commentary':
-      return <Labelled
-        className="exercise-commentary"
-        l10nKey="exercise-commentary-label"
-        {...props}
+      return (
+        <Labelled
+          className="exercise-commentary"
+          l10nKey="exercise-commentary-label"
+          {...props}
         />
+      )
 
     case 'figure_caption':
       return <Caption {...props} />
 
     case 'media_alt':
-      return <Labelled
-        className="media__alt"
-        l10nKey="media-alt-label"
-        textFromUI={true}
-        {...props}
+      return (
+        <Labelled
+          className="media__alt"
+          l10nKey="media-alt-label"
+          textFromUI={true}
+          {...props}
         />
+      )
 
     case 'media_text':
-      return <Labelled
-        className="media__text"
-        l10nKey="media-text-label"
-        {...props}
+      return (
+        <Labelled
+          className="media__text"
+          l10nKey="media-text-label"
+          {...props}
         />
+      )
 
     case 'definition':
-      return <Labelled
-        className="definition"
-        l10nKey="definition-label"
-        {...props}
+      return (
+        <Labelled
+          className="definition"
+          l10nKey="definition-label"
+          {...props}
         />
+      )
 
     case 'definition_example':
-      return <Labelled
-        className="definition-example"
-        l10nKey="definition-example-label"
-        {...props}
+      return (
+        <Labelled
+          className="definition-example"
+          l10nKey="definition-example-label"
+          {...props}
         />
+      )
 
     case 'definition_seealso':
-      return <Labelled
-        className="definition-seealso"
-        l10nKey="definition-seealso-label"
-        {...props}
+      return (
+        <Labelled
+          className="definition-seealso"
+          l10nKey="definition-seealso-label"
+          {...props}
         />
+      )
 
     default:
-      return next();
+      return next()
     }
-  }
+  },
 }
 
 export default I10nPlugin

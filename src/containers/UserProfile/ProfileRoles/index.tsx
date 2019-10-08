@@ -3,11 +3,10 @@ import Select from 'react-select'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { User, Role, TeamMember } from 'src/api'
+import { Role, TeamMember, User } from 'src/api'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'
-import { fetchUser } from 'src/store/actions/user'
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
 
@@ -17,17 +16,15 @@ import { useIsInSuperMode } from 'src/hooks'
 
 import Button from 'src/components/ui/Button'
 
-export type ProfileRolesProps = {
+interface ProfileRolesProps {
   user: User
   loggedUser: User
   teams: TeamsMap
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
 const ProfileRoles = (props: ProfileRolesProps) => {
   const isInSuperMode = useIsInSuperMode(props.loggedUser)
@@ -70,7 +67,7 @@ const ProfileRoles = (props: ProfileRolesProps) => {
       .then(() => {
         if (newRole) {
           store.dispatch(addAlert('success', 'user-profile-change-role-success', {
-            name: newRole.name
+            name: newRole.name,
           }))
         } else {
           store.dispatch(addAlert('success', 'user-profile-unassign-role-success'))
@@ -78,14 +75,14 @@ const ProfileRoles = (props: ProfileRolesProps) => {
         props.user.teams.find(t => t.id === team)!.role = newRole
         setUserTeams([...props.user.teams])
       })
-      .catch((e) => {
+      .catch(e => {
         if (newRole) {
           store.dispatch(addAlert('error', 'user-profile-change-role-error', {
-            details: e.response.data.error
+            details: e.response.data.error,
           }))
         } else {
           store.dispatch(addAlert('error', 'user-profile-unassign-role-error', {
-            details: e.response.data.error
+            details: e.response.data.error,
           }))
         }
       })
@@ -116,6 +113,11 @@ const ProfileRoles = (props: ProfileRolesProps) => {
               options = teams.get(team.id)!.roles.map(role => ({ value: role, label: role.name }))
             }
           }
+
+          const unassignRole = () => {
+            handleRoleUnassign(team.id)
+          }
+
           return (
             <div key={team.id} className="profile__role">
               <span className="profile__role-name">
@@ -128,7 +130,7 @@ const ProfileRoles = (props: ProfileRolesProps) => {
                     >
                       {`{ $role } in team { $team }`}
                     </Localized>
-                  :
+                    :
                     <Localized
                       id="user-profile-no-role-in-team"
                       $team={team.name}
@@ -144,22 +146,22 @@ const ProfileRoles = (props: ProfileRolesProps) => {
                       className="react-select"
                       value={team.role ? { value: team.role, label: team.role.name } : null}
                       options={options}
-                      formatOptionLabel={option => option.label}
+                      formatOptionLabel={formatOptionLabel}
                       onChange={handleRoleChange}
                     />
                     {
                       team.role ?
                         <Button
-                          clickHandler={() => handleRoleUnassign(team.id)}
+                          clickHandler={unassignRole}
                         >
                           <Localized id="user-profile-section-role-unassign">
                             Unassign user from role
                           </Localized>
                         </Button>
-                      : null
+                        : null
                     }
                   </>
-                : null
+                  : null
               }
             </div>
           )
@@ -170,3 +172,5 @@ const ProfileRoles = (props: ProfileRolesProps) => {
 }
 
 export default connect(mapStateToProps)(ProfileRoles)
+
+const formatOptionLabel = (option: { label: string, value: any }) => option.label

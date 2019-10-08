@@ -1,6 +1,6 @@
 // Arguments for l20n have to start with $ sign.
 const validateL20nArgs = (args: { [key: string]: any }) => {
-  let validated = {}
+  const validated = {}
   Object.entries(args).forEach(([key, val]) => {
     if (key[0] === '$') {
       validated[key] = val

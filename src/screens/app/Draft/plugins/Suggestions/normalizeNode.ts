@@ -1,4 +1,4 @@
-import { Editor, Node, Inline, Path } from 'slate'
+import { Editor, Inline, Node, Path } from 'slate'
 
 import { SUGGESTION_TYPES } from './types'
 
@@ -10,12 +10,12 @@ function normalizeNode(node: Node, editor: Editor, next: () => any) {
     const { document } = editor.value
 
     const descendantSuggestions: Iterable<[Inline, Path]> = (node as any).inlines({
-        onlyTypes: SUGGESTION_TYPES
-      })
+      onlyTypes: SUGGESTION_TYPES,
+    })
 
-    let nestedSuggestions: Inline[] = []
+    const nestedSuggestions: Inline[] = []
     for (const descendant of descendantSuggestions) {
-      const [suggestion, _] = descendant
+      const [suggestion] = descendant
       nestedSuggestions.push(suggestion)
     }
 
@@ -25,7 +25,9 @@ function normalizeNode(node: Node, editor: Editor, next: () => any) {
 
     return () => editor.withoutNormalizing(() => {
       nestedSuggestions.forEach(sugg => {
-        const ancestors: Iterable<[Node, Path]> = (document as any).ancestors(document.getPath(sugg.key))
+        const ancestors: Iterable<[Node, Path]> = (document as any).ancestors(
+          document.getPath(sugg.key)
+        )
         removeNestedSuggestions(editor, sugg, ancestors)
       })
     })
@@ -40,9 +42,15 @@ function normalizeNode(node: Node, editor: Editor, next: () => any) {
       if (child.object === 'text' || !SUGGESTION_TYPES.includes(child.type)) return null
 
       const next = node.nodes.get(i + 1)
-      const nextIsEmptyText = next ? (next.object === 'text' ? next.text === '' : false) : false
+      const nextIsEmptyText = next
+        ? next.object === 'text'
+          ? next.text === ''
+          : false
+        : false
       const nextNext = node.nodes.get(i + 2)
-      const nextNextIsSameInline = nextNext && nextNext.object === 'inline' ? (nextNext.type === child.type) : false
+      const nextNextIsSameInline = nextNext && nextNext.object === 'inline'
+        ? nextNext.type === child.type
+        : false
 
       if (!nextIsEmptyText || !nextNextIsSameInline) return null
 
@@ -59,17 +67,17 @@ function normalizeNode(node: Node, editor: Editor, next: () => any) {
    */
   // We join in reverse order, so that multiple suggestions folds onto the first one
   return () => editor.withoutNormalizing(() => {
-      invalids.reverse().forEach(pair => {
-        const [first, second] = pair
-        const updatedSecond = editor.value.document.getDescendant(second.key)! as Inline
-        updatedSecond.nodes.forEach((secondNode, index) => {
-          editor.moveNodeByKey(
-              secondNode!.key,
-              first.key,
-              first.nodes.size + index!
-            )
-        })
-        editor.removeNodeByKey(second.key)
+    invalids.reverse().forEach(pair => {
+      const [first, second] = pair
+      const updatedSecond = editor.value.document.getDescendant(second.key)! as Inline
+      updatedSecond.nodes.forEach((secondNode, index) => {
+        editor.moveNodeByKey(
+          secondNode!.key,
+          first.key,
+          first.nodes.size + index!
+        )
+      })
+      editor.removeNodeByKey(second.key)
     })
   })
 }
@@ -84,7 +92,7 @@ export default normalizeNode
  */
 function removeNestedSuggestions(editor: Editor, node: Inline, ancestors: Iterable<[Node, Path]>) {
   for (const ancestor of ancestors) {
-    const [parent, _] = ancestor
+    const [parent] = ancestor
     // There can't be more suggestions above this ancestor.
     if (parent.object === 'block') break
 

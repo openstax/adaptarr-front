@@ -6,7 +6,7 @@ import { ProcessSlot } from 'src/api/process'
 
 import './index.css'
 
-type SlotProps = {
+interface SlotProps {
   roles: Role[]
   slot: ProcessSlot
 }
@@ -20,7 +20,7 @@ class Slot extends React.Component<SlotProps> {
 
   private updateStateWithProps = () => {
     const { slot, roles } = this.props
-    let rolesNames: string[] = []
+    const rolesNames: string[] = []
     roles.forEach(r => {
       if (slot.roles.includes(r.id)) {
         rolesNames.push(r.name)

@@ -6,14 +6,14 @@ import onKeyDown from './handlers'
 
 import { SUGGESTION_TYPES } from '../Suggestions/types'
 
-const SourceElements = (options: SchemaOptions): Plugin => {
-  const inlines = [
-    ...(options.inlines || []),
+const SourceElements = ({ inlines = [] }: SchemaOptions): Plugin => {
+  const inls = [
+    ...inlines,
     ...SUGGESTION_TYPES,
   ]
 
   return {
-    schema: make_schema({ inlines }),
+    schema: make_schema({ inlines: inls }),
     renderBlock,
     renderInline,
     onKeyDown,

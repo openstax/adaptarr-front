@@ -8,14 +8,18 @@ import Icon from 'src/components/ui/Icon'
 
 import { OnToggle } from '../ToolboxGlossary'
 
-export type Props = {
+interface DefinitionToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-class DefinitionTools extends React.Component<Props> {
+class DefinitionTools extends React.Component<DefinitionToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('meaningTools')
+  }
+
   public render() {
     const meaning = this.props.editor.getActiveDefinitionMeaning(this.props.value)
 
@@ -23,7 +27,7 @@ class DefinitionTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-meaning-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('meaningTools')}
+        onToggle={this.onClickToggle}
       >
         <Button clickHandler={this.insertExample} className="toolbox__button--insert">
           <Icon size="small" name="plus" />

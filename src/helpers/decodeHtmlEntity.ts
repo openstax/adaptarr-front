@@ -1,7 +1,6 @@
-const decodeHtmlEntity = function(str: string) {
-  return str.replace(/&#(\d+);/g, function(_, dec) {
-    return String.fromCharCode(dec)
-  })
+// eslint-disable-next-line arrow-body-style
+const decodeHtmlEntity = (str: string) => {
+  return str.replace(/&#(\d+);/g, (_, dec) => String.fromCharCode(dec))
 }
 
 export default decodeHtmlEntity

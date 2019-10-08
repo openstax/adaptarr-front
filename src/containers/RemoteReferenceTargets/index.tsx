@@ -1,5 +1,5 @@
 import * as React from 'react'
-import Nestable from 'react-nestable'
+import Nestable, { RenderItem } from 'react-nestable'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
@@ -14,13 +14,13 @@ import LocalizationLoader from 'src/screens/app/Draft/components/LocalizationLoa
 
 import RefTargets from 'src/containers/ReferenceTargets'
 
-import { ModulesMap, ReferenceTarget, ReferenceTargets, BooksMap } from 'src/store/types'
+import { BooksMap, ModulesMap, ReferenceTarget, ReferenceTargets } from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { fetchReferenceTargets } from 'src/store/actions/modules'
 
 import './index.css'
 
-export type Props = {
+interface RemoteReferenceTargetsProps {
   modules: ModulesMap,
   targets: ReferenceTargets,
   booksMap: BooksMap,
@@ -35,19 +35,20 @@ export type Props = {
 const mapStateToProps = ({
   modules: { modulesMap, referenceTargets },
   booksMap: { booksMap },
-  draft: { currentDraftLang } }: State) => ({
-    modules: modulesMap,
-    targets: referenceTargets,
-    booksMap,
-    currentDraftLang,
-  })
+  draft: { currentDraftLang },
+}: State) => ({
+  modules: modulesMap,
+  targets: referenceTargets,
+  booksMap,
+  currentDraftLang,
+})
 
 const mapDispatchToProps = { fetchReferenceTargets }
 
 /**
  * Display a list of reference targets located in any module.
  */
-class RemoteReferenceTargets extends React.Component<Props> {
+class RemoteReferenceTargets extends React.Component<RemoteReferenceTargetsProps> {
   state: {
     selected: api.Module | null,
     books: api.BookPart[]
@@ -57,12 +58,14 @@ class RemoteReferenceTargets extends React.Component<Props> {
   }
 
   private fetchBookparts = async () => {
-    const books: api.BookPart[] = await Promise.all([...this.props.booksMap].map(([_, book]) => book.parts()))
+    const books: api.BookPart[] = await Promise.all(
+      [...this.props.booksMap].map(([_, book]) => book.parts())
+    )
 
     this.setState({ books })
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: RemoteReferenceTargetsProps) => {
     if (prevProps.booksMap.size !== this.props.booksMap.size) {
       this.fetchBookparts()
     }
@@ -146,8 +149,18 @@ class RemoteReferenceTargets extends React.Component<Props> {
 
 export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
 
-const NestableCustomized = ({ parts, modules, onModuleClick }: { parts: api.BookPart[], modules: ModulesMap, onModuleClick: (ev: React.MouseEvent) => void }) => {
-  const renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+type NestableCustomizedProps = {
+  parts: api.BookPart[]
+  modules: ModulesMap
+  onModuleClick: (ev: React.MouseEvent) => void
+}
+
+const NestableCustomized = ({ parts, modules, onModuleClick }: NestableCustomizedProps) => {
+  const renderItem = ({ item, collapseIcon }: RenderItem<PartData>) => {
+    const toggleGroup = () => {
+      nestable.current!.toggleCollapseGroup(item.number)
+    }
+
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
@@ -158,12 +171,12 @@ const NestableCustomized = ({ parts, modules, onModuleClick }: { parts: api.Book
               </span>
               <div
                 className="bookpart__title"
-                onClick={() => nestable.current!.toggleCollapseGroup(item.number)}
+                onClick={toggleGroup}
               >
                 {item.title}
               </div>
             </>
-          :
+            :
             <RemoteSource
               module={modules.get(item.id)!}
               onClick={onModuleClick}
@@ -173,7 +186,7 @@ const NestableCustomized = ({ parts, modules, onModuleClick }: { parts: api.Book
     )
   }
 
-  const renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+  const renderCollapseIcon = ({ isCollapsed }: {isCollapsed: boolean}) => {
     if (isCollapsed) {
       return <Icon name="arrow-right"/>
     }

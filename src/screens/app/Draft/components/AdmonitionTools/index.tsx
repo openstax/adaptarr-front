@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Block, BlockProperties, Editor, Value } from 'slate'
+import { BlockProperties, Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
@@ -10,41 +10,41 @@ import { OnToggle } from '../ToolboxDocument'
 
 const ADMONITIONS_TYPES: string[] = ['note', 'warning', 'tip', 'important']
 
-export type Props = {
+interface AdmonitionToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default function AdmonitionTools({ editor, value, toggleState, onToggle }: Props) {
+function AdmonitionTools({ editor, value, toggleState, onToggle }: AdmonitionToolsProps) {
   const admonition = editor.getActiveAdmonition(value)
 
   if (admonition === null) return null
 
-  function onChange({value}: {value: string, label: string}) {
+  function onChange({ value }: {value: string, label: string}) {
     editor.setNodeByKey(admonition!.key, {
       data: { type: value },
     } as unknown as BlockProperties)
   }
 
+  const onClickToggle = () => {
+    onToggle('admonitionTools')
+  }
+
   const admonitionType = admonition.data.get('type')
-  // Allow switching types only for first node.
-  const { selection } = value
-  const first = admonition.nodes.first()
-  let isSelectionInFirstNode = selection.start.isInNode(first) && selection.end.isInNode(first)
 
   return (
     <ToolGroup
       title="editor-tools-admonition-title"
       toggleState={toggleState}
-      onToggle={() => onToggle('admonitionTools')}
+      onToggle={onClickToggle}
     >
       <Select
         className="toolbox__select react-select"
-        value={{value: admonitionType, label: admonitionType}}
+        value={{ value: admonitionType, label: admonitionType }}
         onChange={onChange}
-        options={ADMONITIONS_TYPES.map(t => {return {value: t, label: t}})}
+        options={ADMONITIONS_TYPES.map(t => ({ value: t, label: t }))}
         formatOptionLabel={OptionLabel}
       />
       <Classes editor={editor} block={admonition} />
@@ -52,6 +52,8 @@ export default function AdmonitionTools({ editor, value, toggleState, onToggle }
   )
 }
 
-function OptionLabel({value: type}: {value: string, label: string}) {
+export default AdmonitionTools
+
+function OptionLabel({ value: type }: {value: string, label: string}) {
   return <Localized id="editor-tools-admonition-type" $type={type}>{type}</Localized>
 }

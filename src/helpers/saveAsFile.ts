@@ -1,10 +1,9 @@
 export default function saveAs(filename: string, data: string, type?: string) {
-  var blob = new Blob([data], { type: type ? type : 'text/plain' })
-  if(window.navigator.msSaveOrOpenBlob) {
+  const blob = new Blob([data], { type: type ? type : 'text/plain' })
+  if (window.navigator.msSaveOrOpenBlob) {
     window.navigator.msSaveBlob(blob, filename)
-  }
-  else{
-    var elem = window.document.createElement('a')
+  } else {
+    const elem = window.document.createElement('a')
     elem.href = window.URL.createObjectURL(blob)
     elem.download = filename
     document.body.appendChild(elem)

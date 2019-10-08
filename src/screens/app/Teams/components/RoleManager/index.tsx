@@ -16,13 +16,13 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-export type RoleManagerProps = {
+interface RoleManagerProps {
   role: Role
   onUpdate: (role: Role) => void
   onDelete: () => void
 }
 
-export type RoleManagerState = {
+interface RoleManagerState {
   isEditing: boolean
   roleName: string
   permissions: TeamPermission[]
@@ -31,12 +31,12 @@ export type RoleManagerState = {
 class RoleManager extends React.Component<RoleManagerProps> {
   state: RoleManagerState = {
     isEditing: false,
-    roleName: '',
-    permissions: [],
+    roleName: this.props.role.name,
+    permissions: this.props.role.permissions || [],
   }
 
   private toggleEditMode = () => {
-    this.setState({ isEditing: !this.state.isEditing })
+    this.setState((prevState: RoleManagerState) => ({ isEditing: !prevState.isEditing }))
   }
 
   private openRemoveRoleDialog = async () => {
@@ -63,7 +63,7 @@ class RoleManager extends React.Component<RoleManagerProps> {
           name: this.props.role.name,
         }))
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', 'role-manager-delete-error', {
           details: e.response.data.error,
         }))
@@ -83,7 +83,7 @@ class RoleManager extends React.Component<RoleManagerProps> {
 
     const { roleName, permissions } = this.state
 
-    let data: { name?: string, permissions?: TeamPermission[] } = {}
+    const data: { name?: string, permissions?: TeamPermission[] } = {}
     if (roleName !== this.props.role.name) {
       data.name = roleName
     }
@@ -92,13 +92,13 @@ class RoleManager extends React.Component<RoleManagerProps> {
     }
 
     this.props.role.update(data)
-      .then((r) => {
+      .then(r => {
         this.props.onUpdate(r)
         store.dispatch(addAlert('success', 'role-manager-update-success', {
           name: this.props.role.name,
         }))
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', 'role-manager-update-error', {
           details: e.response.data.error,
         }))
@@ -118,16 +118,13 @@ class RoleManager extends React.Component<RoleManagerProps> {
     const currRole = this.props.role
 
     if (prevRole.name !== currRole.name) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ roleName: currRole.name })
     }
     if (JSON.stringify(prevRole.permissions) !== JSON.stringify(currRole.permissions)) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ permissions: currRole.permissions })
     }
-  }
-
-  componentDidMount() {
-    const role = this.props.role
-    this.setState({ roleName: role.name, permissions: role.permissions || [] })
   }
 
   public render() {
@@ -145,7 +142,7 @@ class RoleManager extends React.Component<RoleManagerProps> {
                   value={roleName}
                   onChange={this.onRoleNameChange}
                 />
-              : role.name
+                : role.name
             }
           </span>
           <LimitedUI team={role.team} permissions="role:edit">

@@ -11,7 +11,7 @@ import Button from 'src/components/ui/Button'
 import { ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
-export type ModulesListProps = {
+interface ModulesListProps {
   // Show only modules from specific team
   team?: Team | number
   modules: {
@@ -22,18 +22,19 @@ export type ModulesListProps = {
   onModuleRemoveClick: (mod: Module) => any
 }
 
-const mapStateToProps = ({ modules }: State) => {
-  return {
-    modules,
-  }
-}
+const mapStateToProps = ({ modules }: State) => ({
+  modules,
+})
 
 const ModulesList = (props: ModulesListProps) => {
   const filterReg = new RegExp(props.filter, 'gi')
-  let modules: Module[] = []
+  const modules: Module[] = []
   props.modules.modulesMap.forEach(mod => {
     if (filterReg.test(mod.title)) {
-      if (props.team && mod.team === (typeof props.team === 'number' ? props.team : props.team.id)) {
+      if (
+        props.team &&
+        mod.team === (typeof props.team === 'number' ? props.team : props.team.id)
+      ) {
         modules.push(mod)
       } else {
         modules.push(mod)
@@ -48,29 +49,49 @@ const ModulesList = (props: ModulesListProps) => {
         modules.length ?
           <ul className="modulesList__list">
             {
-              modules.map(mod => {
-                return (
-                  <li
-                    key={mod.id}
-                    className="modulesList__item"
-                  >
-                    <span onClick={() => props.onModuleClick(mod)}>
-                      <ModuleInfo mod={mod}/>
-                    </span>
-                    <Button type="danger" clickHandler={() => props.onModuleRemoveClick(mod)}>
-                      <Localized id="module-list-remove">
-                        Remove
-                      </Localized>
-                    </Button>
-                  </li>
-                )
-              })
+              modules.map(mod => (
+                <SingleModule
+                  key={mod.id}
+                  mod={mod}
+                  onModuleClick={props.onModuleClick}
+                  onModuleRemove={props.onModuleRemoveClick}
+                />
+              ))
             }
           </ul>
-        : null
+          : null
       }
     </div>
   )
 }
 
 export default connect(mapStateToProps)(ModulesList)
+
+interface SingleModuleProps {
+  mod: Module
+  onModuleClick: (mod: Module) => void
+  onModuleRemove: (mod: Module) => void
+}
+
+const SingleModule = ({ mod, onModuleClick, onModuleRemove }: SingleModuleProps) => {
+  const onClick = () => {
+    onModuleClick(mod)
+  }
+
+  const onRemove = () => {
+    onModuleRemove(mod)
+  }
+
+  return (
+    <li className="modulesList__item">
+      <span onClick={onClick}>
+        <ModuleInfo mod={mod}/>
+      </span>
+      <Button type="danger" clickHandler={onRemove}>
+        <Localized id="module-list-remove">
+          Remove
+        </Localized>
+      </Button>
+    </li>
+  )
+}

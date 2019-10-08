@@ -11,11 +11,11 @@ import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-export type AddTeamProps = {
+interface AddTeamProps {
   onSuccess: (team: Team) => void
 }
 
-export type AddTeamState = {
+interface AddTeamState {
   name: string
 }
 
@@ -33,7 +33,7 @@ export default class AddTeam extends React.Component<AddTeamProps> {
     if (this.state.name.length === 0) return
 
     await Team.create(this.state.name)
-      .then((r) => {
+      .then(r => {
         this.props.onSuccess(r)
         store.dispatch(addAlert('success', 'teams-add-team-success', { name: this.state.name }))
       })

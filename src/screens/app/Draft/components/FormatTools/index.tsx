@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Editor, Value, Text, Document, Block, Inline } from 'slate'
+import { Block, Document, Editor, Inline, Text, Value } from 'slate'
 import { List } from 'immutable'
 
 import SwitchableTypes from '../SwitchableTypes'
@@ -9,7 +9,7 @@ import Tooltip from 'src/components/ui/Tooltip'
 
 import './index.css'
 
-export type Props = {
+interface FormatToolsProps {
   editor: Editor,
   value: Value,
   selectionParent: Document | Block | Inline | null,
@@ -24,11 +24,28 @@ const INVALID_FORMAT_TOOLS_PARENTS = [
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
 
-const FORMATS: Format[] = ['strong', 'emphasis', 'underline', 'superscript', 'subscript', 'code', 'term']
+const FORMATS: Format[] = [
+  'strong',
+  'emphasis',
+  'underline',
+  'superscript',
+  'subscript',
+  'code',
+  'term',
+]
 
-const VALID_LIST_PARENTS = ['admonition', 'document', 'exercise_problem', 'exercise_solution', 'section', 'ul_list', 'ol_list', 'list_item']
+const VALID_LIST_PARENTS = [
+  'admonition',
+  'document',
+  'exercise_problem',
+  'exercise_solution',
+  'section',
+  'ul_list',
+  'ol_list',
+  'list_item',
+]
 
-export default class FormatTools extends React.Component<Props> {
+export default class FormatTools extends React.Component<FormatToolsProps> {
   render() {
     const { editor, value, showSwitchableTypes = true } = this.props
     const { startBlock, startInline } = value
@@ -76,7 +93,7 @@ export default class FormatTools extends React.Component<Props> {
           {
             showSwitchableTypes ?
               <SwitchableTypes editor={editor} value={value} />
-            : null
+              : null
           }
         </div>
         {FORMATS.map(format => (
@@ -96,7 +113,7 @@ export default class FormatTools extends React.Component<Props> {
           </Tooltip>
         ))}
         <Tooltip
-          l10nId={'editor-tools-format-button-list'}
+          l10nId="editor-tools-format-button-list"
           direction="up"
           className="toolbox__button--with-tooltip"
         >
@@ -109,7 +126,7 @@ export default class FormatTools extends React.Component<Props> {
           </Button>
         </Tooltip>
         <Tooltip
-          l10nId={'editor-tools-format-button-clear'}
+          l10nId="editor-tools-format-button-clear"
           direction="up"
           className="toolbox__button--with-tooltip"
         >
@@ -134,9 +151,12 @@ export default class FormatTools extends React.Component<Props> {
   }
 
   private isActive = (format: Format) => {
-    const isMark = this.props.value.marks.some(mark => mark ? mark.type === format : false)
+    const isMark = this.props.value.marks.some(mark => {
+      if (mark) return mark.type === format
+      return false
+    })
     const inline = this.props.value.startInline
-    const isInline = inline && inline.type === format ? true : false
+    const isInline = inline && inline.type === format
     return isMark || isInline
   }
 

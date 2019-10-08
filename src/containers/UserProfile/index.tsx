@@ -24,26 +24,19 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-export type UserProfileProps = {
+interface UserProfileProps {
   user: User
   loggedUser: User
 }
 
-const mapStateToProps = ({ user: { user } }: State) => {
-  return {
-    loggedUser: user,
-  }
-}
+const mapStateToProps = ({ user: { user } }: State) => ({
+  loggedUser: user,
+})
 
 async function loader({ userId }: { userId: string }) {
   const user = await User.load(userId)
 
   return { user }
-}
-
-export type UserProfileState = {
-  userName: string
-  drafts: Draft[]
 }
 
 const UserProfile = (props: UserProfileProps) => {
@@ -54,14 +47,15 @@ const UserProfile = (props: UserProfileProps) => {
   const handleNameChange = (name: string) => {
     const { user, loggedUser } = props
     const usr = user.id === loggedUser.id ? loggedUser : user
-    usr.changeName(name).then((res) => {
+    usr.changeName(name).then(res => {
       store.dispatch(addAlert('success', 'user-profile-update-name-success'))
-      store.dispatch(updateUserInUsersMap({...res.data}))
+      store.dispatch(updateUserInUsersMap({ ...res.data }))
       setUserName(name)
-    }).catch(() => {
-      store.dispatch(addAlert('success', 'user-profile-update-name-error'))
-      setUserName(props.user.name)
     })
+      .catch(() => {
+        store.dispatch(addAlert('success', 'user-profile-update-name-error'))
+        setUserName(props.user.name)
+      })
   }
 
   const fetchUsersDrafts = async () => {
@@ -76,17 +70,18 @@ const UserProfile = (props: UserProfileProps) => {
     }
   }, [props.user.id])
 
-    const { user, loggedUser } = props
+  const { user, loggedUser } = props
 
   let header
   if (props.user.apiId === 'me') {
     header = <Header l10nId="user-profile-view-title-your" title="Your profile" />
   } else {
-    header = <Header
-      l10nId="user-profile-view-title-named"
-      title={decodeHtmlEntity(user.name) + "'s profile"}
-      $name={decodeHtmlEntity(user.name)}
-      />
+    header =
+            <Header
+              l10nId="user-profile-view-title-named"
+              title={decodeHtmlEntity(user.name) + "'s profile"}
+              $name={decodeHtmlEntity(user.name)}
+            />
   }
 
   return (
@@ -108,7 +103,7 @@ const UserProfile = (props: UserProfileProps) => {
                       minLength={3}
                       maxLength={30}
                     />
-                  : decodeHtmlEntity(user.name)
+                    : decodeHtmlEntity(user.name)
                 }
               </h2>
               <ProfileRoles user={user} loggedUser={loggedUser} />
@@ -117,6 +112,7 @@ const UserProfile = (props: UserProfileProps) => {
           <div className="profile__info">
             <LimitedUI permissions="editing-process:manage">
               <h3 className="profile__title">
+                {/* eslint-disable-next-line react/no-unescaped-entities */}
                 <Localized id="user-profile-users-drafts">User's drafts</Localized>
               </h3>
               <DraftsList drafts={drafts} />

@@ -3,24 +3,23 @@ import { Localized } from 'fluent-react/compat'
 
 import User from 'src/api/user'
 import Team from 'src/api/team'
-import { ProcessStructure, ProcessSlot } from 'src/api/process'
+import { ProcessSlot, ProcessStructure } from 'src/api/process'
 import { SlotId, UserId } from '../index'
 
 import UsersList from 'src/containers/UsersList'
 
-import Avatar from 'src/components/ui/Avatar'
-import Button from 'src/components/ui/Button'
+import SlotInfo from './SlotInfo'
 import Dialog from 'src/components/ui/Dialog'
 
 import './index.css'
 
-export type ConfigureSlotsProps = {
+interface ConfigureSlotsProps {
   structure: ProcessStructure
   team: Team
   onChange: (slots: Map<SlotId, UserId>) => any
 }
 
-export type ConfigureSlotsState = {
+interface ConfigureSlotsState {
   slots: Map<SlotId, UserId>
   currentSlot: ProcessSlot | null
   showAssignUser: boolean
@@ -52,7 +51,7 @@ class ConfigureSlots extends React.Component<ConfigureSlotsProps> {
                 onUserClick={this.handleUserClick}
               />
             </Dialog>
-          : null
+            : null
         }
         <h3>
           <Localized id="begin-process-slots-title">
@@ -60,38 +59,15 @@ class ConfigureSlots extends React.Component<ConfigureSlotsProps> {
           </Localized>
         </h3>
         {
-          this.props.structure.slots.map(s => {
-            return (
-              <div key={s.id} className="configure-slots__slot">
-                <div className="configure-slots__info">
-                  <span className="configure-slots__name">{s.name}</span>
-                  {
-                    slots.has(s.id) ?
-                      <Avatar
-                        size="small"
-                        user={slots.get(s.id)}
-                        withName={true}
-                      />
-                    : null
-                  }
-                </div>
-                {
-                  slots.has(s.id) ?
-                    <Button clickHandler={() => this.unassignUser(s.id)}>
-                      <Localized id="begin-process-unassign-user">
-                        Unassign user
-                      </Localized>
-                    </Button>
-                  :
-                    <Button clickHandler={() => this.showAssignUserDialog(s)}>
-                      <Localized id="begin-process-assign-user">
-                        Select user
-                      </Localized>
-                    </Button>
-                }
-              </div>
-            )
-          })
+          this.props.structure.slots.map(s => (
+            <SlotInfo
+              key={s.id}
+              slot={s}
+              slots={slots}
+              onAssignUser={this.showAssignUserDialog}
+              onUnassignUser={this.unassignUser}
+            />
+          ))
         }
       </div>
     )
@@ -108,8 +84,8 @@ class ConfigureSlots extends React.Component<ConfigureSlotsProps> {
     }
   }
 
-  private unassignUser = (slotId: SlotId) => {
-    this.state.slots.delete(slotId)
+  private unassignUser = (slot: ProcessSlot) => {
+    this.state.slots.delete(slot.id)
     this.forceUpdate(() => {
       this.props.onChange(this.state.slots)
     })

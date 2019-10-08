@@ -20,23 +20,21 @@ import Input from 'src/components/ui/Input'
 
 import FileUploader from 'src/containers/FilesUploader'
 
-import { ACCEPTED_FILE_TYPES } from './../../index'
+import { ACCEPTED_FILE_TYPES } from "../../index"
 
 import './index.css'
 
-export type ResourceCardProps = {
+interface ResourceCardProps {
   resource: Resource
   isEditingUnlocked: boolean
   teams: TeamsMap
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
-export type ResourceCardState = {
+interface ResourceCardState {
   showEditResource: boolean
   resourceName: string
   files: File[]
@@ -65,7 +63,7 @@ class ResourceCard extends React.Component<ResourceCardProps> {
     const { resourceName, files } = this.state
     const { resource } = this.props
 
-    let promises = []
+    const promises = []
     if (resourceName !== resource.name) {
       promises.push(resource.changeName(resourceName))
     }
@@ -100,16 +98,19 @@ class ResourceCard extends React.Component<ResourceCardProps> {
   private resourceName = () => (
     <h2 className="resource__title">
       <span className="resource__name">
-      {this.props.resource.name}
+        {this.props.resource.name}
       </span>
       {
         this.props.teams.has(this.props.resource.team) ?
           <span className="resource__team">
-            <Localized id="resources-card-team" $team={this.props.teams.get(this.props.resource.team)!.name}>
+            <Localized
+              id="resources-card-team"
+              $team={this.props.teams.get(this.props.resource.team)!.name}
+            >
               Team: ...
             </Localized>
           </span>
-        : null
+          : null
       }
 
     </h2>
@@ -120,15 +121,15 @@ class ResourceCard extends React.Component<ResourceCardProps> {
     const { showEditResource, resourceName, isUploading } = this.state
 
     const editingButton = isEditingUnlocked ?
-        <div className="resource__buttons">
-          <LimitedUI permissions="resources:manage">
-            <Button clickHandler={this.showEditResource}>
-              <Localized id="resources-card-edit">
+      <div className="resource__buttons">
+        <LimitedUI permissions="resources:manage">
+          <Button clickHandler={this.showEditResource}>
+            <Localized id="resources-card-edit">
                 Edit
-              </Localized>
-            </Button>
-          </LimitedUI>
-        </div>
+            </Localized>
+          </Button>
+        </LimitedUI>
+      </div>
       : null
 
     return (
@@ -145,7 +146,7 @@ class ResourceCard extends React.Component<ResourceCardProps> {
                 {editingButton}
               </div>
             </Link>
-          :
+            :
             <Link
               to={`/api/v1/resources/${resource.id}/content`}
               target="_blank"
@@ -170,7 +171,7 @@ class ResourceCard extends React.Component<ResourceCardProps> {
               {
                 isUploading ?
                   <Spinner />
-                :
+                  :
                   <div className="resources__dialog-content">
                     <Input
                       l10nId="resources-name-placeholder"
@@ -187,7 +188,7 @@ class ResourceCard extends React.Component<ResourceCardProps> {
                           accepts={ACCEPTED_FILE_TYPES}
                           optional={true}
                         />
-                      : null
+                        : null
                     }
                     <div className="dialog__buttons">
                       <Button clickHandler={this.closeEditResource}>
@@ -207,7 +208,7 @@ class ResourceCard extends React.Component<ResourceCardProps> {
                   </div>
               }
             </Dialog>
-          : null
+            : null
         }
       </>
     )

@@ -22,7 +22,7 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import './index.css'
 
-type Props = {
+interface DraftDetailsProps {
   draft: Draft
 }
 
@@ -33,13 +33,15 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   }
 }
 
-class DraftDetais extends React.Component<Props> {
-  state: {
-    isDownloading: boolean
-    isImporting: boolean
-    showImportDialog: boolean
-    files: File[]
-  } = {
+interface DraftDetailsState {
+  isDownloading: boolean
+  isImporting: boolean
+  showImportDialog: boolean
+  files: File[]
+}
+
+class DraftDetais extends React.Component<DraftDetailsProps> {
+  state: DraftDetailsState = {
     isDownloading: false,
     isImporting: false,
     showImportDialog: false,
@@ -63,19 +65,21 @@ class DraftDetais extends React.Component<Props> {
 
   private importCNXML = async () => {
     this.setState({ isImporting: true })
-    let file = this.state.files[0]
+    const file = this.state.files[0]
     if (!file) return
     const text = await new Response(file).text()
-    this.props.draft.writeCNXML(text).then(() => {
-      store.dispatch(addAlert('success', 'draft-details-import-success'))
-    }).catch(e => {
-      store.dispatch(addAlert('error', 'draft-details-import-error', { details: e.toString() }))
-    })
+    this.props.draft.writeCNXML(text)
+      .then(() => {
+        store.dispatch(addAlert('success', 'draft-details-import-success'))
+      })
+      .catch(e => {
+        store.dispatch(addAlert('error', 'draft-details-import-error', { details: e.toString() }))
+      })
     this.setState({ showImportDialog: false, isImporting: false })
   }
 
   private onFilesChange = (files: File[]) => {
-    this.setState({ files, importError: '' })
+    this.setState({ files })
   }
 
   private onFilesError = (error: FilesError, _: File) => {
@@ -110,7 +114,7 @@ class DraftDetais extends React.Component<Props> {
                 <Localized id="draft-details-button-downloading">
                   Downloading...
                 </Localized>
-              :
+                :
                 <Localized id="draft-details-button-download">
                   Download CNXML
                 </Localized>
@@ -122,7 +126,7 @@ class DraftDetais extends React.Component<Props> {
                 <Localized id="draft-details-button-importing">
                   Importing...
                 </Localized>
-              :
+                :
                 <Localized id="draft-details-button-import">
                   Import CNXML
                 </Localized>
@@ -140,7 +144,7 @@ class DraftDetais extends React.Component<Props> {
               {
                 isImporting ?
                   <Spinner />
-                :
+                  :
                   <>
                     <FilesUploader
                       onFilesChange={this.onFilesChange}
@@ -164,7 +168,7 @@ class DraftDetais extends React.Component<Props> {
                   </>
               }
             </Dialog>
-          : null
+            : null
         }
       </Section>
     )

@@ -7,7 +7,7 @@ import { Process, Team } from 'src/api'
 
 import { State } from 'src/store/reducers'
 
-type Props = {
+interface ProcessSelectorProps {
   title?: string
   team?: Team | number
   isClearable?: boolean
@@ -15,17 +15,15 @@ type Props = {
   onChange: (p: Process | null) => void
 }
 
-const mapStateToProps = ({ app: { processes } }: State) => {
-  return {
-    processes,
-  }
-}
+const mapStateToProps = ({ app: { processes } }: State) => ({
+  processes,
+})
 
-class ProcessSelector extends React.Component<Props> {
+class ProcessSelector extends React.Component<ProcessSelectorProps> {
   state: {
     process: Process | null
   } = {
-    process: null
+    process: null,
   }
 
   private onChange = (res: { value: Process, label: string } | null) => {
@@ -43,14 +41,14 @@ class ProcessSelector extends React.Component<Props> {
         if (team) {
           if (typeof team === 'number') {
             if (p.team === team) return true
-          } else {
-            if (p.team === team.id) return true
+          } else if (p.team === team.id) {
+            return true
           }
           return false
         }
         return true
       })
-      .map(p => {return {value: p, label: p.name}})
+      .map(p => ({ value: p, label: p.name }))
 
     return (
       <div className="process-selector">
@@ -59,7 +57,7 @@ class ProcessSelector extends React.Component<Props> {
             Select process:
           </Localized>
         </span>
-        <Localized id="process-selector-placeholder" attrs={{placeholder: true}}>
+        <Localized id="process-selector-placeholder" attrs={{ placeholder: true }}>
           <Select
             className="react-select"
             placeholder="Select..."

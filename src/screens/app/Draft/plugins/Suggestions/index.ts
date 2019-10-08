@@ -1,5 +1,4 @@
 import { Plugin } from 'slate-react'
-import { Command, Editor, Node } from 'slate'
 
 import { renderInline } from './render'
 import onCommand from './onCommand'
@@ -10,15 +9,14 @@ const ALLOWED_INLINES = ['code', 'docref', 'link', 'source_element', 'term', 'xr
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }
 
-const Suggestions = (options: Options): Plugin => {
-  const { isActive = true } = options
-  const allowedInlines = [
-    ...(options.allowedInlines || []),
+const Suggestions = ({ allowedInlines = [], isActive = true }: Options): Plugin => {
+  const inls = [
+    ...allowedInlines,
     ...ALLOWED_INLINES,
   ]
 
-  let plugin = {
-    schema: make_schema({ allowedInlines }),
+  const plugin = {
+    schema: make_schema({ allowedInlines: inls }),
     renderInline,
   } as any
 

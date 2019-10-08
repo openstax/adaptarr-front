@@ -485,7 +485,7 @@ user-profile-role-button-remove = Remove
 #
 # Variables:
 # - $name (string): name of role which has been assigned to user.
-user-profile-change-role-success = Role had been changed to { $name }
+user-profile-change-role-success = Role has been changed to { $name }
 
 # Alert displayed when error occurred when changing user's role.
 #

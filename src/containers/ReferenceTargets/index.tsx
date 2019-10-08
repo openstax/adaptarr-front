@@ -9,7 +9,7 @@ import RefTarget from 'src/components/ReferenceTarget'
 
 import { ReferenceTarget } from 'src/store/types'
 
-export type Props = {
+interface ReferenceTargetsProps {
   /**
    * Module in which reference targets are located.
    */
@@ -27,7 +27,7 @@ export type Props = {
 /**
  * A list of reference targets, all of which are in a single module.
  */
-export default function ReferenceTargets({ module, targets, onSelect }: Props) {
+export default function ReferenceTargets({ module, targets, onSelect }: ReferenceTargetsProps) {
   const sorted = new Map<string, ReferenceTarget[]>()
 
   for (const target of targets) {

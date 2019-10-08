@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Node, Document, Block, Inline } from 'slate'
+import { Block, Document, Editor, Inline, Node, Value } from 'slate'
 
 import FormatTools from '../FormatTools'
 import DefinitionTools from '../DefinitionTools'
@@ -11,16 +11,22 @@ import TermTools from '../TermTools'
 import GlossaryTools from '../GlossaryTools'
 import { onMouseDown } from '../ToolboxDocument'
 
-export type Props = {
+interface ToolboxProps {
   value: Value,
   editor: Editor,
 }
 
-type ToolName = 'termTools' | 'meaningTools' | 'seeAlsoTools' | 'definitionTools' | 'glossaryTools' | 'suggestionsTools'
+type ToolName =
+  'termTools' |
+  'meaningTools' |
+  'seeAlsoTools' |
+  'definitionTools' |
+  'glossaryTools' |
+  'suggestionsTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
-type State = {
+interface ToolboxState {
   selectionParent: Document | Block | Inline | null
   definitionTools: boolean
   termTools: boolean
@@ -42,25 +48,27 @@ const DEFAULT_TOGGLERS = {
   suggestionsTools: true,
 }
 
-class Toolbox extends React.Component<Props> {
-  state: State = {
+class Toolbox extends React.Component<ToolboxProps> {
+  state: ToolboxState = {
     selectionParent: null,
     ...DEFAULT_TOGGLERS,
   }
 
-  componentDidUpdate(_: Props, prevState: State) {
+  componentDidUpdate(_: ToolboxProps, prevState: ToolboxState) {
     const prevSelPar = prevState.selectionParent
     const selPar = this.selectionParent()
     if (
       ((!prevSelPar && selPar) || (prevSelPar && !selPar))
       || (prevSelPar && selPar && (prevSelPar.key !== selPar.key))
     ) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ selectionParent: selPar })
       this.toggleDeepestTool(selPar as Document | Block | Inline | null)
     }
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({ selectionParent: this.selectionParent() })
   }
 
@@ -149,16 +157,16 @@ class Toolbox extends React.Component<Props> {
     if (!a || !b) return null
 
     return document.getClosest(a.key, p1 => {
-      if (p1 && p1.object === 'block' || p1.object === 'inline') {
+      if ((p1 && p1.object === 'block') || p1.object === 'inline') {
         if (p1.type === 'paragraph') return false
-        return !!document.getClosest(b.key, p2 => p1 === p2)
+        return Boolean(document.getClosest(b.key, p2 => p1 === p2))
       }
       return false
     }) || document
   }
 
   private toggleTool = (toolName: ToolName, state?: boolean) => {
-    let newState = {}
+    const newState = {}
     if (typeof state === 'boolean') {
       if (state !== this.state[toolName]) {
         newState[toolName] = state
@@ -175,42 +183,43 @@ class Toolbox extends React.Component<Props> {
       return
     }
 
-    let newState = {...DEFAULT_TOGGLERS}
+    const newState = { ...DEFAULT_TOGGLERS }
 
     switch (node.type) {
-      case 'suggestion_insert':
-      case 'suggestion_delete':
-        newState.suggestionsTools = true
-        newState.glossaryTools = false
-        break
-      case 'term':
-        newState.termTools = true
-        break
-      case 'definition_meaning':
-        newState.meaningTools = true
-        break
-      case 'definition_seealso':
-        newState.seeAlsoTools = true
-        break
-      case 'definition_term':
-        // Toggle depends on parent
-        const path = this.props.value.document.getPath(node.key)
-        const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
-        if (titleParent) {
-          if (titleParent.type === 'definition') {
-            newState.definitionTools = true
-          } else if (titleParent.type === 'definition_seealso') {
-            newState.seeAlsoTools = true
-          }
+    case 'suggestion_insert':
+    case 'suggestion_delete':
+      newState.suggestionsTools = true
+      newState.glossaryTools = false
+      break
+    case 'term':
+      newState.termTools = true
+      break
+    case 'definition_meaning':
+      newState.meaningTools = true
+      break
+    case 'definition_seealso':
+      newState.seeAlsoTools = true
+      break
+    case 'definition_term': {
+      // Toggle depends on parent
+      const path = this.props.value.document.getPath(node.key)
+      const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
+      if (titleParent) {
+        if (titleParent.type === 'definition') {
+          newState.definitionTools = true
+        } else if (titleParent.type === 'definition_seealso') {
+          newState.seeAlsoTools = true
         }
-        break
-      case 'definition':
-        newState.definitionTools = true
-        break
-      default:
-        newState.definitionTools = true
-        newState.glossaryTools = true
-        break
+      }
+      break
+    }
+    case 'definition':
+      newState.definitionTools = true
+      break
+    default:
+      newState.definitionTools = true
+      newState.glossaryTools = true
+      break
     }
 
     this.setState(newState)

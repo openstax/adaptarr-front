@@ -10,7 +10,7 @@ import { addModuleToMap } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers'
 
 import ProcessVersion from 'src/api/processversion'
-import { Draft, Storage, Module } from 'src/api'
+import { Draft, Module, Storage } from 'src/api'
 import { Link, SlotPermission } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
@@ -19,7 +19,7 @@ import { SUGGESTION_TYPES } from '../../plugins/Suggestions/types'
 
 import './index.css'
 
-type Props = {
+interface StepChangerProps {
   draft: Draft
   onStepChange: () => any
   document: Value
@@ -30,13 +30,11 @@ type Props = {
   draftPermissions: SlotPermission[]
 }
 
-const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
-  return {
-    draftPermissions: currentDraftPermissions,
-  }
-}
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
+  draftPermissions: currentDraftPermissions,
+})
 
-class StepChanger extends React.Component<Props> {
+class StepChanger extends React.Component<StepChangerProps> {
   state: {
     link: Link | null
     confirmDialog: boolean
@@ -46,7 +44,8 @@ class StepChanger extends React.Component<Props> {
     documentSuggestions: number
     glossarySuggestions: number
     wrongTargetDialog: boolean
-    wrongTargetL10n: 'step-changer-dialog-wrong-target' | 'step-changer-dialog-wrong-target-suggestions'
+    wrongTargetL10n: 'step-changer-dialog-wrong-target' |
+      'step-changer-dialog-wrong-target-suggestions'
   } = {
     link: null,
     confirmDialog: false,
@@ -76,7 +75,7 @@ class StepChanger extends React.Component<Props> {
       step && step.links.length > 0 && <div className="step-changer">
         <Button clickHandler={this.showDetailsDialog} withBorder={true}>
           <Localized id="step-changer-main-button">
-            I'm handing my work to the next step
+            I am handing my work to the next step
           </Localized>
         </Button>
         {
@@ -97,10 +96,13 @@ class StepChanger extends React.Component<Props> {
                 <div className="step-changer__dialog-content">
                   {
                     step.links.map(l => {
+                      const onClick = () => {
+                        this.handleStepChange(l)
+                      }
                       return (
                         <Button
                           key={l.to}
-                          clickHandler={() => this.handleStepChange(l)}
+                          clickHandler={onClick}
                         >
                           {l.name}
                         </Button>
@@ -110,7 +112,7 @@ class StepChanger extends React.Component<Props> {
                 </div>
               </div>
             </Dialog>
-          : null
+            : null
         }
         {
           suggestionsDialog ?
@@ -126,7 +128,8 @@ class StepChanger extends React.Component<Props> {
                   $document={documentSuggestions}
                   $glossary={glossarySuggestions}
                 >
-                  You have unresolved suggestions in document or glossary. Please resolve all of them before changing step.
+                  You have unresolved suggestions in document or glossary.
+                  Please resolve all of them before changing step.
                 </Localized>
               </div>
               <div className="step-changer__dialog-controls">
@@ -137,7 +140,7 @@ class StepChanger extends React.Component<Props> {
                 </Button>
               </div>
             </Dialog>
-          : null
+            : null
         }
         {
           wrongTargetDialog ?
@@ -154,7 +157,8 @@ class StepChanger extends React.Component<Props> {
                   $glossary={glossarySuggestions}
                   $total={documentSuggestions + glossarySuggestions}
                 >
-                  We couldn't find target which you selected. Please try again later or contact administrator.
+                  We could not find target which you selected.
+                  Please try again later or contact administrator.
                 </Localized>
               </div>
               <div className="step-changer__dialog-controls">
@@ -165,7 +169,7 @@ class StepChanger extends React.Component<Props> {
                 </Button>
               </div>
             </Dialog>
-          : null
+            : null
         }
         {
           confirmDialog ?
@@ -201,7 +205,7 @@ class StepChanger extends React.Component<Props> {
                       </Button>
                     </div>
                   </>
-                :
+                  :
                   <div className="dialog__buttons">
                     <Button clickHandler={this.closeConfirmDialog}>
                       <Localized id="step-changer-cancel">
@@ -216,7 +220,7 @@ class StepChanger extends React.Component<Props> {
                   </div>
               }
             </Dialog>
-          : null
+            : null
         }
       </div>
     )
@@ -239,8 +243,12 @@ class StepChanger extends React.Component<Props> {
     const { storage, document, glossary, draftPermissions, draft } = this.props
 
     if (draftPermissions.some(p => ['accept-changes', 'propose-changes'].includes(p))) {
-      const documentSuggestions = document.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
-      const glossarySuggestions = glossary.document.filterDescendants(n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type))
+      const documentSuggestions = document.document.filterDescendants(
+        n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type)
+      )
+      const glossarySuggestions = glossary.document.filterDescendants(
+        n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type)
+      )
 
       // User with accept-changes permission have to accept / decline all of the suggestions.
       if (draftPermissions.includes('accept-changes')) {
@@ -261,7 +269,11 @@ class StepChanger extends React.Component<Props> {
         try {
           const [processId, versionId] = draft.step!.process
           const process = await ProcessVersion.load(processId, versionId)
-          if (!process) throw new Error(`Couldn't find process version: id: ${processId}, version: ${versionId}`)
+          if (!process) {
+            throw new Error(
+              `Couldn't find process version: id: ${processId}, version: ${versionId}`
+            )
+          }
           targetStep = await process.step(this.state.link!.to)
           if (!targetStep) throw new Error(`Couldn't find step: ${this.state.link!.to}`)
         } catch (e) {
@@ -272,7 +284,9 @@ class StepChanger extends React.Component<Props> {
           return
         }
 
-        let isLinkingToAcceptChanges = targetStep.slots.some(sl => sl.permissions.includes('accept-changes'))
+        const isLinkingToAcceptChanges = targetStep.slots.some(
+          sl => sl.permissions.includes('accept-changes')
+        )
         if (!isLinkingToAcceptChanges) {
           if (documentSuggestions.size > 0 || glossarySuggestions.size > 0) {
             this.setState({
@@ -310,14 +324,13 @@ class StepChanger extends React.Component<Props> {
         details: ex.response ? ex.response.data.raw : ex.toString(),
       }))
     }
-
   }
 
   private nextStep = () => {
     const link = this.state.link
     if (!link) return
     this.props.draft.advance({ target: link.to, slot: link.slot })
-      .then(async (res) => {
+      .then(async res => {
         store.dispatch(addAlert('success', 'step-changer-success', {
           code: res.code.replace(/:/g, '-'),
         }))

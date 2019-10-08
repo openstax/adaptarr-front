@@ -5,7 +5,7 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-type Props = {
+interface EditableTextProps {
   text: string
   minLength?: number,
   maxLength?: number,
@@ -14,27 +14,24 @@ type Props = {
 
 type EditableTextError = 'min-length' | 'max-length'
 
-class EditableText extends React.Component<Props> {
-  state: {
-    text: string,
-    focused: boolean,
-    errors: EditableTextError[],
-  } = {
-    text: '',
-    focused: false,
+interface EditableTextState {
+  text: string,
+  errors: EditableTextError[],
+}
+
+class EditableText extends React.Component<EditableTextProps> {
+  state: EditableTextState = {
+    text: this.props.text,
     errors: [],
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: EditableTextProps) {
     const prevText = prevProps.text
     const text = this.props.text
     if (prevText !== text) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ text: this.props.text })
     }
-  }
-
-  componentDidMount() {
-    this.setState({ text: this.props.text })
   }
 
   textRef: React.RefObject<HTMLSpanElement> = React.createRef()
@@ -53,18 +50,21 @@ class EditableText extends React.Component<Props> {
             onKeyDown={this.onKeyDown}
             dangerouslySetInnerHTML={{ __html: this.props.text }}
             ref={this.textRef}
-          ></span>
+          />
           {
             this.state.text !== this.props.text ?
               <div className="editable-text__controls">
-                <span onClick={this.onSubmit} className={this.state.errors.length ? 'disabled' : ''}>
+                <span
+                  onClick={this.onSubmit}
+                  className={this.state.errors.length ? 'disabled' : ''}
+                >
                   <Icon size="medium" name="check" />
                 </span>
                 <span onClick={this.cancelEdit}>
                   <Icon size="medium" name="close" />
                 </span>
               </div>
-            : null
+              : null
           }
         </div>
         {
@@ -84,7 +84,7 @@ class EditableText extends React.Component<Props> {
                 ))
               }
             </div>
-          : null
+            : null
         }
       </form>
     )
@@ -105,15 +105,17 @@ class EditableText extends React.Component<Props> {
 
   private onKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     switch (e.key) {
-      case 'Enter':
-        e.preventDefault()
-        this.onSubmit()
-        break
-      case 'Escape':
-        this.cancelEdit()
-        break
-      default:
-        return
+    case 'Enter':
+      e.preventDefault()
+      this.onSubmit()
+      break
+
+    case 'Escape':
+      this.cancelEdit()
+      break
+
+    default:
+      break
     }
   }
 

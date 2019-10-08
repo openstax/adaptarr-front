@@ -1,9 +1,9 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
-import { Localized, withLocalization, GetString } from 'fluent-react/compat'
+import { GetString, Localized, withLocalization } from 'fluent-react/compat'
 
-import { Team, TeamMember, Role, User } from 'src/api'
+import { Role, Team, TeamMember, User } from 'src/api'
 
 import store from 'src/store'
 import { UsersMap } from 'src/store/types'
@@ -17,19 +17,17 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-export type MembersManagerProps = {
+interface MembersManagerProps {
   team: Team
   users: UsersMap
   getString: GetString
 }
 
-const mapStateToProps = ({ user: { users } }: State) => {
-  return {
-    users,
-  }
-}
+const mapStateToProps = ({ user: { users } }: State) => ({
+  users,
+})
 
-export type MembersManagerState = {
+interface MembersManagerState {
   isLoading: boolean
   members: TeamMember[]
   selectedUser: User | null
@@ -59,38 +57,40 @@ class MembersManager extends React.Component<MembersManagerProps> {
       user: this.state.selectedUser.id,
       role: this.state.selectedRole ? this.state.selectedRole.id : undefined,
       permissions: [],
-    }).then(() => {
-      this.fetchMembers()
-      this.setState({ selectedUser: null })
-      store.dispatch(fetchUsersMap())
-      store.dispatch(addAlert('success', 'teams-member-add-success'))
-    }).catch(() => {
-      store.dispatch(addAlert('error', 'teams-member-add-error'))
     })
+      .then(() => {
+        this.fetchMembers()
+        this.setState({ selectedUser: null })
+        store.dispatch(fetchUsersMap())
+        store.dispatch(addAlert('success', 'teams-member-add-success'))
+      })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'teams-member-add-error'))
+      })
   }
 
   private onMemberRemove = (member: TeamMember) => {
-    this.setState({
-      members: this.state.members.filter(m => m.user !== member.user),
-    })
+    this.setState((prevState: MembersManagerState) => ({
+      members: prevState.members.filter(m => m.user !== member.user),
+    }))
   }
 
   private onMemberRoleChange = (member: TeamMember) => {
-    this.setState({
-      members: this.state.members.map(m => {
+    this.setState((prevState: MembersManagerState) => ({
+      members: prevState.members.map(m => {
         if (m.user !== member.user) return m
         return member
       }),
-    })
+    }))
   }
 
   private onMemberPermissionsChange = (member: TeamMember) => {
-    this.setState({
-      members: this.state.members.map(m => {
+    this.setState((prevState: MembersManagerState) => ({
+      members: prevState.members.map(m => {
         if (m.user !== member.user) return m
         return member
       }),
-    })
+    }))
   }
 
   private fetchMembers = () => {
@@ -155,17 +155,19 @@ class MembersManager extends React.Component<MembersManagerProps> {
             members.length === 0 ?
               <span className="teams__no-members">
                 <Localized id="teams-no-members">
-                  This team doesn't have members.
+                  This team does not have members.
                 </Localized>
               </span>
-            : members.map(m => <Member
-                key={m.user}
-                member={m}
-                team={team}
-                onMemberRemove={this.onMemberRemove}
-                onMemberRoleChange={this.onMemberRoleChange}
-                onMemberPermissionsChange={this.onMemberPermissionsChange}
-              />)
+              : members.map(m => (
+                <Member
+                  key={m.user}
+                  member={m}
+                  team={team}
+                  onMemberRemove={this.onMemberRemove}
+                  onMemberRoleChange={this.onMemberRoleChange}
+                  onMemberPermissionsChange={this.onMemberPermissionsChange}
+                />
+              ))
           }
         </ul>
       </>

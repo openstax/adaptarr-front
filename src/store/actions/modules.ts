@@ -40,46 +40,42 @@ export type ModulesAction
   | RemoveModuleFromMap
   | SetReferenceTargets
 
-const setModulesMap = (payload: ModulesMap): SetModulesMap => {
-  return {
-    type: constants.SET_MODULES_MAP,
-    data: payload,
-  }
+const setModulesMap = (payload: ModulesMap): SetModulesMap => ({
+  type: constants.SET_MODULES_MAP,
+  data: payload,
+})
+
+export const fetchModulesMap = (): FetchModulesMap => (dispatch: React.Dispatch<ModulesAction>) => {
+  Module.all()
+    .then(modules => {
+      dispatch(setModulesMap(new Map(
+        modules.map((mod: Module): [string, Module] => [mod.id, mod]))
+      ))
+    })
+    .catch(e => {
+      throw new Error(e.message)
+    })
 }
 
-export const fetchModulesMap = (): FetchModulesMap => {
-  return (dispatch: React.Dispatch<ModulesAction>) => {
-    Module.all()
-      .then(modules => {
-        dispatch(setModulesMap(new Map(modules.map((mod: Module): [string, Module] => [mod.id, mod]))))
-      })
-      .catch(e => {
-        console.log('fetchModulesMap():', e.message)
-        throw new Error(e.message)
-      })
-  }
-}
+export const addModuleToMap = (payload: Module): AddModuleToMap => ({
+  type: constants.ADD_MODULE_TO_MAP,
+  data: payload,
+})
 
-export const addModuleToMap = (payload: Module): AddModuleToMap => {
-  return {
-    type: constants.ADD_MODULE_TO_MAP,
-    data: payload,
-  }
-}
+export const removeModuleFromMap = (id: string): RemoveModuleFromMap => ({
+  type: constants.REMOVE_MODULE_FROM_MAP,
+  data: id,
+})
 
-export const removeModuleFromMap = (id: string): RemoveModuleFromMap => {
-  return {
-    type: constants.REMOVE_MODULE_FROM_MAP,
-    data: id,
-  }
-}
-
-const setReferenceTargets = (moduleId: string, targets: ReferenceTarget[]): SetReferenceTargets => ({
+const setReferenceTargets = (
+  moduleId: string,
+  targets: ReferenceTarget[]
+): SetReferenceTargets => ({
   type: constants.SET_REFERENCE_TARGETS,
   data: {
     moduleId,
     targets,
-  }
+  },
 })
 
 export const fetchReferenceTargets = (forModule: Module) => async (dispatch: any) => {

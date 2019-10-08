@@ -4,7 +4,7 @@ import { LocationDescriptor } from 'history'
 
 import './index.css'
 
-export type ButtonProps = {
+interface ButtonProps {
   type?: 'default' | 'danger'
   className?: string
   isDisabled?: boolean
@@ -16,7 +16,17 @@ export type ButtonProps = {
   withBorder?: boolean
 }
 
-const Button = ({ type, className, isDisabled, children, clickHandler, to, dataId, title, withBorder }: ButtonProps) => {
+const Button = ({
+  type,
+  className,
+  isDisabled,
+  children,
+  clickHandler,
+  to,
+  dataId,
+  title,
+  withBorder,
+}: ButtonProps) => {
   const classes: string[] = ['button']
 
   if (type) classes.push(`button--${type}`)

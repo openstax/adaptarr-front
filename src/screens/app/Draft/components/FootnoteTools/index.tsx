@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Editor, Value, Document, Inline } from 'slate'
+import { Document, Editor, Inline, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import ToolGroup from '../ToolGroup'
@@ -7,14 +7,18 @@ import Button from 'src/components/ui/Button'
 
 import { OnToggle } from '../ToolboxDocument'
 
-export type Props = {
+interface FootnoteToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class FootnoteTools extends React.Component<Props> {
+export default class FootnoteTools extends React.Component<FootnoteToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('footnoteTools')
+  }
+
   render() {
     const footnote = this.getActiveFootnote()
     if (!footnote) return null
@@ -24,7 +28,7 @@ export default class FootnoteTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-footnote-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('footnoteTools')}
+        onToggle={this.onClickToggle}
       >
         {
           collapsed ?
@@ -33,7 +37,7 @@ export default class FootnoteTools extends React.Component<Props> {
                 Show content
               </Localized>
             </Button>
-          :
+            :
             <Button clickHandler={this.hideText}>
               <Localized id="editor-tools-footnote-hide">
                 Hide content
@@ -51,7 +55,7 @@ export default class FootnoteTools extends React.Component<Props> {
 
     let node: Document | Inline = document
     for (const index of start.path as unknown as Iterable<number>) {
-      node = node.nodes.get(+index) as Inline
+      node = node.nodes.get(Number(index)) as Inline
 
       if (node.type === 'footnote') {
         return node

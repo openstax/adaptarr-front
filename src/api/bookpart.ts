@@ -103,7 +103,8 @@ export default class BookPart extends Base<PartData> {
    * Fetch module this part references.
    */
   async module(): Promise<Module | null> {
-    return this.id ? await Module.load(this.id) : null
+    const res = this.id ? await Module.load(this.id) : null
+    return res
   }
 
   /**

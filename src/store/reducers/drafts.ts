@@ -12,18 +12,22 @@ export const initialState: State = {
   currentDraftPermissions: [],
 }
 
-export function reducer (state: State = initialState, action: DraftsAction) {
+// eslint-disable-next-line default-param-last
+export function reducer(state: State = initialState, action: DraftsAction) {
   switch (action.type) {
-    case SET_CURRENT_DRAFT_LANG:
-      return {
-        ...state,
-        currentDraftLang: action.data,
-      }
-    case SET_CURRENT_DRAFT_PERMISSIONS:
-      return {
-        ...state,
-        currentDraftPermissions: action.data,
-      }
+  case SET_CURRENT_DRAFT_LANG:
+    return {
+      ...state,
+      currentDraftLang: action.data,
+    }
+
+  case SET_CURRENT_DRAFT_PERMISSIONS:
+    return {
+      ...state,
+      currentDraftPermissions: action.data,
+    }
+
+  default:
+    return state
   }
-  return state
 }

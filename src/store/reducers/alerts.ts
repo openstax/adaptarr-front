@@ -10,21 +10,25 @@ export interface State {
 }
 
 export const initialState: State = {
-  alerts: []
+  alerts: [],
 }
 
-export function reducer (state: State = initialState, action: AlertsAction) {
+// eslint-disable-next-line default-param-last
+export function reducer(state: State = initialState, action: AlertsAction) {
   switch (action.type) {
-    case PUSH_ALERT:
-      return {
-        ...state,
-        alerts: [...state.alerts, action.data],
-      }
-    case REMOVE_ALERT:
-      return {
-        ...state,
-        alerts: state.alerts.filter(a => a.id !== action.data.id),
-      }
+  case PUSH_ALERT:
+    return {
+      ...state,
+      alerts: [...state.alerts, action.data],
+    }
+
+  case REMOVE_ALERT:
+    return {
+      ...state,
+      alerts: state.alerts.filter(a => a.id !== action.data.id),
+    }
+
+  default:
+    return state
   }
-  return state
 }

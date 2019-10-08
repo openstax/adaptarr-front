@@ -1,6 +1,6 @@
 import axios from 'src/config/axios'
 
-import { TeamPermission, TeamID } from './team'
+import { TeamID, TeamPermission } from './team'
 
 import { elevated } from './utils'
 

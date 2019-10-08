@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value, Node, Document, Block, Inline } from 'slate'
+import { Block, Document, Editor, Inline, Node, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
 import CodeTools from '../CodeTools'
@@ -18,20 +18,35 @@ import DocrefTools from '../DocrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SourceTools from '../SourceTools'
-//import QuotationTools from '../QuotationTools'
 
 import './index.css'
 
-export type Props = {
+interface ToolboxProps {
   value: Value,
   editor: Editor,
 }
 
-type ToolName = 'insertTools' | 'suggestionsTools' | 'codeTools' | 'termTools' | 'linkTools' | 'xrefTools' | 'docrefTools' | 'listTools' | 'sourceTools' | 'admonitionTools' | 'exerciseTools' | 'figureTools' | 'footnoteTools' | 'sectionTools' | 'documentTools' | 'quotationTools'
+type ToolName =
+  'insertTools' |
+  'suggestionsTools' |
+  'codeTools' |
+  'termTools' |
+  'linkTools' |
+  'xrefTools' |
+  'docrefTools' |
+  'listTools' |
+  'sourceTools' |
+  'admonitionTools' |
+  'exerciseTools' |
+  'figureTools' |
+  'footnoteTools' |
+  'sectionTools' |
+  'documentTools' |
+  'quotationTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
-type State = {
+interface ToolboxState {
   selectionParent: Document | Block | Inline | null
   // Togglers for components:
   insertTools: boolean
@@ -74,25 +89,27 @@ const DEFAULT_TOGGLERS = {
   documentTools: false,
 }
 
-class Toolbox extends React.Component<Props> {
-  state: State = {
+class Toolbox extends React.Component<ToolboxProps> {
+  state: ToolboxState = {
     selectionParent: null,
     ...DEFAULT_TOGGLERS,
   }
 
-  componentDidUpdate(_: Props, prevState: State) {
+  componentDidUpdate(_: ToolboxProps, prevState: ToolboxState) {
     const prevSelPar = prevState.selectionParent
     const selPar = this.selectionParent()
     if (
       ((!prevSelPar && selPar) || (prevSelPar && !selPar))
       || (prevSelPar && selPar && (prevSelPar.key !== selPar.key))
     ) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ selectionParent: selPar })
       this.toggleDeepestTool(selPar as Document | Block | Inline | null)
     }
   }
 
   componentDidMount() {
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({ selectionParent: this.selectionParent() })
   }
 
@@ -111,11 +128,13 @@ class Toolbox extends React.Component<Props> {
     }
 
     if (selection.start.key !== selection.end.key) {
-      <div className="toolbox">
-        <Localized id="editor-toolbox-mulit-selection">
-          Selection across elements is not yet supported.
-        </Localized>
-      </div>
+      return (
+        <div className="toolbox">
+          <Localized id="editor-toolbox-mulit-selection">
+            Selection across elements is not yet supported.
+          </Localized>
+        </div>
+      )
     }
 
     return (
@@ -235,9 +254,9 @@ class Toolbox extends React.Component<Props> {
     if (!a || !b) return null
 
     return document.getClosest(a.key, p1 => {
-      if (p1 && p1.object === 'block' || p1.object === 'inline') {
+      if ((p1 && p1.object === 'block') || p1.object === 'inline') {
         if (p1.type === 'paragraph') return false
-        return !!document.getClosest(b.key, p2 => p1 === p2)
+        return Boolean(document.getClosest(b.key, p2 => p1 === p2))
       }
       return false
     }) || document
@@ -250,7 +269,7 @@ class Toolbox extends React.Component<Props> {
       }
       return
     }
-    this.setState({ [toolName]: !this.state[toolName] })
+    this.setState((prevState: ToolboxState) => ({ [toolName]: !prevState[toolName] }))
   }
 
   private toggleDeepestTool = (node: Document | Block | Inline | null) => {
@@ -258,82 +277,83 @@ class Toolbox extends React.Component<Props> {
       return
     }
 
-    let newState = {...DEFAULT_TOGGLERS}
+    const newState = { ...DEFAULT_TOGGLERS }
     if (node.object === 'block') {
       newState.insertTools = true
     }
 
     switch (node.type) {
-      case 'suggestion_insert':
-      case 'suggestion_delete':
-        newState.suggestionsTools = true
-        newState.insertTools = false
-        break
-      case 'code':
-        newState.codeTools = true
-        break
-      case 'term':
-        newState.termTools = true
-        break
-      case 'link':
-        newState.linkTools = true
-        break
-      case 'xref':
-        newState.xrefTools = true
-        break
-      case 'docref':
-        newState.docrefTools = true
-        break
-      case 'footnote':
-        newState.footnoteTools = true
-        break
-      case 'source_element':
-        newState.sourceTools = true
-        break
-      case 'list':
-      case 'list_item':
-        newState.listTools = true
-        break
-      case 'admonition':
-        newState.admonitionTools = true
-        break
-      case 'exercise':
-      case 'exercise_problem':
-      case 'exercise_solution':
-      case 'exercise_commentary':
-        newState.exerciseTools = true
-        break
-      case 'figure':
-      case 'figure_caption':
-      case 'image':
-      case 'media_alt':
-        newState.figureTools = true
-        newState.insertTools = false
-        break
-      case 'section':
-        newState.sectionTools = true
-        break
-      case 'title':
-        // Toggle depends on parent
-        const path = this.props.value.document.getPath(node.key)
-        const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
-        if (titleParent) {
-          if (titleParent.type === 'admonition') {
-            newState.admonitionTools = true
-          } else if (titleParent.type === 'quotation') {
-            newState.quotationTools = true
-          } else if (titleParent.type === 'section') {
-            newState.sectionTools = true
-          }
+    case 'suggestion_insert':
+    case 'suggestion_delete':
+      newState.suggestionsTools = true
+      newState.insertTools = false
+      break
+    case 'code':
+      newState.codeTools = true
+      break
+    case 'term':
+      newState.termTools = true
+      break
+    case 'link':
+      newState.linkTools = true
+      break
+    case 'xref':
+      newState.xrefTools = true
+      break
+    case 'docref':
+      newState.docrefTools = true
+      break
+    case 'footnote':
+      newState.footnoteTools = true
+      break
+    case 'source_element':
+      newState.sourceTools = true
+      break
+    case 'list':
+    case 'list_item':
+      newState.listTools = true
+      break
+    case 'admonition':
+      newState.admonitionTools = true
+      break
+    case 'exercise':
+    case 'exercise_problem':
+    case 'exercise_solution':
+    case 'exercise_commentary':
+      newState.exerciseTools = true
+      break
+    case 'figure':
+    case 'figure_caption':
+    case 'image':
+    case 'media_alt':
+      newState.figureTools = true
+      newState.insertTools = false
+      break
+    case 'section':
+      newState.sectionTools = true
+      break
+    case 'title': {
+      // Toggle depends on parent
+      const path = this.props.value.document.getPath(node.key)
+      const titleParent = path ? this.props.value.document.getParent(path) as Block | null : null
+      if (titleParent) {
+        if (titleParent.type === 'admonition') {
+          newState.admonitionTools = true
+        } else if (titleParent.type === 'quotation') {
+          newState.quotationTools = true
+        } else if (titleParent.type === 'section') {
+          newState.sectionTools = true
         }
-        break
-      case 'quotation':
-        newState.quotationTools = true
-        break
-      default:
-        newState.insertTools = true
-        newState.documentTools = true
-        break
+      }
+      break
+    }
+    case 'quotation':
+      newState.quotationTools = true
+      break
+    default:
+      newState.insertTools = true
+      newState.documentTools = true
+      break
     }
 
     this.setState(newState)

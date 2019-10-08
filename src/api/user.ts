@@ -64,7 +64,6 @@ export default class User extends Base<UserData> {
       const user = (await axios.get('users/me')).data
       return new User(user, 'me')
     } catch (err) {
-      console.log('error', err)
       if (err.response.status === 401) {
         return null
       }
@@ -84,14 +83,14 @@ export default class User extends Base<UserData> {
   /**
    * Change password
    */
-  static async changePassword(current: string, newPass: string, newPass2: string) {
+  static changePassword(current: string, newPass: string, newPass2: string) {
     const payload = {
       current,
       new: newPass,
       new2: newPass2,
     }
 
-    return await axios.put('users/me/password', payload)
+    return axios.put('users/me/password', payload)
   }
 
   /**
@@ -162,7 +161,7 @@ export default class User extends Base<UserData> {
       }
     })
 
-    let allPermissions: Set<TeamPermission> = new Set()
+    const allPermissions: Set<TeamPermission> = new Set()
     for (const team of this.teams) {
       if (team.role && team.role.permissions) {
         for (const p of team.role.permissions) {
@@ -180,7 +179,10 @@ export default class User extends Base<UserData> {
    * @param permission
    * @param team
    */
-  hasPermissionsInTeam(permissions: TeamPermission | TeamPermission[], team: Team | TeamID): boolean {
+  hasPermissionsInTeam(
+    permissions: TeamPermission | TeamPermission[],
+    team: Team | TeamID
+  ): boolean {
     const teamId = typeof team === 'number' ? team : team.id
     const targetTeam = this.teams.find(t => t.id === teamId)
     if (!targetTeam) return false
@@ -193,12 +195,17 @@ export default class User extends Base<UserData> {
   /**
    * Determine if user is in super session so he have access to hidden UIs.
    *
-   * @param {boolean} fromCache - if set to false data will be fetched from the server. Default: true
+   * @param {boolean} fromCache - if set to false data will be fetched from the server.
+   * Default: true
    */
   async isInSuperMode(fromCache = true): Promise<boolean> {
     if (this.apiId === 'me' && this.is_super) {
       const now = new Date()
-      if (!fromCache || !this._cacheSession || !(addMinutesToDate(this._cacheSession.lastUpdate, 5) > now)) {
+      if (
+        !fromCache ||
+        !this._cacheSession ||
+        !(addMinutesToDate(this._cacheSession.lastUpdate, 5) > now)
+      ) {
         this._cacheSession = {
           lastUpdate: now,
           data: await User.session(),
@@ -218,8 +225,8 @@ export default class User extends Base<UserData> {
    * Require is_super to change other users name.
    * No permissions required to change own name.
    */
-  async changeName(name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`users/${this.apiId}`, { name }))
+  changeName(name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`users/${this.apiId}`, { name }))
   }
 
   /**
@@ -227,12 +234,11 @@ export default class User extends Base<UserData> {
    *
    * @param language ISO code of language
    */
-  async changeLanguage(language: string) {
+  changeLanguage(language: string) {
     if (this.apiId === 'me') {
-      return await axios.put('users/me', { language })
-    } else {
-      return await elevated(() => axios.put(`users/${this.apiId}`, { language }))
+      return axios.put('users/me', { language })
     }
+    return elevated(() => axios.put(`users/${this.apiId}`, { language }))
   }
 
   /**

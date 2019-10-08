@@ -9,9 +9,9 @@ import { elevated } from './utils'
  * Role data.
  */
 export type RoleData = {
-  id: number,
-  name: string,
-  permissions?: TeamPermission[], // only user with role:edit can see this field
+  id: number
+  name: string
+  permissions?: TeamPermission[] // only user with role:edit can see this field
 }
 
 export default class Role extends Base<RoleData> {
@@ -40,7 +40,11 @@ export default class Role extends Base<RoleData> {
    * @param name
    * @param permissions - Permission[]
    */
-  static async create(team: TeamID, name: string, permissions: TeamPermission[] = []): Promise<Role> {
+  static async create(
+    team: TeamID,
+    name: string,
+    permissions: TeamPermission[] = []
+  ): Promise<Role> {
     const rsp = await elevated(() => axios.post(`teams/${team}/roles`, { name, permissions }))
     return new Role(rsp.data, team)
   }

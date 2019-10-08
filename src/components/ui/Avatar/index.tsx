@@ -12,7 +12,7 @@ import { decodeHtmlEntity } from 'src/helpers'
 
 import './index.css'
 
-type Props = {
+interface AvatarProps {
   user: api.User | number | undefined
   users: UsersMap
   disableLink?: boolean
@@ -23,36 +23,36 @@ type Props = {
 
 const mapStateToProps = ({ user: { users } }: State) => ({ users })
 
-const avatar = (props: Props) => {
+const Avatar = (props: AvatarProps) => {
   const { user, disableLink, status, size, users, withName } = props
 
   const userData = user instanceof api.User ? user : user && users.get(user)
 
-  let mainClasses = ['avatar']
-  let statusClasses = ['avatar__status']
+  const mainClasses = ['avatar']
+  const statusClasses = ['avatar__status']
   if (size) mainClasses.push(`avatar--${size}`)
   if (status) statusClasses.join(`avatar__status--${status}`)
 
   const title = userData && userData.name ? decodeHtmlEntity(userData.name) : 'Unknow user'
   const linkToProfile = userData ? '/users/' + userData.id : '/settings'
 
-  let avatarSrc = /*user && user.avatarSmall ? user.avatarSmall :*/ '/images/unknown-user.svg'
-  /*if (size && size !== 'small' && user && user.avatar) {
-    avatarSrc = user.avatar
-  }*/
+  const avatarSrc = /* user && user.avatarSmall ? user.avatarSmall :*/ '/images/unknown-user.svg'
+  // if (size && size !== 'small' && user && user.avatar) {
+  // avatarSrc = user.avatar
+  // }
 
   const body = (
     <>
       <Tooltip content={title}>
         <div className="avatar__image">
-          <span className={statusClasses.join(' ')}></span>
+          <span className={statusClasses.join(' ')} />
           <img src={avatarSrc} alt={title}/>
         </div>
       </Tooltip>
       {
         withName ?
           <span className="avatar__name">{title}</span>
-        : null
+          : null
       }
     </>
   )
@@ -72,4 +72,4 @@ const avatar = (props: Props) => {
   )
 }
 
-export default connect(mapStateToProps)(avatar)
+export default connect(mapStateToProps)(Avatar)

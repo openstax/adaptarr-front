@@ -4,7 +4,12 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import Team, { TeamID } from 'src/api/team'
-import Process, { ProcessSlot, ProcessStep, ProcessStructure, SlotPermission } from 'src/api/process'
+import Process, {
+  ProcessSlot,
+  ProcessStep,
+  ProcessStructure,
+  SlotPermission,
+} from 'src/api/process'
 
 import { State } from 'src/store/reducers'
 import { TeamsMap } from 'src/store/types'
@@ -17,7 +22,7 @@ import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-export type ProcessFormProps = {
+interface ProcessFormProps {
   structure?: ProcessStructure | null
   process?: Process
   teams: TeamsMap
@@ -25,13 +30,11 @@ export type ProcessFormProps = {
   onCancel: () => any
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
-export type ProcessFormState = {
+interface ProcessFormState {
   name: string
   team: Team | null
   startingStep: number
@@ -110,11 +113,11 @@ class ProcessForm extends React.Component<ProcessFormProps> {
   }
 
   private updateStructure = () => {
-    let { structure: s, process, teams } = this.props
+    const { structure: s, process, teams } = this.props
     if (s) {
       this.setState({
         name: s.name,
-        start: s.start,
+        startingStep: s.start,
         slots: s.slots,
         steps: s.steps,
       })
@@ -122,13 +125,11 @@ class ProcessForm extends React.Component<ProcessFormProps> {
     if (!compareTeams(process ? process.team : null, this.state.team)) {
       if (!process) {
         this.setState({ team: null })
+      } else if (teams.has(process.team)) {
+        this.setState({ team: teams.get(process.team) })
       } else {
-        if (teams.has(process.team)) {
-          this.setState({ team: teams.get(process.team) })
-        } else {
-          this.setState({ team: null })
-          console.error(`Couldn find team with id: ${process.team}`)
-        }
+        this.setState({ team: null })
+        console.error(`Couldn find team with id: ${process.team}`)
       }
     }
   }
@@ -139,7 +140,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
     if (
       !compareTeams(prevTeam, currTeam) ||
       !compareStructures(prevProps.structure, this.props.structure)
-      ) {
+    ) {
       this.updateStructure()
     }
   }
@@ -167,7 +168,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
                 <Localized id="process-form-create">
                   Create process
                 </Localized>
-              :
+                :
                 <Localized id="process-form-save-changes">
                   Save changes
                 </Localized>
@@ -183,12 +184,10 @@ class ProcessForm extends React.Component<ProcessFormProps> {
           errors.size ?
             <ul className="process-form__errors">
               {
-                [...errors].map(e => {
-                  return <li key={e}><Localized id={e}>{e}</Localized></li>
-                })
+                [...errors].map(e => <li key={e}><Localized id={e}>{e}</Localized></li>)
               }
             </ul>
-          : null
+            : null
         }
         <label>
           <h3>
@@ -210,7 +209,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
             </Localized>
           </h3>
           <TeamSelector
-            isDisabled={process ? true : false}
+            isDisabled={process !== undefined}
             team={process ? teams.get(process.team) : undefined}
             permission="editing-process:edit"
             onChange={this.handleTeamChange}
@@ -224,13 +223,15 @@ class ProcessForm extends React.Component<ProcessFormProps> {
           </h3>
           <Select
             className="react-select"
-            value={startingStep >= 0 && steps[startingStep] ? {value: startingStep, label: steps[startingStep].name} : null}
-            options={steps.map((s, i) => {
-              return {
-                value: i,
-                label: s.name,
-              }
-            })}
+            value={
+              startingStep >= 0 && steps[startingStep]
+                ? { value: startingStep, label: steps[startingStep].name }
+                : null
+            }
+            options={steps.map((s, i) => ({
+              value: i,
+              label: s.name,
+            }))}
             onChange={this.handleStartingStepChange}
           />
         </label>
@@ -252,7 +253,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
 
   private validateForm = (): boolean => {
     // List with l10n ids for error messages.
-    let errors: Set<string> = new Set()
+    const errors: Set<string> = new Set()
 
     const { name, startingStep, slots, steps, team } = this.state
 
@@ -297,7 +298,7 @@ class ProcessForm extends React.Component<ProcessFormProps> {
     steps.forEach((s, i) => {
       // If there is propose-changes or accept-changes slot then the second one
       // is also required. Edit permission cannot exists with them.
-      let permissions: Set<SlotPermission> = new Set()
+      const permissions: Set<SlotPermission> = new Set()
       s.slots.forEach(sl => {
         permissions.add(sl.permission)
 
@@ -338,7 +339,11 @@ class ProcessForm extends React.Component<ProcessFormProps> {
         }
       }
 
-      if (permissions.has('edit') && (permissions.has('propose-changes') || permissions.has('accept-changes'))) {
+      if (
+        permissions.has('edit') &&
+        (permissions.has('propose-changes') ||
+        permissions.has('accept-changes'))
+      ) {
         errors.add('process-form-error-edit-and-changes')
       }
 

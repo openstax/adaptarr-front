@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import { Process, Draft } from 'src/api'
+import { Draft, Process } from 'src/api'
 import { State } from 'src/store/reducers'
 
 import Dialog from 'src/components/ui/Dialog'
@@ -10,7 +10,7 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-type Props = {
+interface DraftInfoProps {
   draft: Draft
   processes: Map<number, Process>
   showProcess?: boolean
@@ -18,13 +18,11 @@ type Props = {
   showPermissions?: boolean
 }
 
-const mapStateToProps = ({ app: { processes } }: State) => {
-  return {
-    processes,
-  }
-}
+const mapStateToProps = ({ app: { processes } }: State) => ({
+  processes,
+})
 
-class DraftInfo extends React.Component<Props> {
+class DraftInfo extends React.Component<DraftInfoProps> {
   state: {
     showDialog: boolean
   } = {
@@ -40,7 +38,13 @@ class DraftInfo extends React.Component<Props> {
   }
 
   public render() {
-    const { draft, processes, showProcess = true, showStep = true, showPermissions = true } = this.props
+    const {
+      draft,
+      processes,
+      showProcess = true,
+      showStep = true,
+      showPermissions = true,
+    } = this.props
     const { showDialog } = this.state
 
     if (!draft.permissions || !draft.step) return null
@@ -90,24 +94,22 @@ class DraftInfo extends React.Component<Props> {
                       Your permissions:
                     </Localized>
                     {
-                      draft.permissions.map(p => {
-                        return (
-                          <span key={p} className="draft-info__permission">
-                            <Localized
-                              id="draft-info-permission"
-                              $permission={p}
-                            >
-                              {p}
-                            </Localized>
-                          </span>
-                        )
-                      })
+                      draft.permissions.map(p => (
+                        <span key={p} className="draft-info__permission">
+                          <Localized
+                            id="draft-info-permission"
+                            $permission={p}
+                          >
+                            {p}
+                          </Localized>
+                        </span>
+                      ))
                     }
                   </span>
                 }
               </div>
             </Dialog>
-          : null
+            : null
         }
       </div>
     )

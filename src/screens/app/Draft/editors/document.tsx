@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Counters from 'slate-counters'
 import { Document, DocumentDB, Persistence } from 'cnx-designer'
-import { Value, Editor as Editor_ } from 'slate'
+import { Editor as Editor_, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { ReactLocalization } from 'fluent-react/compat'
 
@@ -23,7 +23,7 @@ import Shortcuts from '../plugins/Shortcuts'
 import Suggestions from '../plugins/Suggestions'
 import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 
-type Props = {
+interface EditorDocumentProps {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
   documentDB: DocumentDB | undefined
@@ -34,7 +34,7 @@ type Props = {
   onChange: (value: Value) => void
 }
 
-class EditorDocument extends React.Component<Props> {
+class EditorDocument extends React.Component<EditorDocumentProps> {
   static contextTypes = {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }
@@ -96,7 +96,7 @@ class EditorDocument extends React.Component<Props> {
         {
           this.props.readOnly ?
             null
-          :
+            :
             <StorageContext storage={this.props.storage}>
               <ToolboxDocument
                 editor={this.editor.current as unknown as Editor_}

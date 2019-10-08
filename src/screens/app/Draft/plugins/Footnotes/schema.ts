@@ -1,14 +1,15 @@
-import { Editor, SlateError, InlineProperties } from 'slate'
+import { Editor, InlineProperties, SlateError } from 'slate'
 
 function normalizeFootnoteData(editor: Editor, error: SlateError) {
   switch (error.code) {
-    case 'node_data_invalid':
-      let newData = error.node.data.set('collapse', false)
-      editor.setNodeByKey(error.node.key, { data: newData } as InlineProperties)
-      break
+  case 'node_data_invalid': {
+    const newData = error.node.data.set('collapse', false)
+    editor.setNodeByKey(error.node.key, { data: newData } as InlineProperties)
+    break
+  }
 
-    default:
-      console.warn('Unhandled footnote violation:', error)
+  default:
+    console.warn('Unhandled footnote violation:', error)
   }
 }
 
@@ -19,6 +20,6 @@ export default {
         collapse: (c: any) => typeof c === 'boolean',
       },
       normalize: normalizeFootnoteData,
-    }
-  }
+    },
+  },
 }

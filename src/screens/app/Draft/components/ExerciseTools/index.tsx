@@ -10,14 +10,18 @@ import ToolGroup from '../ToolGroup'
 
 import { OnToggle } from '../ToolboxDocument'
 
-export type Props = {
+interface ExerciseToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class ExerciseTools extends React.Component<Props> {
+export default class ExerciseTools extends React.Component<ExerciseToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('exerciseTools')
+  }
+
   render() {
     const { editor, value } = this.props
     const exercise = editor.getActiveExercise(value)
@@ -26,7 +30,7 @@ export default class ExerciseTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-exercise-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('exerciseTools')}
+        onToggle={this.onClickToggle}
       >
         <Button clickHandler={this.insertSolution} className="toolbox__button--insert">
           <Icon size="small" name="check" />
@@ -50,5 +54,6 @@ export default class ExerciseTools extends React.Component<Props> {
   }
 
   private insertSolution = () => this.props.editor.insertSolution()
+
   private insertCommentary = () => this.props.editor.insertCommentary()
 }

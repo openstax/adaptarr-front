@@ -5,7 +5,7 @@ import { Localized } from 'fluent-react/compat'
 
 import { Book } from 'src/api'
 
-import { IsLoading, BooksMap, AlertDataKind, TeamsMap } from 'src/store/types'
+import { AlertDataKind, BooksMap, IsLoading, TeamsMap } from 'src/store/types'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/books'
 import { addAlert, AddAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers/index'
@@ -18,7 +18,7 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-type Props = {
+interface BookCardProps {
   book: Book
   booksMap: {
     isLoading: IsLoading
@@ -30,21 +30,17 @@ type Props = {
   addAlert: (kind: AlertDataKind, message: string) => void
 }
 
-export const mapStateToProps = ({ app: { teams }, booksMap }: State) => {
-  return {
-    booksMap,
-    teams,
-  }
-}
+export const mapStateToProps = ({ app: { teams }, booksMap }: State) => ({
+  booksMap,
+  teams,
+})
 
-export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => {
-  return {
-    fetchBooksMap: () => dispatch(fetchBooksMap()),
-    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
-  }
-}
+export const mapDispatchToProps = (dispatch: FetchBooksMap | AddAlert) => ({
+  fetchBooksMap: () => dispatch(fetchBooksMap()),
+  addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
+})
 
-class BookCard extends React.Component<Props> {
+class BookCard extends React.Component<BookCardProps> {
   state: {
     showEditBook: boolean
   } = {
@@ -72,7 +68,7 @@ class BookCard extends React.Component<Props> {
         this.props.fetchBooksMap()
         this.props.addAlert('success', 'book-delete-alert-success')
       })
-      .catch((e) => {
+      .catch(e => {
         this.props.addAlert('error', e.message)
       })
   }
@@ -96,16 +92,18 @@ class BookCard extends React.Component<Props> {
         {this.props.book.title}
       </span>
       {
-        this.props.teams.has(this.props.book.team) ?
+        this.props.teams.has(this.props.book.team)
+          ?
           <span className="card__book-team">
             <Localized id="book-card-team" $team={this.props.teams.get(this.props.book.team)!.name}>
-              Team: ...
+                  Team: ...
             </Localized>
           </span>
-        : null
+          : null
       }
     </h2>
   )
+
 
   public render() {
     const { showEditBook } = this.state
@@ -132,7 +130,7 @@ class BookCard extends React.Component<Props> {
                 </LimitedUI>
               </div>
             </div>
-          :
+            :
             <Link to={`books/${book.id}`} className="card__content">
               {this.cardTitle()}
             </Link>
@@ -144,7 +142,7 @@ class BookCard extends React.Component<Props> {
               onClose={this.closeEditBook}
               onSuccess={this.editBookSuccess}
             />
-          : null
+            : null
         }
       </div>
     )

@@ -1,12 +1,12 @@
 import {
-  SET_LOCALE,
-  SET_AVAILABLE_LOCALES,
-  SET_PROCESSES,
-  SHOW_CONFIRM_DIALOG,
   CLOSE_CONFIRM_DIALOG,
+  SET_AVAILABLE_LOCALES,
+  SET_LOCALE,
+  SET_PROCESSES,
   SET_SELECTED_TEAMS,
   SET_TEAM,
   SET_TEAMS,
+  SHOW_CONFIRM_DIALOG,
 } from 'src/store/constants'
 import { addAlert, AddAlert } from 'src/store/actions/alerts'
 import { TeamsMap } from 'src/store/types'
@@ -75,7 +75,15 @@ export interface SetSelectedTeams {
   data: number[]
 }
 
-export type AppAction = SetLocale | SetAvailableLocales | SetProcesses | ShowConfirmDialog | CloseConfirmDialog | SetTeam | SetTeams | SetSelectedTeams
+export type AppAction =
+  SetLocale |
+  SetAvailableLocales |
+  SetProcesses |
+  ShowConfirmDialog |
+  CloseConfirmDialog |
+  SetTeam |
+  SetTeams |
+  SetSelectedTeams
 
 export const setLocale = (locale: string[]): SetLocale => ({
   type: SET_LOCALE,
@@ -87,12 +95,12 @@ export const setAvailableLocales = (locales: string[]): SetAvailableLocales => (
   data: locales,
 })
 
-export const fetchProcesses = (): FetchProcesses => {
-  return async (dispatch: React.Dispatch<SetProcesses>) => {
-    const data = await Process.all()
-    const processes = new Map(data.map((p): [number, Process] => [p.id, p]))
-    dispatch(setProcesses(processes))
-  }
+export const fetchProcesses = (): FetchProcesses => async (
+  dispatch: React.Dispatch<SetProcesses>
+) => {
+  const data = await Process.all()
+  const processes = new Map(data.map((p): [number, Process] => [p.id, p]))
+  dispatch(setProcesses(processes))
 }
 
 export const setProcesses = (processes: Map<number, Process>): SetProcesses => ({
@@ -109,27 +117,25 @@ export const closeConfirmDialog = (): CloseConfirmDialog => ({
   type: CLOSE_CONFIRM_DIALOG,
 })
 
-export const fetchTeams = (): FetchTeams => {
-  return async (dispatch: React.Dispatch<SetTeams | AddAlert>) => {
-    await Team.all()
-      .then(teams => {
-        dispatch(setTeams(teams))
-      })
-      .catch(() => {
-        dispatch(addAlert('error', 'teams-error-fetch'))
-      })
-  }
+export const fetchTeams = (): FetchTeams => async (
+  dispatch: React.Dispatch<SetTeams | AddAlert>
+) => {
+  await Team.all()
+    .then(teams => {
+      dispatch(setTeams(teams))
+    })
+    .catch(() => {
+      dispatch(addAlert('error', 'teams-error-fetch'))
+    })
 }
 
-export const setTeam = (team: Team): SetTeam => {
-  return {
-    type: SET_TEAM,
-    data: team,
-  }
-}
+export const setTeam = (team: Team): SetTeam => ({
+  type: SET_TEAM,
+  data: team,
+})
 
 export const setTeams = (teams: Team[] | TeamsMap): SetTeams => {
-  const teamMap = teams instanceof Map ? teams : new Map(teams.map(t => ([t.id, t])))
+  const teamMap = teams instanceof Map ? teams : new Map(teams.map(t => [t.id, t]))
   return {
     type: SET_TEAMS,
     data: teamMap,

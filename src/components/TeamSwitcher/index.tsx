@@ -14,21 +14,19 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-type Props = {
+interface TeamSwitcherProps {
   user: User
   selectedTeams: number[]
   teams: TeamsMap
 }
 
-const mapStateToProps = ({ user: { user }, app: { selectedTeams, teams } }: State) => {
-  return {
-    user,
-    selectedTeams,
-    teams,
-  }
-}
+const mapStateToProps = ({ user: { user }, app: { selectedTeams, teams } }: State) => ({
+  user,
+  selectedTeams,
+  teams,
+})
 
-class TeamSwitcher extends React.Component<Props> {
+class TeamSwitcher extends React.Component<TeamSwitcherProps> {
   private onSelectListChange = (selected: Set<number>) => {
     const teamsIds = [...selected]
     store.dispatch(setSelectedTeams(teamsIds))
@@ -44,7 +42,7 @@ class TeamSwitcher extends React.Component<Props> {
   }
 
   componentDidMount() {
-    let selTeamsFromLS = localStorage.getItem('selectedTeams')
+    const selTeamsFromLS = localStorage.getItem('selectedTeams')
     // Filter value saved in localStorage since it can change when user will log
     // to another account.
     let selectedTeams: number[] = JSON.parse(selTeamsFromLS || '[]')
@@ -64,6 +62,7 @@ class TeamSwitcher extends React.Component<Props> {
   }
 
   selectList = React.createRef<SelectList>()
+
   teamSwitcher = React.createRef<HTMLDivElement>()
 
   public render() {
@@ -79,7 +78,7 @@ class TeamSwitcher extends React.Component<Props> {
               {
                 selectedTeams.length && teams.has(selectedTeams[0]) ?
                   teams.get(selectedTeams[0])!.name
-                :
+                  :
                   <Localized id="team-switcher-select-placeholder">
                     Select teams
                   </Localized>
@@ -90,7 +89,7 @@ class TeamSwitcher extends React.Component<Props> {
                 <span className="team-switcher__more">
                   + {selectedTeams.length - 1}
                 </span>
-              : null
+                : null
             }
           </span>
           <span className="team-switcher__trigger">
@@ -120,7 +119,10 @@ class TeamSwitcher extends React.Component<Props> {
   }
 
   private clickOutside = (ev: MouseEvent) => {
-    if (this.teamSwitcher.current && !this.teamSwitcher.current.contains(ev.target as HTMLElement)) {
+    if (
+      this.teamSwitcher.current &&
+      !this.teamSwitcher.current.contains(ev.target as HTMLElement)
+    ) {
       if (this.selectList.current!.state.isListOpen) {
         this.selectList.current!.close()
       }

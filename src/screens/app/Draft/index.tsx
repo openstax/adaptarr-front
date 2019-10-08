@@ -1,19 +1,20 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { PersistDB, DocumentDB, uuid } from 'cnx-designer'
+import { DocumentDB, PersistDB, uuid } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
-import { Block, Value, KeyUtils } from 'slate'
+import { Block, KeyUtils, Value } from 'slate'
 import { connect } from 'react-redux'
 
-import { confirmDialog, timeout } from 'src/helpers'
-
-import store from 'src/store'
 import * as api from 'src/api'
 import { SlotPermission } from 'src/api/process'
+
+import store from 'src/store'
 import { State } from 'src/store/reducers'
 import { fetchReferenceTargets } from 'src/store/actions/modules'
 import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/drafts'
+
+import { confirmDialog, timeout } from 'src/helpers'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
@@ -34,7 +35,7 @@ import EditorGlossary from './editors/glossary'
 
 import './index.css'
 
-type Props = {
+interface DraftProps {
   documentDbContent: DocumentDB
   documentDbGlossary: DocumentDB
   storage: api.Storage
@@ -45,16 +46,21 @@ type Props = {
   currentDraftLang: string
 }
 
-;KeyUtils.resetGenerator()
+KeyUtils.resetGenerator()
 KeyUtils.setGenerator(() => uuid.v4())
 
-async function loader({ match: { params: { id } } }: { match: match<{ id: string }>, history: History }) {
-  let [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
+async function loader(
+  { match: { params: { id } } }: { match: match<{ id: string }>,
+  history: History }
+) {
+  const [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
     Promise.race([
       Promise.all([
         PersistDB.load(`${id}-document`),
         PersistDB.load(`${id}-glossary`),
-      ]).catch(() => { throw new PersistanceError() }),
+      ]).catch(() => {
+        throw new PersistanceError()
+      }),
       timeout(10000),
     ]),
     api.Storage.load(id),
@@ -76,33 +82,39 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   // versioning scheme. Remove check for
   // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
   // all users should have migrated to the new version.
-  if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
+  if (
+    dirty &&
+    !(documentDbContent.version || '').match(/^\d+$/) &&
+    index.version !== documentDbContent.version
+  ) {
     const res = await confirmDialog({
-        title: 'draft-load-incorrect-version-title',
-        content: 'draft-load-incorrect-version-info',
-        buttons: {
-          discard: 'draft-load-incorrect-version-button-discard',
-          keepWorking: 'draft-load-incorrect-version-button-keep-working',
-        },
-        showCloseButton: false,
-        closeOnBgClick: false,
-        closeOnEsc: false,
-      })
+      title: 'draft-load-incorrect-version-title',
+      content: 'draft-load-incorrect-version-info',
+      buttons: {
+        discard: 'draft-load-incorrect-version-button-discard',
+        keepWorking: 'draft-load-incorrect-version-button-keep-working',
+      },
+      showCloseButton: false,
+      closeOnBgClick: false,
+      closeOnEsc: false,
+    })
 
     switch (res) {
-      case 'discard': {
-        if (documentDbContent.dirty) {
-          await Promise.all([documentDbContent.discard(), documentDbGlossary.discard()])
-        }
-        break
+    case 'discard': {
+      if (documentDbContent.dirty) {
+        await Promise.all([documentDbContent.discard(), documentDbGlossary.discard()])
       }
-      case 'keepWorking':
-        // Local changes will be loaded.
-        storage.tag = documentDbContent.version!
-        index.version = documentDbContent.version!
-        break
-      default:
-        throw new Error(`Unknown action: "${res}" while trying to handle loading of incorrect version of document.`)
+      break
+    }
+    case 'keepWorking':
+      // Local changes will be loaded.
+      storage.tag = documentDbContent.version!
+      index.version = documentDbContent.version!
+      break
+    default:
+      throw new Error(
+        `Unknown action: "${res}" while trying to handle loading of incorrect version of document.`
+      )
     }
   }
 
@@ -127,7 +139,7 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
           document: {
             object: 'document',
             nodes: [],
-          }
+          },
         })
       }
       await documentDbGlossary.save(glossary, index.version)
@@ -149,28 +161,30 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
   return { documentDbContent, documentDbGlossary, storage, document, glossary, draft }
 }
 
-const mapStateToProps = ({ draft: { currentDraftLang } }: State) => {
-  return {
-    currentDraftLang,
-  }
+const mapStateToProps = ({ draft: { currentDraftLang } }: State) => ({
+  currentDraftLang,
+})
+
+interface DraftState {
+  editorStyle: string
+  showInfoBox: boolean
+  valueDocument: Value
+  valueGlossary: Value
+  isGlossaryEmpty: boolean
 }
 
-class Draft extends React.Component<Props> {
-  state: {
-    editorStyle: string
-    showInfoBox: boolean
-    valueDocument: Value
-    valueGlossary: Value
-    isGlossaryEmpty: boolean
-  } = {
+class Draft extends React.Component<DraftProps> {
+  state: DraftState = {
     editorStyle: '',
     showInfoBox: false,
     valueDocument: this.props.document,
     valueGlossary: this.props.glossary,
-    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || (this.props.glossary.document.nodes.get(0) as Block).type !== 'definition',
+    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) ||
+      (this.props.glossary.document.nodes.get(0) as Block).type !== 'definition',
   }
 
   draftPermissions = new Set(this.props.draft.permissions || [])
+
   stepPermissions = this.props.draft.step!.slots.reduce((acc, slot) => {
     acc = new Set([...acc, ...slot.permissions])
     return acc
@@ -240,7 +254,7 @@ class Draft extends React.Component<Props> {
                   documentDbContent={documentDbContent}
                   documentDbGlossary={documentDbGlossary}
                 />
-              : null
+                : null
             }
           </div>
         </Header>
@@ -251,10 +265,11 @@ class Draft extends React.Component<Props> {
                 showInfoBox ?
                   <InfoBox onClose={this.hideInfoBox}>
                     <Localized id="draft-style-switcher-info-box">
-                      This is experimental feature. There are visual differences between preview and original styles.
+                      This is experimental feature.
+                      There are visual differences between preview and original styles.
                     </Localized>
                   </InfoBox>
-                : null
+                  : null
               }
               <div className="document__header">
                 <Title draft={draft} />

@@ -11,12 +11,12 @@ import TeamPermissions from 'src/components/TeamPermissions'
 import Input from 'src/components/ui/Input'
 import LimitedUI from 'src/components/LimitedUI'
 
-type AddRoleProps = {
+interface AddRoleProps {
   team: Team
   onSuccess: (role: Role) => void
 }
 
-type AddRoleState = {
+interface AddRoleState {
   roleName: string
   permissions: TeamPermission[]
 }
@@ -34,14 +34,14 @@ class AddRole extends React.Component<AddRoleProps> {
 
     if (roleName) {
       this.props.team.createRole({ name: roleName, permissions })
-        .then((role) => {
+        .then(role => {
           this.setState({ roleName: '', permissions: [] })
           this.props.onSuccess(role)
           store.dispatch(addAlert('success', 'teams-role-create-success', {
             name: roleName,
           }))
         })
-        .catch((e) => {
+        .catch(e => {
           store.dispatch(addAlert('error', 'teams-role-create-error', {
             details: e.response.data.error,
           }))

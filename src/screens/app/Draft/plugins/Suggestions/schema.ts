@@ -3,46 +3,47 @@ import { Editor, SlateError } from 'slate'
 function normalizeSuggestionInsert(editor: Editor, error: SlateError) {
   const { code, child, node } = error
 
-  switch(code) {
-    case 'child_type_invalid':
-      if (child.type === 'suggestion_delete') {
-        editor.removeNodeByKey(child.key)
-      } else {
-        const path = editor.value.document.getPath(child.key)
-        editor.unwrapChildrenByPath(path!)
-      }
-      break
+  switch (code) {
+  case 'child_type_invalid':
+    if (child.type === 'suggestion_delete') {
+      editor.removeNodeByKey(child.key)
+    } else {
+      const path = editor.value.document.getPath(child.key)
+      editor.unwrapChildrenByPath(path!)
+    }
+    break
 
-    case 'node_text_invalid':
-      editor.removeNodeByKey(node.key)
-      break
+  case 'node_text_invalid':
+    editor.removeNodeByKey(node.key)
+    break
 
-    default:
-      console.warn('Unhandled suggestion insert violation:', error.code)
-      break
+  default:
+    console.warn('Unhandled suggestion insert violation:', error.code)
+    break
   }
 }
 
 function normalizeSuggestionRemove(editor: Editor, error: SlateError) {
   const { code, child, node } = error
 
-  switch(code) {
-    case 'child_type_invalid':
-      if (child.type === 'suggestion_insert') {
-        editor.removeNodeByKey(child.key)
-        break
-      }
-
-      const path = editor.value.document.getPath(child.key)
-      editor.unwrapChildrenByPath(path!)
+  switch (code) {
+  case 'child_type_invalid': {
+    if (child.type === 'suggestion_insert') {
+      editor.removeNodeByKey(child.key)
       break
+    }
 
-    case 'node_text_invalid':
-      editor.removeNodeByKey(node.key)
-      break
+    const path = editor.value.document.getPath(child.key)
+    editor.unwrapChildrenByPath(path!)
+    break
+  }
 
-    default:
-      console.warn('Unhandled suggestion remove violation:', error.code)
+  case 'node_text_invalid':
+    editor.removeNodeByKey(node.key)
+    break
+
+  default:
+    console.warn('Unhandled suggestion remove violation:', error.code)
   }
 }
 

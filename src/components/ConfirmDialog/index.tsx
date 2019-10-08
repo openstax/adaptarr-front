@@ -10,12 +10,10 @@ import Dialog from 'src/components/ui/Dialog'
 
 import './index.css'
 
-const mapStateToProps = ({ app: { showConfirmDialog, confirmDialogOptions} }: State) => {
-  return {
-    show: showConfirmDialog,
-    options: confirmDialogOptions,
-  }
-}
+const mapStateToProps = ({ app: { showConfirmDialog, confirmDialogOptions } }: State) => ({
+  show: showConfirmDialog,
+  options: confirmDialogOptions,
+})
 
 const ConfirmDialog = ({ options, show }: { options: ConfirmDialogOptions, show: boolean }) => {
   if (!show) return null
@@ -28,16 +26,27 @@ const ConfirmDialog = ({ options, show }: { options: ConfirmDialogOptions, show:
     showCloseButton = true,
     closeOnBgClick = true,
     closeOnEsc = true,
-    callback = (key: string) => console.warn(`Resolved with: ${key}. You did not provide callback for button click.`),
+    callback = (key: string) => console.warn(
+      `Resolved with: ${key}. You did not provide callback for button click.`
+    ),
     ...localizationProps
   } = options
+
+  const onClose = () => {
+    callback('close')
+  }
+
+  const onClick = (ev: React.MouseEvent<HTMLButtonElement>) => {
+    const key = (ev.target as HTMLButtonElement)!.dataset.id as string
+    callback(key)
+  }
 
   return (
     <Dialog
       size="medium"
       l10nId={title}
       placeholder="Confirm action"
-      onClose={() => callback('close')}
+      onClose={onClose}
       showCloseButton={showCloseButton}
       closeOnBgClick={closeOnBgClick}
       closeOnEsc={closeOnEsc}
@@ -51,27 +60,27 @@ const ConfirmDialog = ({ options, show }: { options: ConfirmDialogOptions, show:
                 {content}
               </Localized>
             </div>
-          : content
-        : null
+            : content
+          : null
       }
       {
         buttons ?
           <div className={`dialog__buttons dialog__buttons--${buttonsPosition}`}>
             {
               Object.entries(buttons).map(([key, val]: [string, string | typeof Button], i) => (
-                <Button key={key+i} clickHandler={() => callback(key)}>
+                <Button key={key+i} dataId={key} clickHandler={onClick}>
                   {
                     typeof val === 'string' ?
                       <Localized id={val}>
                         {val}
                       </Localized>
-                    : val
+                      : val
                   }
                 </Button>
               ))
             }
           </div>
-        : null
+          : null
       }
     </Dialog>
   )

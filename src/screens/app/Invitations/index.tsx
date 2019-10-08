@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Localized, withLocalization, GetString } from 'fluent-react/compat'
+import { GetString, Localized, withLocalization } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
 import Role from 'src/api/role'
@@ -24,16 +24,14 @@ import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-export type InvitationsProps = {
+interface InvitationsProps {
   user: User
   getString: GetString
 }
 
-const mapStateToProps = ({ user: { user } }: State) => {
-  return {
-    user,
-  }
-}
+const mapStateToProps = ({ user: { user } }: State) => ({
+  user,
+})
 
 const Invitations = (props: InvitationsProps) => {
   const [email, setEmail] = React.useState('')
@@ -49,7 +47,7 @@ const Invitations = (props: InvitationsProps) => {
 
     if (!isEmailVaild || !team) return
 
-    let data: InvitationData = {
+    const data: InvitationData = {
       email,
       language: language.code,
       team: team.id,
@@ -70,9 +68,9 @@ const Invitations = (props: InvitationsProps) => {
         inputRef!.current!.unTouch()
         store.dispatch(addAlert('success', 'invitation-send-alert-success', { email }))
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', 'invitation-send-alert-error', {
-          details: e.response.data.error
+          details: e.response.data.error,
         }))
       })
   }
@@ -138,7 +136,7 @@ const Invitations = (props: InvitationsProps) => {
                 value={email}
                 onChange={hanleInputChange}
                 isValid={handleInputValidation}
-                validation={{email: true}}
+                validation={{ email: true }}
                 errorMessage="invitation-email-validation-invalid"
               />
               <Select
@@ -146,7 +144,7 @@ const Invitations = (props: InvitationsProps) => {
                 placeholder={getString('invitation-select-language')}
                 value={{ value: language, label: language.name }}
                 options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
-                formatOptionLabel={option => option.label}
+                formatOptionLabel={formatOptionLabel}
                 onChange={handleLanguageChange}
               />
               <TeamSelector
@@ -159,8 +157,8 @@ const Invitations = (props: InvitationsProps) => {
                 isClearable={true}
                 isDisabled={!team}
                 value={role ? { value: role, label: role.name } : null}
-                options={team ? team.roles.map(role => ({ value: role, label: role.name})) : []}
-                formatOptionLabel={option => option.label}
+                options={team ? team.roles.map(role => ({ value: role, label: role.name })) : []}
+                formatOptionLabel={formatOptionLabel}
                 onChange={handleRoleChange}
               />
               <TeamPermissions
@@ -180,3 +178,5 @@ const Invitations = (props: InvitationsProps) => {
 }
 
 export default connect(mapStateToProps)(withLocalization(Invitations))
+
+const formatOptionLabel = (option: { label: string, value: any }) => option.label

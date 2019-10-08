@@ -8,14 +8,18 @@ import Icon from 'src/components/ui/Icon'
 
 import { OnToggle } from '../ToolboxGlossary'
 
-export type Props = {
+interface DefinitionToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-class DefinitionTools extends React.Component<Props> {
+class DefinitionTools extends React.Component<DefinitionToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('definitionTools')
+  }
+
   public render() {
     const { editor, value } = this.props
     const definition = editor.getActiveDefinition(value)
@@ -24,7 +28,7 @@ class DefinitionTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-definition-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('definitionTools')}
+        onToggle={this.onClickToggle}
       >
         <Button clickHandler={this.insertDefinitionBefore} className="toolbox__button--insert">
           <Icon size="small" name="plus" />
@@ -61,14 +65,18 @@ class DefinitionTools extends React.Component<Props> {
   }
 
   insertDefinitionBefore = () => this.props.editor.insertDefinition('before')
+
   insertDefinitionAfter = () => this.props.editor.insertDefinition('after')
+
   removeDefinition = () => {
     const { editor, value } = this.props
     const definition = editor.getActiveDefinition(value)
     if (!definition) return
     this.props.editor.removeNodeByKey(definition.key)
   }
+
   insertMeaning = () => this.props.editor.addMeaningToDefinition()
+
   insertSeeAlso = () => this.props.editor.addSeeAlsoToDefinition()
 }
 

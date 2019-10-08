@@ -3,11 +3,11 @@ const deserializeRules = {
     if (
       el.nodeType !== Node.TEXT_NODE &&
       el.localName &&
-      SOURCE_TAGS.includes(el.localName.toLowerCase())) {
-
+      SOURCE_TAGS.includes(el.localName.toLowerCase())
+    ) {
       const parentsForInlines = ['para', 'caption']
 
-      let data = {
+      const data = {
         object: 'block',
         type: 'source_element',
         nodes: [{
@@ -25,8 +25,8 @@ const deserializeRules = {
       return data
     }
 
-    return
-  }
+    return undefined
+  },
 }
 
 /**

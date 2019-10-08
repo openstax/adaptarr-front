@@ -1,11 +1,11 @@
 import * as React from 'react'
-import Nestable from 'react-nestable'
+import Nestable, { RenderItem } from 'react-nestable'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
 import * as api from 'src/api'
-import { PartData, GroupData } from 'src/api/bookpart'
+import { GroupData, PartData } from 'src/api/bookpart'
 
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
@@ -16,7 +16,7 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-export type DraftsListProps = {
+interface DraftsListProps {
   booksMap: {
     booksMap: BooksMap
   }
@@ -31,14 +31,12 @@ type BookWithPartsAndDrafts = {
   drafts: api.Draft[],
 }
 
-const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => {
-  return {
-    booksMap,
-    selectedTeams,
-  }
-}
+const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => ({
+  booksMap,
+  selectedTeams,
+})
 
-export type DraftsListState = {
+interface DraftsListState {
   isLoading: boolean
   books: Map<string, BookWithPartsAndDrafts>
 }
@@ -51,16 +49,16 @@ class DraftsList extends React.Component<DraftsListProps> {
 
   componentDidUpdate = (prevProps: DraftsListProps) => {
     if (prevProps.drafts !== this.props.drafts) {
-      this.setState({ isLoading: true })
       this.fetchBooks()
     }
   }
 
   private fetchBooks = async () => {
+    this.setState({ isLoading: true })
     const { drafts, booksMap: { booksMap } } = this.props
-    let books: Map<string, BookWithPartsAndDrafts> = new Map()
+    const books: Map<string, BookWithPartsAndDrafts> = new Map()
 
-    for (let draft of drafts) {
+    for (const draft of drafts) {
       if (draft.books.length === 0) {
         if (books.has('empty')) {
           const entry = books.get('empty')!
@@ -80,7 +78,7 @@ class DraftsList extends React.Component<DraftsListProps> {
         }
       }
 
-      for (let bookId of draft.books) {
+      for (const bookId of draft.books) {
         const book = booksMap.get(bookId)
 
         if (books.has(bookId)) {
@@ -102,9 +100,9 @@ class DraftsList extends React.Component<DraftsListProps> {
     }
 
     // Remove bookparts on which user can't work
-    for (let data of books.values()) {
-      let { id, parts, drafts } = data
-      let trimmedParts: api.BookPart[] = []
+    for (const data of books.values()) {
+      const { id, parts, drafts } = data
+      const trimmedParts: api.BookPart[] = []
       parts.forEach(part => {
         if (part.kind === 'module') {
           if (drafts.findIndex(d => d.module === part.id) >= 0) {
@@ -127,7 +125,7 @@ class DraftsList extends React.Component<DraftsListProps> {
   }
 
   private trimDraftsFromGroup = (group: api.BookPart, drafts: api.Draft[]): api.BookPart | null => {
-    let parts: api.BookPart[] = []
+    const parts: api.BookPart[] = []
     group.parts!.forEach(p => {
       if (p.kind === 'module') {
         if (drafts.findIndex(d => d.module === p.id) >= 0) {
@@ -140,11 +138,10 @@ class DraftsList extends React.Component<DraftsListProps> {
         }
       }
     })
-    return parts.length ? new api.BookPart({...group, parts: parts} as GroupData, group.book) : null
+    return parts.length ? new api.BookPart({ ...group, parts } as GroupData, group.book) : null
   }
 
   componentDidMount = () => {
-    this.setState({ isLoading: true })
     this.fetchBooks()
   }
 
@@ -157,7 +154,7 @@ class DraftsList extends React.Component<DraftsListProps> {
         {
           isLoading ?
             <Spinner />
-          :
+            :
             books.size ?
               <ul className="list">
                 {
@@ -178,7 +175,7 @@ class DraftsList extends React.Component<DraftsListProps> {
                                 <NestableCustomized parts={b.parts} />
                               </ul>
                             </>
-                          :
+                            :
                             <>
                               <div className="draftsList__book-title">
                                 <Localized id="dashboard-drafts-section-not-assigned">
@@ -210,9 +207,9 @@ class DraftsList extends React.Component<DraftsListProps> {
                   })
                 }
               </ul>
-            :
+              :
               <Localized id="dashboard-drafts-empty">
-                You don't have any drafts.
+                You do not have any drafts.
               </Localized>
         }
       </div>
@@ -223,24 +220,28 @@ class DraftsList extends React.Component<DraftsListProps> {
 export default connect(mapStateToProps)(DraftsList)
 
 const NestableCustomized = ({ parts }: { parts: api.BookPart[] }) => {
-  const renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+  const renderItem = ({ item, collapseIcon }: RenderItem<PartData>) => {
+    const toggleGroup = () => {
+      nestable.current!.toggleCollapseGroup(item.number)
+    }
+
     return (
-        <div className={`bookpart__item bookpart__item--${item.kind}`}>
-          {
-            item.kind === 'group' ?
-              <>
-                <span className="bookpart__icon">
-                  {collapseIcon}
-                </span>
-                <div
-                  className="bookpart__title"
-                  onClick={() => nestable.current!.toggleCollapseGroup(item.number)}
-                >
-                  {item.title}
-                </div>
-              </>
+      <div className={`bookpart__item bookpart__item--${item.kind}`}>
+        {
+          item.kind === 'group' ?
+            <>
+              <span className="bookpart__icon">
+                {collapseIcon}
+              </span>
+              <div
+                className="bookpart__title"
+                onClick={toggleGroup}
+              >
+                {item.title}
+              </div>
+            </>
             :
-              <>
+            <>
               <Link
                 to={`/drafts/${item.id}/edit`}
                 className="draftsList__draft-title"
@@ -253,12 +254,12 @@ const NestableCustomized = ({ parts }: { parts: api.BookPart[] }) => {
                 </Localized>
               </Button>
             </>
-          }
-        </div>
-      )
-    }
+        }
+      </div>
+    )
+  }
 
-  const renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+  const renderCollapseIcon = ({ isCollapsed }: {isCollapsed: boolean}) => {
     if (isCollapsed) {
       return <Icon name="arrow-right"/>
     }

@@ -29,10 +29,10 @@ export async function elevated<T>(action: () => Promise<T>): Promise<T> {
 export function elevate(): Promise<void> {
   return new Promise((resolve, reject) => {
     const url = `${location.origin}/elevate?action=message`
-    const left = screen.width / 2 - 210
-    const top = screen.height / 2 - 340
+    const left = (screen.width / 2) - 210
+    const top = (screen.height / 2) - 340
     const config = `width=420,height=680,left=${left},top=${top}`
-    const win = window.open(url, '', config)
+    window.open(url, '', config)
 
     function handler(ev: MessageEvent) {
       if (ev.origin !== location.origin) {
@@ -40,7 +40,7 @@ export function elevate(): Promise<void> {
       }
 
       if (ev.data === 'closed') {
-        reject()
+        reject(new Error('Window closed'))
       } else if (ev.data.authorized) {
         resolve()
       } else {

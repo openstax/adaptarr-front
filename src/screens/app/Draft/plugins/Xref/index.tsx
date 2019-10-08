@@ -16,16 +16,19 @@ const XrefPlugin: Plugin = {
     }
 
     return next()
-  }
+  },
 }
 
 export default XrefPlugin
 
-type XrefProps = RenderInlineProps & {
-  referenceTargets?: ReferenceTarget[],
+interface XrefProps extends RenderInlineProps {
+  referenceTargets?: ReferenceTarget[]
 }
 
-const mapStateTopProps = ({ modules: { referenceTargets } }: State, { node }: RenderInlineProps) => {
+const mapStateTopProps = (
+  { modules: { referenceTargets } }: State,
+  { node }: RenderInlineProps
+) => {
   const document = node.data.get('document')
   if (document) {
     return {
@@ -94,7 +97,11 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     const target = editor.value.document.getNode(targetKey) as unknown as Block | Inline
 
     let l10nKey
-    let args = { case: node.data.get('case') }
+    const args: {
+      case: string
+      note?: string
+      [key: string]: any
+    } = { case: node.data.get('case') }
     let localization
 
     if (target) {
@@ -114,7 +121,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
       for (const [name, value] of cnts) {
         // Temporary solution until we will support all types of notes
         if (name === 'admonition') {
-          args['note'] = value
+          args.note = value
         } else {
           args[name] = value
         }
@@ -136,7 +143,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     const targetKey = node.data.get('target')
 
     const findTarget = (refs: ReferenceTarget[] = []): ReferenceTarget | undefined => {
-      let result = undefined
+      let result
       refs.some(target => {
         if (target.id === targetKey) {
           result = target
@@ -156,7 +163,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
     const target = findTarget(referenceTargets)
 
     let l10nKey
-    let args = { case: node.data.get('case') }
+    const args = { case: node.data.get('case') }
     let localization
 
     if (!referenceTargets) {

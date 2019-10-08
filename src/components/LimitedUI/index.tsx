@@ -17,11 +17,12 @@ import './index.css'
  * We've tried to require those by creating separate interfaces but typescript
  * wasn't cooperating.
  */
-type Props = {
+interface LimitedUIProps {
   user: {
     isLoading: IsLoading
     user: User
   }
+  children: React.ReactNode
   // User has to have all of passed permissions.
   permissions?: TeamPermission | TeamPermission[]
   // User has to have one permission from given array.
@@ -32,13 +33,11 @@ type Props = {
   team?: Team | number
 }
 
-const mapStateToProps = ({ user }: State) => {
-  return {
-    user,
-  }
-}
+const mapStateToProps = ({ user }: State) => ({
+  user,
+})
 
-const LimitedUI = (props: Props & { children: React.ReactNode }) => {
+const LimitedUI = (props: LimitedUIProps) => {
   const [userHasPermissions, setUserHasPermissions] = React.useState(false)
   const isInSuperMode = useIsInSuperMode(props.user.user)
 
@@ -64,7 +63,8 @@ const LimitedUI = (props: Props & { children: React.ReactNode }) => {
 
     if (team) {
       const teamId = typeof team === 'number' ? team : team.id
-      setUserHasPermissions(user.hasPermissionsInTeam(
+      setUserHasPermissions(
+        user.hasPermissionsInTeam(
           (permissions || onePermissionFrom) as TeamPermission | TeamPermission[],
           teamId
         )
@@ -85,7 +85,6 @@ const LimitedUI = (props: Props & { children: React.ReactNode }) => {
     }
 
     setUserHasPermissions(false)
-    return
   }
 
   React.useEffect(() => {

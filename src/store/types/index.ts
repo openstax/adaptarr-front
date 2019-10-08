@@ -1,4 +1,4 @@
-import { Book, Module, User, Notification } from 'src/api'
+import { Book, Module, Notification, User } from 'src/api'
 import Team, { TeamID } from 'src/api/team'
 
 export type IsLoading = boolean
@@ -12,7 +12,13 @@ export type TeamsMap = Map<TeamID, Team>
 export type BooksMap = Map<string, Book>
 
 export type BookPartKind = 'group' | 'module'
-export type BookPart = {id?: string, number: number, kind: BookPartKind, title: string, parts?: BookPart[]}
+export type BookPart = {
+  id?: string
+  number: number
+  kind: BookPartKind
+  title: string
+  parts?: BookPart[]
+}
 export interface BookPartModule extends BookPart {
   status: ModuleStatus
   assignee?: User
@@ -24,7 +30,13 @@ export type BookParts = (BookPart | BookPartGroup | BookPartModule)[]
 
 
 export type ModuleStatus = 'ready' | 'translation' | 'review' | 'done'
-export type Module = {id: string, title: string, book: string, assignee: number | null, status: ModuleStatus}
+export type Module = {
+  id: string
+  title: string
+  book: string
+  assignee: number | null
+  status: ModuleStatus
+}
 export type ModulesMap = Map<string, Module>
 
 export type ReferenceTargetType
@@ -47,7 +59,6 @@ export type ReferenceTargets = Map<string, ReferenceTarget[]>
 export type NotificationStatus = 'read' | 'unread'
 
 export type DraftShortInfo = { module: string, title: string }
-
 
 
 export type AlertDataKind = 'success' | 'error' | 'warning' | 'info'

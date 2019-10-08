@@ -2,7 +2,7 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { User, Team, TeamMember } from 'src/api'
+import { Team, TeamMember, User } from 'src/api'
 
 import { State } from 'src/store/reducers'
 
@@ -12,7 +12,7 @@ import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-export type UsersListProps = {
+interface UsersListProps {
   team: Team | Team[]
   users: Map<number, User>
   isSearchable?: boolean
@@ -22,17 +22,15 @@ export type UsersListProps = {
 
 export type MembersMap = Map<number, { team: Team, members: TeamMember[] }>
 
-export type UsersListState = {
+interface UsersListState {
   isLoading: boolean
   filterInput: string
   membersMap: MembersMap
 }
 
-const mapStateToProps = ({ user: { users } }: State) => {
-  return {
-    users,
-  }
-}
+const mapStateToProps = ({ user: { users } }: State) => ({
+  users,
+})
 
 class UsersList extends React.Component<UsersListProps> {
   state: UsersListState = {
@@ -54,7 +52,7 @@ class UsersList extends React.Component<UsersListProps> {
     const { filterInput } = this.state
     const filterReg = new RegExp('^' + filterInput, 'i')
 
-    let membersMap: MembersMap = new Map()
+    const membersMap: MembersMap = new Map()
     const teams = Array.isArray(team) ? team : [team]
 
     for (const t of teams) {
@@ -98,43 +96,39 @@ class UsersList extends React.Component<UsersListProps> {
               l10nId="user-profile-team-list-search"
               onChange={this.handleFilterInput}
             />
-          : null
+            : null
         }
         {
-          Array.from(membersMap.values()).map(({ team, members }) => {
-            return (
-              <div key={team.id} className="usersList__team">
-                <span className="usersList__team-name">
-                  <Localized id="user-profile-team-list-team" $team={team.name}>
+          Array.from(membersMap.values()).map(({ team, members }) => (
+            <div key={team.id} className="usersList__team">
+              <span className="usersList__team-name">
+                <Localized id="user-profile-team-list-team" $team={team.name}>
                     Team: ...
-                  </Localized>
-                </span>
-                <ul className="usersList__list">
-                  {
-                    members.length ?
-                      members.map(member => {
-                        const user = users.get(member.user)!
-                        return (
-                          <li
-                            key={team.id + member.user}
-                            className="usersList__item"
-                            onClick={() => this.props.onUserClick(user)}
-                          >
-                            <UserInfo user={user} />
-                          </li>
-                        )
-                      })
+                </Localized>
+              </span>
+              <ul className="usersList__list">
+                {
+                  members.length ?
+                    members.map(member => {
+                      const user = users.get(member.user)!
+                      return (
+                        <UserListItem
+                          key={team.id + user.id}
+                          user={user}
+                          onUserClick={this.props.onUserClick}
+                        />
+                      )
+                    })
                     :
-                      <li className="usersList__item--no-results">
-                        <Localized id="user-profile-team-list-no-results">
+                    <li className="usersList__item--no-results">
+                      <Localized id="user-profile-team-list-no-results">
                           There are no users with specified criteria.
-                        </Localized>
-                      </li>
-                  }
-                </ul>
-              </div>
-            )
-          })
+                      </Localized>
+                    </li>
+                }
+              </ul>
+            </div>
+          ))
         }
       </div>
     )
@@ -148,4 +142,16 @@ function compareTeams(team1: Team | Team[], team2: Team | Team[]) {
   team2 = Array.isArray(team2) ? team2 : [team2]
   if (team1.length !== team2.length) return false
   return team1.every((val, i) => val.id === team2[i].id)
+}
+
+function UserListItem({ user, onUserClick }: { user: User, onUserClick: (user: User) => void }) {
+  const onClick = () => {
+    onUserClick(user)
+  }
+
+  return (
+    <li className="usersList__item" onClick={onClick}>
+      <UserInfo user={user} />
+    </li>
+  )
 }

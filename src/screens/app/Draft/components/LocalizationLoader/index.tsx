@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import { FluentBundle } from 'fluent/compat'
-import { negotiateLanguages } from 'fluent-langneg/compat';
+import { negotiateLanguages } from 'fluent-langneg/compat'
 import { LocalizationProvider, ReactLocalization } from 'fluent-react/compat'
 
 import { MANIFEST } from 'src/l10n'
@@ -9,7 +9,7 @@ import { MANIFEST } from 'src/l10n'
 import Load from 'src/components/Load'
 import Spinner from 'src/components/Spinner'
 
-type Props = {
+interface LocalizationLoaderProps {
   locale: string,
   bundles: FluentBundle[],
   languages: string[],
@@ -37,7 +37,7 @@ async function loader(
   return { bundles, languages }
 }
 
-class LocalizationLoader extends React.Component<Props> {
+class LocalizationLoader extends React.Component<LocalizationLoaderProps> {
   static contextTypes = {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }

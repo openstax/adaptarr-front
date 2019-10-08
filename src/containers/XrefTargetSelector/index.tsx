@@ -11,7 +11,7 @@ import { ReferenceTarget } from 'src/store/types'
 
 import './index.css'
 
-export type Props = {
+interface XrefTargetSelectorProps {
   /**
    * Current editor session.
    */
@@ -22,7 +22,7 @@ export type Props = {
   onSelect: (target: ReferenceTarget | null, source: api.Module | null) => void,
 }
 
-export default class XrefTargetSelector extends React.Component<Props> {
+export default class XrefTargetSelector extends React.Component<XrefTargetSelectorProps> {
   state: {
     tab: 'local' | 'remote',
   } = {

@@ -6,11 +6,10 @@ import { ProcessSlot, SlotPermission, StepSlot } from 'src/api/process'
 import { StepSlotWithId } from '../Step'
 
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 
 const PERMISSIONS: SlotPermission[] = ['view', 'edit', 'accept-changes', 'propose-changes']
 
-type SlotProps = {
+interface SlotProps {
   slots: ProcessSlot[]
   slot: StepSlotWithId
   onChange: (slot: StepSlot) => any
@@ -19,11 +18,9 @@ type SlotProps = {
 
 class Slot extends React.Component<SlotProps> {
   state: {
-    id: number
     slot: number | null
     permission: SlotPermission | null
   } = {
-    id: this.props.slot.id,
     slot: null,
     permission: null,
   }
@@ -31,7 +28,6 @@ class Slot extends React.Component<SlotProps> {
   private updateStateWithProps = () => {
     const slot = this.props.slot
     this.setState({
-      id: slot.id,
       slot: slot.slot,
       permission: slot.permission,
     })
@@ -73,8 +69,12 @@ class Slot extends React.Component<SlotProps> {
         <label>
           <Select
             className="react-select"
-            value={slot !== null && slots[slot] ? {value: slots[slot].id, label: slots[slot].name} : null}
-            options={slots.map(s => {return {value: s.id, label: s.name}})}
+            value={
+              slot !== null && slots[slot]
+                ? { value: slots[slot].id, label: slots[slot].name }
+                : null
+            }
+            options={slots.map(s => ({ value: s.id, label: s.name }))}
             onChange={this.handleSlotChange}
           />
         </label>
@@ -86,13 +86,11 @@ class Slot extends React.Component<SlotProps> {
           </span>
           <Select
             className="react-select"
-            value={permission ? {value: permission, label: permission} : null}
-            options={PERMISSIONS.map(p => {
-              return {
-                value: p,
-                label: p,
-              }
-            })}
+            value={permission ? { value: permission, label: permission } : null}
+            options={PERMISSIONS.map(p => ({
+              value: p,
+              label: p,
+            }))}
             onChange={this.handlePermissionChange}
           />
         </label>
@@ -112,7 +110,9 @@ class Slot extends React.Component<SlotProps> {
     })
   }
 
-  private handlePermissionChange = ({ value: permission }: { value: SlotPermission, label: SlotPermission }) => {
+  private handlePermissionChange = (
+    { value: permission }: { value: SlotPermission, label: SlotPermission }
+  ) => {
     this.setState({ permission })
     this.props.onChange({
       ...this.props.slot,

@@ -18,7 +18,7 @@ import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import './index.css'
 
-type Props = {
+interface SettingsProps {
   locale: string[],
   user: User,
 }
@@ -28,20 +28,24 @@ const mapStateToProps = ({ app: { locale }, user: { user } }: State) => ({
   user,
 })
 
-class Settings extends React.Component<Props> {
-  state: {
-    arePasswordsValid: boolean
-    oldPassword: string
-    newPassword: string
-    newPassword2: string
-  } = {
+interface SettingsState {
+  arePasswordsValid: boolean
+  oldPassword: string
+  newPassword: string
+  newPassword2: string
+}
+
+class Settings extends React.Component<SettingsProps> {
+  state: SettingsState = {
     arePasswordsValid: false,
     oldPassword: '',
     newPassword: '',
     newPassword2: '',
   }
 
-  private handleLanguageChange = async ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
+  private handleLanguageChange = async (
+    { value }: { value: typeof LANGUAGES[0], label: string }
+  ) => {
     const res = await confirmDialog({
       title: 'settings-language-dialog-title',
       buttons: {
@@ -54,8 +58,6 @@ class Settings extends React.Component<Props> {
     if (res === 'confirm') {
       this.changeLanguage(value)
     }
-
-    return
   }
 
   private changeLanguage = (value: typeof LANGUAGES[0]) => {
@@ -136,7 +138,7 @@ class Settings extends React.Component<Props> {
               value={language ? { value: language, label: language.name } : null}
               onChange={this.handleLanguageChange}
               options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
-              formatOptionLabel={option => option.label}
+              formatOptionLabel={formatOptionLabel}
             />
             <h2 className="settings__title">
               <Localized id="settings-section-password">
@@ -163,7 +165,7 @@ class Settings extends React.Component<Props> {
                 l10nId="settings-value-new-password-repeat"
                 value={newPassword2}
                 onChange={this.updateNewPassword2}
-                validation={{sameAs: newPassword}}
+                validation={{ sameAs: newPassword }}
                 errorMessage="settings-validation-password-no-match"
               />
               <Localized id="settings-password-change" attrs={{ value: true }}>
@@ -178,3 +180,5 @@ class Settings extends React.Component<Props> {
 }
 
 export default connect(mapStateToProps)(Settings)
+
+const formatOptionLabel = (option: { label: string, value: any }) => option.label

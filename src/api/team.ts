@@ -24,6 +24,11 @@ export type TeamData = {
   roles: RoleData[]
 }
 
+export type NewRoleData = {
+  name: string
+  permissions?: TeamPermission[]
+}
+
 export default class Team extends Base<TeamData> {
   /**
    * Fetch specific team from the server.
@@ -103,15 +108,15 @@ export default class Team extends Base<TeamData> {
   /**
    * Get data for specific role in team.
    */
-  async getRole(id: number): Promise<Role> {
-    return await Role.load(id, this.id)
+  getRole(id: number): Promise<Role> {
+    return Role.load(id, this.id)
   }
 
   /**
    * Create role in team.
    */
-  async createRole({ name, permissions = [] }: { name: string, permissions?: TeamPermission[] }): Promise<Role> {
-    return await Role.create(this.id, name, permissions)
+  createRole({ name, permissions = [] }: NewRoleData): Promise<Role> {
+    return Role.create(this.id, name, permissions)
   }
 
   /**
@@ -130,15 +135,15 @@ export default class Team extends Base<TeamData> {
   /**
    * Get data for specific member in team.
    */
-  async member(id: number): Promise<TeamMember> {
-    return await TeamMember.load(id, this.id)
+  member(id: number): Promise<TeamMember> {
+    return TeamMember.load(id, this.id)
   }
 
   /**
    * Add member to team.
    */
-  async addMember(data: NewTeamMemberData): Promise<TeamMember> {
-    return await TeamMember.add(this.id, data)
+  addMember(data: NewTeamMemberData): Promise<TeamMember> {
+    return TeamMember.add(this.id, data)
   }
 
   /**

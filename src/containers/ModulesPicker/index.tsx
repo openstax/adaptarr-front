@@ -21,7 +21,7 @@ import FilesUploader from 'src/containers/FilesUploader'
 
 import './index.css'
 
-export type ModulesPickerProps = {
+interface ModulesPickerProps {
   // Team in which new module will be created.
   team: Team | number
   // Show only modules from specific team.
@@ -40,21 +40,20 @@ const LANGUAGES: SelectOption[] = [
   { value: 'pl', label: 'Polski' },
 ]
 
-const mapStateToProps = ({ modules }: State) => {
-  return {
-    modules,
-  }
-}
+const mapStateToProps = ({ modules }: State) => ({
+  modules,
+})
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addModuleToMap: (mod: Module) => dispatch(modulesActions.addModuleToMap(mod)),
-    removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
-    addAlert: (kind: AlertDataKind, message: string, args: {}) => dispatch(addAlert(kind, message, args)),
-  }
-}
+const mapDispatchToProps = (dispatch: any) => ({
+  addModuleToMap: (mod: Module) => dispatch(modulesActions.addModuleToMap(mod)),
+  removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
+  // eslint-disable-next-line arrow-body-style
+  addAlert: (kind: AlertDataKind, message: string, args: {}) => {
+    return dispatch(addAlert(kind, message, args))
+  },
+})
 
-export type ModulesPickerState = {
+interface ModulesPickerState {
   moduleTitleValue: string
   moduleLanguage: SelectOption
   files: File[]
@@ -88,7 +87,9 @@ class ModulesPicker extends React.Component<ModulesPickerProps> {
     const { team } = this.props
     const teamId = team instanceof Team ? team.id : team
 
-    ;(files.length ? Module.createFromZip(title, files[0], teamId) : Module.create(title, lang.value, teamId))
+    ;(files.length
+      ? Module.createFromZip(title, files[0], teamId)
+      : Module.create(title, lang.value, teamId))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
@@ -126,7 +127,11 @@ class ModulesPicker extends React.Component<ModulesPickerProps> {
     mod.delete()
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
-        this.props.addAlert('success', 'module-list-delete-module-alert-success', {title: mod.title})
+        this.props.addAlert(
+          'success',
+          'module-list-delete-module-alert-success',
+          { title: mod.title }
+        )
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
@@ -135,7 +140,7 @@ class ModulesPicker extends React.Component<ModulesPickerProps> {
 
   private handleFilterInput = (val: string) => {
     if (val !== this.state.filterInput) {
-      this.setState({ filterInput: val})
+      this.setState({ filterInput: val })
     }
   }
 
@@ -152,7 +157,7 @@ class ModulesPicker extends React.Component<ModulesPickerProps> {
                   l10nId="module-list-add-module-title"
                   value={moduleTitleValue}
                   onChange={this.updateModuleTitleValue}
-                  validation={{minLength: 3}}
+                  validation={{ minLength: 3 }}
                 />
                 <Select
                   className="react-select"

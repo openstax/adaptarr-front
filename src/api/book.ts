@@ -5,7 +5,7 @@ import BookPart from './bookpart'
 import User from './user'
 import { TeamID } from './team'
 
-import { elevated, elevate } from './utils'
+import { elevate, elevated } from './utils'
 
 export type BookData = {
   id: string,
@@ -90,7 +90,7 @@ export default class Book extends Base<BookData> {
       config = { headers: { 'Content-Type': 'application/json' } }
     }
 
-    let res = await axios.post('books', data, config)
+    const res = await axios.post('books', data, config)
     return new Book(res.data)
   }
 

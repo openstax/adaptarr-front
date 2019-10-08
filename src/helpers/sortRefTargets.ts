@@ -5,9 +5,8 @@ const sortRefTargets = (a: ReferenceTarget, b: ReferenceTarget) => {
     return 1
   } else if (a.counter < b.counter) {
     return -1
-  } else {
-    return 0
   }
+  return 0
 }
 
 export default sortRefTargets

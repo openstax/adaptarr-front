@@ -1,9 +1,9 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { InjectedProps, withLocalization, ReactLocalization } from 'fluent-react/compat'
+import { InjectedProps, ReactLocalization, withLocalization } from 'fluent-react/compat'
 import { RenderBlockProps } from 'slate-react'
 
-export type Props = RenderBlockProps & {
+export interface LabelledProps extends RenderBlockProps {
   className: string
   l10nKey: string
   // Get text from uiL10n. Default is false and then texts from document.ftl file will be loaded.
@@ -11,7 +11,9 @@ export type Props = RenderBlockProps & {
   args?: object
 }
 
-class Labelled extends React.Component<Props & InjectedProps> {
+// TODO: Remove legacy context types
+// eslint-disable-next-line react/prefer-stateless-function
+class Labelled extends React.Component<LabelledProps & InjectedProps> {
   static contextTypes = {
     uiL10n: PropTypes.instanceOf(ReactLocalization),
   }

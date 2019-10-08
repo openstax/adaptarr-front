@@ -10,7 +10,7 @@ export type OptionType = {
   [key: string]: any
 }
 
-export type SelectListProps = {
+interface SelectListProps {
   showSelectAllOption?: boolean
   classes?: { list?: string, item?: string }
   closeAfterSelect?: boolean
@@ -22,7 +22,7 @@ export type SelectListProps = {
   onChange: (ids: Set<number>) => void
 }
 
-type SelectListState = {
+interface SelectListState {
   isListOpen: boolean
   selected: Set<number>
 }
@@ -47,9 +47,11 @@ class SelectList extends React.Component<SelectListProps> {
       if (selected instanceof Array) {
         selected = new Set(selected)
       }
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ selected })
     }
     if (prevProps.isListOpen !== this.props.isListOpen) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ isListOpen: this.props.isListOpen })
     }
   }
@@ -59,6 +61,7 @@ class SelectList extends React.Component<SelectListProps> {
     if (selected instanceof Array) {
       selected = new Set(selected)
     }
+    // eslint-disable-next-line react/no-did-mount-set-state
     this.setState({ selected, isListOpen })
   }
 
@@ -97,10 +100,10 @@ class SelectList extends React.Component<SelectListProps> {
                   <span className="select-list__selected">
                     <Icon size="small" name="check-simple" />
                   </span>
-                : null
+                  : null
               }
             </li>
-          : null
+            : null
         }
         {
           options.map(op => {
@@ -120,7 +123,7 @@ class SelectList extends React.Component<SelectListProps> {
                     <span className="select-list__selected">
                       <Icon size="small" name="check-simple" />
                     </span>
-                  : null
+                    : null
                 }
               </li>
             )
@@ -139,9 +142,9 @@ class SelectList extends React.Component<SelectListProps> {
       selected = new Set(this.props.options.map(op => op.id))
     }
 
-    let newState = {
+    const newState = {
       selected,
-      isListOpen: this.props.closeAfterSelect ? false : true,
+      isListOpen: !this.props.closeAfterSelect,
     }
 
     this.setState(newState, () => {
@@ -156,17 +159,15 @@ class SelectList extends React.Component<SelectListProps> {
 
     if (selected.has(id)) {
       selected.delete(id)
+    } else if (multiple) {
+      selected.add(id)
     } else {
-      if (multiple) {
-        selected.add(id)
-      } else {
-        selected = new Set([id])
-      }
+      selected = new Set([id])
     }
 
-    let newState = {
+    const newState = {
       selected,
-      isListOpen: closeAfterSelect ? false : true,
+      isListOpen: !closeAfterSelect,
     }
 
     this.setState(newState, () => {
@@ -192,7 +193,7 @@ function compareSelected(val1: SelectedValue, val2: SelectedValue) {
   }
   if (val1 instanceof Set && val2 instanceof Set) {
     if (val1.size !== val2.size) return false
-    for (let val of val1.values()) {
+    for (const val of val1.values()) {
       if (!val2.has(val)) return false
     }
     return true

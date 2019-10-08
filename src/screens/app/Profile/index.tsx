@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { User } from 'src/api'
 
-import { UsersMap, TeamsMap } from 'src/store/types'
+import { TeamsMap, UsersMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
 import Section from 'src/components/Section'
@@ -16,7 +16,7 @@ import UsersList from 'src/containers/UsersList'
 
 import './index.css'
 
-export type ProfileProps = {
+interface ProfileProps {
   match: {
     params: {
       id: string
@@ -28,13 +28,11 @@ export type ProfileProps = {
   teams: TeamsMap
 }
 
-const mapStateToProps = ({ user: { user, users }, app: { teams } }: State) => {
-  return {
-    user,
-    users,
-    teams,
-  }
-}
+const mapStateToProps = ({ user: { user, users }, app: { teams } }: State) => ({
+  user,
+  users,
+  teams,
+})
 
 const Profile = ({ match, history, user, users, teams }: ProfileProps) => {
   const goToUserProfile = (user: User) => {
@@ -57,7 +55,7 @@ const Profile = ({ match, history, user, users, teams }: ProfileProps) => {
                 team={Array.from(teams.values())}
                 onUserClick={goToUserProfile}
               />
-            : <Spinner/>
+              : <Spinner/>
           }
         </div>
       </Section>

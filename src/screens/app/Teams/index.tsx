@@ -4,13 +4,13 @@ import { Localized } from 'fluent-react/compat'
 import { match } from 'react-router'
 import { History } from 'history'
 
-import { Team, User, Role } from 'src/api'
+import { Role, Team, User } from 'src/api'
 
 import store from 'src/store'
 import { setTeam, setTeams } from 'src/store/actions/app'
 import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
-import { UsersMap, TeamsMap } from 'src/store/types'
+import { TeamsMap, UsersMap } from 'src/store/types'
 
 import { useIsInSuperMode } from 'src/hooks'
 
@@ -27,7 +27,7 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-export type TeamsProps = {
+interface TeamsProps {
   teams: TeamsMap
   user: User
   users: UsersMap
@@ -35,13 +35,11 @@ export type TeamsProps = {
   history: History
 }
 
-const mapStateToProps = ({ app: { teams }, user: { user, users } }: State) => {
-  return {
-    teams,
-    user,
-    users,
-  }
-}
+const mapStateToProps = ({ app: { teams }, user: { user, users } }: State) => ({
+  teams,
+  user,
+  users,
+})
 
 type Tab = 'roles' | 'members'
 
@@ -78,17 +76,6 @@ const Teams = (props: TeamsProps) => {
       setActiveTab(tab as Tab)
       props.history.push(`/teams/${id}/${tab}`)
     }
-  }
-
-  const updateTeamName = async (name: string, team: Team) => {
-    await team.update({ name })
-      .then((team) => {
-        store.dispatch(addAlert('success', 'teams-update-name-success'))
-        store.dispatch(setTeam(team))
-      })
-      .catch(() => {
-        store.dispatch(addAlert('error', 'teams-update-name-error'))
-      })
   }
 
   const activateRolesTab = () => {
@@ -168,7 +155,8 @@ const Teams = (props: TeamsProps) => {
                 <Button
                   withBorder={true}
                   className={activeTab === 'roles' ? 'active' : ''}
-                  clickHandler={activateRolesTab}>
+                  clickHandler={activateRolesTab}
+                >
                   <Localized id="teams-tab-roles">
                     Roles
                   </Localized>
@@ -176,38 +164,29 @@ const Teams = (props: TeamsProps) => {
                 <Button
                   withBorder={true}
                   className={activeTab === 'members' ? 'active' : ''}
-                  clickHandler={activateMembersTab}>
+                  clickHandler={activateMembersTab}
+                >
                   <Localized id="teams-tab-members">
                     Team members
                   </Localized>
                 </Button>
               </div>
-            : null
+              : null
           }
         </Header>
         <div className="section__content">
           <AddTeam onSuccess={fetchTeams} />
           <ul className="teams__list">
             {
-              Array.from(teams.values()).map(t => {
-                const isActive = selectedTeam && t.id === selectedTeam.id
-                return (
-                  <li
-                    key={t.id}
-                    className={`teams__team ${isActive ? 'teams__team--selected' : ''}`}
-                    onClick={() => onTeamClick(t)}
-                  >
-                    {
-                      isInSuperMode ?
-                        <EditableText
-                          text={t.name}
-                          onAccept={(name: string) => updateTeamName(name, t)}
-                        />
-                      : t.name
-                    }
-                  </li>
-                )
-              })
+              Array.from(teams.values()).map(t => (
+                <TeamListItem
+                  key={t.id}
+                  team={t}
+                  isActive={Boolean(selectedTeam && t.id === selectedTeam.id)}
+                  isInSuperMode={isInSuperMode}
+                  onTeamClick={onTeamClick}
+                />
+              ))
             }
           </ul>
         </div>
@@ -219,7 +198,8 @@ const Teams = (props: TeamsProps) => {
               <Header
                 l10nId="teams-section-manage-roles-title"
                 $team={selectedTeam.name}
-                title="Manage roles">
+                title="Manage roles"
+              >
                 <Button clickHandler={unselectTeam} className="close-button">
                   <Icon name="close" />
                 </Button>
@@ -237,12 +217,13 @@ const Teams = (props: TeamsProps) => {
                 <AddRole team={selectedTeam} onSuccess={fetchRoles} />
               </div>
             </Section>
-          :
+            :
             <Section className="teams">
               <Header
                 l10nId="teams-section-manage-members-title"
                 $team={selectedTeam.name}
-                title="Manage members">
+                title="Manage members"
+              >
                 <Button clickHandler={unselectTeam} className="close-button">
                   <Icon name="close" />
                 </Button>
@@ -251,10 +232,50 @@ const Teams = (props: TeamsProps) => {
                 <MembersManager team={selectedTeam} />
               </div>
             </Section>
-        : null
+          : null
       }
     </div>
   )
 }
 
 export default connect(mapStateToProps)(Teams)
+
+interface TeamListItemProps {
+  team: Team
+  isActive: boolean
+  isInSuperMode: boolean
+  onTeamClick: (t: Team) => void
+}
+
+const TeamListItem = ({ team, isActive, isInSuperMode, onTeamClick }: TeamListItemProps) => {
+  const onClick = () => {
+    onTeamClick(team)
+  }
+
+  const updateTeamName = async (name: string) => {
+    await team.update({ name })
+      .then(team => {
+        store.dispatch(addAlert('success', 'teams-update-name-success'))
+        store.dispatch(setTeam(team))
+      })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'teams-update-name-error'))
+      })
+  }
+
+  return (
+    <li
+      className={`teams__team ${isActive ? 'teams__team--selected' : ''}`}
+      onClick={onClick}
+    >
+      {
+        isInSuperMode ?
+          <EditableText
+            text={team.name}
+            onAccept={updateTeamName}
+          />
+          : team.name
+      }
+    </li>
+  )
+}

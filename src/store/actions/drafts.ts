@@ -13,16 +13,14 @@ export interface SetCurrentDraftPermissions {
 
 export type DraftsAction = SetCurrentDraftLang | SetCurrentDraftPermissions
 
-export const setCurrentDraftLang = (code: string): SetCurrentDraftLang => {
-  return {
-    type: SET_CURRENT_DRAFT_LANG,
-    data: code,
-  }
-}
+export const setCurrentDraftLang = (code: string): SetCurrentDraftLang => ({
+  type: SET_CURRENT_DRAFT_LANG,
+  data: code,
+})
 
-export const setCurrentDraftPermissions = (permissions: SlotPermission[]): SetCurrentDraftPermissions => {
-  return {
-    type: SET_CURRENT_DRAFT_PERMISSIONS,
-    data: permissions,
-  }
-}
+export const setCurrentDraftPermissions = (
+  permissions: SlotPermission[]
+): SetCurrentDraftPermissions => ({
+  type: SET_CURRENT_DRAFT_PERMISSIONS,
+  data: permissions,
+})

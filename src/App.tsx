@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { SecureRoute } from 'react-route-guard'
 import { connect } from 'react-redux'
 
@@ -37,7 +37,7 @@ import { State } from 'src/store/reducers/index'
 
 import 'src/assets/styles/shared.css'
 
-type Props = {
+interface AppProps {
   user: {
     isLoading: types.IsLoading
     user: api.User
@@ -52,23 +52,25 @@ type Props = {
   fetchModulesMap: () => void
 }
 
-const mapStateToProps = ({ user }: State) => {
-  return {
-    user,
-  }
-}
+const mapStateToProps = ({ user }: State) => ({
+  user,
+})
 
-const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
-  return {
-    fetchUser: () => dispatch(userActions.fetchUser()),
-    fetchUsers: () => dispatch(userActions.fetchUsersMap()),
-    fetchProcesses: () => dispatch(appActions.fetchProcesses()),
-    fetchTeams: () => dispatch(appActions.fetchTeams()),
-    fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
-    fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
-    fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
-  }
-}
+const mapDispatchToProps = (
+  dispatch:
+    userActions.FetchUser |
+    notificationsActions.FetchNotifications |
+    booksActions.FetchBooksMap |
+    modulesActions.FetchModulesMap
+) => ({
+  fetchUser: () => dispatch(userActions.fetchUser()),
+  fetchUsers: () => dispatch(userActions.fetchUsersMap()),
+  fetchProcesses: () => dispatch(appActions.fetchProcesses()),
+  fetchTeams: () => dispatch(appActions.fetchTeams()),
+  fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
+  fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
+  fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
+})
 
 /**
  * One of those permissions is required to go to the /teams route since in this screen
@@ -81,13 +83,13 @@ export const ROUTE_TEAMS_PERMISSIONS: TeamPermission[] = [
   'member:remove',
 ]
 
-class App extends React.Component<Props> {
+class App extends React.Component<AppProps> {
   private InvitationsGuard = {
     shouldRoute: async () => {
       const user = this.props.user.user
       const isSuper = await user.isInSuperMode()
       return isSuper || user.allPermissions.has('member:add')
-    }
+    },
   }
 
   private TeamsGuard = {
@@ -95,7 +97,7 @@ class App extends React.Component<Props> {
       const user = this.props.user.user
       const isSuper = await user.isInSuperMode()
       return isSuper || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
-    }
+    },
   }
 
   private ProcessesGuard = {
@@ -103,10 +105,10 @@ class App extends React.Component<Props> {
       const user = this.props.user.user
       const isSuper = await user.isInSuperMode()
       return isSuper || user.allPermissions.has('editing-process:edit')
-    }
+    },
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.props.fetchUser()
     this.props.fetchUsers()
     this.props.fetchProcesses()
@@ -115,7 +117,7 @@ class App extends React.Component<Props> {
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
 
-    const events = api.Events.create()
+    api.Events.create()
   }
 
   public render() {
@@ -141,16 +143,31 @@ class App extends React.Component<Props> {
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
                   <Route path="/helpdesk" component={Helpdesk}/>
-                  <SecureRoute path="/invitations" component={Invitations} routeGuard={this.InvitationsGuard} redirectToPathWhenFail="/" />
-                  <SecureRoute path="/teams/:id?/:tab?" component={Teams} routeGuard={this.TeamsGuard} redirectToPathWhenFail="/"/>
-                  <SecureRoute path="/processes" component={Processes} routeGuard={this.ProcessesGuard} redirectToPathWhenFail="/"/>
+                  <SecureRoute
+                    path="/invitations"
+                    component={Invitations}
+                    routeGuard={this.InvitationsGuard}
+                    redirectToPathWhenFail="/"
+                  />
+                  <SecureRoute
+                    path="/teams/:id?/:tab?"
+                    component={Teams}
+                    routeGuard={this.TeamsGuard}
+                    redirectToPathWhenFail="/"
+                  />
+                  <SecureRoute
+                    path="/processes"
+                    component={Processes}
+                    routeGuard={this.ProcessesGuard}
+                    redirectToPathWhenFail="/"
+                  />
                   <Route component={Error404}/>
                 </Switch>
               </main>
               <Alerts />
               <ConfirmDialog />
             </div>
-          : <Spinner />
+            : <Spinner />
         }
       </Router>
     )

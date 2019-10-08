@@ -13,12 +13,12 @@ const DocrefPlugin: Plugin = {
     }
 
     return next()
-  }
+  },
 }
 
 export default DocrefPlugin
 
-type DocrefProps = RenderInlineProps & {
+interface DocrefProps extends RenderInlineProps {
   targetModule: Module | undefined
 }
 
@@ -38,6 +38,7 @@ const Docref = connect(mapStateTopProps)(class Docref extends React.Component<Do
       <a
         href={href}
         target="_blank"
+        rel="noreferrer noopener"
         title={targetModule ? targetModule.title : undefined}
         onClick={this.onClick}
         {...attributes}

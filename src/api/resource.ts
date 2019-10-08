@@ -5,7 +5,7 @@ import Base from './base'
 import User from './user'
 import { TeamID } from './team'
 
-import { elevated, elevate } from './utils'
+import { elevate, elevated } from './utils'
 
 export type ResourceData = {
   id: string
@@ -16,6 +16,13 @@ export type ResourceData = {
 }
 
 export type ResourceKind = 'directory' | 'file'
+
+export type NewResourceData = {
+  name: string
+  team: TeamID
+  parent?: string
+  file?: File
+}
 
 export default class Resource extends Base<ResourceData> {
   /**
@@ -44,8 +51,8 @@ export default class Resource extends Base<ResourceData> {
    * @param parent optional parent id.
    * @param file optional file, if omitted "folder" will be created.
    */
-  static async create({ name, team, parent, file }: { name: string, team: TeamID, parent?: string, file?: File}): Promise<Resource> {
-    let data: FormData = new FormData()
+  static async create({ name, team, parent, file }: NewResourceData): Promise<Resource> {
+    const data: FormData = new FormData()
 
     data.append('name', name)
     data.append('team', team.toString())
@@ -56,7 +63,7 @@ export default class Resource extends Base<ResourceData> {
       data.append('file', file)
     }
 
-    let res = await axios.post('resources', data)
+    const res = await axios.post('resources', data)
     return new Resource(res.data)
   }
 
@@ -100,8 +107,8 @@ export default class Resource extends Base<ResourceData> {
    *
    * This method requires elevated permissions: 'resources:manage'
    */
-  async changeName(name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`resources/${this.id}`, { name }))
+  changeName(name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`resources/${this.id}`, { name }))
   }
 
   /**
@@ -115,7 +122,7 @@ export default class Resource extends Base<ResourceData> {
       await elevate()
     }
 
-    return await axios.put(`resources/${this.id}/content`, file, {
+    return axios.put(`resources/${this.id}/content`, file, {
       headers: {
         'Content-Type': 'multipart',
       },
@@ -127,9 +134,8 @@ export default class Resource extends Base<ResourceData> {
    *
    * This method requires elevated permissions: 'resources:manage'
    */
-  async delete(): Promise<void> {
+  delete() {
     console.warn('This endpoint does not exists yet.')
-    return
-    await elevated(() => axios.delete(`resources/${this.id}`))
+    // await elevated(() => axios.delete(`resources/${this.id}`))
   }
 }

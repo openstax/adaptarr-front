@@ -26,17 +26,15 @@ import ProcessPreview from 'src/containers/ProcessPreview'
 
 import './index.css'
 
-export type ProcessesProps = {
+interface ProcessesProps {
   teams: TeamsMap
 }
 
-const mapStateToProps = ({ app: { teams } }: State) => {
-  return {
-    teams,
-  }
-}
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
 
-export type ProcessesState = {
+interface ProcessesState {
   showForm: boolean
   structure: ProcessStructure | null
   process: Process | null
@@ -74,11 +72,17 @@ class Processes extends React.Component<ProcessesProps> {
       Process.create(structure, team)
         .then(() => {
           this.closeForm()
-          store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
+          store.dispatch(addAlert('success', 'process-create-success', { name: structure.name }))
           store.dispatch(fetchProcesses())
         })
-        .catch((e) => {
-          store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
+        .catch(e => {
+          store.dispatch(
+            addAlert(
+              'error',
+              'process-create-error',
+              { details: e.response.data.raw }
+            )
+          )
         })
     } else {
       // Check if changes require creating new version.
@@ -101,7 +105,7 @@ class Processes extends React.Component<ProcessesProps> {
           store.dispatch(addAlert('success', 'process-update-success'))
           store.dispatch(fetchProcesses())
         } catch (e) {
-          console.log(e)
+          console.error(e)
           store.dispatch(addAlert('error', 'process-update-error'))
         }
       } else {
@@ -115,7 +119,7 @@ class Processes extends React.Component<ProcessesProps> {
     const res = await confirmDialog({
       title: 'process-update-warning-new-version',
       content: <Localized id="process-update-warning-new-version-content" p={<p/>}>
-        <div className="process__dialog-content"></div>
+        <div className="process__dialog-content" />
       </Localized>,
       buttons: {
         cancel: 'process-update-warning-new-version-cancel',
@@ -135,11 +139,23 @@ class Processes extends React.Component<ProcessesProps> {
     process.createVersion(structure)
       .then(() => {
         this.closeForm()
-        store.dispatch(addAlert('success', 'process-create-version-success', {name: structure.name}))
+        store.dispatch(
+          addAlert(
+            'success',
+            'process-create-version-success',
+            { name: structure.name }
+          )
+        )
         store.dispatch(fetchProcesses())
       })
-      .catch((e) => {
-        store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
+      .catch(e => {
+        store.dispatch(
+          addAlert(
+            'error',
+            'process-create-version-error',
+            { details: e.response.data.raw }
+          )
+        )
       })
   }
 
@@ -150,7 +166,10 @@ class Processes extends React.Component<ProcessesProps> {
   private onShowPreview = async (p: Process) => {
     const previewStructure = await p.structure()
     const team = this.props.teams.get(p.team)
-    if (!team) return console.error(`Couldn't find team with id: ${p.team}`)
+    if (!team) {
+      console.error(`Couldn't find team with id: ${p.team}`)
+      return
+    }
     this.setState({ showPreview: true, previewStructure, team })
   }
 
@@ -164,7 +183,7 @@ class Processes extends React.Component<ProcessesProps> {
       throw new Error("Couldn't establish process to update.")
     }
 
-    let res: {
+    const res: {
       newVersionRequired: boolean
       updates: any[]
     } = {
@@ -176,7 +195,7 @@ class Processes extends React.Component<ProcessesProps> {
       oldStructure.slots.length !== newStructure.slots.length
       || oldStructure.steps.length !== newStructure.steps.length
       || oldStructure.start !== newStructure.start
-      ) {
+    ) {
       return {
         newVersionRequired: true,
         updates: [],
@@ -200,7 +219,7 @@ class Processes extends React.Component<ProcessesProps> {
           updates: [],
         }
       }
-      let slotUpdate: {name?: string, roles?: number[]} = {}
+      const slotUpdate: {name?: string, roles?: number[]} = {}
       if (slot.name !== newSlot.name) {
         slotUpdate.name = newSlot.name
       }
@@ -293,7 +312,7 @@ class Processes extends React.Component<ProcessesProps> {
                   onSubmit={this.createProcess}
                   onCancel={this.closeForm}
                 />
-              :
+                :
                 <>
                   <div className="processes__create-new">
                     <Button clickHandler={this.showForm}>
@@ -329,7 +348,7 @@ class Processes extends React.Component<ProcessesProps> {
                 />
               </div>
             </Section>
-          : null
+            : null
         }
       </div>
     )
@@ -341,7 +360,6 @@ export default connect(mapStateToProps)(Processes)
 function numberArrayDiff(a: number[], b: number[]) {
   if (a.length > b.length) {
     return a.filter(item => b.indexOf(item) < 0)
-  } else {
-    return b.filter(item => a.indexOf(item) < 0)
   }
+  return b.filter(item => a.indexOf(item) < 0)
 }

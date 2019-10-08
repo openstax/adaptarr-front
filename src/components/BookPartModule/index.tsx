@@ -13,7 +13,6 @@ import { addAlert } from 'src/store/actions/alerts'
 import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
-import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
@@ -23,7 +22,7 @@ import UpdateSlots from 'src/containers/UpdateSlots'
 
 import './index.css'
 
-type ModuleProps = {
+interface ModuleProps {
   item: api.BookPart
   modulesMap: types.ModulesMap
   processes: Map<number, api.Process>
@@ -40,7 +39,7 @@ const mapStateToProps = ({ modules: { modulesMap }, app: { processes, teams } }:
   teams,
 })
 
-export type ModuleState = {
+interface ModuleState {
   showBeginProcess: boolean
   processStructure: ProcessStructure | null
   module: api.Module | undefined
@@ -53,6 +52,10 @@ class Module extends React.Component<ModuleProps> {
     processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
     team: null,
+  }
+
+  private onClick = () => {
+    this.props.onModuleClick(this.props.item)
   }
 
   private showRemoveModuleDialog = async () => {
@@ -74,13 +77,20 @@ class Module extends React.Component<ModuleProps> {
     const { item: targetModule } = this.props
 
     if (!targetModule) {
-      return console.error('targetModule:', targetModule)
+      console.error('targetModule:', targetModule)
+      return
     }
 
     targetModule.delete()
       .then(() => {
         this.props.afterAction()
-        store.dispatch(addAlert('success', 'book-remove-module-alert-success', { title: targetModule.title }))
+        store.dispatch(
+          addAlert(
+            'success',
+            'book-remove-module-alert-success',
+            { title: targetModule.title },
+          )
+        )
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
@@ -135,13 +145,13 @@ class Module extends React.Component<ModuleProps> {
       const draft = await api.Draft.load(item.id!)
       await draft.cancelProcess()
 
-      this.props.modulesMap.set(mod!.id, new api.Module({...mod!, process: null}))
+      this.props.modulesMap.set(mod!.id, new api.Module({ ...mod!, process: null }))
       this.props.item.process = null
       store.dispatch(addAlert('success', 'book-process-cancel-success'))
       this.closeProcessDetails()
     } catch (e) {
       console.error(e)
-      store.dispatch(addAlert('success', 'book-process-cancel-error', {details: e.toString()}))
+      store.dispatch(addAlert('success', 'book-process-cancel-error', { details: e.toString() }))
     }
   }
 
@@ -151,6 +161,7 @@ class Module extends React.Component<ModuleProps> {
 
   componentDidUpdate(prevProps: ModuleProps) {
     if (this.props.item !== prevProps.item) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
     }
   }
@@ -167,28 +178,22 @@ class Module extends React.Component<ModuleProps> {
     let titleWithHighlights = ''
     if (highlightText) {
       const rgx = new RegExp(highlightText, 'gi')
-      titleWithHighlights = item.title.replace(rgx, match => `<span class="highlight">${match}</span>`)
+      titleWithHighlights = item.title.replace(
+        rgx,
+        match => `<span class="highlight">${match}</span>`
+      )
     }
 
     return (
       <>
         <span
           className="bookpart__title"
-          onClick={() => this.props.onModuleClick(item)}
+          onClick={this.onClick}
         >
           {
-            // Currently only users with proper permissions in process can change module title.
-            /* isEditingUnlocked ?
-              <EditableText
-                text={item.title}
-                onAccept={this.updateModuleTitle}
-              />
-            : item.title */
-          }
-          {
             highlightText ?
-              <span dangerouslySetInnerHTML={{__html: titleWithHighlights}}></span>
-            : item.title
+              <span dangerouslySetInnerHTML={{ __html: titleWithHighlights }} />
+              : item.title
           }
         </span>
         <span className="bookpart__info">
@@ -202,7 +207,7 @@ class Module extends React.Component<ModuleProps> {
                   <Localized id="book-button-remove">Remove</Localized>
                 </Button>
               </LimitedUI>
-            : null
+              : null
           }
           <LimitedUI permissions="editing-process:manage">
             {
@@ -219,7 +224,7 @@ class Module extends React.Component<ModuleProps> {
                     {`{ $step } in { $process }`}
                   </Localized>
                 </Button>
-              :
+                :
                 <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>
                 </Button>
@@ -241,7 +246,7 @@ class Module extends React.Component<ModuleProps> {
                 afterUpdate={this.afterBeginProcess}
               />
             </Dialog>
-          : null
+            : null
         }
         {
           processStructure && team ?
@@ -267,7 +272,7 @@ class Module extends React.Component<ModuleProps> {
                 </Button>
               </div>
             </Dialog>
-          : null
+            : null
         }
       </>
     )

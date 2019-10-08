@@ -9,11 +9,11 @@ import EditableText from 'src/components/EditableText'
 
 import './index.css'
 
-type Props = {
+interface TitleProps {
   draft: Draft
 }
 
-class Title extends React.Component<Props> {
+class Title extends React.Component<TitleProps> {
   state: {
     titleInput: string
   } = {
@@ -32,14 +32,11 @@ class Title extends React.Component<Props> {
     }
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: TitleProps) => {
     if (prevProps.draft.title !== this.props.draft.title) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ titleInput: this.props.draft.title })
     }
-  }
-
-  componentDidMount = () => {
-    this.setState({ titleInput: this.props.draft.title })
   }
 
   public render() {
@@ -54,7 +51,7 @@ class Title extends React.Component<Props> {
           viewPermission ?
             titleInput
           : <EditableText text={titleInput} onAccept={this.changeTitle} />
-        }
+		}
       </div>
     )
   }
