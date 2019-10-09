@@ -105,7 +105,6 @@ configuration in `config.toml` in `adaptarr-server`. The same applies for other 
 │    │    ├── constants
 │    │    ├── reducers
 │    │    └── types
-│    ├── App.test.tsx - not used yet.
 │    ├── App.tsx - main app component.
 │    ├── index.tsx - entry file for whole application.
 │    ├── l10n.tsx - main component for localization.
@@ -146,11 +145,35 @@ If you want to add custom configuration for production or tests, please use `tsc
 
 - When importing component from `src/components` or container from `src/containers` please use whole path. When importing "local" component use relative path.
 
-- When writing types for components' props and state should be prefixed with component name and exported, ex. `export type MyComponentProps = {...}`
+- When writing interfaces for components' props and state should be prefixed with component name and exported (only if necessary), ex. `export interface MyComponentProps {...}`
+type
 
 - Use `.tsx` extension for files which are using `react` and `ts` for those which does not.
 
 Please be aware that not all of current files meet those standards yet. If you work on feature which require updating files which doesn't meet standard then feel free to adjust it.
+
+## ESLint and TSLint
+
+We are using ESLint config which was created for our foundations projects: [eslint-config-openstax-poland](https://github.com/openstax-poland/eslint-config-openstax-poland/) and few TSLint rules.
+
+Specific configuration can be found in `.eslintrc.yaml` and `tslint.yaml`
+
+IF you are using VSCode then you can use this additional config for `dbaeumer.vscode-eslint` extension:
+`/adaptarr-front/.vscode/settings.json`
+```JSON
+{
+  "eslint.autoFixOnSave": true,
+  "eslint.packageManager": "yarn",
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact",
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true }
+  ]
+}
+```
+
+Please run `yarn lint` before commiting to make sure that there are no lint errors.
 
 ## Localization
 
@@ -211,7 +234,7 @@ import { connect } from 'react-redux'
 import { State } from 'src/store/reducers/'
 import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
 
-type Props = {
+interface ComponentNameProps {
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
@@ -231,7 +254,7 @@ export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
   }
 }
 
-class ComponentName extends React.Component<Props> {
+class ComponentName extends React.Component<ComponentNameProps> {
   componentDidMount() {
     this.props.fetchBooksMap()
   }
@@ -284,7 +307,7 @@ Start from "all" imports: `import * as XXX from 'xxx'`,
 then default imports: `import XXX from 'xxx'`,
 at then end partial imports: `import { xxx } from 'xxx'`.
 
-4. Declare and export type for component' props, ex: `export type MyComponentProps = {...}`.
+4. Declare and export (optional) type for component' props, ex: `export interface MyComponentProps {...}`.
 
 5. If you will be using redux, please declare `mapStateToProps` / `mapDispatchToProps` in this place.
 
@@ -292,4 +315,4 @@ at then end partial imports: `import { xxx } from 'xxx'`.
 
 7. Export component as default.
 
-8. If you have to create small, local helper component like `OptionLabel` for `Select` then you can declare under the export line.
+8. If you have to create small, local helper component like `OptionLabel` for `Select` then you can declare it under the export line.
