@@ -43,15 +43,15 @@ class Title extends React.Component<TitleProps> {
     const { titleInput } = this.state
     const { draft } = this.props
     const permissions = draft.permissions || []
-    const viewPermission = permissions.length === 0 || permissions.every(p => p === 'view')
+    const editPermission = permissions.some(p => p === 'edit')
 
     return (
       <div className="draft__title">
         {
-          viewPermission ?
-            titleInput
-          : <EditableText text={titleInput} onAccept={this.changeTitle} />
-		}
+          editPermission ?
+            <EditableText text={titleInput} onAccept={this.changeTitle} />
+            : titleInput
+        }
       </div>
     )
   }
