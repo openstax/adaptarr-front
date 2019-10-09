@@ -67,9 +67,9 @@ class DraftDetais extends React.Component<Props> {
     if (!file) return
     const text = await new Response(file).text()
     this.props.draft.writeCNXML(text).then(() => {
-      store.dispatch(addAlert('success', 'draft-tools-import-success'))
+      store.dispatch(addAlert('success', 'draft-details-import-success'))
     }).catch(e => {
-      store.dispatch(addAlert('error', 'draft-tools-import-error', { details: e.toString() }))
+      store.dispatch(addAlert('error', 'draft-details-import-error', { details: e.toString() }))
     })
     this.setState({ showImportDialog: false, isImporting: false })
   }
