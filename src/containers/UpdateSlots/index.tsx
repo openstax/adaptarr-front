@@ -1,14 +1,13 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { connect } from 'react-redux'
+
+import { Draft, Module, User, Role, Team } from 'src/api'
+import { SlotDetails, ProcessDetails } from 'src/api/draft'
 
 import store from 'src/store'
-import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
-import { Draft, Module, User, Role } from 'src/api'
-import { SlotDetails, ProcessDetails } from 'src/api/draft'
-import { SlotId, UserId } from '../BeginProcess'
+import { addAlert } from 'src/store/actions/alerts'
 
+import { SlotId, UserId } from '../BeginProcess'
 
 import UsersList from 'src/containers/UsersList'
 
@@ -18,25 +17,21 @@ import Dialog from 'src/components/ui/Dialog'
 
 import './index.css'
 
-type Props = {
+export type UpdateSlotsProps = {
   module: Module | string | undefined
-  roles: Map<number, Role>
+  team: Team
 }
 
-const mapStateToProps = ({ app: { roles } }: State) => {
-  return {
-    roles: new Map(roles.map((r: Role): [number, Role] => [r.id, r])),
-  }
+export type UpdateSlotsState = {
+  slots: Map<SlotId, UserId>
+  currentSlot: SlotDetails | null
+  showAssignUser: boolean
+  processSlots: Map<SlotId, SlotDetails>
+  draftDetails: ProcessDetails | undefined
 }
 
-class UpdateSlots extends React.Component<Props> {
-  state: {
-    slots: Map<SlotId, UserId>
-    currentSlot: SlotDetails | null
-    showAssignUser: boolean
-    processSlots: Map<SlotId, SlotDetails>
-    draftDetails: ProcessDetails | undefined
-  } = {
+class UpdateSlots extends React.Component<UpdateSlotsProps> {
+  state: UpdateSlotsState = {
     slots: new Map(),
     currentSlot: null,
     showAssignUser: false,
@@ -70,8 +65,8 @@ class UpdateSlots extends React.Component<Props> {
       processSlots,
       draftDetails,
     } = this.state
-    const { roles } = this.props
     const slotRoles = currentSlot ? currentSlot.roles : []
+    const roles = new Map(this.props.team.roles.map(r => [r.id, r]))
 
     if (!draftDetails) return (
       <div className="update-slots">
@@ -95,6 +90,7 @@ class UpdateSlots extends React.Component<Props> {
             >
               <UsersList
                 allowedRoles={currentSlot.roles}
+                team={this.props.team}
                 onUserClick={this.handleUserClick}
               />
             </Dialog>
@@ -170,4 +166,4 @@ class UpdateSlots extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps)(UpdateSlots)
+export default UpdateSlots

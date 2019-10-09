@@ -1,0 +1,59 @@
+.teams__members {
+  width: 100%;
+  background-color: #fff;
+  color: var(--font-dark);
+}
+
+.teams__member-add {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.teams__member-add .react-select {
+  margin-bottom: 0;
+  margin-right: 10px;
+  max-width: 250px;
+}
+
+.teams__no-members {
+  display: block;
+  padding: 20px;
+}
+
+.teams__member {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 10px;
+}
+
+.teams__member-controls {
+  display: flex;
+  align-items: center;
+}
+
+.teams__member-controls .react-select {
+  min-width: 200px;
+  margin-bottom: 0;
+  margin-right: 10px;
+}
+
+.teams__member-controls .react-select > div {
+  border: 1px solid var(--lighter-bg);
+}
+
+.teams__user {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  cursor: pointer;
+}
+
+.teams__user .avatar {
+  margin-right: 10px;
+}
+
+.teams__member-permissions {
+  width: 100%;
+}

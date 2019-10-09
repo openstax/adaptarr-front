@@ -3,18 +3,17 @@ import { Localized } from 'fluent-react/compat'
 import { PersistDB, DocumentDB, uuid } from 'cnx-designer'
 import { match } from 'react-router'
 import { History } from 'history'
-import { Value, KeyUtils } from 'slate'
+import { Block, Value, KeyUtils } from 'slate'
 import { connect } from 'react-redux'
 
-import timeout from 'src/helpers/timeout'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, timeout } from 'src/helpers'
 
 import store from 'src/store'
 import * as api from 'src/api'
 import { SlotPermission } from 'src/api/process'
 import { State } from 'src/store/reducers'
-import { fetchReferenceTargets } from 'src/store/actions/Modules'
-import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/Drafts'
+import { fetchReferenceTargets } from 'src/store/actions/modules'
+import { setCurrentDraftLang, setCurrentDraftPermissions } from 'src/store/actions/drafts'
 
 import Load from 'src/components/Load'
 import Section from 'src/components/Section'
@@ -49,7 +48,7 @@ type Props = {
 ;KeyUtils.resetGenerator()
 KeyUtils.setGenerator(() => uuid.v4())
 
-async function loader({ match: { params: { id } } }: { match: match<{ id: string }> }) {
+async function loader({ match: { params: { id } } }: { match: match<{ id: string }>, history: History }) {
   let [[documentDbContent, documentDbGlossary], storage, draft] = await Promise.all([
     Promise.race([
       Promise.all([
@@ -62,24 +61,33 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     api.Draft.load(id),
   ])
 
-  let document, glossary
+  const draftPermissions = draft.permissions || []
+  const readOnly = draftPermissions.length === 0 || draftPermissions.every(p => p === 'view')
+
+  if (readOnly) {
+    history.replaceState(undefined, '', `/drafts/${id}/view`)
+  }
 
   const index = await storage.read()
-  const dirty = documentDbContent.dirty || documentDbGlossary.dirty
+  const dirty = !readOnly && (documentDbContent.dirty || documentDbGlossary.dirty)
+  let { document, glossary, language: draftLang } = index.deserialize()
 
   // XXX: Some users might have local changes saved with the old temporary
   // versioning scheme. Remove check for
   // `!(documentDbContent.version || '').match(/^\d+$/)` after a few weeks once
   // all users should have migrated to the new version.
   if (dirty && !(documentDbContent.version || '').match(/^\d+$/) && index.version != documentDbContent.version) {
-    const res = await confirmDialog(
-        'draft-load-incorrect-version-title',
-        'draft-load-incorrect-version-info',
-        {
+    const res = await confirmDialog({
+        title: 'draft-load-incorrect-version-title',
+        content: 'draft-load-incorrect-version-info',
+        buttons: {
           discard: 'draft-load-incorrect-version-button-discard',
           keepWorking: 'draft-load-incorrect-version-button-keep-working',
-        }
-      )
+        },
+        showCloseButton: false,
+        closeOnBgClick: false,
+        closeOnEsc: false,
+      })
 
     switch (res) {
       case 'discard': {
@@ -98,34 +106,32 @@ async function loader({ match: { params: { id } } }: { match: match<{ id: string
     }
   }
 
-  const deserialize = index.deserialize()
-
-  if (deserialize && storage.language !== deserialize.language) {
-    storage.setLanguage(deserialize.language)
+  if (storage.language !== draftLang) {
+    storage.setLanguage(draftLang)
   }
 
-  if (documentDbContent.dirty) {
-    document = await documentDbContent.restore()
-  } else {
-    document = deserialize!.document
-    await documentDbContent.save(document, index.version)
-  }
-
-  if (documentDbGlossary.dirty) {
-    glossary = await documentDbGlossary.restore()
-  } else {
-    glossary = deserialize!.glossary
-    // Reset glossary if it have invalid content
-    if (glossary.document.nodes.get(0).type !== 'definition') {
-      glossary = Value.fromJS({
-        object: 'value',
-        document: {
-          object: 'document',
-          nodes: [],
-        }
-      })
+  if (!readOnly) {
+    if (documentDbContent.dirty) {
+      document = await documentDbContent.restore()
+    } else {
+      await documentDbContent.save(document, index.version)
     }
-    await documentDbGlossary.save(glossary, index.version)
+
+    if (documentDbGlossary.dirty) {
+      glossary = await documentDbGlossary.restore()
+    } else {
+      // Reset glossary if it have invalid content
+      if ((glossary.document.nodes.get(0) as Block).type !== 'definition') {
+        glossary = Value.fromJS({
+          object: 'value',
+          document: {
+            object: 'document',
+            nodes: [],
+          }
+        })
+      }
+      await documentDbGlossary.save(glossary, index.version)
+    }
   }
 
   const { modules: { modulesMap } } = store.getState()
@@ -161,7 +167,7 @@ class Draft extends React.Component<Props> {
     showInfoBox: false,
     valueDocument: this.props.document,
     valueGlossary: this.props.glossary,
-    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || this.props.glossary.document.nodes.get(0).type !== 'definition',
+    isGlossaryEmpty: !this.props.glossary.document.nodes.has(0) || (this.props.glossary.document.nodes.get(0) as Block).type !== 'definition',
   }
 
   draftPermissions = new Set(this.props.draft.permissions || [])
@@ -187,7 +193,8 @@ class Draft extends React.Component<Props> {
   }
 
   onChangeGlossary = (value: Value) => {
-    const isGlossaryEmpty = !value.document.nodes.has(0) || value.document.nodes.get(0).type !== 'definition'
+    const isGlossaryEmpty = !value.document.nodes.has(0) ||
+      (value.document.nodes.get(0) as Block).type !== 'definition'
     this.setState({ valueGlossary: value, isGlossaryEmpty })
   }
 

@@ -9,7 +9,7 @@ import { List } from 'immutable'
 import { Storage } from 'src/api'
 import { SlotPermission } from 'src/api/process'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 
@@ -25,7 +25,7 @@ import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 type Props = {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
-  documentDB: DocumentDB
+  documentDB: DocumentDB | undefined
   readOnly: boolean
   storage: Storage
   value: Value
@@ -53,7 +53,7 @@ class EditorGlossary extends React.Component<Props> {
       },
     }),
     Shortcuts(),
-    Persistence({ db: this.props.documentDB }),
+    this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
   onChange = ({ value }: { value: Value }) => {
@@ -89,13 +89,16 @@ class EditorGlossary extends React.Component<Props> {
     })
 
     this.props.onChange(valueGlossary)
-    this.props.documentDB.save(valueGlossary, this.props.documentDB.version!)
+    this.props.documentDB!.save(valueGlossary, this.props.documentDB!.version!)
   }
 
   removeGlossary = async () => {
-    const res = await confirmDialog('draft-remove-glossary-dialog', '', {
-      cancel: 'draft-cancel',
-      remove: 'draft-remove-glossary',
+    const res = await confirmDialog({
+      title: 'draft-remove-glossary-dialog',
+      buttons: {
+        cancel: 'draft-cancel',
+        remove: 'draft-remove-glossary',
+      },
     })
 
     if (res === 'remove') {
@@ -108,7 +111,7 @@ class EditorGlossary extends React.Component<Props> {
       })
 
       this.props.onChange(valueGlossary)
-      this.props.documentDB.save(valueGlossary, this.props.documentDB.version!)
+      this.props.documentDB!.save(valueGlossary, this.props.documentDB!.version!)
     }
   }
 

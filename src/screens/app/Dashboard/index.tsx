@@ -4,7 +4,7 @@ import { History } from 'history'
 
 import store from 'src/store'
 import * as api from 'src/api'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'

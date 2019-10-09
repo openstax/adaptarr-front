@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import Team from 'src/api/team'
 import { ProcessStructure } from 'src/api/process'
 
 import Slot from './Slot'
@@ -8,13 +9,15 @@ import Step from './Step'
 
 import './index.css'
 
-type Props = {
+export type ProcessPreviewProps = {
   structure: ProcessStructure
+  team: Team
 }
 
-class ProcessPreview extends React.Component<Props> {
+class ProcessPreview extends React.Component<ProcessPreviewProps> {
   public render() {
-    const { structure } = this.props
+    const { structure, team } = this.props
+    const roles = team.roles
 
     return (
       <div className="process-preview">
@@ -32,7 +35,7 @@ class ProcessPreview extends React.Component<Props> {
           <ul>
             {
               structure.slots.map(s => {
-                return <li key={s.id}><Slot slot={s} /></li>
+                return <li key={s.id}><Slot slot={s} roles={roles} /></li>
               })
             }
           </ul>

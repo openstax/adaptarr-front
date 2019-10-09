@@ -1,9 +1,9 @@
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
-import { Editor, Value } from 'slate'
+import { Editor, Value, Text, Inline } from 'slate'
+import { List } from 'immutable'
 
-import getCurrentLng from 'src/helpers/getCurrentLng'
 import { Module } from 'src/api'
 import { ReferenceTarget } from 'src/store/types'
 
@@ -111,10 +111,31 @@ export default class XrefTools extends React.Component<Props> {
 
   private changeReference = (target: ReferenceTarget, source: Module | null) => {
     this.xrefModal!.close()
-    const newRef = {type: 'xref', data: { target: target.id, document: source ? source.id : undefined }}
     const xref = this.getActiveXref()
     if (!xref) return
-    this.props.editor.setNodeByKey(xref.key, newRef)
+
+    let newRef
+    if (target) {
+      newRef = {
+        type: 'xref',
+        data: {
+          target: target.id,
+          document: source ? source.id : undefined,
+        },
+      }
+    } else if (!target && source) {
+      newRef = {
+        type: 'docref',
+        data: {
+          document: source!.id,
+        },
+        nodes: List([Text.create(source.title)]),
+      }
+    } else {
+      return
+    }
+
+    this.props.editor.replaceNodeByKey(xref.key, Inline.create(newRef))
   }
 }
 

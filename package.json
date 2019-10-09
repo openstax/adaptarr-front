@@ -1,6 +1,7 @@
 {
-  "name": "adaptar",
-  "version": "0.1.0",
+  "name": "adaptarr-front",
+  "version": "0.5.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@babel/runtime": "^7.5.0",
@@ -12,7 +13,6 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-select": "^2.0.10",
     "@types/react-tag-input": "^6.1.0",
-    "@types/redux-thunk": "^2.1.0",
     "autoprefixer": "^7.1.6",
     "axios": "^0.18.0",
     "babel-jest": "^20.0.3",
@@ -95,7 +95,7 @@
     "@types/node": "^10.12.10",
     "@types/react": "^16.7.10",
     "@types/react-dom": "^16.0.11",
-    "@types/slate": "^0.44.10",
+    "@types/slate": "^0.47.1",
     "@types/slate-react": "^0.22.1",
     "fluent-syntax": "^0.10.0",
     "typescript": "^3.2.1"

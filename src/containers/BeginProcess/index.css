@@ -15,3 +15,7 @@
 .begin-process li {
   list-style: disc;
 }
+
+.begin-process-dialog {
+  min-height: 300px;
+}

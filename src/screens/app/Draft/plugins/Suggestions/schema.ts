@@ -9,7 +9,7 @@ function normalizeSuggestionInsert(editor: Editor, error: SlateError) {
         editor.removeNodeByKey(child.key)
       } else {
         const path = editor.value.document.getPath(child.key)
-        editor.unwrapChildrenByPath(path)
+        editor.unwrapChildrenByPath(path!)
       }
       break
 
@@ -34,7 +34,7 @@ function normalizeSuggestionRemove(editor: Editor, error: SlateError) {
       }
 
       const path = editor.value.document.getPath(child.key)
-      editor.unwrapChildrenByPath(path)
+      editor.unwrapChildrenByPath(path!)
       break
 
     case 'node_text_invalid':

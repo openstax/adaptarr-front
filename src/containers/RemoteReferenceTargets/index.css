@@ -2,11 +2,13 @@
   display: none;
 }
 
-.remote-reference-targets > .button {
-  margin: 10px 0px 0 10px;
+.remote-reference-targets__controls {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
 }
 
-.remote-reference-targets > .button .icon {
+.remote-reference-targets__controls > .button .icon {
   margin-left: -8px;
 }
 

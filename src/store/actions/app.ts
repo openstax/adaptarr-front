@@ -1,11 +1,19 @@
 import {
   SET_LOCALE,
   SET_AVAILABLE_LOCALES,
-  SET_ROLES, SET_PROCESSES,
+  SET_PROCESSES,
   SHOW_CONFIRM_DIALOG,
   CLOSE_CONFIRM_DIALOG,
+  SET_SELECTED_TEAMS,
+  SET_TEAM,
+  SET_TEAMS,
 } from 'src/store/constants'
-import { Process, Role } from 'src/api'
+import { addAlert, AddAlert } from 'src/store/actions/alerts'
+import { TeamsMap } from 'src/store/types'
+
+import { Process, Team } from 'src/api'
+
+import Button from 'src/components/ui/Button'
 
 export interface SetLocale {
   type: SET_LOCALE,
@@ -15,15 +23,6 @@ export interface SetLocale {
 export interface SetAvailableLocales {
   type: SET_AVAILABLE_LOCALES,
   data: string[],
-}
-
-export interface FetchRoles {
-  (dispatch: any): void
-}
-
-export interface SetRoles {
-  type: SET_ROLES,
-  data: Role[],
 }
 
 export interface FetchProcesses {
@@ -37,9 +36,15 @@ export interface SetProcesses {
 
 export type ConfirmDialogOptions = {
   title: string
-  content: string
-  buttons: {[key: string]: string}
-  callback: (key: string) => any
+  buttons?: {[key: string]: string | typeof Button}
+  size?: 'small' | 'medium' | 'big'
+  content?: string | JSX.Element
+  buttonsPosition?: 'default' | 'center' | 'start' | 'end'
+  showCloseButton?: boolean
+  closeOnBgClick?: boolean
+  closeOnEsc?: boolean
+  callback?: (key: string) => any
+  [localizationProps: string]: any
 }
 
 export interface ShowConfirmDialog {
@@ -51,7 +56,26 @@ export interface CloseConfirmDialog {
   type: CLOSE_CONFIRM_DIALOG
 }
 
-export type AppAction = SetLocale | SetAvailableLocales | SetRoles | SetProcesses | ShowConfirmDialog | CloseConfirmDialog
+export interface FetchTeams {
+  (dispatch: any): void
+}
+
+export interface SetTeam {
+  type: SET_TEAM
+  data: Team
+}
+
+export interface SetTeams {
+  type: SET_TEAMS
+  data: TeamsMap
+}
+
+export interface SetSelectedTeams {
+  type: SET_SELECTED_TEAMS
+  data: number[]
+}
+
+export type AppAction = SetLocale | SetAvailableLocales | SetProcesses | ShowConfirmDialog | CloseConfirmDialog | SetTeam | SetTeams | SetSelectedTeams
 
 export const setLocale = (locale: string[]): SetLocale => ({
   type: SET_LOCALE,
@@ -61,18 +85,6 @@ export const setLocale = (locale: string[]): SetLocale => ({
 export const setAvailableLocales = (locales: string[]): SetAvailableLocales => ({
   type: SET_AVAILABLE_LOCALES,
   data: locales,
-})
-
-export const fetchRoles = (): FetchRoles => {
-  return async (dispatch: React.Dispatch<SetRoles>) => {
-    const roles = await Role.all()
-    dispatch(setRoles(roles))
-  }
-}
-
-export const setRoles = (roles: Role[]): SetRoles => ({
-  type: SET_ROLES,
-  data: roles,
 })
 
 export const fetchProcesses = (): FetchProcesses => {
@@ -88,16 +100,46 @@ export const setProcesses = (processes: Map<number, Process>): SetProcesses => (
   data: processes,
 })
 
-export const showConfirmDialog = (title: string, content: string, buttons: {[key: string]: string}, callback: (key: string) => any): ShowConfirmDialog => ({
+export const showConfirmDialog = (options: ConfirmDialogOptions): ShowConfirmDialog => ({
   type: SHOW_CONFIRM_DIALOG,
-  data: {
-    title,
-    content,
-    buttons,
-    callback,
-  }
+  data: options,
 })
 
 export const closeConfirmDialog = (): CloseConfirmDialog => ({
   type: CLOSE_CONFIRM_DIALOG,
 })
+
+export const fetchTeams = (): FetchTeams => {
+  return async (dispatch: React.Dispatch<SetTeams | AddAlert>) => {
+    await Team.all()
+      .then(teams => {
+        dispatch(setTeams(teams))
+      })
+      .catch(() => {
+        dispatch(addAlert('error', 'teams-error-fetch'))
+      })
+  }
+}
+
+export const setTeam = (team: Team): SetTeam => {
+  return {
+    type: SET_TEAM,
+    data: team,
+  }
+}
+
+export const setTeams = (teams: Team[] | TeamsMap): SetTeams => {
+  const teamMap = teams instanceof Map ? teams : new Map(teams.map(t => ([t.id, t])))
+  return {
+    type: SET_TEAMS,
+    data: teamMap,
+  }
+}
+
+export const setSelectedTeams = (teams: number[]): SetSelectedTeams => {
+  localStorage.setItem('selectedTeams', JSON.stringify(teams))
+  return {
+    type: SET_SELECTED_TEAMS,
+    data: teams,
+  }
+}

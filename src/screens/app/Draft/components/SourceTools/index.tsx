@@ -1,7 +1,8 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Block, Inline } from 'slate'
+import { Editor, Value, Block, Inline, Text } from 'slate'
 import { Localized } from 'fluent-react/compat'
+import { List } from 'immutable'
 
 import ToolGroup from '../ToolGroup'
 
@@ -66,7 +67,7 @@ class SourceTools extends React.Component<Props> {
       editor.removeNodeByKey(source.key)
       editor.insertInline({
         type: 'source_element',
-        nodes: source.nodes,
+        nodes: source.nodes as List<Inline | Text>,
       })
     }
   }

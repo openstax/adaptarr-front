@@ -185,7 +185,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 })
 
 export function collectForeignDocuments(value: Value): string[] {
-  const documents = new Set()
+  const documents = new Set<string>()
 
   for (const node of value.document.getInlinesByType('xref') as unknown as Iterable<Inline>) {
     const document = node.data.get('document')

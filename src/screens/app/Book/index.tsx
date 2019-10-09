@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import Nestable from 'react-nestable'
 import { History } from 'history'
@@ -8,6 +6,10 @@ import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
 import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
+
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -25,9 +27,7 @@ import Input from 'src/components/ui/Input'
 import ModulePreview from 'src/containers/ModulePreview'
 import ModulesPicker from 'src/containers/ModulesPicker'
 
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import './index.css'
 
 type Props = {
   match: {
@@ -36,18 +36,14 @@ type Props = {
     }
   }
   history: History
-  team: {
-    teamMap: types.TeamMap
-  }
   modules: {
     modulesMap: types.ModulesMap
   }
   addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
+const mapStateToProps = ({ modules }: State) => {
   return {
-    team,
     modules,
   }
 }
@@ -428,6 +424,7 @@ class Book extends React.Component<Props> {
           </Header>
           <ProcessSelector
             title="book-statistics-choose-process"
+            team={book ? book.team : undefined}
             onChange={this.handleProcessChange}
           />
           {
@@ -525,7 +522,11 @@ class Book extends React.Component<Props> {
               size="medium"
               onClose={this.closeAddModuleDialog}
             >
-              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker
+                team={book!.team}
+                filterByTeam={book!.team}
+                onModuleClick={this.handleModuleClick}
+              />
             </Dialog>
           : null
         }

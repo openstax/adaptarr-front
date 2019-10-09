@@ -6,11 +6,7 @@ import onKeyDown from './handlers'
 
 import { SUGGESTION_TYPES } from '../Suggestions/types'
 
-interface CustomPlugin extends Plugin {
-  schema: object
-}
-
-const SourceElements = (options: SchemaOptions): CustomPlugin => {
+const SourceElements = (options: SchemaOptions): Plugin => {
   const inlines = [
     ...(options.inlines || []),
     ...SUGGESTION_TYPES,
@@ -21,7 +17,7 @@ const SourceElements = (options: SchemaOptions): CustomPlugin => {
     renderBlock,
     renderInline,
     onKeyDown,
-  }
+  } as unknown as Plugin
 }
 
 export default SourceElements

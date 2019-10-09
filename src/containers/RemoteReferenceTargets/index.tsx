@@ -16,7 +16,7 @@ import RefTargets from 'src/containers/ReferenceTargets'
 
 import { ModulesMap, ReferenceTarget, ReferenceTargets, BooksMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
-import { fetchReferenceTargets } from 'src/store/actions/Modules'
+import { fetchReferenceTargets } from 'src/store/actions/modules'
 
 import './index.css'
 
@@ -27,7 +27,7 @@ export type Props = {
   /**
    * Function to call when user selects a resource target.
    */
-  onSelect: (target: ReferenceTarget, source: null) => void,
+  onSelect: (target: ReferenceTarget | null, source: api.Module | null) => void,
   fetchReferenceTargets: (module: api.Module) => void,
   currentDraftLang: string,
 }
@@ -80,10 +80,15 @@ class RemoteReferenceTargets extends React.Component<Props> {
       <>
         {
           targets && <div className="remote-reference-targets">
-            <Button clickHandler={this.unselectRefSource}>
-              <Icon name="arrow-left" size="small" />
-              <Localized id="reference-target-list-go-back">Back</Localized>
-            </Button>
+            <div className="remote-reference-targets__controls">
+              <Button clickHandler={this.unselectRefSource}>
+                <Icon name="arrow-left" size="small" />
+                <Localized id="reference-target-list-go-back">Back</Localized>
+              </Button>
+              <Button clickHandler={this.selectModule}>
+                <Localized id="reference-target-link-module">Link to this module</Localized>
+              </Button>
+            </div>
             <LocalizationLoader
               locale={currentDraftLang || 'en'}
             >
@@ -109,6 +114,12 @@ class RemoteReferenceTargets extends React.Component<Props> {
         </div>
       </>
     )
+  }
+
+  selectModule = () => {
+    if (this.state.selected) {
+      this.props.onSelect(null, this.state.selected)
+    }
   }
 
   selectRefSource = (ev: React.MouseEvent) => {

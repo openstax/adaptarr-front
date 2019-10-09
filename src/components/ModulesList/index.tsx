@@ -2,8 +2,8 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import * as api from 'src/api'
-import sortArrayByTitle from 'src/helpers/sortArrayByTitle'
+import { Module, Team } from 'src/api'
+import { sortArrayByTitle } from 'src/helpers'
 
 import ModuleInfo from 'src/components/ModuleInfo'
 import Button from 'src/components/ui/Button'
@@ -11,13 +11,15 @@ import Button from 'src/components/ui/Button'
 import { ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
-type Props = {
+export type ModulesListProps = {
+  // Show only modules from specific team
+  team?: Team | number
   modules: {
     modulesMap: ModulesMap
   }
   filter: string
-  onModuleClick: (mod: api.Module) => any
-  onModuleRemoveClick: (mod: api.Module) => any
+  onModuleClick: (mod: Module) => any
+  onModuleRemoveClick: (mod: Module) => any
 }
 
 const mapStateToProps = ({ modules }: State) => {
@@ -26,12 +28,16 @@ const mapStateToProps = ({ modules }: State) => {
   }
 }
 
-const modulesList = (props: Props) => {
-  const filterReg = new RegExp('^' + props.filter, 'i')
-  let modules: api.Module[] = []
+const ModulesList = (props: ModulesListProps) => {
+  const filterReg = new RegExp(props.filter, 'gi')
+  let modules: Module[] = []
   props.modules.modulesMap.forEach(mod => {
     if (filterReg.test(mod.title)) {
-      modules.push(mod)
+      if (props.team && mod.team === (typeof props.team === 'number' ? props.team : props.team.id)) {
+        modules.push(mod)
+      } else {
+        modules.push(mod)
+      }
     }
   })
   modules.sort(sortArrayByTitle)
@@ -67,4 +73,4 @@ const modulesList = (props: Props) => {
   )
 }
 
-export default connect(mapStateToProps)(modulesList)
+export default connect(mapStateToProps)(ModulesList)

@@ -1,163 +1,69 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
-import { Link } from 'react-router-dom'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
-import * as api from 'src/api'
+import { Notification } from 'src/api'
 
-import DateDiff from 'src/components/DateDiff'
+import { State } from 'src/store/reducers'
+
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
 import NotificationComp from 'src/components/Notification'
-import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 
-import Conversation from 'src/containers/Conversation'
-
-import { TeamMap, ModulesMap } from 'src/store/types'
-import { State } from 'src/store/reducers'
+import './index.css'
 
 type Props = {
   notifications: {
     isLoading: boolean
-    unreadNotifications: api.Notification[]
-  }
-  team: {
-    teamMap: TeamMap
-  },
-  modules: {
-    modulesMap: ModulesMap
+    unreadNotifications: Notification[]
   }
 }
 
-const mapStateToProps = ({ notifications, team, modules }: State) => {
+const mapStateToProps = ({ notifications }: State) => {
   return {
     notifications,
-    team,
-    modules,
   }
 }
 
 class NotificationsCentre extends React.Component<Props> {
-  state: {
-    showDetails: boolean
-    details: api.Notification | null
-  } = {
-    showDetails: false,
-    details: null,
-  }
-
-  private showDetails = (details: api.Notification) => {
-    this.setState({ showDetails: true, details })
-  }
-
-  private closeDetails = () => {
-    this.setState({ showDetails: false, details: null })
-  }
-
-  private notificationDetails = (details: api.Notification) => {
-    const modulesMap = this.props.modules.modulesMap
-    const teamMap = this.props.team.teamMap
-    const mod = details.module ? modulesMap.get(details.module) : undefined
-    const who = details.who ? teamMap.get(details.who) : undefined
-
-    return (
-      <div className="details">
-        <Localized
-          id="notification"
-          $actor={who && decodeHtmlEntity(who.name)}
-          actor={
-            <Link to={`/users/${who && who.id}`} />
-          }
-          $title={mod && mod.title}
-          module={
-            <Link to={`/modules/${mod && mod.id}`} />
-          }
-          />
-      </div>
-    )
-  }
-
   public render() {
-    const { showDetails, details } = this.state
     const isLoading = this.props.notifications.isLoading
     const unreadNotifications = [...this.props.notifications.unreadNotifications].reverse()
-    const teamMap = this.props.team.teamMap
-    let detailsWho = details && details.who ? teamMap.get(details.who) : undefined
 
     return (
       <div className="container">
         {
           !isLoading ?
-            <React.Fragment>
-              <Section>
-                <Header l10nId="notification-centre-view-title" title="Notifications" />
-                <div className="section__content">
-                  {
-                    unreadNotifications.length > 0 ?
-                      <ul className="notificationsList">
-                        {
-                          unreadNotifications.map((noti: api.Notification) => {
-                            return (
-                              <li
-                                key={noti.id}
-                                className="notificationsList__item"
-                                onClick={() => this.showDetails(noti)}
-                              >
-                                <NotificationComp
-                                  notification={noti}
-                                  disableLink={true}
-                                  avatarSize="medium"
-                                />
-                              </li>
-                            )
-                          })
-                        }
-                      </ul>
-                    : <Localized id="notification-centre-empty">
-                      No notifications found.
-                    </Localized>
-                  }
-                </div>
-              </Section>
-              {/* <Section>
+            <Section>
+              <Header l10nId="notification-centre-view-title" title="Notifications" />
+              <div className="section__content">
                 {
-                  showDetails ?
-                    <React.Fragment>
-                      <Header l10nId="xxx-no-translation" title={detailsWho && detailsWho.name ? decodeHtmlEntity(detailsWho.name) : 'Unknow user'}>
-                        <span className="date">
-                          { details ? <DateDiff dateString={details.timestamp} /> : null }
-                        </span>
-                        <Button size="small" clickHandler={this.closeDetails}>
-                          <Icon name="close" />
-                        </Button>
-                      </Header>
-                      <div className="section__content">
-                        { details ? this.notificationDetails(details) : null }
-                      </div>
-                    </React.Fragment>
-                  :
-                    <React.Fragment>
-                      <Header
-                        fixed
-                        l10nId="xxx-no-translation"
-                        title="Jason Cook"
-                      >
-                        <span className="date">
-                          { new Date().toISOString().split('T')[0] }
-                        </span>
-                      </Header>
-                      <div className="section__content">
-                        <Conversation id="1"/>
-                      </div>
-                    </React.Fragment>
+                  unreadNotifications.length > 0 ?
+                    <ul className="notificationsList">
+                      {
+                        unreadNotifications.map(noti => {
+                          return (
+                            <li
+                              key={noti.id}
+                              className="notificationsList__item"
+                            >
+                              <NotificationComp
+                                notification={noti}
+                                disableLink={true}
+                                avatarSize="medium"
+                              />
+                            </li>
+                          )
+                        })
+                      }
+                    </ul>
+                  : <Localized id="notification-centre-empty">
+                    No notifications found.
+                  </Localized>
                 }
-              </Section> */}
-            </React.Fragment>
+              </div>
+            </Section>
           : <Spinner />
         }
       </div>

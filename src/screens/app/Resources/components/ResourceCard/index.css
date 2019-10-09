@@ -16,10 +16,20 @@
   color: var(--font-dark);
 }
 
-.resource__name {
+.resource__title {
   margin-top: 20px;
-  font-size: 18px;
   text-align: center;
+  display:flex;
+  flex-direction: column;
+}
+
+.resource__name {
+  font-size: 18px;
+}
+
+.resource__team {
+  font-size: 14px;
+  margin: 3px 0;
 }
 
 .resource__buttons {

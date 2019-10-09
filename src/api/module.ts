@@ -3,16 +3,19 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 import Draft from './draft'
+import { TeamID } from './team'
+
 import { elevated } from './utils'
 
 /**
  * Module data as returned by the API.
  */
 export type Data = {
-  id: string,
-  title: string,
-  language: string,
+  id: string
+  title: string
+  language: string
   process: ModuleProcess | null
+  team: TeamID
 }
 
 /**
@@ -93,9 +96,10 @@ export default class Module extends Base<Data> {
    *
    * @param title
    * @param language - ISO language tag
+   * @param team - team ID in which module should be created.
    */
-  static async create(title: string, language: string): Promise<Module> {
-    const rsp = await elevated(() => axios.post('modules', { title, language }, {
+  static async create(title: string, language: string, team: TeamID): Promise<Module> {
+    const rsp = await elevated(() => axios.post('modules', { title, language, team }, {
       headers: {
         'Content-Type': 'application/json',
       },
@@ -109,10 +113,11 @@ export default class Module extends Base<Data> {
    *
    * This function requires elevated permissions.
    */
-  static async createFromZip(title: string, file: File): Promise<Module> {
+  static async createFromZip(title: string, file: File, team: TeamID): Promise<Module> {
     const data = new FormData()
     data.append('title', title)
     data.append('file', file)
+    data.append('team', team.toString())
     const rsp = await elevated(() => axios.post('modules', data))
     return new Module(rsp.data)
   }
@@ -138,6 +143,11 @@ export default class Module extends Base<Data> {
   process: ModuleProcess | null
 
   /**
+   * ID of team for which this modules belongs.
+   */
+  team: TeamID
+
+  /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
    */
   async files(): Promise<string[]> {
@@ -148,7 +158,11 @@ export default class Module extends Base<Data> {
    * Fetch contents of a file.
    */
   async read(name: string): Promise<string> {
-    return (await axios.get(`modules/${this.id}/files/${name}`)).data
+    return (await axios.get(`modules/${this.id}/files/${name}`, {
+      headers: {
+        'Cache-Control': 'no-cache',
+      },
+    })).data
   }
 
   /**

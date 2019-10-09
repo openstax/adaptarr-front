@@ -39,6 +39,14 @@ export default class Modal extends React.Component<Props> {
     this.setState({ open: false })
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown)
+  }
+
   render() {
     if (!this.state.open) return null
 
@@ -51,7 +59,6 @@ export default class Modal extends React.Component<Props> {
           className="modal"
           tabIndex={0}
           onClick={this.onClick}
-          onKeyDown={this.onKeyDown}
           ref={el => el && (this.back = el)}
         >
           <div className={`modal__content ${overflowAuto ? 'overflow-auto' : ''}`}>
@@ -80,10 +87,10 @@ export default class Modal extends React.Component<Props> {
     }
   }
 
-  onKeyDown = (ev: React.KeyboardEvent) => {
+  onKeyDown = (ev: Event) => {
     const { closeOnEsc = true } = this.props
 
-    if (ev.key === 'Escape' && closeOnEsc) {
+    if ((ev as KeyboardEvent).key === 'Escape' && closeOnEsc) {
       this.onClose()
     }
   }

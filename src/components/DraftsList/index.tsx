@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
-
 import * as api from 'src/api'
 import { PartData, GroupData } from 'src/api/bookpart'
+
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
@@ -16,11 +16,12 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-type Props = {
+export type DraftsListProps = {
   booksMap: {
     booksMap: BooksMap
   }
   drafts: api.Draft[]
+  selectedTeams: number[]
 }
 
 type BookWithPartsAndDrafts = {
@@ -30,22 +31,25 @@ type BookWithPartsAndDrafts = {
   drafts: api.Draft[],
 }
 
-const mapStateToProps = ({ booksMap }: State) => {
+const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => {
   return {
     booksMap,
+    selectedTeams,
   }
 }
 
-class DraftsList extends React.Component<Props> {
-  state: {
-    isLoading: boolean
-    books: Map<string, BookWithPartsAndDrafts>
-  } = {
+export type DraftsListState = {
+  isLoading: boolean
+  books: Map<string, BookWithPartsAndDrafts>
+}
+
+class DraftsList extends React.Component<DraftsListProps> {
+  state: DraftsListState = {
     isLoading: true,
     books: new Map(),
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: DraftsListProps) => {
     if (prevProps.drafts !== this.props.drafts) {
       this.setState({ isLoading: true })
       this.fetchBooks()
@@ -144,10 +148,9 @@ class DraftsList extends React.Component<Props> {
     this.fetchBooks()
   }
 
-  nestable = React.createRef<Nestable>()
-
   public render() {
     const { isLoading, books } = this.state
+    const { selectedTeams, booksMap: { booksMap } } = this.props
 
     return (
       <div className="draftsList">
@@ -158,43 +161,53 @@ class DraftsList extends React.Component<Props> {
             books.size ?
               <ul className="list">
                 {
-                  Array.from(books.values()).map(b => (
-                    <li key={b.id} className="list__item draftsList__book">
-                      {
-                        b.name ?
-                          <>
-                            <div className="draftsList__book-title">
-                              {b.name}
-                            </div>
-                            <ul className="list">
-                              <NestableCustomized parts={b.parts} />
-                            </ul>
-                          </>
-                        :
-                          <>
-                            <div className="draftsList__book-title">
-                              <Localized id="dashboard-drafts-section-not-assigned">
-                                Not assigned to any book
-                              </Localized>
-                            </div>
-                            <ul className="list">
-                              {
-                                b.drafts.map(d => (
-                                  <li key={d.module} className="list__item">
-                                    <Link
-                                      to={`/drafts/${d.module}`}
-                                      className="draftsList__draft-title"
-                                    >
-                                      {d.title}
-                                    </Link>
-                                  </li>
-                                ))
-                              }
-                            </ul>
-                          </>
-                      }
-                    </li>
-                  ))
+                  Array.from(books.values()).map(b => {
+                    if (booksMap.has(b.id)) {
+                      if (!selectedTeams.includes(booksMap.get(b.id)!.team)) return null
+                    }
+
+                    return (
+                      <li key={b.id} className="list__item draftsList__book">
+                        {
+                          b.name ?
+                            <>
+                              <div className="draftsList__book-title">
+                                {b.name}
+                              </div>
+                              <ul className="list">
+                                <NestableCustomized parts={b.parts} />
+                              </ul>
+                            </>
+                          :
+                            <>
+                              <div className="draftsList__book-title">
+                                <Localized id="dashboard-drafts-section-not-assigned">
+                                  Not assigned to any book
+                                </Localized>
+                              </div>
+                              <ul className="list">
+                                {
+                                  b.drafts.map(d => {
+                                    if (!selectedTeams.includes(d.team)) return null
+
+                                    return (
+                                      <li key={d.module} className="list__item">
+                                        <Link
+                                          to={`/drafts/${d.module}`}
+                                          className="draftsList__draft-title"
+                                        >
+                                          {d.title}
+                                        </Link>
+                                      </li>
+                                    )
+                                  })
+                                }
+                              </ul>
+                            </>
+                        }
+                      </li>
+                    )
+                  })
                 }
               </ul>
             :

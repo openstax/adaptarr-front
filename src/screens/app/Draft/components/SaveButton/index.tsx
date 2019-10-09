@@ -5,15 +5,14 @@ import { DocumentDB } from 'cnx-designer'
 import { isKeyHotkey } from 'is-hotkey'
 
 import Storage from 'src/api/storage'
-import saveAsFile from 'src/helpers/saveAsFile'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, saveAsFile } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 import Spinner from 'src/components/Spinner'
 
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import store from 'src/store'
 
 import './index.css'
@@ -127,14 +126,15 @@ export default class SaveButton extends React.Component<Props> {
       const res = await storage.write(document, glossaryContent)
         .catch(async (e) => {
           if (e.response && e.response.status === 412) {
-            const res = await confirmDialog(
-              'draft-save-incorrect-version-title',
-              'draft-save-incorrect-version-content',
-              {
+            const res = await confirmDialog({
+              title: 'draft-save-incorrect-version-title',
+              content: 'draft-save-incorrect-version-content',
+              buttons: {
                 cancel: 'draft-save-incorrect-version-button-cancel',
                 overwrite: 'draft-save-incorrect-version-button-overwrite',
               },
-            )
+              showCloseButton: false,
+            })
             return res
           }
           throw e
@@ -142,7 +142,7 @@ export default class SaveButton extends React.Component<Props> {
       if (res) {
         if (res === 'overwrite') {
           await storage.write(document, glossaryContent, true)
-        } else if (res === 'cancel') {
+        } else if (res === 'cancel' || res === 'close') {
           this.setState({ saving: false })
           return
         } else {

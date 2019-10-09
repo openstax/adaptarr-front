@@ -8,7 +8,7 @@ import { Localized } from 'fluent-react/compat'
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import store from 'src/store'
-import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+import { setCurrentDraftLang } from 'src/store/actions/drafts'
 import Storage from 'src/api/storage'
 
 import ToolGroup from '../ToolGroup'

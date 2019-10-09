@@ -13,7 +13,7 @@ import Input from 'src/components/ui/Input'
 import FilesUploader from 'src/containers/FilesUploader'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
 type Props = {
   book: api.Book

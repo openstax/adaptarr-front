@@ -1,10 +1,10 @@
-import './index.css'
-
 import * as React from 'react'
 import { List } from 'immutable'
-import { Editor, Block } from 'slate'
+import { Editor, Block, BlockProperties } from 'slate'
 import { WithContext as ReactTags } from 'react-tag-input'
 import { Localized, withLocalization, GetString } from 'fluent-react/compat'
+
+import './index.css'
 
 type Props = {
   editor: Editor,
@@ -126,13 +126,9 @@ class ClassName extends React.Component<Props> {
 
     if (!block) return
 
-    let newElem = {
-      ...block.toJS()
-    }
+    let newData = block.data.set('class', List(tags.map(tag => tag.text.replace(/\s/g, ''))))
 
-    newElem.data.class = List(tags.map(tag => tag.text.replace(/\s/g, '')))
-
-    editor.setNodeByKey(block.key, newElem)
+    editor.setNodeByKey(block.key, { data: newData.toJS() } as BlockProperties)
   }
 }
 

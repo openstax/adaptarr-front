@@ -2,28 +2,46 @@ import axios from 'src/config/axios'
 import { AxiosResponse } from 'axios'
 
 import Base from './base'
-import { elevated } from './utils'
-import Role, { Permission } from './role'
+import Role, { RoleData } from './role'
 import Draft, { DraftData } from './draft'
+import Team, { TeamID, TeamPermission } from './team'
+
+import { elevated } from './utils'
+
+import { addMinutesToDate } from 'src/helpers'
 
 /**
  * User data as returned by the API.
  */
 export type UserData = {
-  id: number,
-  name: string,
-  role: Role | null,
-  permissions?: Permission[], // Converted to Set<Permission> and merged with user.role.permissions
-  language: string,
+  id: number
+  name: string
+  is_super: boolean
+  language: string
+  teams: {
+    id: TeamID
+    name: string
+    permissions: TeamPermission[]
+    role: RoleData | null
+  }[]
+}
+
+export type UserTeam = {
+  id: TeamID
+  name: string
+  // Permissions not related to role.
+  permissions: TeamPermission[]
+  // All permissions which user has in team.
+  allPermissions: Set<TeamPermission>
+  role: Role | null
 }
 
 /**
  * Session details
  */
 export type SessionInfo = {
-  expires: string,
-  is_elevated: boolean,
-  permission: Permission[],
+  expires: string
+  is_elevated: boolean
 }
 
 export default class User extends Base<UserData> {
@@ -31,11 +49,8 @@ export default class User extends Base<UserData> {
    * Fetch a user by their ID.
    */
   static async load(id: number | string): Promise<User> {
-    const user = (await axios.get(`users/${id}`)).data
-    const userPermissions = user.permissions ? user.permissions : []
-    const rolePermissions = user.role && user.role.permissions ? user.role.permissions : []
-    const permissions = new Set([...userPermissions, ...rolePermissions])
-    return new User({...user, permissions})
+    const user = (await axios.get(`users/${id}`)).data as UserData
+    return new User(user)
   }
 
   /**
@@ -47,10 +62,7 @@ export default class User extends Base<UserData> {
   static async me(): Promise<User | null> {
     try {
       const user = (await axios.get('users/me')).data
-      const userPermissions = user.permissions ? user.permissions : []
-      const rolePermissions = user.role && user.role.permissions ? user.role.permissions : []
-      const permissions = new Set([...userPermissions, ...rolePermissions])
-      return new User({...user, permissions}, 'me')
+      return new User(user, 'me')
     } catch (err) {
       console.log('error', err)
       if (err.response.status === 401) {
@@ -100,6 +112,11 @@ export default class User extends Base<UserData> {
   name: string
 
   /**
+   * Determine if user is super user.
+   */
+  is_super: boolean
+
+  /**
    * User's language.
    */
   language: string
@@ -115,43 +132,94 @@ export default class User extends Base<UserData> {
   apiId: string
 
   /**
-   * User's role.
+   * All user's permissions across all teams and system.
    */
-  role: Role | null
+  allPermissions: Set<TeamPermission>
 
   /**
-   * User's permissions.
-   */
-  permissions: Set<Permission>
+   * Teams for which this users is member of.
+  */
+  teams: UserTeam[]
+
+  private _cacheSession?: {
+    lastUpdate: Date
+    data: SessionInfo & { elevated_expires?: Date }
+  }
 
   constructor(data: UserData, apiId?: string) {
     super(data)
 
     this.apiId = apiId || data.id.toString()
+
+    this.teams = data.teams.map(t => {
+      const role = t.role ? new Role(t.role, t.id) : null
+      const rolePermissions = role ? role.permissions || [] : []
+      const allPermissions = new Set([...t.permissions, ...rolePermissions])
+      return {
+        ...t,
+        role,
+        allPermissions,
+      }
+    })
+
+    let allPermissions: Set<TeamPermission> = new Set()
+    for (const team of this.teams) {
+      if (team.role && team.role.permissions) {
+        for (const p of team.role.permissions) {
+          allPermissions.add(p)
+        }
+      }
+    }
+
+    this.allPermissions = allPermissions
+  }
+
+  /**
+   * Check if user has one or more permissions in specific team.
+   *
+   * @param permission
+   * @param team
+   */
+  hasPermissionsInTeam(permissions: TeamPermission | TeamPermission[], team: Team | TeamID): boolean {
+    const teamId = typeof team === 'number' ? team : team.id
+    const targetTeam = this.teams.find(t => t.id === teamId)
+    if (!targetTeam) return false
+    if (typeof permissions === 'string') {
+      return targetTeam.allPermissions.has(permissions)
+    }
+    return permissions.every(p => targetTeam.allPermissions.has(p))
+  }
+
+  /**
+   * Determine if user is in super session so he have access to hidden UIs.
+   *
+   * @param {boolean} fromCache - if set to false data will be fetched from the server. Default: true
+   */
+  async isInSuperMode(fromCache = true): Promise<boolean> {
+    if (this.apiId === 'me' && this.is_super) {
+      const now = new Date()
+      if (!fromCache || !this._cacheSession || !(addMinutesToDate(this._cacheSession.lastUpdate, 5) > now)) {
+        this._cacheSession = {
+          lastUpdate: now,
+          data: await User.session(),
+        }
+      }
+
+      if (this._cacheSession.data.is_elevated) {
+        return true
+      }
+    }
+    return false
   }
 
   /**
    * Change name
    *
-   * Require 'users:edit' permission to change other users name.
+   * Require is_super to change other users name.
    * No permissions required to change own name.
    */
   async changeName(name: string): Promise<AxiosResponse> {
     return await elevated(() => axios.put(`users/${this.apiId}`, { name }))
-  }
-
-  /**
-   * Change role
-   */
-  async changeRole(id: number | null): Promise<any> {
-    return await elevated(() => axios.put(`users/${this.apiId}`, { role: id }))
-  }
-
-  /**
-   * Change permissions
-   */
-  async changePermissions(permissions: Permission[]): Promise<any> {
-    return await elevated(() => axios.put(`users/${this.apiId}/permissions`, permissions))
   }
 
   /**

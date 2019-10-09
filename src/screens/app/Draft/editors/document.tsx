@@ -12,6 +12,8 @@ import { SlotPermission } from 'src/api/process'
 import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxDocument from '../components/ToolboxDocument'
 
+import Docref from '../plugins/Docref'
+import Footnotes from '../plugins/Footnotes'
 import StorageContext from '../plugins/Storage'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
@@ -24,7 +26,7 @@ import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 type Props = {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
-  documentDB: DocumentDB
+  documentDB: DocumentDB | undefined
   readOnly: boolean
   storage: Storage
   value: Value
@@ -39,6 +41,7 @@ class EditorDocument extends React.Component<Props> {
 
   plugins = [
     I10nPlugin,
+    Docref,
     XrefPlugin,
     TablesPlugin,
     SourceElements({ inlines: SUGGESTION_TYPES }),
@@ -46,10 +49,14 @@ class EditorDocument extends React.Component<Props> {
     || this.props.stepPermissions.has('accept-changes') ?
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
       : {},
+    Footnotes(),
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
+      media: {
+        inlines: SUGGESTION_TYPES,
+      },
       text: {
         code: {
           inlines: SUGGESTION_TYPES,
@@ -60,7 +67,7 @@ class EditorDocument extends React.Component<Props> {
       },
     }),
     Shortcuts(),
-    Persistence({ db: this.props.documentDB }),
+    this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
   onChange = ({ value }: { value: Value }) => {

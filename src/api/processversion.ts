@@ -3,6 +3,7 @@ import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import Process, { ProcessStructure, ProcessSlot, Link, ProcessSingleStep } from './process'
+import { TeamID } from './team'
 
 import { elevated } from './utils'
 
@@ -10,9 +11,9 @@ import { elevated } from './utils'
  * Versions's data.
  */
 export type VersionData = {
-  id: number,
-  name: string,
-  version: string, // date this version was created
+  id: number
+  name: string
+  version: string // date this version was created
 }
 
 export default class ProcessVersion extends Base<VersionData> {

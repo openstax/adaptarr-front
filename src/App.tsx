@@ -4,6 +4,7 @@ import { SecureRoute } from 'react-route-guard'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
+import { TeamPermission } from 'src/api/team'
 
 import Alerts from 'src/components/Alerts'
 import Navigation from 'src/components/Navigation'
@@ -22,16 +23,15 @@ import Profile from 'src/screens/app/Profile'
 import Settings from 'src/screens/app/Settings'
 import Helpdesk from 'src/screens/app/Helpdesk'
 import Invitations from 'src/screens/app/Invitations'
-import Roles from 'src/screens/app/Roles'
 import Processes from 'src/screens/app/Processes'
 import Error404 from 'src/screens/app/Error404'
+import Teams from 'src/screens/app/Teams'
 
-import * as userActions from 'src/store/actions/User'
+import * as userActions from 'src/store/actions/user'
 import * as appActions from 'src/store/actions/app'
-import * as teamActions from 'src/store/actions/Team'
-import * as notificationsActions from 'src/store/actions/Notifications'
-import * as booksActions from 'src/store/actions/Books'
-import * as modulesActions from 'src/store/actions/Modules'
+import * as notificationsActions from 'src/store/actions/notifications'
+import * as booksActions from 'src/store/actions/books'
+import * as modulesActions from 'src/store/actions/modules'
 import * as types from 'src/store/types'
 import { State } from 'src/store/reducers/index'
 
@@ -41,84 +41,76 @@ type Props = {
   user: {
     isLoading: types.IsLoading
     user: api.User
-  }
-  team: {
-    teamMap: types.TeamMap
-  }
-  notifications: {}
-  booksMap: {
-    booksMap: types.BooksMap
-  }
-  modules: {
-    modulesMap: types.ModulesMap
+    users: types.UsersMap
   }
   fetchUser: () => void
-  fetchRoles: () => void
+  fetchUsers: () => void
   fetchProcesses: () => void
-  fetchTeamMap: () => void
+  fetchTeams: () => void
   fetchNotifications: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
 
-const mapStateToProps = ({
-  user,
-  notifications,
-  team,
-  booksMap,
-  modules,
-  app: {
-    roles,
-    processes,
-  },
-}: State) => {
+const mapStateToProps = ({ user }: State) => {
   return {
     user,
-    team,
-    notifications,
-    booksMap,
-    modules,
-    roles,
-    processes,
   }
 }
 
 const mapDispatchToProps = (dispatch: userActions.FetchUser | notificationsActions.FetchNotifications | booksActions.FetchBooksMap | modulesActions.FetchModulesMap) => {
   return {
     fetchUser: () => dispatch(userActions.fetchUser()),
-    fetchRoles: () => dispatch(appActions.fetchRoles()),
+    fetchUsers: () => dispatch(userActions.fetchUsersMap()),
     fetchProcesses: () => dispatch(appActions.fetchProcesses()),
-    fetchTeamMap: () => dispatch(teamActions.fetchTeamMap()),
+    fetchTeams: () => dispatch(appActions.fetchTeams()),
     fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
     fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
     fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
   }
 }
 
+/**
+ * One of those permissions is required to go to the /teams route since in this screen
+ * user can add, remove and manage users in teams.
+ */
+export const ROUTE_TEAMS_PERMISSIONS: TeamPermission[] = [
+  'member:add',
+  'member:assign-role',
+  'member:edit-permissions',
+  'member:remove',
+]
+
 class App extends React.Component<Props> {
   private InvitationsGuard = {
-    shouldRoute: () => {
-      return this.props.user.user.permissions.has('user:invite')
+    shouldRoute: async () => {
+      const user = this.props.user.user
+      const isSuper = await user.isInSuperMode()
+      return isSuper || user.allPermissions.has('member:add')
     }
   }
 
-  private RolesGuard = {
-    shouldRoute: () => {
-      return this.props.user.user.permissions.has('role:edit')
+  private TeamsGuard = {
+    shouldRoute: async () => {
+      const user = this.props.user.user
+      const isSuper = await user.isInSuperMode()
+      return isSuper || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
     }
   }
 
   private ProcessesGuard = {
-    shouldRoute: () => {
-      return this.props.user.user.permissions.has('editing-process:edit')
+    shouldRoute: async () => {
+      const user = this.props.user.user
+      const isSuper = await user.isInSuperMode()
+      return isSuper || user.allPermissions.has('editing-process:edit')
     }
   }
 
   componentDidMount () {
     this.props.fetchUser()
-    this.props.fetchRoles()
+    this.props.fetchUsers()
     this.props.fetchProcesses()
-    this.props.fetchTeamMap()
+    this.props.fetchTeams()
     this.props.fetchNotifications()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
@@ -143,14 +135,14 @@ class App extends React.Component<Props> {
                   <Route path="/books/:id" component={Book}/>
                   <Route path="/modules/:id" component={Module}/>
                   <Route exact path="/drafts/:id" component={DraftDetais}/>
-                  <Route path="/drafts/:id/edit" component={Draft}/>
+                  <Route path="/drafts/:id/:action" component={Draft}/>
                   <Route exact path="/resources" component={Resources}/>
                   <Route path="/resources/:id" component={Resources}/>
                   <Route path="/users/:id" component={Profile}/>
                   <Route path="/settings" component={Settings}/>
                   <Route path="/helpdesk" component={Helpdesk}/>
                   <SecureRoute path="/invitations" component={Invitations} routeGuard={this.InvitationsGuard} redirectToPathWhenFail="/" />
-                  <SecureRoute path="/roles" component={Roles} routeGuard={this.RolesGuard} redirectToPathWhenFail="/"/>
+                  <SecureRoute path="/teams/:id?/:tab?" component={Teams} routeGuard={this.TeamsGuard} redirectToPathWhenFail="/"/>
                   <SecureRoute path="/processes" component={Processes} routeGuard={this.ProcessesGuard} redirectToPathWhenFail="/"/>
                   <Route component={Error404}/>
                 </Switch>

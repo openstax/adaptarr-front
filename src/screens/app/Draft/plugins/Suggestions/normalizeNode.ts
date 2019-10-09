@@ -93,7 +93,7 @@ function removeNestedSuggestions(editor: Editor, node: Inline, ancestors: Iterab
       if (node.type === 'suggestion_insert') {
         if (parentType === 'insert') {
           const path = editor.value.document.getPath(node.key)
-          editor.unwrapChildrenByPath(path)
+          editor.unwrapChildrenByPath(path!)
         } else if (parentType === 'delete') {
           editor.removeNodeByKey(node.key)
         }
@@ -102,7 +102,7 @@ function removeNestedSuggestions(editor: Editor, node: Inline, ancestors: Iterab
           editor.removeNodeByKey(node.key)
         } else if (parentType === 'delete') {
           const path = editor.value.document.getPath(node.key)
-          editor.unwrapChildrenByPath(path)
+          editor.unwrapChildrenByPath(path!)
         }
       }
     }
