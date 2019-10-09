@@ -219,7 +219,7 @@ class FreeSlots extends React.Component<FreeSlotsProps> {
                                         <span className="free-slots__draft">
                                           {slot.draft.title}
                                         </span>
-                                        <Button to={`/drafts/${slot.draft.module}`}>
+                                        <Button to={`/drafts/${slot.draft.module}/view`}>
                                           <Localized id="free-slots-view-draft">
                                             View draft
                                           </Localized>
@@ -320,7 +320,7 @@ const NestableCustomized = ({ parts, freeSlots, onTakeSlot }: NestableProps) => 
                   <span className="free-slots__draft">
                     {slot!.draft.title}
                   </span>
-                  <Button to={`/drafts/${slot!.draft.module}`}>
+                  <Button to={`/drafts/${slot!.draft.module}/view`}>
                     <Localized id="free-slots-view-draft">
                       View draft
                     </Localized>
