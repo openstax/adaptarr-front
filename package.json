@@ -79,6 +79,9 @@
     "whatwg-fetch": "^3.0.0"
   },
   "resolutions": {
+    "braces": "^2.3.1",
+    "js-yaml": "^3.13.1",
+    "mem": "^4.0.0",
     "slate": "^0.47.0",
     "slate-counters": "https://github.com/katalysteducation/slate-counters.git#use-onsetvalue"
   },
