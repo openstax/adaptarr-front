@@ -1,0 +1,17 @@
+.color-picker {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.color-picker__item {
+  width: 20px;
+  height: 20px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.color-picker__item--active {
+  border: 1px solid var(--dark-bg);
+  cursor: default;
+}

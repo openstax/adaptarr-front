@@ -1664,6 +1664,8 @@ editor-tools-format-button-code = Kod (Ctrl+`)
 
 editor-tools-format-button-term = Termin (Ctrl+K)
 
+editor-tools-format-button-highlight = Zaznaczenie
+
 
 
 ## Editor toolboxes - figures
@@ -1989,6 +1991,12 @@ editor-tools-footnote-title = Przypis
 editor-tools-footnote-show = Pokaż treść
 
 editor-tools-footnote-hide = Ukryj treść
+
+
+
+## Editor toolboxes - highlight
+
+editor-tools-highlight-title = Zaznaczenie
 
 
 

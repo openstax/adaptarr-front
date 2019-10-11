@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Block, Document, Editor, Inline, Node, Value } from 'slate'
 
 import FormatTools from '../FormatTools'
+import HighlightTools from '../HighlightTools'
 import DefinitionTools from '../DefinitionTools'
 import MeaningTools from '../MeaningTools'
 import SeeAlsoTools from '../SeeAlsoTools'
@@ -22,7 +23,8 @@ type ToolName =
   'seeAlsoTools' |
   'definitionTools' |
   'glossaryTools' |
-  'suggestionsTools'
+  'suggestionsTools' |
+  'highlightTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
@@ -34,6 +36,7 @@ interface ToolboxState {
   seeAlsoTools: boolean
   glossaryTools: boolean
   suggestionsTools: boolean
+  highlightTools: boolean
 }
 
 /**
@@ -46,6 +49,7 @@ const DEFAULT_TOGGLERS = {
   seeAlsoTools: false,
   glossaryTools: false,
   suggestionsTools: true,
+  highlightTools: true,
 }
 
 class Toolbox extends React.Component<ToolboxProps> {
@@ -142,6 +146,12 @@ class Toolbox extends React.Component<ToolboxProps> {
           toggleState={this.state.suggestionsTools}
           onToggle={this.toggleTool}
         />
+        <HighlightTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.highlightTools}
+          onToggle={this.toggleTool}
+        />
       </div>
     )
   }
@@ -215,6 +225,9 @@ class Toolbox extends React.Component<ToolboxProps> {
     }
     case 'definition':
       newState.definitionTools = true
+      break
+    case 'highlight':
+      newState.highlightTools = true
       break
     default:
       newState.definitionTools = true

@@ -45,6 +45,13 @@ const VALID_LIST_PARENTS = [
   'list_item',
 ]
 
+const INVALID_HIGHLIGHT_PARENTS = [
+  'image',
+  'term',
+  'link',
+  'xref',
+]
+
 export default class FormatTools extends React.Component<FormatToolsProps> {
   render() {
     const { editor, value, showSwitchableTypes = true } = this.props
@@ -126,7 +133,20 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
           </Button>
         </Tooltip>
         <Tooltip
-          l10nId="editor-tools-format-button-clear"
+          l10nId={'editor-tools-format-button-highlight'}
+          direction="up"
+          className="toolbox__button--with-tooltip"
+        >
+          <Button
+            className="toolbox__button--only-icon"
+            isDisabled={this.validateParents(INVALID_HIGHLIGHT_PARENTS)}
+            clickHandler={this.toggleHighlight}
+          >
+            <Icon size="small" name="pencil" />
+          </Button>
+        </Tooltip>
+        <Tooltip
+          l10nId={'editor-tools-format-button-clear'}
           direction="up"
           className="toolbox__button--with-tooltip"
         >
@@ -203,6 +223,17 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
     } else {
       editor.wrapInList('ul_list')
     }
+  }
+
+  private toggleHighlight = () => {
+    const { editor, value, value: { selection } } = this.props
+    const highlight = editor.getActiveHighlight(value)
+    if (highlight) {
+      editor.unwrapInlineByKey(highlight.key, { type: 'highlight' })
+      return
+    }
+    if (selection.isCollapsed) return
+    editor.wrapInline({ type: 'highlight', data: { color: 'red', text: '' } })
   }
 
   private validateParents = (validParents: string[]): boolean => {

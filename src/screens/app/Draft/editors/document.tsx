@@ -14,6 +14,7 @@ import ToolboxDocument from '../components/ToolboxDocument'
 
 import Docref from '../plugins/Docref'
 import Footnotes from '../plugins/Footnotes'
+import Highlights from '../plugins/Highlights'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
 import TablesPlugin from '../plugins/Tables'
@@ -49,12 +50,13 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
       : {},
     Footnotes(),
+    Highlights(),
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
       media: {
-        inlines: SUGGESTION_TYPES,
+        inlines: SUGGESTION_TYPES.concat('highlight'),
         mediaUrl: (name: string) => `/api/v1/drafts/${this.props.storage.id}/files/${name}`,
       },
       text: {

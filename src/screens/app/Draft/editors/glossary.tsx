@@ -16,6 +16,7 @@ import Button from 'src/components/ui/Button'
 import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxGlossary from '../components/ToolboxGlossary'
 
+import Highlights from '../plugins/Highlights'
 import I10nPlugin from '../plugins/I10n'
 import Shortcuts from '../plugins/Shortcuts'
 import Suggestions from '../plugins/Suggestions'
@@ -40,6 +41,7 @@ class EditorGlossary extends React.Component<EditorGlossaryProps> {
 
   plugins = [
     I10nPlugin,
+    Highlights(),
     this.props.stepPermissions.has('propose-changes')
     || this.props.stepPermissions.has('accept-changes') ?
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
