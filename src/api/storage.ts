@@ -8,6 +8,7 @@ import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
 import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
 import suggestionRules from 'src/screens/app/Draft/plugins/Suggestions/deSerializationRules'
+import highlightsRules from 'src/screens/app/Draft/plugins/Highlights/deSerializationRules'
 
 import axios from 'src/config/axios'
 import { DraftData } from './draft'
@@ -187,13 +188,17 @@ export default class Storage {
 
   static serializer = new CNXML({
     documentRules: [
+      highlightsRules,
       tablesDeserialize,
       tablesSerialize,
       sourceElementsDeserialize,
       sourceElementsSerialize,
       suggestionRules,
     ],
-    glossaryRules: [suggestionRules],
+    glossaryRules: [
+      highlightsRules,
+      suggestionRules,
+    ],
   })
 }
 

@@ -5,7 +5,7 @@ import onCommand from './onCommand'
 import make_schema from './schema'
 import normalizeNode from './normalizeNode'
 
-const ALLOWED_INLINES = ['code', 'docref', 'link', 'source_element', 'term', 'xref', 'footnote']
+const ALLOWED_INLINES = ['code', 'docref', 'highlight', 'link', 'source_element', 'term', 'xref', 'footnote']
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }
 
