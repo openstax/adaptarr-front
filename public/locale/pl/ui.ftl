@@ -1998,6 +1998,8 @@ editor-tools-footnote-hide = Ukryj treść
 
 editor-tools-highlight-title = Zaznaczenie
 
+editor-tools-highlight-remove = Usuń zaznaczenie
+
 
 
 ## Highlight component

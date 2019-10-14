@@ -1991,6 +1991,8 @@ editor-tools-footnote-hide = Hide content
 
 editor-tools-highlight-title = Highlight
 
+editor-tools-highlight-remove = Remove highlight
+
 
 
 ## Highlight component
