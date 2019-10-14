@@ -152,7 +152,7 @@ class FormatTools extends React.Component<FormatToolsProps> {
             isDisabled={this.validateParents(INVALID_HIGHLIGHT_PARENTS)}
             clickHandler={this.toggleHighlight}
           >
-            <Icon size="small" name="pencil" />
+            <Icon size="small" name="highlight" />
           </Button>
         </Tooltip>
         <Tooltip
