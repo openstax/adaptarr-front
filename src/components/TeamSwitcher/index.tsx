@@ -42,14 +42,18 @@ class TeamSwitcher extends React.Component<TeamSwitcherProps> {
   }
 
   componentDidMount() {
+    const { user } = this.props
+
     const selTeamsFromLS = localStorage.getItem('selectedTeams')
     // Filter value saved in localStorage since it can change when user will log
     // to another account.
     let selectedTeams: number[] = JSON.parse(selTeamsFromLS || '[]')
-      .filter((tId: number) => this.props.user.teams.find(t => t.id === tId))
-    if (selectedTeams.length === 0 && this.props.user.teams.length > 0) {
-      selectedTeams = this.props.user.teams.map(t => t.id)
+      .filter((tId: number) => user.teams.find(t => t.id === tId || user.is_super))
+
+    if (selectedTeams.length === 0 && user.teams.length > 0) {
+      selectedTeams = user.teams.map(t => t.id)
     }
+
     store.dispatch(setSelectedTeams(selectedTeams))
 
     document.addEventListener('keydown', this.onKeyDown)
