@@ -446,7 +446,7 @@ const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
     return
   }
   if (node.object === 'text') return
-  node.nodes.forEach(n => {
+  node.nodes.forEach((n: Block | Inline) => {
     if (n && n.object === 'block' && n.type === 'title') {
       editor.setNodeByKey(n.key, { type: 'paragraph' })
     }
