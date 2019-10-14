@@ -2000,6 +2000,12 @@ editor-tools-highlight-title = Zaznaczenie
 
 
 
+## Highlight component
+
+editor-highlight-message-placeholder = Twoja wiadomość...
+
+
+
 ## Reusable component - confirm dialog
 
 confirm-dialog-button-cancel = Anuluj

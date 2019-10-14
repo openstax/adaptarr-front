@@ -1993,6 +1993,12 @@ editor-tools-highlight-title = Highlight
 
 
 
+## Highlight component
+
+editor-highlight-message-placeholder = Write your message...
+
+
+
 ## Reusable component - confirm dialog
 
 confirm-dialog-button-cancel = Cancel
