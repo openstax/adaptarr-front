@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { Block, Document, Editor, Inline, Text, Value } from 'slate'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
+
+import { User } from 'src/api'
+
+import { State } from 'src/store/reducers'
 
 import SwitchableTypes from '../SwitchableTypes'
 import Button from 'src/components/ui/Button'
@@ -14,7 +19,12 @@ interface FormatToolsProps {
   value: Value,
   selectionParent: Document | Block | Inline | null,
   showSwitchableTypes?: boolean,
+  user: User
 }
+
+const mapStateToProps = ({ user: { user } }: State) => ({
+  user,
+})
 
 const INVALID_FORMAT_TOOLS_PARENTS = [
   'code',
@@ -52,7 +62,7 @@ const INVALID_HIGHLIGHT_PARENTS = [
   'xref',
 ]
 
-export default class FormatTools extends React.Component<FormatToolsProps> {
+class FormatTools extends React.Component<FormatToolsProps> {
   render() {
     const { editor, value, showSwitchableTypes = true } = this.props
     const { startBlock, startInline } = value
@@ -226,14 +236,14 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
   }
 
   private toggleHighlight = () => {
-    const { editor, value, value: { selection } } = this.props
+    const { editor, value, value: { selection }, user } = this.props
     const highlight = editor.getActiveHighlight(value)
     if (highlight) {
       editor.unwrapInlineByKey(highlight.key, { type: 'highlight' })
       return
     }
     if (selection.isCollapsed) return
-    editor.wrapInline({ type: 'highlight', data: { color: 'red', text: '' } })
+    editor.wrapInline({ type: 'highlight', data: { color: 'red', text: '', user: user.id } })
   }
 
   private validateParents = (validParents: string[]): boolean => {
@@ -243,3 +253,5 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
     return false
   }
 }
+
+export default connect(mapStateToProps)(FormatTools)

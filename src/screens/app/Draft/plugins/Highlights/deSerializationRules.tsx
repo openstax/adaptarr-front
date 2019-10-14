@@ -5,7 +5,12 @@ declare global {
   namespace JSX {
     interface IntrinsicElements {
       'highlight': React.DetailedHTMLProps<
-          React.HTMLAttributes<HTMLElement> & { xmlns: string, color: string, text: string },
+          React.HTMLAttributes<HTMLElement> & {
+            xmlns: string
+            color: string
+            text: string
+            user: number
+          },
           HTMLElement
         >
     }
@@ -23,6 +28,7 @@ const deSerializeRules = {
           xmlns={HIGHLIGHTS_NAMESPACE}
           color={obj.data.get('color')}
           text={obj.data.get('text')}
+          user={obj.data.get('user')}
         >
           {children}
         </highlight>
@@ -38,6 +44,7 @@ const deSerializeRules = {
         data: {
           color: el.getAttribute('color'),
           text: el.getAttribute('text'),
+          user: Number(el.getAttribute('user')),
         },
         nodes: next(Array.from(el.childNodes)),
       }
