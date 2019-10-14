@@ -36,18 +36,15 @@ const Avatar = (props: AvatarProps) => {
   const title = userData && userData.name ? decodeHtmlEntity(userData.name) : 'Unknow user'
   const linkToProfile = userData ? '/users/' + userData.id : '/settings'
 
-  const avatarSrc = /* user && user.avatarSmall ? user.avatarSmall :*/ '/images/unknown-user.svg'
-  // if (size && size !== 'small' && user && user.avatar) {
-  // avatarSrc = user.avatar
-  // }
+  let avatarSrc = '/images/unknown-user.svg'
 
   const body = (
     <>
-      <Tooltip content={title}>
-        <div className="avatar__image">
-          <span className={statusClasses.join(' ')} />
+      <Tooltip content={title} tagName="span">
+        <span className="avatar__image">
+          <span className={statusClasses.join(' ')}></span>
           <img src={avatarSrc} alt={title}/>
-        </div>
+        </span>
       </Tooltip>
       {
         withName ?
@@ -59,9 +56,9 @@ const Avatar = (props: AvatarProps) => {
 
   if (disableLink) {
     return (
-      <div className={mainClasses.join(' ')}>
+      <span className={mainClasses.join(' ')}>
         {body}
-      </div>
+      </span>
     )
   }
 
