@@ -9,6 +9,8 @@ declare module 'slate-counters' {
     counters: Immutable.Map<string, number>
   }
 
+  export const CounterContext: React.Context<Immutable.Map<any, any>>
+
   export type WithCountersDecorator<Props> = (
     component: React.ComponentType<Props & CounterProps>
   ) => React.ComponentType<Props>

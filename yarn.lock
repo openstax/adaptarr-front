@@ -8525,7 +8525,7 @@ slate-base64-serializer@^0.2.106:
 
 "slate-counters@https://github.com/katalysteducation/slate-counters.git", "slate-counters@https://github.com/katalysteducation/slate-counters.git#use-onsetvalue":
   version "0.6.0"
-  resolved "https://github.com/katalysteducation/slate-counters.git#47abee33d6303cea4161f2395b79ba6c34ea4707"
+  resolved "https://github.com/katalysteducation/slate-counters.git#e08129ea2745cd7f87558d9b3076b5466b74b9ee"
   dependencies:
     "@babel/runtime" "^7.0.0"
 
