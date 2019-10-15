@@ -1,4 +1,5 @@
 declare module 'cnx-designer' {
+  import * as React from 'react'
   import {
     Block,
     Data,
@@ -31,6 +32,8 @@ declare module 'cnx-designer' {
   export class Storage {
     mediaUrl(name: string): string
   }
+
+  export const StorageContext: React.Context<{ storage: Storage }>
 
   export type PersistDBData = {
     database: {

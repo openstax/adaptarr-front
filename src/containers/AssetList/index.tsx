@@ -1,9 +1,9 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
+import { StorageContext } from 'cnx-designer'
 
-import Storage, { FileDescription } from 'src/api/storage'
+import { FileDescription } from 'src/api/storage'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'
@@ -29,10 +29,6 @@ const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
 })
 
 class AssetList extends React.Component<AssetListProps> {
-  static contextTypes = {
-    storage: PropTypes.instanceOf(Storage),
-  }
-
   constructor(a: any, b?: any) {
     super(a, b)
 
@@ -102,5 +98,7 @@ class AssetList extends React.Component<AssetListProps> {
     if (onSelect) onSelect(asset)
   }
 }
+
+AssetList.contextType = StorageContext
 
 export default connect(mapStateToProps)(AssetList)

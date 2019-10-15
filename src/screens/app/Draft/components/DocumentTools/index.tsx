@@ -1,14 +1,13 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import Select from 'react-select'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
+import { StorageContext } from 'cnx-designer'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import store from 'src/store'
 import { setCurrentDraftLang } from 'src/store/actions/drafts'
-import Storage from 'src/api/storage'
 
 import ToolGroup from '../ToolGroup'
 import CharactersCounter from '../CharactersCounter'
@@ -23,10 +22,6 @@ interface DocumentToolsProps {
 }
 
 export default class DocumentTools extends React.Component<DocumentToolsProps> {
-  static contextTypes = {
-    storage: PropTypes.instanceOf(Storage),
-  }
-
   private onClickToggle = () => {
     this.props.onToggle('documentTools')
   }
@@ -68,6 +63,8 @@ export default class DocumentTools extends React.Component<DocumentToolsProps> {
     store.dispatch(setCurrentDraftLang(code))
   }
 }
+
+DocumentTools.contextType = StorageContext
 
 function getOptionLabel({ label: name }: {value: string, label: string}) {
   return name

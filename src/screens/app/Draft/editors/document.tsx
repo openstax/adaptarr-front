@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Counters from 'slate-counters'
-import { Document, DocumentDB, Persistence } from 'cnx-designer'
+import { Document, DocumentDB, Persistence, StorageContext } from 'cnx-designer'
 import { Editor as Editor_, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { ReactLocalization } from 'fluent-react/compat'
@@ -14,7 +14,6 @@ import ToolboxDocument from '../components/ToolboxDocument'
 
 import Docref from '../plugins/Docref'
 import Footnotes from '../plugins/Footnotes'
-import StorageContext from '../plugins/Storage'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
 import TablesPlugin from '../plugins/Tables'
@@ -77,12 +76,14 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
   editor = React.createRef<Editor>()
 
   public render() {
+    const contextValue = { storage: this.props.storage }
+
     return (
       <div className="document__editor document__editor--document">
         <LocalizationLoader
           locale={this.props.language}
         >
-          <StorageContext storage={this.props.storage}>
+          <StorageContext.Provider value={contextValue}>
             <Editor
               ref={this.editor}
               className="editor editor--document"
@@ -91,18 +92,18 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
               onChange={this.onChange}
               readOnly={this.props.readOnly}
             />
-          </StorageContext>
+          </StorageContext.Provider>
         </LocalizationLoader>
         {
-          this.props.readOnly ?
-            null
+          this.props.readOnly
+            ? null
             :
-            <StorageContext storage={this.props.storage}>
+            <StorageContext.Provider value={contextValue}>
               <ToolboxDocument
                 editor={this.editor.current as unknown as Editor_}
                 value={this.props.value}
               />
-            </StorageContext>
+            </StorageContext.Provider>
         }
       </div>
     )
