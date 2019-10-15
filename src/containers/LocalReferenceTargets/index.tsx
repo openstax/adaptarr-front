@@ -35,14 +35,18 @@ const mapStateToProps = ({ draft: { currentDraftLang } }: State) => ({
   currentDraftLang,
 })
 
+interface LocalResourceTargetsState {
+  countersMap: Map<string, Map<string, number>>
+  targets: ReferenceTarget[]
+}
+
 /**
  * Display list of reference targets in an editor session.
  */
 class LocalResourceTargets extends React.PureComponent<LocalResourceTargetsProps> {
-  state: {
-    countersMap: Map<string, Map<string, number>>
-  } = {
+  state: LocalResourceTargetsState = {
     countersMap: new Map(),
+    targets: [],
   }
 
   private setCounters = () => {
@@ -97,7 +101,9 @@ class LocalResourceTargets extends React.PureComponent<LocalResourceTargetsProps
       }
     })
 
-    this.setState({ countersMap })
+    const targets = Array.from(this.mapBlockToTargets(this.props.editor.value.document))
+
+    this.setState({ countersMap, targets })
   }
 
   componentDidMount() {
@@ -105,8 +111,8 @@ class LocalResourceTargets extends React.PureComponent<LocalResourceTargetsProps
   }
 
   render() {
-    const { editor, onSelect, currentDraftLang } = this.props
-    const targets = Array.from(this.mapBlockToTargets(editor.value.document))
+    const { onSelect, currentDraftLang } = this.props
+    const { targets } = this.state
 
     return (
       targets.length ?
