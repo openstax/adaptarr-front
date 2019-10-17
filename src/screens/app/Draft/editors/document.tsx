@@ -1,12 +1,12 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Counters from 'slate-counters'
-import { Document, DocumentDB, Persistence, StorageContext } from 'cnx-designer'
+import { Document, DocumentDB, Persistence } from 'cnx-designer'
 import { Editor as Editor_, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { ReactLocalization } from 'fluent-react/compat'
 
-import { Storage } from 'src/api'
+import Storage, { StorageContext } from 'src/api/storage'
 import { SlotPermission } from 'src/api/process'
 
 import LocalizationLoader from '../components/LocalizationLoader'
@@ -55,6 +55,7 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
       content: ['source_element'],
       media: {
         inlines: SUGGESTION_TYPES,
+        mediaUrl: (name: string) => `/api/v1/drafts/${this.props.storage.id}/files/${name}`,
       },
       text: {
         code: {
@@ -81,16 +82,14 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
         <LocalizationLoader
           locale={this.props.language}
         >
-          <StorageContext.Provider value={this.props.storage}>
-            <Editor
-              ref={this.editor}
-              className="editor editor--document"
-              value={this.props.value}
-              plugins={this.plugins}
-              onChange={this.onChange}
-              readOnly={this.props.readOnly}
-            />
-          </StorageContext.Provider>
+          <Editor
+            ref={this.editor}
+            className="editor editor--document"
+            value={this.props.value}
+            plugins={this.plugins}
+            onChange={this.onChange}
+            readOnly={this.props.readOnly}
+          />
         </LocalizationLoader>
         {
           this.props.readOnly

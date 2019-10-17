@@ -29,12 +29,6 @@ declare module 'cnx-designer' {
     statusText: string
   }
 
-  export class Storage {
-    mediaUrl(name: string): string
-  }
-
-  export const StorageContext: React.Context<Storage>
-
   export type PersistDBData = {
     database: {
       name: string
@@ -155,7 +149,8 @@ declare module 'cnx-designer' {
   }
 
   export type MediaOptions = {
-    inlines: string[]
+    inlines?: string[]
+    mediaUrl?: (name: string) => string
   }
 
   export function Document(options?: {

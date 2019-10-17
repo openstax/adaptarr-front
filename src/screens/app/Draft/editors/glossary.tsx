@@ -1,6 +1,6 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { DocumentDB, Glossary, Persistence, StorageContext } from 'cnx-designer'
+import { DocumentDB, Glossary, Persistence } from 'cnx-designer'
 import { Block, Editor as Editor_, Text, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { Localized, ReactLocalization } from 'fluent-react/compat'
@@ -140,27 +140,23 @@ class EditorGlossary extends React.Component<EditorGlossaryProps> {
           <LocalizationLoader
             locale={this.props.language}
           >
-            <StorageContext.Provider value={this.props.storage}>
-              <Editor
-                ref={this.editor}
-                className="editor editor--glossary"
-                value={this.props.value}
-                plugins={this.plugins}
-                onChange={this.onChange}
-                readOnly={this.props.readOnly}
-              />
-            </StorageContext.Provider>
+            <Editor
+              ref={this.editor}
+              className="editor editor--glossary"
+              value={this.props.value}
+              plugins={this.plugins}
+              onChange={this.onChange}
+              readOnly={this.props.readOnly}
+            />
           </LocalizationLoader>
           {
             this.props.readOnly ?
               null
               :
-              <StorageContext.Provider value={this.props.storage}>
-                <ToolboxGlossary
-                  editor={this.editor.current as unknown as Editor_}
-                  value={this.props.value}
-                />
-              </StorageContext.Provider>
+              <ToolboxGlossary
+                editor={this.editor.current as unknown as Editor_}
+                value={this.props.value}
+              />
           }
         </div>
       </>

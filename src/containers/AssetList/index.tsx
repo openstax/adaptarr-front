@@ -1,9 +1,8 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
-import { StorageContext } from 'cnx-designer'
 
-import { FileDescription } from 'src/api/storage'
+import { FileDescription, StorageContext } from 'src/api/storage'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'

@@ -2,7 +2,8 @@ import * as React from 'react'
 import Select from 'react-select'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
-import { StorageContext } from 'cnx-designer'
+
+import { StorageContext } from 'src/api/storage'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 

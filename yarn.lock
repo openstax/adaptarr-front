@@ -2106,10 +2106,11 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#0977a56639e0058598a84aa49c3b90eacf6e5945"
+  resolved "https://github.com/katalysteducation/cnx-designer#16327de6a3840e14fbe1fa3c6bced0b13a7f9c47"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
+    prop-types "^15.7.2"
     react "^16.4.1"
     slate "^0.47.0"
     slate-counters "https://github.com/katalysteducation/slate-counters.git"
