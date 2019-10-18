@@ -13,6 +13,7 @@ import { addAlert } from 'src/store/actions/alerts'
 import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
+import ModuleLabels from 'src/components/ModuleLabels'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
@@ -209,6 +210,7 @@ class Module extends React.Component<ModuleProps> {
               </LimitedUI>
               : null
           }
+          <ModuleLabels module={item.id!} />
           <LimitedUI permissions="editing-process:manage">
             {
               item.process ?

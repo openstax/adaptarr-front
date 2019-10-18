@@ -10,6 +10,7 @@ import { GroupData, PartData } from 'src/api/bookpart'
 import { State } from 'src/store/reducers'
 import { BooksMap } from 'src/store/types'
 
+import ModuleLabels from 'src/components/ModuleLabels'
 import Spinner from 'src/components/Spinner'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -248,6 +249,7 @@ const NestableCustomized = ({ parts }: { parts: api.BookPart[] }) => {
               >
                 {item.title}
               </Link>
+              <ModuleLabels module={item.id} />
               <Button to={`/drafts/${item.id}`}>
                 <Localized id="dashboard-drafts-details">
                   Details
