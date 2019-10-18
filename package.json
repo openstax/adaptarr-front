@@ -110,6 +110,7 @@
     "eslint-config-openstax-poland": "https://github.com/openstax-poland/eslint-config-openstax-poland.git",
     "eslint-plugin-react": "^7.16.0",
     "fluent-syntax": "^0.10.0",
+    "indexeddb-getall-shim": "^1.3.5",
     "typescript": "^3.2.1"
   },
   "jest": {

@@ -1,3 +1,5 @@
+import "indexeddb-getall-shim"
+
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { DocumentDB, PersistDB, uuid } from 'cnx-designer'
