@@ -1,0 +1,26 @@
+.module-labels {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.module-labels__labels {
+  display: flex;
+}
+
+.module-labels__labels .module-label {
+  margin-right: 5px;
+}
+
+.module-labels__settings {
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.module-labels .module-labels-list {
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  top: 70%;
+  width: 250px;
+}

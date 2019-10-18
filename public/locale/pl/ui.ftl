@@ -2013,3 +2013,23 @@ editor-highlight-message-placeholder = Twoja wiadomość...
 confirm-dialog-button-cancel = Anuluj
 
 confirm-dialog-button-ok = OK
+
+
+
+## Resusable component  - modules labels
+
+module-labels-selector-title = Przypisz etykiety do tego modułu
+
+
+
+## Resusable component - module labels list
+
+module-labels-list-filter =
+  .placeholder = Filtruj etykiety
+
+# - $name (string): name for new label
+module-labels-list-create-label = Utwórz nową etykietę: { $name }
+
+module-labels-list-no-labels-found = Nie znaleziono etykiety
+
+module-labels-list-edit-labels = Edytuj etykiety

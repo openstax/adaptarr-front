@@ -1,0 +1,85 @@
+.module-labels-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch;
+  border: 1px solid var(--light-bg);
+  box-shadow: 0 5px 10px rgba(0,0,0,0.15);
+  border-radius: 20px;
+  background-color: #fff;
+}
+
+.module-labels-list__content {
+  max-height: 300px;
+  overflow: auto;
+}
+
+.module-labels-list__title {
+  display: block;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 10px;
+  background-color: #e8e8e8;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+}
+
+.module-labels-list .input {
+  padding: 5px;
+}
+
+.module-labels-list .input input {
+  padding: 5px;
+  border: 1px solid var(--light-bg);
+}
+
+.module-labels-list .input.focused input {
+  border: 1px solid var(--dark-bg);
+}
+
+
+.module-labels-list__item {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  min-height: 20px;
+  padding: 10px 0;
+  font-size: 14px;
+  color: var(--font-dark);
+  border-top: 1px solid var(--light-bg);
+  cursor: pointer;
+}
+
+.module-labels-list__item:hover {
+  background-color: var(--lighter-bg);
+}
+
+.module-labels-list__item--no-hover:hover {
+  cursor: auto;
+  background-color: none;
+}
+
+.module-labels-list__item--center {
+  justify-content: center;
+  min-height: 0;
+}
+
+.module-labels-list__item .icon {
+  width: 15px;
+  margin: 0 5px;
+}
+
+.module-labels-list__color {
+  width: 15px;
+  height: 15px;
+  border-radius: 4px;
+  margin-right: 5px;
+}
+
+.module-labels-list__name {
+  white-space: nowrap;
+  max-width: 70%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}

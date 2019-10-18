@@ -2006,3 +2006,23 @@ editor-highlight-message-placeholder = Write your message...
 confirm-dialog-button-cancel = Cancel
 
 confirm-dialog-button-ok = OK
+
+
+
+## Resusable component  - modules labels
+
+module-labels-selector-title = Assign labels to this module
+
+
+
+## Resusable component - module labels list
+
+module-labels-list-filter =
+  .placeholder = Filter labels
+
+# - $name (string): name for new label
+module-labels-list-create-label = Create new label: { $name }
+
+module-labels-list-no-labels-found = No labels found
+
+module-labels-list-edit-labels = Edit labels

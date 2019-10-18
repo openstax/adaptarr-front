@@ -1,0 +1,10 @@
+.module-label {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  padding: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
