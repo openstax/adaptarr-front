@@ -2059,6 +2059,8 @@ module-labels-editor-remove-confirm = Remove label: { $label }
 module-labels-editor-label-name-placeholder =
   .placeholder = Label name
 
+module-labels-editor-label-name-taken = Name has already been taken
+
 module-labels-editor-update-label = Update label
 
 

@@ -2066,6 +2066,8 @@ module-labels-editor-remove-confirm = Usuń etykietę: { $label }
 module-labels-editor-label-name-placeholder =
   .placeholder = Nazwa etykiety
 
+module-labels-editor-label-name-taken = Nazwa jest już zajęta
+
 module-labels-editor-update-label = Zapisz zmiany
 
 

@@ -5,6 +5,8 @@ import store from 'src/store'
 import { createLabel } from 'src/store/actions/modules'
 import { ModuleLabelData, ModuleLabelProperites } from 'src/store/types'
 
+import { useIsLabelExisting } from 'src/hooks'
+
 import ColorGenerator from 'src/components/ColorGenerator'
 import Input from 'src/components/ui/Input'
 import Button from 'src/components/ui/Button'
@@ -35,6 +37,8 @@ const ModuleLabelCreator = ({ onCancel, afterCreate }: ModuleLabelCreatorProps) 
     })
   }
 
+  const isLabelExisting = useIsLabelExisting(labelData.name || '')
+
   const onChange = (name: string) => {
     updateLabelData({ name })
   }
@@ -62,6 +66,10 @@ const ModuleLabelCreator = ({ onCancel, afterCreate }: ModuleLabelCreatorProps) 
         <Input
           l10nId="module-labels-editor-label-name-placeholder"
           onChange={onChange}
+          validation={{
+            custom: () => !isLabelExisting,
+          }}
+          errorMessage="module-labels-editor-label-name-taken"
         />
         <ColorGenerator startColor={labelData.color} onChange={onColorChange} />
         <div className="module-label-creator__buttons">
@@ -72,7 +80,7 @@ const ModuleLabelCreator = ({ onCancel, afterCreate }: ModuleLabelCreatorProps) 
           </Button>
           <Button
             clickHandler={handleCreateLabel}
-            isDisabled={!labelData.name || !labelData.color}
+            isDisabled={!labelData.name || !labelData.color || isLabelExisting}
           >
             <Localized id="module-labels-editor-create-label">
               Create label
