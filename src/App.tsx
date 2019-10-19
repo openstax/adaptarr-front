@@ -16,6 +16,7 @@ import NotificationsCentre from 'src/screens/app/NotificationsCentre'
 import Books from 'src/screens/app/Books'
 import Book from 'src/screens/app/Book'
 import Module from 'src/screens/app/Module'
+import ModuleLabels from 'src/screens/app/ModuleLabels'
 import Draft from 'src/screens/app/Draft'
 import DraftDetais from 'src/screens/app/DraftDetails'
 import Resources from 'src/screens/app/Resources'
@@ -135,6 +136,7 @@ class App extends React.Component<AppProps> {
                   <Route path="/notifications" component={NotificationsCentre}/>
                   <Route exact path="/books" component={Books}/>
                   <Route path="/books/:id" component={Book}/>
+                  <Route path="/modules/labels" component={ModuleLabels}/>
                   <Route path="/modules/:id" component={Module}/>
                   <Route exact path="/drafts/:id" component={DraftDetais}/>
                   <Route path="/drafts/:id/:action" component={Draft}/>

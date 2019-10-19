@@ -429,6 +429,12 @@ module-create-draft-alert-success = Draft has been created
 
 
 
+## Screens - module labels
+
+module-labels-screen-title = Manage labels
+
+
+
 ## Screens - notification centre
 
 notification-centre-view-title = Notifications

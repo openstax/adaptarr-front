@@ -429,6 +429,12 @@ module-create-draft-alert-success = Szkic został utworzony
 
 
 
+## Screens - module labels
+
+module-labels-screen-title = Zarządzaj etykietami
+
+
+
 ## Screens - notification centre
 
 notification-centre-view-title = Powiadomienia
