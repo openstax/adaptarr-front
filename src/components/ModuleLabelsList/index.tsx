@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { Link } from 'react-router-dom'
 
@@ -16,7 +16,6 @@ import Input from 'src/components/ui/Input'
 import './index.css'
 
 interface ModuleLabelsListProps {
-  labels: Labels
   active?: ModuleLabelType[]
   title?: string
   onLabelClick: (label: ModuleLabelType) => void
@@ -24,14 +23,10 @@ interface ModuleLabelsListProps {
   [localizationProps: string]: any
 }
 
-const mapStateToProps = ({ modules: { labels, modulesWithLabels } }: State) => ({
-  labels,
-  modulesWithLabels,
-})
-
 const ModuleLabelsList = (
-  { labels, active = [], title, onLabelClick, onClose, ...localizationProps }: ModuleLabelsListProps
+  { active = [], title, onLabelClick, onClose, ...localizationProps }: ModuleLabelsListProps
 ) => {
+  const labels = useSelector((state: State) => state.modules.labels)
   const [filter, setFilter] = React.useState('')
   const regExp = new RegExp(filter, 'i')
   const filteredLabels = Object.values(labels).filter(label => label.name.match(regExp))
@@ -141,7 +136,7 @@ const ModuleLabelsList = (
   )
 }
 
-export default connect(mapStateToProps)(ModuleLabelsList)
+export default ModuleLabelsList
 
 interface LabelPresentationProps {
   label: ModuleLabelType

@@ -1,12 +1,12 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { Module } from 'src/api'
 
 import store from 'src/store'
 import { addLabelToModule, removeLabelFromModule } from 'src/store/actions/modules'
 import { State } from 'src/store/reducers'
-import { Labels, ModuleID, ModuleLabel, ModulesWithLabels } from 'src/store/types'
+import { ModuleID, ModuleLabel } from 'src/store/types'
 
 import ModuleLabelComp from 'src/components/ModuleLabel'
 import ModuleLabelsList from 'src/components/ModuleLabelsList'
@@ -16,17 +16,18 @@ import './index.css'
 
 interface ModuleLabelsProps {
   module: Module | ModuleID
-  labels: Labels
-  modulesWithLabels: ModulesWithLabels
+  onModuleLabelClick?: (label: ModuleLabel) => void
 }
 
-const mapStateToProps = ({ modules: { labels, modulesWithLabels } }: State) => ({
-  labels,
-  modulesWithLabels,
-})
-
-const ModuleLabels = ({ module, labels, modulesWithLabels }: ModuleLabelsProps) => {
+const ModuleLabels = ({
+  module,
+  onModuleLabelClick,
+}: ModuleLabelsProps) => {
   const [editLabels, setEditLabels] = React.useState(false)
+  const { labels, modulesWithLabels } = useSelector((state: State) => ({
+    labels: state.modules.labels,
+    modulesWithLabels: state.modules.modulesWithLabels,
+  }))
 
   const moduleId = typeof module === 'string' ? module : module.id
   const moduleLabels = (modulesWithLabels[moduleId] || []).map(lId => labels[lId])
@@ -65,6 +66,7 @@ const ModuleLabels = ({ module, labels, modulesWithLabels }: ModuleLabelsProps) 
                 <ModuleLabelComp
                   key={label.id}
                   label={label}
+                  onClick={onModuleLabelClick}
                 />
               ))
             }
@@ -84,7 +86,7 @@ const ModuleLabels = ({ module, labels, modulesWithLabels }: ModuleLabelsProps) 
             active={moduleLabels}
             title="module-labels-selector-title"
             onLabelClick={onLabelClick}
-            onClose={toggleEditLabel}
+            onClose={toggleEditLabel as () => void}
           />
           : null
       }
@@ -92,4 +94,4 @@ const ModuleLabels = ({ module, labels, modulesWithLabels }: ModuleLabelsProps) 
   )
 }
 
-export default connect(mapStateToProps)(ModuleLabels)
+export default ModuleLabels

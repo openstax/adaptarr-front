@@ -1,9 +1,8 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import { State } from 'src/store/reducers'
-import { Labels } from 'src/store/types'
 
 import ModuleLabelCreator from './ModuleLabelCreator'
 import MLEItem from './MLEItem'
@@ -12,15 +11,8 @@ import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-interface ModuleLabelsEditorProps {
-  labels: Labels
-}
-
-const mapStateToProps = ({ modules: { labels } }: State) => ({
-  labels,
-})
-
-const ModuleLabelsEditor = ({ labels }: ModuleLabelsEditorProps) => {
+const ModuleLabelsEditor = () => {
+  const labels = useSelector((state: State) => state.modules.labels)
   const [search, setSearch] = React.useState('')
   const regExp = new RegExp(search, 'i')
   const filteredLabels = Object.values(labels).filter(l => l.name.match(regExp))
@@ -73,4 +65,4 @@ const ModuleLabelsEditor = ({ labels }: ModuleLabelsEditorProps) => {
   )
 }
 
-export default connect(mapStateToProps)(ModuleLabelsEditor)
+export default ModuleLabelsEditor
