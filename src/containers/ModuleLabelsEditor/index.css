@@ -1,0 +1,46 @@
+.module-labels-editor {
+  width: 100%;
+}
+
+.module-labels-editor .input input {
+  border: 1px solid var(--light-bg);
+}
+
+.module-labels-editor .focused input {
+  border: 1px solid var(--dark-bg);
+}
+
+.module-labels-editor .module-label {
+  font-size: 16px;
+  padding: 9px;
+}
+
+.module-labels-editor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.module-labels-editor__header .input {
+  width: 300px;
+  margin-right: 20px;
+}
+
+.module-labels-editor__list {
+  margin-top: 20px;
+  border: 1px solid var(--dark-bg);
+  border-radius: 10px;
+  background-color: #fff;
+}
+
+.module-labels-editor__list li {
+  border-bottom: 1px solid var(--dark-bg);
+}
+
+.module-labels-editor__list li:last-child {
+  border-bottom: none;
+}
+
+.module-labels-editor__no-labels {
+  padding: 20px;
+}

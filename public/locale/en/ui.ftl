@@ -2026,3 +2026,38 @@ module-labels-list-create-label = Create new label: { $name }
 module-labels-list-no-labels-found = No labels found
 
 module-labels-list-edit-labels = Edit labels
+
+
+
+## Reusable container - module labels editor
+
+module-labels-editor-search =
+  .placeholder = Search label
+
+module-labels-editor-new-label = New label
+
+module-labels-editor-no-labels = No labels found
+
+module-labels-editor-edit = Edit
+
+module-labels-editor-cancel = Cancel
+
+module-labels-editor-remove = Remove
+
+# - $label (string): name of label to remove
+module-labels-editor-remove-confirm = Remove label: { $label }
+
+
+# Container's component - module label manager
+
+module-labels-editor-label-name-placeholder =
+  .placeholder = Label name
+
+module-labels-editor-update-label = Update label
+
+
+# Container's component - module label creator
+
+module-label-editor-label-name = Label name
+
+module-labels-editor-create-label = Create label

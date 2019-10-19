@@ -1,0 +1,23 @@
+.module-label-manager {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.module-label-manager__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.module-label-manager__controls .input {
+  width: 150px
+}
+
+.module-label-manager__buttons .button {
+  margin-left: 10px;
+}

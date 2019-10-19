@@ -2033,3 +2033,38 @@ module-labels-list-create-label = Utwórz nową etykietę: { $name }
 module-labels-list-no-labels-found = Nie znaleziono etykiety
 
 module-labels-list-edit-labels = Edytuj etykiety
+
+
+
+## Reusable container - module labels editor
+
+module-labels-editor-search =
+  .placeholder = Szukaj etykiety
+
+module-labels-editor-new-label = Nowa etykieta
+
+module-labels-editor-no-labels = Nie ma żadnej etykiety
+
+module-labels-editor-edit = Edytuj
+
+module-labels-editor-cancel = Anuluj
+
+module-labels-editor-remove = Usuń
+
+# - $label (string): name of label to remove
+module-labels-editor-remove-confirm = Usuń etykietę: { $label }
+
+
+# Container's component - module label manager
+
+module-labels-editor-label-name-placeholder =
+  .placeholder = Nazwa etykiety
+
+module-labels-editor-update-label = Zapisz zmiany
+
+
+# Container's component - module label creator
+
+module-label-editor-label-name = Nazwa etykiety
+
+module-labels-editor-create-label = Utwórz etykietę

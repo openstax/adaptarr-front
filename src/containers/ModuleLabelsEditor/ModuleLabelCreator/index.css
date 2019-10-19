@@ -1,0 +1,27 @@
+.module-label-creator {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  margin-top: 10px;
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid var(--dark-bg);
+  border-radius: 10px;
+}
+
+.module-label-creator__controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.module-label-creator__controls .input {
+  width: 150px
+}
+
+.module-label-creator__buttons .button {
+  margin-left: 10px;
+}
