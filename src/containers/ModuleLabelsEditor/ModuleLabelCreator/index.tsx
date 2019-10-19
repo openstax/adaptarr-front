@@ -8,7 +8,7 @@ import { ModuleLabelData, ModuleLabelProperites } from 'src/store/types'
 import ColorGenerator from 'src/components/ColorGenerator'
 import Input from 'src/components/ui/Input'
 import Button from 'src/components/ui/Button'
-import { getRandomColor } from 'src/helpers'
+import { getRandomColor, isColorDark } from 'src/helpers'
 
 import './index.css'
 
@@ -90,18 +90,27 @@ interface ModuleLabelPreviewProps extends ModuleLabelProperites {
   color: string
 }
 
-const ModuleLabelPreview = ({ name, color }: ModuleLabelPreviewProps) => (
-  <span
-    className="module-label"
-    style={{ backgroundColor: color }}
-  >
-    {
-      name
-        ? name
-        :
-        <Localized id="module-label-editor-label-name">
-          Label name
-        </Localized>
-    }
-  </span>
-)
+const ModuleLabelPreview = ({ name, color }: ModuleLabelPreviewProps) => {
+  const style: React.CSSProperties = {
+    backgroundColor: color,
+  }
+  if (isColorDark(color)) {
+    style.color = '#fff'
+  }
+
+  return (
+    <span
+      className="module-label"
+      style={style}
+    >
+      {
+        name
+          ? name
+          :
+          <Localized id="module-label-editor-label-name">
+            Label name
+          </Localized>
+      }
+    </span>
+  )
+}

@@ -18,3 +18,7 @@
 .color-generator .input {
   width: 150px;
 }
+
+.color-generator__box .icon {
+  fill: inherit;
+}

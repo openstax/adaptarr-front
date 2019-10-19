@@ -1,6 +1,6 @@
 import * as React from 'react'
 
-import { getRandomColor, isValidHex } from 'src/helpers'
+import { getRandomColor, isColorDark, isValidHex } from 'src/helpers'
 
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
@@ -28,12 +28,19 @@ const ColorGenerator = ({ startColor, onChange }: ColorGeneratorProps) => {
     }
   }
 
+  const style: React.CSSProperties = {
+    backgroundColor: color,
+  }
+  if (isColorDark(color)) {
+    style.fill = '#fff'
+  }
+
   return (
     <div className="color-generator">
       <div
         className="color-generator__box"
         onClick={newColor}
-        style={{ backgroundColor: color }}
+        style={style}
       >
         <Icon size="small" name="refresh" />
       </div>

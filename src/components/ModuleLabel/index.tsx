@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import { isColorDark } from 'src/helpers'
+
 import { ModuleLabel as ModuleLabelType } from 'src/store/types'
 
 import './index.css'
@@ -16,11 +18,17 @@ const ModuleLabel = ({ label, onClick }: ModuleLabelProps) => {
     }
   }
 
-  // TODO: Change font color to white if bg is dark.
+  const style: React.CSSProperties = {
+    backgroundColor: label.color,
+  }
+  if (isColorDark(label.color)) {
+    style.color = '#fff'
+  }
+
   return (
     <span
       className="module-label"
-      style={{ backgroundColor: label.color }}
+      style={style}
       onClick={handleClick}
     >
       { label.name }
