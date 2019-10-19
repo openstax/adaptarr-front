@@ -1,0 +1,20 @@
+.color-generator {
+  display: flex;
+  align-items: center;
+}
+
+.color-generator__box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 25px;
+  height: 25px;
+  margin-right: 5px;
+  padding: 7px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.color-generator .input {
+  width: 150px;
+}
