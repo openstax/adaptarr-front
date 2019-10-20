@@ -19,6 +19,7 @@ import EditBook from 'src/components/EditBook'
 import BookPartGroup from 'src/components/BookPartGroup'
 import BookPartModule from 'src/components/BookPartModule'
 import ProcessSelector from 'src/components/ProcessSelector'
+import SearchInput, { SearchQueries } from 'src/components/SearchInput'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -37,7 +38,9 @@ interface BookProps {
   }
   history: History
   modules: {
+    labels: types.Labels
     modulesMap: types.ModulesMap
+    modulesWithLabels: types.ModulesWithLabels
   }
   addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
@@ -63,7 +66,7 @@ interface BookState {
   groupNameInput: string
   showAddGroup: boolean
   showAddModule: boolean
-  searchInput: string
+  search: SearchQueries
   selectedProcess: api.Process | null
 }
 
@@ -77,7 +80,7 @@ class Book extends React.Component<BookProps> {
     groupNameInput: '',
     showAddGroup: false,
     showAddModule: false,
-    searchInput: '',
+    search: { text: '' },
     selectedProcess: null,
   }
 
@@ -85,8 +88,8 @@ class Book extends React.Component<BookProps> {
     this.setState({ selectedProcess })
   }
 
-  private onSearch = (searchInput: string) => {
-    this.setState({ searchInput })
+  private onSearch = (search: SearchQueries) => {
+    this.setState({ search })
   }
 
   private showModuleDetails = (item: api.BookPart) => {
@@ -104,8 +107,10 @@ class Book extends React.Component<BookProps> {
    * Check if @param {ModuleData} mod is matching searchInput and / or selectedProcess.
    */
   private testModule = (mod: ModuleData) => {
-    const { selectedProcess, searchInput } = this.state
-    const rgx = new RegExp(searchInput, 'gi')
+    const { selectedProcess, search } = this.state
+    const { modules: { modulesWithLabels } } = this.props
+
+    const rgx = new RegExp(search.text, 'gi')
 
     let passed = true
     if (selectedProcess) {
@@ -113,7 +118,15 @@ class Book extends React.Component<BookProps> {
         passed = false
       }
     }
-    if (passed && searchInput) {
+    if (passed && search.label) {
+      if (
+        !modulesWithLabels[mod.id]
+        || modulesWithLabels[mod.id].indexOf(search.label.id) === -1
+      ) {
+        passed = false
+      }
+    }
+    if (passed && search.text) {
       if (!mod.title.match(rgx)) {
         passed = false
       }
@@ -139,9 +152,9 @@ class Book extends React.Component<BookProps> {
   }
 
   private renderItem = ({ item, collapseIcon }: RenderItem<PartData>) => {
-    const { selectedProcess, searchInput, isEditingUnlocked, book } = this.state
+    const { selectedProcess, search, isEditingUnlocked, book } = this.state
 
-    if (selectedProcess || searchInput) {
+    if (selectedProcess || search.text || search.label) {
       if (item.kind === 'module' && !this.testModule(item)) return null
       if (
         item.kind === 'group' &&
@@ -169,7 +182,7 @@ class Book extends React.Component<BookProps> {
               onModuleClick={this.showModuleDetails}
               afterAction={this.fetchBook}
               isEditingUnlocked={isEditingUnlocked}
-              highlightText={searchInput}
+              highlightText={search.text}
             />
         }
       </div>
@@ -399,7 +412,7 @@ class Book extends React.Component<BookProps> {
       showAddGroup,
       showAddModule,
       groupNameInput,
-      searchInput,
+      search,
     } = this.state
 
     const title = book ? book.title : 'Loading'
@@ -437,9 +450,9 @@ class Book extends React.Component<BookProps> {
               }
             </LimitedUI>
             <div className="book__search">
-              <Input
-                l10nId="book-search-input"
-                value={searchInput}
+              <SearchInput
+                placeholder="book-search-input"
+                slowMode={true}
                 onChange={this.onSearch}
               />
             </div>
@@ -462,7 +475,7 @@ class Book extends React.Component<BookProps> {
                   renderCollapseIcon={this.renderCollapseIcon}
                   onMove={this.handleOnMove}
                   onChange={this.handlePositionChange}
-                  collapsed={!searchInput}
+                  collapsed={!search.text && !search.label}
                 />
                 {
                   isEditingUnlocked ?
