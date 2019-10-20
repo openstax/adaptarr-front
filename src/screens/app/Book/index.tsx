@@ -103,6 +103,16 @@ class Book extends React.Component<BookProps> {
     this.setState({ showModuleDetails: undefined })
   }
 
+  private filterByLabel = (label: types.ModuleLabel) => {
+    // Set new label in search input or remove it if it was clicked two times.
+    this.setState((state: BookState) => ({
+      search: {
+        text: state.search.text,
+        label: state.search.label && state.search.label.id === label.id ? undefined : label,
+      },
+    }))
+  }
+
   /**
    * Check if @param {ModuleData} mod is matching searchInput and / or selectedProcess.
    */
@@ -183,6 +193,7 @@ class Book extends React.Component<BookProps> {
               afterAction={this.fetchBook}
               isEditingUnlocked={isEditingUnlocked}
               highlightText={search.text}
+              onModuleLabelClick={this.filterByLabel}
             />
         }
       </div>
@@ -451,6 +462,7 @@ class Book extends React.Component<BookProps> {
             </LimitedUI>
             <div className="book__search">
               <SearchInput
+                value={search}
                 placeholder="book-search-input"
                 slowMode={true}
                 onChange={this.onSearch}

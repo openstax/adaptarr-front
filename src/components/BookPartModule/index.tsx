@@ -30,8 +30,9 @@ interface ModuleProps {
   teams: Map<number, api.Team>
   isEditingUnlocked: boolean
   highlightText: string
-  onModuleClick: (item: api.BookPart) => any
-  afterAction: () => any
+  onModuleClick: (item: api.BookPart) => void
+  onModuleLabelClick: (label: types.ModuleLabel) => void
+  afterAction: () => void
 }
 
 const mapStateToProps = ({ modules: { modulesMap }, app: { processes, teams } }: State) => ({
@@ -168,7 +169,7 @@ class Module extends React.Component<ModuleProps> {
   }
 
   public render() {
-    const { item, processes, isEditingUnlocked, highlightText } = this.props
+    const { item, processes, isEditingUnlocked, highlightText, onModuleLabelClick } = this.props
     const {
       showBeginProcess,
       processStructure,
@@ -210,7 +211,7 @@ class Module extends React.Component<ModuleProps> {
               </LimitedUI>
               : null
           }
-          <ModuleLabels module={item.id!} />
+          <ModuleLabels module={item.id!} onModuleLabelClick={onModuleLabelClick} />
           <LimitedUI permissions="editing-process:manage">
             {
               item.process ?
