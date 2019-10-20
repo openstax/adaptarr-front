@@ -82,7 +82,11 @@ const ModuleLabelManager = ({ label, onCancel, onUpdate }: ModuleLabelManagerPro
           </Button>
           <Button
             clickHandler={handleUpdateLabel}
-            isDisabled={!labelPreview.name || !labelPreview.color || isLabelExisting}
+            isDisabled={
+              !labelPreview.name
+              || !labelPreview.color
+              || (isLabelExisting && labelPreview.name !== label.name)
+            }
           >
             <Localized id="module-labels-editor-update-label">
               Update label
