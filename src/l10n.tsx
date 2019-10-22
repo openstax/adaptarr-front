@@ -34,7 +34,7 @@ async function loader(
     locale,
     manifest.available.application,
     { defaultLocale: manifest.default },
-  )
+  ).filter(lang => lang)
 
   const bundles = await Promise.all(languages.map(async language => {
     const rsp = await fetch(`/locale/${language}/ui.ftl`)
