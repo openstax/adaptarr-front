@@ -240,12 +240,7 @@ const NestableCustomized = ({ parts }: { parts: api.BookPart[] }) => {
                 onClick={toggleGroup}
               >
                 {item.title}
-              </Link>
-              <Button to={`/drafts/${item.id}`}>
-                <Localized id="dashboard-drafts-details">
-                  Details
-                </Localized>
-              </Button>
+              </div>
             </>
             :
             <>

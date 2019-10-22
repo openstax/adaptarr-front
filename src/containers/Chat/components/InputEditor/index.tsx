@@ -1,5 +1,13 @@
 import * as React from 'react'
-import { Value, Editor as CoreEditor, Block, Inline, Text, Annotation } from 'slate'
+import {
+  Annotation,
+  AnnotationProperties,
+  Block,
+  Editor as CoreEditor,
+  Inline,
+  Text,
+  Value,
+} from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import { Localized } from 'fluent-react/compat'
 
@@ -7,7 +15,7 @@ import { Conversation, User } from 'src/api'
 
 import SCHEMA from './schema'
 import serialize from './serialize'
-import { renderBlock, renderMark, renderInline, renderAnnotation } from './render'
+import { renderAnnotation, renderBlock, renderInline, renderMark } from './render'
 
 import Suggestions from '../Suggestions'
 
@@ -78,10 +86,10 @@ class InputEditor extends React.Component<Props> {
               searchQuery={searchQuery}
               onSelect={this.insertMention}
             />
-          : null
+            : null
         }
         <div className="chat__input-editor">
-          <Localized id="chat-input-placeholder" attrs={{placeholder: true}}>
+          <Localized id="chat-input-placeholder" attrs={{ placeholder: true }}>
             <SlateEditor
               ref={this.editor}
               schema={SCHEMA}
@@ -116,16 +124,16 @@ class InputEditor extends React.Component<Props> {
 
       const { selection } = change.value
 
-      let anno: Annotation | undefined = change.value.annotations.find(ann => {
+      const anno: Annotation | undefined = change.value.annotations.find(ann => {
         if (ann && ann.type === CONTEXT_ANNOTATION_TYPE) {
           return true
         }
         return false
       })
 
-      let newAnno: Annotation | undefined = undefined
+      let newAnno: Annotation | undefined
       if (inputValue && hasValAnc) {
-        newAnno = {
+        newAnno = Annotation.create({
           type: CONTEXT_ANNOTATION_TYPE,
           key: anno ? anno.key : getMentionKey(),
           anchor: {
@@ -138,7 +146,7 @@ class InputEditor extends React.Component<Props> {
             key: selection.end.key,
             offset: selection.end.offset,
           },
-        }
+        } as AnnotationProperties)
       }
 
       if (newAnno) {
@@ -166,6 +174,7 @@ class InputEditor extends React.Component<Props> {
 
     if (event.key === 'Enter') {
       this.sendMessage()
+      return true
     }
 
     if (event.ctrlKey) {
@@ -183,9 +192,9 @@ class InputEditor extends React.Component<Props> {
       default:
         return next()
       }
-    } else {
-      return next()
     }
+
+    return next()
   }
 }
 

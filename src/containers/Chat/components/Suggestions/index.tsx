@@ -9,21 +9,19 @@ import Avatar from 'src/components/ui/Avatar'
 
 import './index.css'
 
-type Props = {
+interface SuggestionsProps {
   users: User[]
   searchQuery: string
   onSelect: (user: User) => void
 }
 
-const mapStateToProps = ({ team: { teamMap } }: State) => {
-  return {
-    users: Array.from(teamMap.values())
-  }
-}
+const mapStateToProps = ({ user: { users } }: State) => ({
+  users: Array.from(users.values()),
+})
 
 const KEYS_TO_HANDLE = ['ArrowUp', 'ArrowDown', 'Tab', 'Enter']
 
-class Suggestions extends React.Component<Props> {
+class Suggestions extends React.Component<SuggestionsProps> {
   state: {
     users: User[]
     selectedUser: User | null
@@ -32,7 +30,7 @@ class Suggestions extends React.Component<Props> {
     selectedUser: null,
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: SuggestionsProps) => {
     if (prevProps.searchQuery !== this.props.searchQuery) {
       this.updateUsers()
     }
@@ -56,20 +54,22 @@ class Suggestions extends React.Component<Props> {
       <ul className="mentions__list">
         {
           users.map(user => (
-              <li
-                key={user.id}
-                className={`mentions__item ${selectedUser && selectedUser.id === user.id ? 'selected' : '' }`}
-                data-id={user.id}
-                onClick={this.onUserClick}
-              >
-                <Avatar
-                  size="small"
-                  withName={true}
-                  user={user}
-                  disableLink={true}
-                />
-              </li>
-            )
+            <li
+              key={user.id}
+              className={
+                `mentions__item ${selectedUser && selectedUser.id === user.id ? 'selected' : '' }`
+              }
+              data-id={user.id}
+              onClick={this.onUserClick}
+            >
+              <Avatar
+                size="small"
+                withName={true}
+                user={user}
+                disableLink={true}
+              />
+            </li>
+          )
           )
         }
       </ul>
@@ -91,7 +91,9 @@ class Suggestions extends React.Component<Props> {
     }
 
     const selectedUser = this.state.selectedUser
-    const newSelectedUser: User = selectedUser && result.find(usr => usr.id === selectedUser.id) ? selectedUser : result[0]
+    const newSelectedUser: User = selectedUser && result.find(usr => usr.id === selectedUser.id)
+      ? selectedUser
+      : result[0]
 
     this.setState({
       users: result,
@@ -114,7 +116,7 @@ class Suggestions extends React.Component<Props> {
     ev.stopPropagation()
 
     const { users, selectedUser } = this.state
-    let selectedUserIndex = selectedUser ? users.findIndex(usr => usr.id === selectedUser.id)! : 0
+    const selectedUserIndex = selectedUser ? users.findIndex(usr => usr.id === selectedUser.id)! : 0
 
     if (ev.key === 'ArrowUp') {
       if (selectedUserIndex > 0) {

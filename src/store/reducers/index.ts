@@ -6,7 +6,7 @@ import * as fromNotifications from './notifications'
 import * as fromBooks from './books'
 import * as fromModules from './modules'
 import * as fromAlerts from './alerts'
-import * as fromConversations from './Conversations'
+import * as fromConversations from './conversations'
 import * as fromDrafts from './drafts'
 
 // This is the root state of the app

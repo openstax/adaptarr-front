@@ -28,7 +28,7 @@ type ConnectedEventData = {}
 
   parser(_: ArrayBuffer): ConnectedEventData {
     return {}
-  }
+  },
 }
 
 export type NewMessageEventData = { id: number, time: Date, userId: number, message: MessageBody }
@@ -43,13 +43,13 @@ export type NewMessageEventData = { id: number, time: Date, userId: number, mess
     const message = body.slice(metalen)
 
     return { id, time, userId, message }
-  }
+  },
 }
 
 TYPES[UNKNOWN_EVENT] = {
   parser() {
     return new UnknownEventError()
-  }
+  },
 }
 
 type MessageReceivedEventData = { id: number }
@@ -57,14 +57,14 @@ type MessageReceivedEventData = { id: number }
   parser(_: Uint8Array, dv: DataView): MessageReceivedEventData {
     const id = dv.getUint32(0, true)
     return { id }
-  }
+  },
 }
 
 TYPES[MESSAGE_INVALID] = {
   parser(body: Uint8Array) {
     const message = decode_utf8(body)
     return new MessageInvalidError(message)
-  }
+  },
 }
 
 export type HistoryEntriesEventData = {
@@ -78,7 +78,7 @@ export interface ReplaceLoadingMessageData extends HistoryEntriesEventData {
   ref?: NewMessageEventData
 }
 
-;TYPES[HISTORY_ENTRIES] = {
+TYPES[HISTORY_ENTRIES] = {
   event: 'historyentries',
 
   parser(body: Uint8Array, dv: DataView): HistoryEntriesEventData {
@@ -103,7 +103,7 @@ export interface ReplaceLoadingMessageData extends HistoryEntriesEventData {
       after: events.splice(count_before),
       before: events,
     }
-  }
+  },
 }
 
 export type ConversationEventData =
@@ -156,14 +156,17 @@ export class DelegatedEventTarget implements EventTarget {
   private delegate = document.createDocumentFragment();
 
   addEventListener(...args: any): void {
+    // eslint-disable-next-line prefer-spread
     this.delegate.addEventListener.apply(this.delegate, args)
   }
 
   dispatchEvent(...args: any): boolean {
+    // eslint-disable-next-line prefer-spread
     return this.delegate.dispatchEvent.apply(this.delegate, args)
   }
 
   removeEventListener(...args: any): void {
+    // eslint-disable-next-line prefer-spread
     return this.delegate.removeEventListener.apply(this.delegate, args)
   }
 }
@@ -212,8 +215,11 @@ export default class Conversation extends DelegatedEventTarget {
   _ws: WebSocket | null = null
 
   onerror: any
+
   onclose: any
+
   onconnected: any
+
   onnewmessage: any
 
   constructor(id: number) {
@@ -240,6 +246,7 @@ export default class Conversation extends DelegatedEventTarget {
    * @param {flags} flags - message flags
    * @param {number[]|Uint8Array|ArrayBuffer} body - body of the event
    */
+  // eslint-disable-next-line consistent-return
   send(type: number, flags: number, body: MessageBody): Promise<any> | void {
     const cookie = this._getCookie()
     const msg = this._buildMessage(cookie, type, flags, body)
@@ -250,7 +257,7 @@ export default class Conversation extends DelegatedEventTarget {
       return new Promise((resolve, reject) => {
         const timeout = window.setTimeout(() => {
           this._ws!.close(4003)
-          reject()
+          reject(new Error(`Timeouted after ${TIMEOUT}`))
         }, TIMEOUT)
         this._requests.set(cookie, { type, resolve, reject, timeout })
       })
@@ -294,13 +301,18 @@ export default class Conversation extends DelegatedEventTarget {
    *
    * If @param refEvent was provided then it will be returned as a first event in after variable
    */
-  async getHistory(refEvent: number, before: number, after: number): Promise<HistoryEntriesEventData> {
+  async getHistory(
+    refEvent: number,
+    before: number,
+    after: number
+  ): Promise<HistoryEntriesEventData> {
     const body = new Uint8Array(8)
     const dv = new DataView(body.buffer)
     dv.setUint32(0, refEvent, true)
     dv.setUint16(4, before, true)
     dv.setUint16(6, after, true)
-    return await this.send(GET_HISTORY, RESPONSE_REQUIRED, body)
+    const data = await this.send(GET_HISTORY, RESPONSE_REQUIRED, body) as HistoryEntriesEventData
+    return data
   }
 
   /**
@@ -368,7 +380,8 @@ export default class Conversation extends DelegatedEventTarget {
     const bodydv = new DataView(ev.data, 8)
 
     if ((cookie & 0x8000) === 0) {
-      return this._onresponse(cookie, type, body, bodydv)
+      this._onresponse(cookie, type, body, bodydv)
+      return
     }
 
     this._event = cookie
@@ -385,8 +398,8 @@ export default class Conversation extends DelegatedEventTarget {
         this._ws!.close(ERR_UNKNOWN_EVENT)
       } else {
         this.respond(UNKNOWN_EVENT, [])
-        //this.respond(cookie, [])
-        //this.respond(cookie, UNKNOWN_EVENT, [])
+        // this.respond(cookie, [])
+        // this.respond(cookie, UNKNOWN_EVENT, [])
       }
       return
     }
@@ -435,6 +448,7 @@ export default class Conversation extends DelegatedEventTarget {
    * Generate a valid cookie.
    */
   _getCookie(): number {
+    // eslint-disable-next-line no-constant-condition
     while (true) {
       const cookie = this._cookie++
 
@@ -503,7 +517,7 @@ function decode_utf8(data: Uint8Array): string {
   const text = []
 
   for (let inx = 0 ; inx < data.length ;) {
-    const byte = data[inx++];
+    const byte = data[inx++]
     let cp
     let len = 0
 
@@ -535,13 +549,14 @@ function decode_utf8(data: Uint8Array): string {
 /**
  * TODO: Add description
  */
+// eslint-disable-next-line no-extend-native
 DataView.prototype.getBigInt64 = function getBigInt64(offset: number, little: boolean) {
   const negative = (this.getUint8(little ? offset + 7 : 0) & 0x80) !== 0
 
   if (!negative) {
     const low = this.getUint32(little ? offset : offset + 4, little)
     const high = this.getUint32(little ? offset + 4 : offset, little)
-    return high * 0x100000000 + low
+    return (high * 0x100000000) + low
   }
 
   let start = offset
@@ -557,7 +572,7 @@ DataView.prototype.getBigInt64 = function getBigInt64(offset: number, little: bo
   let r = 0
 
   for (let i = start ; i !== end ; i += step) {
-    r = (r * 0x100 ) + ((~this.getUint8(i)) & 0xff)
+    r = (r * 0x100) + (~this.getUint8(i) & 0xff)
   }
 
   return -r - 1

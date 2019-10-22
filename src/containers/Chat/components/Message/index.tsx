@@ -39,7 +39,7 @@ export function leb128(data: Data, inx=0) {
   return [r, inx]
 }
 
-function* frames(data: Data): IterableIterator<[number, Data]> {
+function *frames(data: Data): IterableIterator<[number, Data]> {
   for (let inx = 0; inx < data.length;) {
     let type, len
 
@@ -72,6 +72,7 @@ function Block({ data }: { data: Data }): JSX.Element[] {
 
 class LineCtx {
   nodes: [JSX.Element[], number][] = [[[], 0]]
+
   key = 0
 
   top() {
@@ -148,13 +149,14 @@ function Line({ data }: { data: Data }): JSX.Element[] {
         .getUint16(0, true))
       break
 
-    case FRAME_HYPERLINK:
+    case FRAME_HYPERLINK: {
       const [len, inx] = leb128(data, 0)
       const label = decode_utf8(data.subarray(inx, inx + len))
       const url = String.fromCodePoint.apply(null, data.subarray(inx + len))
 
       ctx.addInline(<a href={url}>{label}</a>)
       break
+    }
 
     case FRAME_MENTION:
       ctx.addInline(<Mention key={ctx.key++} data={body} />)
@@ -178,7 +180,7 @@ function decode_utf8(data: Data) {
   const text = []
 
   for (let inx = 0 ; inx < data.length ;) {
-    const byte = data[inx++];
+    const byte = data[inx++]
     let cp
     let len = 0
 

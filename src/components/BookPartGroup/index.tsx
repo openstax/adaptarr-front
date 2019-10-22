@@ -73,36 +73,6 @@ class Group extends React.Component<GroupProps> {
     return modStatuses
   }
 
-  private getModStatuses = (group: api.BookPart = this.props.item) => {
-    // Map<step name, number of modules in this step>
-    let modStatuses: Map<string, number> = new Map()
-
-    if (!this.props.showStatsFor) return modStatuses
-
-    for (const part of group.parts!) {
-      if (part.kind === 'module') {
-        if (part.process && part.process.process === this.props.showStatsFor.id) {
-          let counter = 1
-          if (modStatuses.has(part.process.step.name)) {
-            counter = modStatuses.get(part.process.step.name)! + 1
-          }
-          modStatuses.set(part.process.step.name, counter)
-        }
-      } else if (part.kind === 'group') {
-        const map = this.getModStatuses(part)
-
-        for (let [stepName, counter] of map.entries()) {
-          if (modStatuses.has(stepName)) {
-            counter += modStatuses.get(stepName)!
-          }
-          modStatuses.set(stepName, counter)
-        }
-      }
-    }
-
-    return modStatuses
-  }
-
   private showBeginProcessDialog = async () => {
     const modules: api.Module[] = []
 

@@ -4,9 +4,9 @@ import { PersistDB, PersistDBData } from 'cnx-designer'
 import { Localized } from 'fluent-react/compat'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-import saveAs from 'src/helpers/saveAsFile'
+import { saveAsFile } from 'src/helpers'
 
 import Spinner from 'src/components/Spinner'
 import Button from 'src/components/ui/Button'
@@ -35,7 +35,7 @@ class HelpdeskTools extends React.Component {
       const db = await PersistDB.open()
       const data = await db.export()
       const filename = `IndexedDB-${new Date().toISOString()}.json`
-      saveAs(filename, JSON.stringify(data, null, 2), 'application/json')
+      saveAsFile(filename, JSON.stringify(data, null, 2), 'application/json')
     } catch (e) {
       console.error(e)
       store.dispatch(addAlert('error', 'helpdesk-export-error', { details: e.toString() }))
@@ -51,10 +51,8 @@ class HelpdeskTools extends React.Component {
     this.setState({
       isImportingDatabase: false,
       showImportDatabase: false,
-      showWhatToReplace:false,
       files: [],
       uploadedDatabase: undefined,
-      selectedStates: [],
     })
   }
 
@@ -101,7 +99,7 @@ class HelpdeskTools extends React.Component {
               <Localized id="helpdesk-export-local-database-loading">
                 Exporting...
               </Localized>
-            :
+              :
               <Localized id="helpdesk-export-local-database">
                 Export local database
               </Localized>
@@ -124,7 +122,7 @@ class HelpdeskTools extends React.Component {
               {
                 isImportingDatabase ?
                   <Spinner />
-                :
+                  :
                   <div className="helpdesk__dialog-content">
                     <FileUploader
                       onFilesChange={this.onFilesChange}
@@ -141,9 +139,9 @@ class HelpdeskTools extends React.Component {
                         </Localized>
                       </Button>
                       <Button
-                          clickHandler={this.importDatabase}
-                          isDisabled={!files.length}
-                        >
+                        clickHandler={this.importDatabase}
+                        isDisabled={!files.length}
+                      >
                         <Localized id="helpdesk-import-confirm">
                           Import database
                         </Localized>
@@ -152,14 +150,14 @@ class HelpdeskTools extends React.Component {
                   </div>
               }
             </Dialog>
-          : null
+            : null
         }
       </div>
     )
   }
 
   private onFilesChange = async (files: File[]) => {
-    let uploadedDatabase = undefined
+    let uploadedDatabase
     if (files.length) {
       uploadedDatabase = JSON.parse(await new Response(files[0]).text())
       if (

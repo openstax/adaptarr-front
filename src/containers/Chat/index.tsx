@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
 
-import Conversation, { ConversationMessage, ConversationData } from 'src/api/conversation'
+import Conversation, { ConversationData, ConversationMessage } from 'src/api/conversation'
 
 import { State } from 'src/store/reducers'
 
@@ -18,15 +18,12 @@ type Props = {
   messages: Map<number, ConversationMessage[]>
 }
 
-const mapStateToProps = ({ conversations: { conversations, messages } }: State) => {
-  return {
-    conversations,
-    messages,
-  }
-}
+const mapStateToProps = ({ conversations: { conversations, messages } }: State) => ({
+  conversations,
+  messages,
+})
 
 class Chat extends React.Component<Props> {
-
   private focusInput = () => {
     if (this.inputEditor.current) {
       this.inputEditor.current!.focus()

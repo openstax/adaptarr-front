@@ -2,23 +2,24 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import Conversation, {
-  UserMessages as UserMessagesType,
   DateSeparator as DateSeparatorType,
   LoadingMessages as LoadingMessagesType,
+  UserMessages as UserMessagesType,
 } from 'src/api/conversation'
 
 import store from 'src/store'
-import { replaceLoadingMessage } from 'src/store/actions/Conversations'
+import { replaceLoadingMessage } from 'src/store/actions/conversations'
 
-import isSameDay from 'src/helpers/isSameDay'
+import { isSameDay } from 'src/helpers'
 
 import Message from '../Message'
 import Avatar from 'src/components/ui/Avatar'
 
-type UserMessagesProps = {
+interface UserMessagesProps {
   data: UserMessagesType
   selectedMsg: number
 }
+
 export const UserMessages = ({ data, selectedMsg }: UserMessagesProps) => {
   const { userId, messages } = data
 
@@ -36,13 +37,15 @@ export const UserMessages = ({ data, selectedMsg }: UserMessagesProps) => {
             <div
               key={id}
               id={`msg-${id}`}
-              className={`chat__msg-single ${id === selectedMsg ? 'chat__msg-single--selected' : ''}`}
+              className={
+                `chat__msg-single ${id === selectedMsg ? 'chat__msg-single--selected' : ''}`
+              }
             >
               <Time time={time} />
               <Message data={new Uint8Array(message)} />
             </div>
           ))
-      }
+        }
       </div>
     </div>
   )
@@ -58,9 +61,9 @@ export const DateSeparator = ({ data: { date } }: { data: DateSeparatorType }) =
         {
           isToday ?
             <Localized id="chat-today">Today</Localized>
-          : isYesterday ?
+            : isYesterday ?
               <Localized id="chat-yesterday">Yesterday</Localized>
-            : new Intl.DateTimeFormat(
+              : new Intl.DateTimeFormat(
                 'default', { weekday: 'long', month: 'short', day: 'numeric' }).format(date)
         }
       </span>
@@ -68,20 +71,17 @@ export const DateSeparator = ({ data: { date } }: { data: DateSeparatorType }) =
   )
 }
 
-const Time = ({ time }: { time?: Date }) => {
-  return (
-    <span className="chat__msg-time">
-      {
-        new Intl.DateTimeFormat(
-          'default', { hour: '2-digit', minute: '2-digit' }).format(time)
-      }
-    </span>
-  )
-}
+const Time = ({ time }: { time?: Date }) => (
+  <span className="chat__msg-time">
+    {
+      new Intl.DateTimeFormat(
+        'default', { hour: '2-digit', minute: '2-digit' }).format(time)
+    }
+  </span>
+)
 
 
-
-type LoadingMessagesProps = {
+interface LoadingMessagesProps {
   data: LoadingMessagesType
   isInView: boolean
   conversation: Conversation
@@ -99,7 +99,7 @@ export class LoadingMessages extends React.Component<LoadingMessagesProps> {
   state: {
     isLoading: boolean
   } = {
-    isLoading: false
+    isLoading: false,
   }
 
   componentDidMount() {
@@ -113,7 +113,8 @@ export class LoadingMessages extends React.Component<LoadingMessagesProps> {
       this.loadMessages()
     }
     if (prevProps.data.id !== this.props.data.id) {
-      if (!this.props.isInView && this.props.isInView) {
+      if (!prevProps.isInView && this.props.isInView) {
+        // eslint-disable-next-line react/no-did-update-set-state
         this.setState({ isLoading: false })
       }
     }
@@ -150,21 +151,20 @@ export class LoadingMessages extends React.Component<LoadingMessagesProps> {
     let isLoadingDone = false
 
     switch (direction) {
-      case 'before': {
-        if (numBefore > 0 && before.length < numBefore) {
-          isLoadingDone = true
-        }
-        break
+    case 'before':
+      if (numBefore > 0 && before.length < numBefore) {
+        isLoadingDone = true
       }
-      case 'after': {
-        if (numAfter > 0 && after.length < numAfter) {
-          isLoadingDone = true
-        }
-        break
+      break
+
+    case 'after':
+      if (numAfter > 0 && after.length < numAfter) {
+        isLoadingDone = true
       }
-      default: {
-        console.warn(`Unknown direction: ${direction} in loadMessages().`)
-      }
+      break
+
+    default:
+      console.warn(`Unknown direction: ${direction} in loadMessages().`)
     }
 
     const scrollHeightBeforeMsgAdd = chatContainer.scrollHeight
@@ -194,6 +194,7 @@ export class LoadingMessages extends React.Component<LoadingMessagesProps> {
       if (direction === 'before') {
         // If messages were added to the top of loading message then we have to
         // keep scrollFromBottom position.
+        // eslint-disable-next-line max-len
         chatContainer.scrollTop = scrollHeightAfterMsgAdd - scrollFromBottom - chatContainer.offsetHeight
       } else if (direction === 'after') {
         // If messages were added after loading message then we have to

@@ -82,7 +82,7 @@ const UserProfile = (props: UserProfileProps) => {
         title={decodeHtmlEntity(user.name) + "'s profile"}
         $name={decodeHtmlEntity(user.name)}
       />
-	)
+    )
   }
 
   return (

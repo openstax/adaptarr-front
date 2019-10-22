@@ -1,21 +1,21 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import Conversation, { ConversationMessage, ConversationData } from 'src/api/conversation'
+import Conversation, { ConversationData, ConversationMessage } from 'src/api/conversation'
 
-import { UserMessages, DateSeparator, LoadingMessages, HISTORY_LIMIT } from '../Messages'
+import { DateSeparator, HISTORY_LIMIT, LoadingMessages, UserMessages } from '../Messages'
 
 import store from 'src/store'
-import { addMessages, AddMessagesData } from 'src/store/actions/Conversations'
+import { addMessages, AddMessagesData } from 'src/store/actions/conversations'
 
-type Props = {
+interface MessagesStreamProps {
   conversation: Conversation
   convData: ConversationData
   messages: ConversationMessage[]
   afterUpdate: () => void
 }
 
-class MessagesStream extends React.Component<Props> {
+class MessagesStream extends React.Component<MessagesStreamProps> {
   state: {
     historyHasEnded: boolean
     loadingMessagesInView: Set<string>
@@ -35,13 +35,17 @@ class MessagesStream extends React.Component<Props> {
 
     const hash = Number(window.location.hash.replace('#', ''))
     if (hash) {
+      // eslint-disable-next-line react/no-did-mount-set-state
       this.setState({ selectedMsg: hash })
       if (convData.knownMessages.has(hash)) {
         document.getElementById(`msg-${hash}`)!.scrollIntoView()
         chat.scrollBy(0, -(chat.offsetHeight / 2))
       } else {
         try {
-          const { before, after } = await conversation.getHistory(hash, HISTORY_LIMIT, HISTORY_LIMIT)
+          const {
+            before,
+            after,
+          } = await conversation.getHistory(hash, HISTORY_LIMIT, HISTORY_LIMIT)
           const ref = after[0]
 
           if (!before.length && !after.length) {
@@ -52,8 +56,8 @@ class MessagesStream extends React.Component<Props> {
             messages: [...before, ...after].reverse(),
             conversationId: conversation.id,
             position: 'start',
-            addLoadingMsgBefore: before.length < HISTORY_LIMIT ? false : true,
-            addLoadingMsgAfter: after.length < HISTORY_LIMIT ? false : true,
+            addLoadingMsgBefore: !(before.length < HISTORY_LIMIT),
+            addLoadingMsgAfter: !(after.length < HISTORY_LIMIT),
           }
 
           store.dispatch(
@@ -66,6 +70,7 @@ class MessagesStream extends React.Component<Props> {
             chat.scrollBy(0, -(chat.offsetHeight / 2))
           }
         } catch (e) {
+          // eslint-disable-next-line max-len
           console.error(`Couldn't find ref message with id: ${hash} for conversation with id: ${conversation.id}`)
         }
       }
@@ -95,13 +100,15 @@ class MessagesStream extends React.Component<Props> {
       } else if (msg.kind === 'message:separator') {
         rendered.push(<DateSeparator key={i} data={msg} />)
       } else if (msg.kind === 'message:loading') {
-        rendered.push(<LoadingMessages
-          key={i}
-          data={msg}
-          isInView={this.state.loadingMessagesInView.has(msg.id)}
-          conversation={this.props.conversation}
-          chatContainer={this.chatContainer.current!}
-        />)
+        rendered.push(
+          <LoadingMessages
+            key={i}
+            data={msg}
+            isInView={this.state.loadingMessagesInView.has(msg.id)}
+            conversation={this.props.conversation}
+            chatContainer={this.chatContainer.current!}
+          />
+        )
       }
       i++
     }
@@ -115,7 +122,7 @@ class MessagesStream extends React.Component<Props> {
                 This is very beggining of your message history.
               </Localized>
             </div>
-          : null
+            : null
         }
         {rendered}
       </div>
@@ -129,7 +136,8 @@ class MessagesStream extends React.Component<Props> {
     const chat = this.chatContainer.current!
     const scrollBy = chat.scrollHeight - chat.clientHeight - chat.scrollTop
 
-    const lastMsg = chat.querySelector<HTMLDivElement>('.chat__msg:last-child .chat__msg-single:last-child')
+    const lastMsg = chat.querySelector<HTMLDivElement>(
+      '.chat__msg:last-child .chat__msg-single:last-child')
     const lastMsgHeight = lastMsg ? lastMsg.offsetHeight : 0
 
     // Scroll only if user didn't scroll to the top manually for value more than 150px.
@@ -139,7 +147,8 @@ class MessagesStream extends React.Component<Props> {
   }
 
   timeout: NodeJS.Timeout | null = null
-  private handleScroll = async () => {
+
+  private handleScroll = () => {
     if (this.timeout) {
       clearTimeout(this.timeout)
     }
@@ -151,9 +160,10 @@ class MessagesStream extends React.Component<Props> {
 
   private checkForLoadingMessagesInView = () => {
     const chat = this.chatContainer.current!
-    const loadingMessages = chat.querySelectorAll('.chat__msg--loading') as NodeListOf<HTMLDivElement>
+    const loadingMessages = chat.querySelectorAll(
+      '.chat__msg--loading') as NodeListOf<HTMLDivElement>
     if (loadingMessages.length === 0) return
-    let loadingMessagesInView = new Set<string>()
+    const loadingMessagesInView = new Set<string>()
     loadingMessages.forEach(msg => {
       if (this.isElemInChatView(msg)) {
         if (loadingMessagesInView.size === 0) {
@@ -171,7 +181,7 @@ class MessagesStream extends React.Component<Props> {
     const top = elRect.top
     const height = elRect.height
 
-    if (top <= chatRect.bottom === false) return false
+    if (top <= chatRect.bottom) return false
     // Check if the element is out of view due to a container scrolling
     if ((top + height) <= chatRect.top) return false
     // Check its within the document viewport

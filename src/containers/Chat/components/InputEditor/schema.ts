@@ -1,4 +1,4 @@
-import { Editor, SlateError, Block } from 'slate'
+import { Block, Editor, SlateError } from 'slate'
 
 import { CONTEXT_ANNOTATION_TYPE } from '../InputEditor'
 
@@ -34,6 +34,6 @@ export default {
   annotations: {
     [CONTEXT_ANNOTATION_TYPE]: {
       isAtomic: true,
-    }
+    },
   },
 }

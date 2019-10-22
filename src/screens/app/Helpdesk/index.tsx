@@ -5,8 +5,7 @@ import Conversation, { ConversationData } from 'src/api/conversation'
 
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/alerts'
-import { createConversation, openConversation } from 'src/store/actions/Conversations'
+import { createConversation, openConversation } from 'src/store/actions/conversations'
 
 import Header from 'src/components/Header'
 import Section from 'src/components/Section'
@@ -22,28 +21,18 @@ interface HelpdeskProps {
   sockets: Map<number, Conversation>
 }
 
-const mapStateToProps = ({ conversations: { conversations, sockets } }: State) => {
-  return {
-    conversations,
-    sockets,
-  }
-}
+const mapStateToProps = ({ conversations: { conversations, sockets } }: State) => ({
+  conversations,
+  sockets,
+})
 
 interface HelpdeskState {
-  isExportingDatabase: boolean
-  isImportingDatabase: boolean
-  showImportDatabase: boolean
-  files: File[]
-  uploadedDatabase: PersistDBData | undefined
+  conversation?: Conversation
 }
 
 class Helpdesk extends React.Component<HelpdeskProps> {
   state: HelpdeskState = {
-    isExportingDatabase: false,
-    isImportingDatabase: false,
-    showImportDatabase: false,
-    files: [],
-    uploadedDatabase: undefined,
+    conversation: undefined,
   }
 
   private startHelpdeskConversation = () => {
@@ -61,16 +50,16 @@ class Helpdesk extends React.Component<HelpdeskProps> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: HelpdeskProps) {
     if (
       prevProps.conversations.size !== this.props.conversations.size
       || prevProps.sockets.size !== this.props.sockets.size
-      ) {
-        this.startHelpdeskConversation()
-      }
+    ) {
+      this.startHelpdeskConversation()
+    }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.startHelpdeskConversation()
   }
 
@@ -88,9 +77,9 @@ class Helpdesk extends React.Component<HelpdeskProps> {
         <Section>
           <Header l10nId="helpdesk-view-chat-title" title="Chat" />
           {
-            conversation ?
-              <Chat conversation={conversation} />
-            : <Spinner/>
+            conversation
+              ? <Chat conversation={conversation} />
+              : <Spinner/>
           }
         </Section>
       </div>

@@ -1,4 +1,4 @@
-import { Text, Inline, Block, Value, Mark } from 'slate'
+import { Block, Inline, Mark, Text, Value } from 'slate'
 
 /**
  * Mapping from slate marks to formatting flags.
@@ -21,6 +21,7 @@ const FRAME_MENTION = 6
  */
 function leb128(buf: number[], v: number) {
   let s = 0
+  // eslint-disable-next-line no-empty
   for (; (v >> s) > 0 ; s += 7) {}
   s -= 7
 
@@ -37,7 +38,7 @@ function leb128(buf: number[], v: number) {
 function frame(bytes: number[], type: number, body: number[]) {
   leb128(bytes, type)
   leb128(bytes, body.length)
-  bytes.push.apply(bytes, body)
+  bytes.push(...body)
 }
 
 /**
@@ -80,16 +81,16 @@ function text(bytes: number[], node: Text, lastFormat: number) {
     format |= MARKS[mark.type]
   }
 
-  let pop = lastFormat & ~format
-  let push = format & ~lastFormat
+  const pop = lastFormat & ~format
+  const push = format & ~lastFormat
 
   // NOTE: Push and pop formatting are fixed-length frames, so we can
   // hard-code then and skip allocation for frame().
   if (pop !== 0) {
-    bytes.push.call(bytes, FRAME_POP_FORMAT, 0x02, pop & 0xff, pop >> 8)
+    bytes.push(...bytes, FRAME_POP_FORMAT, 0x02, pop & 0xff, pop >> 8)
   }
   if (push !== 0) {
-    bytes.push.call(bytes, FRAME_PUSH_FORMAT, 0x02, push & 0xff, push >> 8)
+    bytes.push(...bytes, FRAME_PUSH_FORMAT, 0x02, push & 0xff, push >> 8)
   }
 
   const text = encodeUtf8(node.text)
@@ -102,17 +103,17 @@ function inline(bytes: number[], node: Inline) {
   const body: number[] = []
 
   switch (node.type) {
-  case 'hyperlink':
+  case 'hyperlink': {
     const label = encodeUtf8(node.text)
     leb128(body, label.length)
-    body.push.apply(body, label)
+    body.push(...label)
     encodeUtf8(node.data.get('url'), body)
     frame(bytes, FRAME_HYPERLINK, body)
     break
+  }
 
   case 'mention':
-    const user = node.data.get('userId')
-    leb128(body, user)
+    leb128(body, node.data.get('userId'))
     frame(bytes, FRAME_MENTION, body)
     break
 
@@ -149,7 +150,7 @@ function textBlock(block: Block) {
 export default function serialize(value: Value) {
   const bytes: number[] = []
 
-  for (const block of value.document.nodes.toArray()) {
+  for (const block of value.document.nodes.toArray() as Block[]) {
     switch (block.type) {
     case 'paragraph':
       frame(bytes, FRAME_PARA, textBlock(block))

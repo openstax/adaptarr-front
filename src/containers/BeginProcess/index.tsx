@@ -137,4 +137,4 @@ class BeginProcess extends React.Component<BeginProcessProps> {
   }
 }
 
-export default BeginProcess
+export default connect(mapStateToProps)(BeginProcess)
