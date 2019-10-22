@@ -5,14 +5,14 @@ import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-export type Props = {
-  title: string,
-  toggleState: boolean,
-  onToggle: () => any,
-  [localizationProps: string]: any,
+interface ToolGroupProps {
+  title: string
+  toggleState: boolean
+  onToggle: () => any
+  [localizationProps: string]: any
 }
 
-export default class ToolGroup extends React.Component<Props> {
+export default class ToolGroup extends React.Component<ToolGroupProps> {
   render() {
     const { children, title, toggleState: open, ...args } = this.props
 

@@ -2,18 +2,18 @@ import * as React from 'react'
 
 import Draft from 'src/api/draft'
 
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import store from 'src/store'
 
 import EditableText from 'src/components/EditableText'
 
 import './index.css'
 
-type Props = {
+interface TitleProps {
   draft: Draft
 }
 
-class Title extends React.Component<Props> {
+class Title extends React.Component<TitleProps> {
   state: {
     titleInput: string
   } = {
@@ -32,28 +32,25 @@ class Title extends React.Component<Props> {
     }
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: TitleProps) => {
     if (prevProps.draft.title !== this.props.draft.title) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ titleInput: this.props.draft.title })
     }
-  }
-
-  componentDidMount = () => {
-    this.setState({ titleInput: this.props.draft.title })
   }
 
   public render() {
     const { titleInput } = this.state
     const { draft } = this.props
     const permissions = draft.permissions || []
-    const viewPermission = permissions.length === 0 || permissions.every(p => p === 'view')
+    const editPermission = permissions.some(p => p === 'edit')
 
     return (
       <div className="draft__title">
         {
-          viewPermission ?
-            titleInput
-          : <EditableText text={titleInput} onAccept={this.changeTitle} />
+          editPermission ?
+            <EditableText text={titleInput} onAccept={this.changeTitle} />
+            : titleInput
         }
       </div>
     )

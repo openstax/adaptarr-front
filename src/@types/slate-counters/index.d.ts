@@ -3,13 +3,17 @@ declare module 'slate-counters' {
   import * as Immutable from 'immutable'
   import { Plugin } from 'slate-react'
 
-  export default function(): Plugin;
+  export default function(): Plugin
 
-  export type CounterProps = {
-    counters: Immutable.Map<string, number>,
+  export interface CounterProps {
+    counters: Immutable.Map<string, number>
   }
 
-  export type WithCountersDecorator<Props> = (component: React.ComponentType<Props & CounterProps>) => React.ComponentType<Props>;
+  export type WithCountersDecorator<Props> = (
+    component: React.ComponentType<Props & CounterProps>
+  ) => React.ComponentType<Props>
 
-  export function WithCounters<Props>(getKey: (props: Props) => string): WithCountersDecorator<Props>;
+  export function WithCounters<Props>(
+    getKey: (props: Props) => string
+  ): WithCountersDecorator<Props>
 }

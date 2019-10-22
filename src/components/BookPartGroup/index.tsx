@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import { addAlert } from 'src/store/actions/Alerts'
+
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/alerts'
+
+import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import EditableText from 'src/components/EditableText'
@@ -14,7 +17,7 @@ import Input from 'src/components/ui/Input'
 import BeginProcess from 'src/containers/BeginProcess'
 import ModulesPicker from 'src/containers/ModulesPicker'
 
-type Props = {
+interface GroupProps {
   book: api.Book
   item: api.BookPart
   collapseIcon: any
@@ -25,23 +28,49 @@ type Props = {
   onTitleClick: (num: number) => void
 }
 
-class Group extends React.Component<Props> {
+class Group extends React.Component<GroupProps> {
   state: {
     showAddGroup: boolean
-    showRemoveGroup: boolean
     showAddModule: boolean
     groupNameInput: string
     showBeginProcess: boolean
     modules: api.Module[] | undefined
-    showNoModules: boolean
   } = {
     showAddGroup: false,
-    showRemoveGroup: false,
     showAddModule: false,
-    groupNameInput: '',
+    groupNameInput: this.props.item.title,
     showBeginProcess: false,
     modules: undefined,
-    showNoModules: false,
+  }
+
+  private getModStatuses = (group: api.BookPart = this.props.item) => {
+    // Map<step name, number of modules in this step>
+    const modStatuses: Map<string, number> = new Map()
+
+    if (!this.props.showStatsFor) return modStatuses
+
+    for (const part of group.parts!) {
+      if (part.kind === 'module') {
+        if (part.process && part.process.process === this.props.showStatsFor.id) {
+          let counter = 1
+          if (modStatuses.has(part.process.step.name)) {
+            counter = modStatuses.get(part.process.step.name)! + 1
+          }
+          modStatuses.set(part.process.step.name, counter)
+        }
+      } else if (part.kind === 'group') {
+        const map = this.getModStatuses(part)
+
+        for (let [stepName, counter] of map.entries()) {
+          if (modStatuses.has(stepName)) {
+            counter += modStatuses.get(stepName)!
+          }
+          modStatuses.set(stepName, counter)
+        }
+      }
+    }
+
+    return modStatuses
   }
 
   private getModStatuses = (group: api.BookPart = this.props.item) => {
@@ -75,9 +104,9 @@ class Group extends React.Component<Props> {
   }
 
   private showBeginProcessDialog = async () => {
-    let modules: api.Module[] = []
+    const modules: api.Module[] = []
 
-    for (let part of this.props.item.parts!) {
+    for (const part of this.props.item.parts!) {
       if (part.kind === 'module') {
         const mod = await part.module()
         if (mod && !mod.process) {
@@ -89,16 +118,19 @@ class Group extends React.Component<Props> {
     if (modules.length) {
       this.setState({ showBeginProcess: true, modules })
     } else {
-      this.setState({ showNoModules: true, modules: undefined })
+      this.setState({ modules: undefined })
+      await confirmDialog({
+        title: 'book-begin-process-no-modules',
+        buttons: {
+          ok: 'book-begin-process-no-modules-ok',
+        },
+        buttonsPosition: 'center',
+      })
     }
   }
 
   private closeBeginProcessDialog = () => {
     this.setState({ showBeginProcess: false, modules: undefined })
-  }
-
-  private closeNoModules = () => {
-    this.setState({ showNoModules: false })
   }
 
   private updateGroupNameInput = (val: string) => {
@@ -115,9 +147,18 @@ class Group extends React.Component<Props> {
     this.props.item.update({ title: name })
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', 'book-group-change-title-alert-success', {from: this.props.item.title, to: name}))
+        store.dispatch(
+          addAlert(
+            'success',
+            'book-group-change-title-alert-success',
+            {
+              from: this.props.item.title,
+              to: name,
+            }
+          )
+        )
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
   }
@@ -144,7 +185,7 @@ class Group extends React.Component<Props> {
         this.updateBook()
         store.dispatch(addAlert('success', 'book-add-group-alert-success'))
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
     this.closeAddGroupDialog()
@@ -158,30 +199,42 @@ class Group extends React.Component<Props> {
     this.setState({ showAddGroup: false })
   }
 
-  private handleRemoveGroup = () => {
+  private removeGroup = () => {
     const { item } = this.props
 
     item.delete()
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', 'book-remove-group-alert-success', {title: item.title}))
+        store.dispatch(
+          addAlert(
+            'success',
+            'book-remove-group-alert-success',
+            { title: item.title }
+          )
+        )
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
-    this.closeRemoveGroupDialog()
   }
 
-  private showRemoveGroupDialog = () => {
-    this.setState({ showRemoveGroup: true })
-  }
+  private showRemoveGroupDialog = async () => {
+    const res = await confirmDialog({
+      title: 'book-remove-group-dialog-title',
+      buttons: {
+        cancel: 'book-remove-group-cancel',
+        confirm: 'book-remove-group-confirm',
+      },
+      showCloseButton: false,
+    })
 
-  private closeRemoveGroupDialog = () => {
-    this.setState({ showRemoveGroup: false })
+    if (res === 'confirm') {
+      this.removeGroup()
+    }
   }
 
   private handleAddModule = (selectedModule: api.Module) => {
-    const { book, item: targetGroup} = this.props
+    const { book, item: targetGroup } = this.props
 
     if (!targetGroup || !selectedModule) {
       throw new Error("targetGroup or selectedModule is undefined")
@@ -196,9 +249,15 @@ class Group extends React.Component<Props> {
     book.createPart(payload)
       .then(() => {
         this.updateBook()
-        store.dispatch(addAlert('success', 'book-group-add-module-alert-success', {title: selectedModule.title}))
+        store.dispatch(
+          addAlert(
+            'success',
+            'book-group-add-module-alert-success',
+            { title: selectedModule.title }
+          )
+        )
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
     this.closeAddModuleDialog()
@@ -226,29 +285,24 @@ class Group extends React.Component<Props> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: GroupProps) {
     const prevTitle = prevProps.item.title
     const title = this.props.item.title
     if (prevTitle !== title) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ groupNameInput: this.props.item.title })
     }
-  }
-
-  componentDidMount() {
-    this.setState({ groupNameInput: this.props.item.title })
   }
 
   public render() {
     const {
       showAddGroup,
-      showRemoveGroup,
       showAddModule,
       groupNameInput,
       showBeginProcess,
       modules,
-      showNoModules,
     } = this.state
-    const { isEditingUnlocked, collapseIcon, item, showStatsFor } = this.props
+    const { isEditingUnlocked, collapseIcon, item, showStatsFor, book } = this.props
     const partsNotInProcess = item.parts!.some(p => p.kind === 'module' && !p.process)
     const modStatuses = this.getModStatuses()
 
@@ -264,7 +318,7 @@ class Group extends React.Component<Props> {
                 text={item.title}
                 onAccept={this.updateGroupName}
               />
-            : item.title
+              : item.title
           }
         </span>
         <span className="bookpart__info">
@@ -287,26 +341,18 @@ class Group extends React.Component<Props> {
                   </Localized>
                 </Button>
               </LimitedUI>
-            : null
+              : null
           }
           {
             showStatsFor ?
-              modStatuses.size ?
-                Array.from(modStatuses.entries()).map(([stepName, counter]) => {
-                  return (
-                      <span key={stepName} className="bookpart__step">
-                        <Localized id="book-part-step-statistic" $step={stepName} $counter={counter}>
-                          {`{ $step }: { $counter }`}
-                        </Localized>
-                      </span>
-                    )
-                })
-              : null
-            : partsNotInProcess ?
-                <Button clickHandler={this.showBeginProcessDialog}>
+              modStatuses.size
+                ? <ModStatuses statuses={modStatuses} />
+                : null
+              : partsNotInProcess
+                ? <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>
                 </Button>
-              : null
+                : null
           }
         </span>
         {
@@ -322,7 +368,7 @@ class Group extends React.Component<Props> {
                   l10nId="book-add-group-title"
                   onChange={this.updateGroupNameInput}
                   autoFocus
-                  validation={{minLength: 3}}
+                  validation={{ minLength: 3 }}
                 />
                 <div className="dialog__buttons">
                   <Button clickHandler={this.closeAddGroupDialog}>
@@ -338,30 +384,7 @@ class Group extends React.Component<Props> {
                 </div>
               </form>
             </Dialog>
-          : null
-        }
-        {
-          showRemoveGroup ?
-            <Dialog
-              l10nId="book-remove-group-dialog-title"
-              placeholder="Remove this group and all its contents?"
-              size="medium"
-              onClose={this.closeRemoveGroupDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeRemoveGroupDialog}>
-                  <Localized id="book-remove-group-cancel">Cancel</Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.handleRemoveGroup}
-                >
-                  <Localized id="book-remove-group-confirm">Delete</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
+            : null
         }
         {
           showAddModule ?
@@ -371,9 +394,13 @@ class Group extends React.Component<Props> {
               size="medium"
               onClose={this.closeAddModuleDialog}
             >
-              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker
+                team={book.team}
+                filterByTeam={book.team}
+                onModuleClick={this.handleModuleClick}
+              />
             </Dialog>
-          : null
+            : null
         }
         {
           showBeginProcess && modules ?
@@ -390,25 +417,7 @@ class Group extends React.Component<Props> {
                 afterUpdate={this.afterBeginProcess}
               />
             </Dialog>
-          : null
-        }
-        {
-          showNoModules ?
-            <Dialog
-              l10nId="book-begin-process-no-modules"
-              placeholder="All modules in this chapter are already assigned to the process."
-              size="medium"
-              onClose={this.closeNoModules}
-            >
-              <div className="dialog__buttons dialog__buttons--center">
-                <Button clickHandler={this.closeNoModules}>
-                  <Localized id="book-begin-process-no-modules-ok">
-                    Ok
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
+            : null
         }
       </>
     )
@@ -416,3 +425,24 @@ class Group extends React.Component<Props> {
 }
 
 export default Group
+
+const ModStatuses = ({ statuses }: { statuses: Map<string, number> }) => {
+  const sts = Array.from(statuses.entries())
+  return (
+    // There is typescript error for returning array of JSX.Elements
+    // https://stackoverflow.com/questions/46709773/typescript-react-rendering-
+    // an-array-from-a-stateless-functional-component/53718997#53718997
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
+      {
+        sts.map(([stepName, counter]) => (
+          <span key={stepName} className="bookpart__step">
+            <Localized id="book-part-step-statistic" $step={stepName} $counter={counter}>
+              {`{ $step }: { $counter }`}
+            </Localized>
+          </span>
+        ))
+      }
+    </>
+  )
+}

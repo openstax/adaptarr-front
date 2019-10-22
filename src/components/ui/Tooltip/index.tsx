@@ -2,7 +2,7 @@ import * as React from 'react'
 import TooltipImpl from 'react-tooltip-lite'
 import { Localized } from 'fluent-react/compat'
 
-export type Props = {
+interface TooltipProps {
   l10nId: string,
   children: JSX.Element,
   // From TooltipImpl
@@ -29,7 +29,7 @@ export type Props = {
   isDisabled?: boolean
 }
 
-export default function Tooltip({ l10nId, children, isDisabled, ...props }: Props) {
+export default function Tooltip({ l10nId, children, isDisabled, ...props }: TooltipProps) {
   if (isDisabled) return children
   const content = <Localized id={l10nId}>...</Localized>
   return <TooltipImpl content={content} {...props}>{ children }</TooltipImpl>

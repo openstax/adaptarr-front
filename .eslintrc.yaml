@@ -1,0 +1,34 @@
+parser: "@typescript-eslint/parser"
+plugins: ["@typescript-eslint"]
+extends: openstax-poland/react/style
+env:
+  browser: true
+  node: true
+rules:
+  # This is giving false-positives for types imports: https://github.com/typescript-eslint/typescript-eslint/issues/363
+  # tslint will handle this.
+  no-unused-vars: off
+  react/jsx-closing-bracket-location: [error, tag-aligned]
+  indent:
+    - error
+    - 2
+  import/order: off
+  # tslint will handle this
+  import/extensions: off
+  max-len:
+    - error
+    - code: 100
+  operator-linebreak: off
+  no-extra-parens: off
+  "@typescript-eslint/no-extra-parens":
+    - error
+    - all
+    - ignoreJSX: all
+      nestedBinaryExpressions: false
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+settings:
+  react:
+    # Tells eslint-plugin-react to automatically detect the version of React to use
+    version: detect

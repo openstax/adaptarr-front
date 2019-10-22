@@ -3,16 +3,26 @@ import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import User from './user'
-import { elevated, elevate } from './utils'
+import { TeamID } from './team'
+
+import { elevate, elevated } from './utils'
 
 export type ResourceData = {
-  id: string,
-  name: string,
-  parent: string | null,
-  kind: ResourceKind,
+  id: string
+  name: string
+  parent: string | null
+  kind: ResourceKind
+  team: TeamID
 }
 
 export type ResourceKind = 'directory' | 'file'
+
+export type NewResourceData = {
+  name: string
+  team: TeamID
+  parent?: string
+  file?: File
+}
 
 export default class Resource extends Base<ResourceData> {
   /**
@@ -34,16 +44,18 @@ export default class Resource extends Base<ResourceData> {
   /**
    * Create a new resource.
    *
-   * This function requires elevated permissions: 'resources:manage'
+   * This function requires elevated permissions: 'resources:manage' in targeted team.
    *
    * @param name   name of the resource.
+   * @param team   id of the team in which to create the resource.
    * @param parent optional parent id.
    * @param file optional file, if omitted "folder" will be created.
    */
-  static async create({ name, parent, file }: { name: string, parent?: string, file?: File}): Promise<Resource> {
-    let data: FormData = new FormData()
+  static async create({ name, team, parent, file }: NewResourceData): Promise<Resource> {
+    const data: FormData = new FormData()
 
     data.append('name', name)
+    data.append('team', team.toString())
     if (parent) {
       data.append('parent', parent)
     }
@@ -51,12 +63,7 @@ export default class Resource extends Base<ResourceData> {
       data.append('file', file)
     }
 
-    const session = await User.session()
-    if (!session.is_elevated) {
-      await elevate()
-    }
-
-    let res = await axios.post('resources', data)
+    const res = await axios.post('resources', data)
     return new Resource(res.data)
   }
 
@@ -81,6 +88,11 @@ export default class Resource extends Base<ResourceData> {
   kind: ResourceKind
 
   /**
+   * ID of team for which this resource belongs.
+   */
+  team: TeamID
+
+  /**
    * Fetch this resource's content.
    *
    * This endpoint is avaible only for non-directories.
@@ -95,8 +107,8 @@ export default class Resource extends Base<ResourceData> {
    *
    * This method requires elevated permissions: 'resources:manage'
    */
-  async changeName(name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`resources/${this.id}`, { name }))
+  changeName(name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`resources/${this.id}`, { name }))
   }
 
   /**
@@ -110,7 +122,7 @@ export default class Resource extends Base<ResourceData> {
       await elevate()
     }
 
-    return await axios.put(`resources/${this.id}/content`, file, {
+    return axios.put(`resources/${this.id}/content`, file, {
       headers: {
         'Content-Type': 'multipart',
       },
@@ -122,9 +134,8 @@ export default class Resource extends Base<ResourceData> {
    *
    * This method requires elevated permissions: 'resources:manage'
    */
-  async delete(): Promise<void> {
+  delete() {
     console.warn('This endpoint does not exists yet.')
-    return
-    await elevated(() => axios.delete(`resources/${this.id}`))
+    // await elevated(() => axios.delete(`resources/${this.id}`))
   }
 }

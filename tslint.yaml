@@ -8,3 +8,4 @@ linterOptions:
 rules:
   no-unused-variable:
     severity: warning
+  import/extensions: error

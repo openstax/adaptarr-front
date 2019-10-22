@@ -1,10 +1,10 @@
-import './index.css'
-
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { LocationDescriptor } from 'history'
 
-type Props = {
+import './index.css'
+
+interface ButtonProps {
   type?: 'default' | 'danger'
   className?: string
   isDisabled?: boolean
@@ -16,7 +16,17 @@ type Props = {
   withBorder?: boolean
 }
 
-const button = ({ type, className, isDisabled, children, clickHandler, to, dataId, title, withBorder }: Props) => {
+const Button = ({
+  type,
+  className,
+  isDisabled,
+  children,
+  clickHandler,
+  to,
+  dataId,
+  title,
+  withBorder,
+}: ButtonProps) => {
   const classes: string[] = ['button']
 
   if (type) classes.push(`button--${type}`)
@@ -49,4 +59,4 @@ const button = ({ type, className, isDisabled, children, clickHandler, to, dataI
   )
 }
 
-export default button
+export default Button

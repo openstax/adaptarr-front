@@ -11,7 +11,6 @@ function normalizeSourceInline(change: Editor, error: SlateError) {
 export type SchemaOptions = { inlines?: string[] }
 
 export default function make_schema({ inlines = [] }: SchemaOptions) {
-
   const allowedTypes = inlines.map(type => ({ type }))
 
   return {
@@ -25,7 +24,7 @@ export default function make_schema({ inlines = [] }: SchemaOptions) {
       source_element: {
         nodes: [{ match: [...allowedTypes, { object: 'text' }] }],
         normalize: normalizeSourceInline,
-      }
-    }
+      },
+    },
   }
 }

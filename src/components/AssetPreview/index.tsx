@@ -5,14 +5,14 @@ import Storage, { FileDescription } from 'src/api/storage'
 
 import './index.css'
 
-export type Props = {
+interface AssetPreviewProps {
   asset: FileDescription,
   onClick?: (event: React.MouseEvent, asset: FileDescription) => void,
 }
 
 const KNOWN_MIME = ['image']
 
-export default class AssetPreview extends React.Component<Props> {
+export default class AssetPreview extends React.Component<AssetPreviewProps> {
   static contextTypes = {
     storage: PropTypes.instanceOf(Storage),
   }
@@ -28,19 +28,21 @@ export default class AssetPreview extends React.Component<Props> {
 
     let content
     switch (type) {
-      case 'image':
-        content = <>
-          <img className="asset__image" src={storage.mediaUrl(asset.name)} alt="" />
-          <span className="asset__name">{asset.name}</span>
-        </>
-        break
+    case 'image':
+      content =
+                <>
+                  <img className="asset__image" src={storage.mediaUrl(asset.name)} alt="" />
+                  <span className="asset__name">{asset.name}</span>
+                </>
+      break
 
-      default:
-        content = <>
-          <span className="asset__name">{asset.name}</span>
-          <span className="asset__mime">{asset.mime}</span>
-        </>
-        break
+    default:
+      content =
+                <>
+                  <span className="asset__name">{asset.name}</span>
+                  <span className="asset__mime">{asset.mime}</span>
+                </>
+      break
     }
 
     return (

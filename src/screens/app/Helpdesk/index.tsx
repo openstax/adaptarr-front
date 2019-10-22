@@ -5,6 +5,7 @@ import Conversation, { ConversationData } from 'src/api/conversation'
 
 import store from 'src/store'
 import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/alerts'
 import { createConversation, openConversation } from 'src/store/actions/Conversations'
 
 import Header from 'src/components/Header'
@@ -16,7 +17,7 @@ import Chat from 'src/containers/Chat'
 
 import './index.css'
 
-type Props = {
+interface HelpdeskProps {
   conversations: Map<number, ConversationData>
   sockets: Map<number, Conversation>
 }
@@ -28,11 +29,21 @@ const mapStateToProps = ({ conversations: { conversations, sockets } }: State) =
   }
 }
 
-class Helpdesk extends React.Component<Props> {
-  state: {
-    conversation: Conversation | undefined
-  } = {
-    conversation: undefined,
+interface HelpdeskState {
+  isExportingDatabase: boolean
+  isImportingDatabase: boolean
+  showImportDatabase: boolean
+  files: File[]
+  uploadedDatabase: PersistDBData | undefined
+}
+
+class Helpdesk extends React.Component<HelpdeskProps> {
+  state: HelpdeskState = {
+    isExportingDatabase: false,
+    isImportingDatabase: false,
+    showImportDatabase: false,
+    files: [],
+    uploadedDatabase: undefined,
   }
 
   private startHelpdeskConversation = () => {

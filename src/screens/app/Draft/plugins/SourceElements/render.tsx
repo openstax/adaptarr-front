@@ -3,10 +3,10 @@ import { Editor } from 'slate'
 import { RenderBlockProps, RenderInlineProps } from 'slate-react'
 
 export function renderBlock({
-    node,
-    children,
-    attributes,
-  }: RenderBlockProps, _: Editor, next: () => any) {
+  node,
+  children,
+  attributes,
+}: RenderBlockProps, _: Editor, next: () => any) {
   if (node.type === 'source_element') {
     return <div className="source source--block" {...attributes}>
       {children}

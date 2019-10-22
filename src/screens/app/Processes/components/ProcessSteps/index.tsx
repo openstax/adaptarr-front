@@ -1,74 +1,81 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessStep, ProcessSlot } from 'src/api/process'
+import { ProcessSlot, ProcessStep } from 'src/api/process'
 
 import Step from './Step'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 
 import './index.css'
 
-type Props = {
+interface ProcessStepsProps {
   steps: ProcessStep[]
   slots: ProcessSlot[]
   onChange: (steps: ProcessStep[]) => any
 }
 
-class ProcessSteps extends React.Component<Props> {
+interface ProcessStepsState {
+  steps: ProcessStep[]
+}
+
+class ProcessSteps extends React.Component<ProcessStepsProps> {
   // We use index as an id for ProcessStep which makes it easier
   // to update and remove elements. Ids are ignored when creating Process.
 
-  state: {
-    steps: ProcessStep[]
-  } = {
+  state: ProcessStepsState = {
     steps: [],
   }
 
   private updateStep = (step: ProcessStep) => {
-    let steps = [...this.state.steps]
-    steps[step.id] = step
-    this.setState({ steps })
-    this.props.onChange(steps)
+    this.setState((prevState: ProcessStepsState) => {
+      const steps = [...prevState.steps]
+      steps[step.id] = step
+
+      this.props.onChange(steps)
+
+      return { steps }
+    })
   }
 
   private removeStep = (step: ProcessStep) => {
-    let steps = [...this.state.steps]
-    steps.splice(step.id, 1)
-    steps = steps.map((s, i) => {
-      return {...s, id: i}
+    this.setState((prevState: ProcessStepsState) => {
+      let steps = [...prevState.steps]
+      steps.splice(step.id, 1)
+      steps = steps.map((s, i) => ({ ...s, id: i }))
+
+      this.props.onChange(steps)
+
+      return { steps }
     })
-    this.setState({ steps })
-    this.props.onChange(steps)
   }
 
   private addEmptyStep = () => {
-    const steps = [
-      ...this.state.steps,
-      {
-        id: this.state.steps.length,
-        name: '',
-        slots: [],
-        links: [],
-      }
-    ]
-    this.setState({ steps })
-    this.props.onChange(steps)
+    this.setState((prevState: ProcessStepsState) => {
+      const steps = [
+        ...prevState.steps,
+        {
+          id: prevState.steps.length,
+          name: '',
+          slots: [],
+          links: [],
+        },
+      ]
+      this.props.onChange(steps)
+      return { steps }
+    })
   }
 
   private updateSteps = () => {
     // Form expect indexes as an id.
-    const steps = this.props.steps.map((s, i) => {
-      return {
-        ...s,
-        id: i,
-      }
-    })
+    const steps = this.props.steps.map((s, i) => ({
+      ...s,
+      id: i,
+    }))
     this.setState({ steps })
     this.props.onChange(steps)
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ProcessStepsProps) {
     const prevSteps = prevProps.steps
     const steps = this.props.steps
     if (JSON.stringify(prevSteps) !== JSON.stringify(steps)) {
@@ -89,8 +96,8 @@ class ProcessSteps extends React.Component<Props> {
           </Localized>
         </h3>
         {
-          this.state.steps.map((s, i) => {
-            return <Step
+          this.state.steps.map((s, i) => (
+            <Step
               key={i}
               slots={this.props.slots}
               steps={this.state.steps}
@@ -98,7 +105,7 @@ class ProcessSteps extends React.Component<Props> {
               onChange={this.updateStep}
               remove={this.removeStep}
             />
-          })
+          ))
         }
         <Button clickHandler={this.addEmptyStep}>
           <Localized id="process-form-step-add">

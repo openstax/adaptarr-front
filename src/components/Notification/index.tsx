@@ -1,72 +1,54 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
 
-import decodeHtmlEntity from 'src/helpers/decodeHtmlEntity'
-import { Notification, User, Module } from 'src/api'
+import { Notification, User } from 'src/api'
+
+import { ModulesMap, NotificationStatus, UsersMap } from 'src/store/types'
+import { changeNotificationStatus } from 'src/store/actions/notifications'
+import { State } from 'src/store/reducers'
+
+import { decodeHtmlEntity } from 'src/helpers'
 
 import DateDiff from 'src/components/DateDiff'
 import Avatar from 'src/components/ui/Avatar'
 
-import { TeamMap, ModulesMap, NotificationStatus } from 'src/store/types'
-import { changeNotificationStatus, ChangeNotificationStatus } from 'src/store/actions/Notifications'
-import { State } from 'src/store/reducers'
+import './index.css'
 
-type Props = {
-  team: {
-    teamMap: TeamMap
-  }
-  modules: {
-    modulesMap: ModulesMap
-  }
+interface NotificationCompProps {
+  users: UsersMap
+  modules: ModulesMap
   notification: Notification
   avatarSize?: 'small' | 'medium' | 'big'
   disableLink?: boolean
   changeNotificationStatus: (noti: Notification, status: NotificationStatus) => any
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
-  return {
-    team,
-    modules,
-  }
-}
+const mapStateToProps = ({ user: { users }, modules: { modulesMap } }: State) => ({
+  users,
+  modules: modulesMap,
+})
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    changeNotificationStatus: (noti: Notification, status: NotificationStatus) => dispatch(changeNotificationStatus(noti, status))
-  }
-}
+const mapDispatchToProps = (dispatch: any) => ({
+  // eslint-disable-next-line arrow-body-style
+  changeNotificationStatus: (noti: Notification, status: NotificationStatus) => {
+    return dispatch(changeNotificationStatus(noti, status))
+  },
+})
 
-const trimMessage = (message: string) => {
-  const maxLength = 30
-
-  if (message.length <= maxLength) return message
-
-  return message.substring(0, 30) + '...'
-}
-
-class NotificationComp extends React.Component<Props> {
+class NotificationComp extends React.Component<NotificationCompProps> {
   private onNotificationClick = () => {
     // TODO: Fire this action only on unread notifications
     this.props.changeNotificationStatus(this.props.notification, 'read')
   }
 
   public render() {
-    const { teamMap } = this.props.team
-    const { modulesMap } = this.props.modules
+    const { users, modules } = this.props
     const noti = this.props.notification
-    const who: User | undefined = teamMap.get(noti.who!)
-    const mod = noti.module ? modulesMap.get(noti.module) : undefined
-    let linkToNotification: string
-    // if (noti.conversation) {
-    //   linkToNotification = '/conversations/' + noti.conversation
-    // } else {
-      linkToNotification = '/modules/' + noti.module
-    // }
+    const who: User | undefined = users.get(noti.who!)
+    const mod = noti.module ? modules.get(noti.module) : undefined
+    const linkToNotification = '/modules/' + noti.module
     const avatarSize = this.props.avatarSize ? this.props.avatarSize : 'small'
 
     const body = (
@@ -82,17 +64,16 @@ class NotificationComp extends React.Component<Props> {
               actor={<strong/>}
               $actor={who ? decodeHtmlEntity(who.name) : null}
               $module={mod && mod.title}
-              >
-              <div className="notification__action">
-              </div>
+            >
+              <div className="notification__action" />
             </Localized>
             {
-              /*noti.message ?
-                <span className="notification__message">
-                  {trimMessage(noti.message)}
-                </span>
-              : null*/
-             }
+              // noti.message ?
+              // <span className="notification__message">
+              // {trimMessage(noti.message)}
+              // </span>
+              // : null
+            }
             <span className="notification__date">
               <DateDiff dateString={noti.timestamp} />
             </span>
@@ -102,11 +83,11 @@ class NotificationComp extends React.Component<Props> {
     )
 
     return this.props.disableLink ?
-        body
+      body
       :
-        <Link to={linkToNotification} className="notification__link">
-          {body}
-        </Link>
+      <Link to={linkToNotification} className="notification__link">
+        {body}
+      </Link>
   }
 }
 

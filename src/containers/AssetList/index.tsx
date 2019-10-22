@@ -6,7 +6,7 @@ import { connect } from 'react-redux'
 import Storage, { FileDescription } from 'src/api/storage'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
 import { SlotPermission } from 'src/api/process'
 
@@ -14,23 +14,21 @@ import AssetPreview from 'src/components/AssetPreview'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-import mimeToRegExp from 'src/helpers/mimeToRegExp'
+import { mimeToRegExp } from 'src/helpers'
 
 import './index.css'
 
-export type Props = {
+interface AssetListProps {
   filter?: string,
   onSelect?: (asset: FileDescription) => void,
   draftPermissions: SlotPermission[],
 }
 
-const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
-  return {
-    draftPermissions: currentDraftPermissions,
-  }
-}
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
+  draftPermissions: currentDraftPermissions,
+})
 
-class AssetList extends React.Component<Props> {
+class AssetList extends React.Component<AssetListProps> {
   static contextTypes = {
     storage: PropTypes.instanceOf(Storage),
   }
@@ -69,8 +67,7 @@ class AssetList extends React.Component<Props> {
                 onClick={this.onClickAsset}
               />
             </li>
-          ))
-        }
+          ))}
       </ul>
     )
   }

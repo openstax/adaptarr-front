@@ -2,9 +2,12 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { History } from 'history'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import { addAlert } from 'src/store/actions/Alerts'
+
+import * as types from 'src/store/types'
+import store from 'src/store'
+import { addAlert } from 'src/store/actions/alerts'
+import { State } from 'src/store/reducers/index'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -12,10 +15,7 @@ import Spinner from 'src/components/Spinner'
 import DraftsList from 'src/components/DraftsList'
 import FreeSlots from 'src/components/FreeSlots'
 
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers/index'
-
-type Props = {
+interface DashboardProps {
   history: History
   user: {
     user: api.User
@@ -28,16 +28,13 @@ type Props = {
   }
 }
 
-const mapStateToProps = ({ user, booksMap, modules }: State) => {
-  return {
-    user,
-    booksMap,
-    modules,
-  }
-}
+const mapStateToProps = ({ user, booksMap, modules }: State) => ({
+  user,
+  booksMap,
+  modules,
+})
 
-class Dashboard extends React.Component<Props> {
-
+class Dashboard extends React.Component<DashboardProps> {
   public state: {
     isLoading: boolean,
     drafts: api.Draft[],
@@ -57,7 +54,7 @@ class Dashboard extends React.Component<Props> {
       })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.fetchDrafts()
   }
 
@@ -72,7 +69,7 @@ class Dashboard extends React.Component<Props> {
             {
               isLoading ?
                 <Spinner />
-              :
+                :
                 <DraftsList drafts={drafts} />
             }
           </div>
@@ -83,7 +80,7 @@ class Dashboard extends React.Component<Props> {
             {
               isLoading ?
                 <Spinner />
-              :
+                :
                 <FreeSlots
                   onUpdate={this.fetchDrafts}
                 />

@@ -2,7 +2,7 @@ import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Counters from 'slate-counters'
 import { Document, DocumentDB, Persistence } from 'cnx-designer'
-import { Value, Editor as Editor_ } from 'slate'
+import { Editor as Editor_, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { ReactLocalization } from 'fluent-react/compat'
 
@@ -12,6 +12,8 @@ import { SlotPermission } from 'src/api/process'
 import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxDocument from '../components/ToolboxDocument'
 
+import Docref from '../plugins/Docref'
+import Footnotes from '../plugins/Footnotes'
 import StorageContext from '../plugins/Storage'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
@@ -21,10 +23,10 @@ import Shortcuts from '../plugins/Shortcuts'
 import Suggestions from '../plugins/Suggestions'
 import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 
-type Props = {
+interface EditorDocumentProps {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
-  documentDB: DocumentDB
+  documentDB: DocumentDB | undefined
   readOnly: boolean
   storage: Storage
   value: Value
@@ -32,13 +34,14 @@ type Props = {
   onChange: (value: Value) => void
 }
 
-class EditorDocument extends React.Component<Props> {
+class EditorDocument extends React.Component<EditorDocumentProps> {
   static contextTypes = {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }
 
   plugins = [
     I10nPlugin,
+    Docref,
     XrefPlugin,
     TablesPlugin,
     SourceElements({ inlines: SUGGESTION_TYPES }),
@@ -46,10 +49,14 @@ class EditorDocument extends React.Component<Props> {
     || this.props.stepPermissions.has('accept-changes') ?
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
       : {},
+    Footnotes(),
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
+      media: {
+        inlines: SUGGESTION_TYPES,
+      },
       text: {
         code: {
           inlines: SUGGESTION_TYPES,
@@ -60,7 +67,7 @@ class EditorDocument extends React.Component<Props> {
       },
     }),
     Shortcuts(),
-    Persistence({ db: this.props.documentDB }),
+    this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
   onChange = ({ value }: Editor_) => {
@@ -89,7 +96,7 @@ class EditorDocument extends React.Component<Props> {
         {
           this.props.readOnly ?
             null
-          :
+            :
             <StorageContext storage={this.props.storage}>
               <ToolboxDocument
                 editor={this.editor.current as unknown as Editor_}

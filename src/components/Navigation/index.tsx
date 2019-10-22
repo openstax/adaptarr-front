@@ -1,16 +1,17 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { NavLink, Link, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Link, match, NavLink, RouteComponentProps, withRouter } from 'react-router-dom'
 import { Localized } from 'fluent-react/compat'
+import { Location } from 'history'
 
 import { Notification } from 'src/api'
 
-import Header from 'src/components/Header'
+import { ROUTE_TEAMS_PERMISSIONS } from 'src/App'
+
 import NotificationComp from 'src/components/Notification'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
+import TeamSwitcher from 'src/components/TeamSwitcher'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Tooltip from 'src/components/ui/Tooltip'
@@ -18,7 +19,9 @@ import Tooltip from 'src/components/ui/Tooltip'
 import { IsLoading } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
-type Props = {
+import './index.css'
+
+interface NavigationProps {
   notifications: {
     isLoading: IsLoading
     unreadNotifications: Notification[]
@@ -26,36 +29,38 @@ type Props = {
   }
 }
 
-const mapStateToProps = ({ notifications }: State) => {
-  return {
-    notifications,
-  }
-}
+const mapStateToProps = ({ notifications }: State) => ({
+  notifications,
+})
 
 const isActive = (location: any, pathnames: string[]): boolean => {
   const pathname = location.pathname
   return pathnames.some(el => pathname.match(el))
 }
 
-class Navigation extends React.Component<RouteComponentProps & Props> {
+interface NavigationState {
+  toggleSidebar: boolean,
+}
 
-  state: {
-    toggleSidebar: boolean,
-  } = {
-    toggleSidebar: false,
+class Navigation extends React.Component<RouteComponentProps & NavigationProps> {
+  state: NavigationState = {
+    toggleSidebar: localStorage.getItem('toggleSidebar') === 'true',
   }
 
   private toggleSidebar = () => {
     const currentVal = this.state.toggleSidebar
-    this.setState({toggleSidebar: !currentVal})
+    this.setState({ toggleSidebar: !currentVal })
     localStorage.setItem('toggleSidebar', JSON.stringify(!currentVal))
   }
 
-  componentDidMount = () => {
-    const toggleSidebar = localStorage.getItem('toggleSidebar')
-    if (toggleSidebar) {
-      this.setState({ toggleSidebar: JSON.parse(toggleSidebar) })
-    }
+  // eslint-disable-next-line arrow-body-style
+  private isActiveBooksOrModules = (_: match, location: Location) => {
+    return isActive(location, ['books', 'modules'])
+  }
+
+  // eslint-disable-next-line arrow-body-style
+  private isActiveUsersOrSettings = (_: match, location: Location) => {
+    return isActive(location, ['users', 'settings'])
   }
 
   public render() {
@@ -69,13 +74,15 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
         <div className="menu-toggler">
           <Button
             className="sidebar__toggle"
-            clickHandler={this.toggleSidebar}>
+            clickHandler={this.toggleSidebar}
+          >
             <Icon name="menu" />
             <Localized id="navigation-title">
               Menu
             </Localized>
           </Button>
         </div>
+        <TeamSwitcher />
         <nav className="nav">
           <ul>
             <li className="nav__link">
@@ -108,7 +115,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                       <span className="notifications__counter">
                         <span>{unreadNotifications.length}</span>
                       </span>
-                    : null
+                      : null
                   }
                 </NavLink>
               </Tooltip>
@@ -117,13 +124,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                   <div className="nav__hoverbox">
                     {
                       !isLoading ?
-                        <React.Fragment>
+                        <>
                           {
                             unreadNotifications.map((noti: Notification, index: number) => {
-                              if (index > 2) return
-                              return (
-                                <NotificationComp key={noti.kind + index} notification={noti}/>
-                              )
+                              if (index > 2) return null
+                              return <NotificationComp key={noti.kind + index} notification={noti}/>
                             })
                           }
                           <Link to="/notifications" className="nav__link show-more">
@@ -131,11 +136,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                               Show all
                             </Localized>
                           </Link>
-                        </React.Fragment>
-                      : <Spinner />
+                        </>
+                        : <Spinner />
                     }
                   </div>
-                : null
+                  : null
               }
             </li>
             <li className="nav__link">
@@ -143,7 +148,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <NavLink
                   to="/books"
                   activeClassName="active"
-                  isActive={(_, location) => isActive(location, ['books', 'modules'])}
+                  isActive={this.isActiveBooksOrModules}
                 >
                   <span className="nav__content">
                     <Icon size="medium" name="books" />
@@ -175,7 +180,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 <NavLink
                   to="/users/me"
                   activeClassName="active"
-                  isActive={(_, location) => isActive(location, ['users', 'settings'])}
+                  isActive={this.isActiveUsersOrSettings}
                 >
                   <span className="nav__content">
                     <Icon size="medium" name="user"/>
@@ -222,7 +227,7 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </NavLink>
               </Tooltip>
             </li>
-            <LimitedUI permissions="user:invite">
+            <LimitedUI permissions="member:add">
               <li className="nav__link">
                 <Tooltip l10nId="navigation-invite" direction="right" isDisabled={!toggleSidebar}>
                   <NavLink to="/invitations" activeClassName="active">
@@ -238,15 +243,15 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
                 </Tooltip>
               </li>
             </LimitedUI>
-            <LimitedUI permissions="role:edit">
+            <LimitedUI onePermissionFrom={ROUTE_TEAMS_PERMISSIONS}>
               <li className="nav__link">
-                <Tooltip l10nId="navigation-roles" direction="right" isDisabled={!toggleSidebar}>
-                  <NavLink to="/roles" activeClassName="active">
+                <Tooltip l10nId="navigation-teams" direction="right" isDisabled={!toggleSidebar}>
+                  <NavLink to="/teams" activeClassName="active">
                     <span className="nav__content">
                       <Icon size="medium" name="users" />
                       <span className="nav__text">
-                        <Localized id="navigation-roles">
-                          Manage roles
+                        <Localized id="navigation-teams">
+                          Manage teams
                         </Localized>
                       </span>
                     </span>
@@ -256,7 +261,11 @@ class Navigation extends React.Component<RouteComponentProps & Props> {
             </LimitedUI>
             <LimitedUI permissions="editing-process:edit">
               <li className="nav__link">
-                <Tooltip l10nId="navigation-processes" direction="right" isDisabled={!toggleSidebar}>
+                <Tooltip
+                  l10nId="navigation-processes"
+                  direction="right"
+                  isDisabled={!toggleSidebar}
+                >
                   <NavLink to="/processes" activeClassName="active">
                     <span className="nav__content">
                       <Icon size="medium" name="paper-pen" />

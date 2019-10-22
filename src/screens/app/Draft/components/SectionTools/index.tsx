@@ -9,14 +9,18 @@ import Icon from 'src/components/ui/Icon'
 
 import { OnToggle } from '../ToolboxDocument'
 
-export type Props = {
-  editor: Editor,
-  value: Value,
-  toggleState: boolean,
-  onToggle: OnToggle,
+interface SectionToolsProps {
+  editor: Editor
+  value: Value
+  toggleState: boolean
+  onToggle: OnToggle
 }
 
-export default class SectionTools extends React.Component<Props> {
+export default class SectionTools extends React.Component<SectionToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('sectionTools')
+  }
+
   render() {
     const { editor, value } = this.props
     const section = editor.getActiveSection(value)
@@ -27,7 +31,7 @@ export default class SectionTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-sections-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('sectionTools')}
+        onToggle={this.onClickToggle}
       >
         <Button
           clickHandler={this.decreaseSectionDepth}

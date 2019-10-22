@@ -1,122 +1,134 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import sortArrayByName from 'src/helpers/sortArrayByName'
-import { User } from 'src/api'
+import { Team, TeamMember, User } from 'src/api'
 
-import UserInfo from 'src/components/UserInfo'
-import Input from 'src/components/ui/Input'
-
-import { TeamMap, ModulesMap } from 'src/store/types'
 import { State } from 'src/store/reducers'
 
-type Props = {
-  allowedRoles?: number[],
-  team: {
-    teamMap: TeamMap
-  }
-  modules: {
-    modulesMap: ModulesMap
-  }
-  onUserClick: (user: User) =>  any
+import UserInfo from 'src/components/UserInfo'
+import Spinner from 'src/components/Spinner'
+import Input from 'src/components/ui/Input'
+
+import './index.css'
+
+interface UsersListProps {
+  team: Team | Team[]
+  users: Map<number, User>
+  isSearchable?: boolean
+  allowedRoles?: number[]
+  onUserClick: (user: User) => void
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
-  return {
-    team,
-    modules,
-  }
+export type MembersMap = Map<number, { team: Team, members: TeamMember[] }>
+
+interface UsersListState {
+  isLoading: boolean
+  filterInput: string
+  membersMap: MembersMap
 }
 
-class UsersList extends React.Component<Props> {
-  state: {
-    filterInput: string
-  } = {
+const mapStateToProps = ({ user: { users } }: State) => ({
+  users,
+})
+
+class UsersList extends React.Component<UsersListProps> {
+  state: UsersListState = {
+    isLoading: true,
     filterInput: '',
-  }
-
-  private listOfUsers = (teamMap: TeamMap) => {
-    const allowedRoles = this.props.allowedRoles
-    const filterReg = new RegExp('^' + this.state.filterInput, 'i')
-    let users: User[] = []
-
-    teamMap.forEach(user => {
-      if (this.state.filterInput) {
-        if (filterReg.test(user.name)) {
-          if (allowedRoles && allowedRoles.length) {
-            if (user.role && allowedRoles.includes(user.role.id)) {
-              users.push(user)
-            }
-          } else {
-            users.push(user)
-          }
-        }
-      } else {
-        if (allowedRoles && allowedRoles.length) {
-          if (user.role && allowedRoles.includes(user.role.id)) {
-            users.push(user)
-          }
-        } else {
-          users.push(user)
-        }
-      }
-    })
-
-    users.sort(sortArrayByName)
-
-    if (!users.length) {
-      return (
-        <li className="usersList__item--no-results">
-          <Localized id="user-profile-team-list-no-results">
-            There are no users with specified criteria.
-          </Localized>
-        </li>
-      )
-    }
-
-    return users.map((user: User) => {
-      return (
-        <li
-          key={user.id}
-          className="usersList__item"
-          onClick={() => this.props.onUserClick(user)}
-        >
-          <UserInfo user={user} />
-        </li>
-      )
-    })
+    membersMap: new Map(),
   }
 
   private handleFilterInput = (val: string) => {
     if (val !== this.state.filterInput) {
-      this.setState({ filterInput: val})
+      this.setState({ filterInput: val })
     }
   }
 
+  private fetchMembers = async () => {
+    this.setState({ isLoading: true })
+
+    const { team, allowedRoles = [], users } = this.props
+    const { filterInput } = this.state
+    const filterReg = new RegExp('^' + filterInput, 'i')
+
+    const membersMap: MembersMap = new Map()
+    const teams = Array.isArray(team) ? team : [team]
+
+    for (const t of teams) {
+      const members = (await t.members()).filter(member => {
+        const user = users.get(member.user)!
+        if (filterInput && !filterReg.test(user.name)) return false
+        if (allowedRoles.length) {
+          if (!member.role) return false
+          if (!allowedRoles.includes(member.role.id)) return false
+        }
+        return true
+      })
+
+      membersMap.set(t.id, { team: t, members })
+    }
+
+    this.setState({ isLoading: false, membersMap })
+  }
+
+  componentDidUpdate(prevProps: UsersListProps) {
+    if (!compareTeams(prevProps.team, this.props.team)) {
+      this.fetchMembers()
+    }
+  }
+
+  componentDidMount() {
+    this.fetchMembers()
+  }
+
   public render() {
-    const { teamMap } = this.props.team
+    const { isLoading, membersMap } = this.state
+    const { users, isSearchable } = this.props
+
+    if (isLoading) return <Spinner />
 
     return (
       <div className="usersList">
         {
-          teamMap.size > 6 ?
-            <div className="usersList">
-              <Input
-                l10nId="user-profile-team-list-search"
-                onChange={this.handleFilterInput}
-              />
-            </div>
-          : null
+          isSearchable ?
+            <Input
+              l10nId="user-profile-team-list-search"
+              onChange={this.handleFilterInput}
+            />
+            : null
         }
         {
-          teamMap.size > 0 ?
-            <ul className="usersList__list">
-              {this.listOfUsers(teamMap)}
-            </ul>
-          : null
+          Array.from(membersMap.values()).map(({ team, members }) => (
+            <div key={team.id} className="usersList__team">
+              <span className="usersList__team-name">
+                <Localized id="user-profile-team-list-team" $team={team.name}>
+                    Team: ...
+                </Localized>
+              </span>
+              <ul className="usersList__list">
+                {
+                  members.length ?
+                    members.map(member => {
+                      const user = users.get(member.user)!
+                      return (
+                        <UserListItem
+                          key={team.id + user.id}
+                          user={user}
+                          onUserClick={this.props.onUserClick}
+                        />
+                      )
+                    })
+                    :
+                    <li className="usersList__item--no-results">
+                      <Localized id="user-profile-team-list-no-results">
+                          There are no users with specified criteria.
+                      </Localized>
+                    </li>
+                }
+              </ul>
+            </div>
+          ))
         }
       </div>
     )
@@ -124,3 +136,22 @@ class UsersList extends React.Component<Props> {
 }
 
 export default connect(mapStateToProps)(UsersList)
+
+function compareTeams(team1: Team | Team[], team2: Team | Team[]) {
+  team1 = Array.isArray(team1) ? team1 : [team1]
+  team2 = Array.isArray(team2) ? team2 : [team2]
+  if (team1.length !== team2.length) return false
+  return team1.every((val, i) => val.id === team2[i].id)
+}
+
+function UserListItem({ user, onUserClick }: { user: User, onUserClick: (user: User) => void }) {
+  const onClick = () => {
+    onUserClick(user)
+  }
+
+  return (
+    <li className="usersList__item" onClick={onClick}>
+      <UserInfo user={user} />
+    </li>
+  )
+}

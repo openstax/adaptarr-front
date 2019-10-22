@@ -1,20 +1,23 @@
-import './index.css'
-
 import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import { elevate } from 'src/api/utils'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
+
+import store from 'src/store'
+import { BooksMap, IsLoading } from 'src/store/types'
+import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/books'
+import { fetchModulesMap } from 'src/store/actions/modules'
+import { State } from 'src/store/reducers/index'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import LimitedUI from 'src/components/LimitedUI'
 import BookCard from 'src/components/BookCard'
 import Spinner from 'src/components/Spinner'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
@@ -22,71 +25,71 @@ import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
-import { IsLoading, BooksMap } from 'src/store/types'
-import { FetchBooksMap, fetchBooksMap } from 'src/store/actions/Books'
-import { fetchModulesMap } from 'src/store/actions/Modules'
-import { State } from 'src/store/reducers/index'
+import './index.css'
 
-type Props = {
+interface BooksProps {
   booksMap: {
     isLoading: IsLoading
     booksMap: BooksMap
   }
+  selectedTeams: number[]
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
 
-export const mapStateToProps = ({ booksMap }: State) => {
-  return {
-    booksMap,
-  }
+export const mapStateToProps = ({ app: { selectedTeams }, booksMap }: State) => ({
+  booksMap,
+  selectedTeams,
+})
+
+export const mapDispatchToProps = (dispatch: FetchBooksMap) => ({
+  fetchBooksMap: () => dispatch(fetchBooksMap()),
+  fetchModulesMap: () => dispatch(fetchModulesMap()),
+})
+
+interface BooksState {
+  titleInput: string
+  showAddBook: boolean
+  files: File[]
+  uploading: boolean
+  isEditingUnlocked: boolean
+  team: api.Team | null
 }
 
-export const mapDispatchToProps = (dispatch: FetchBooksMap) => {
-  return {
-    fetchBooksMap: () => dispatch(fetchBooksMap()),
-    fetchModulesMap: () => dispatch(fetchModulesMap()),
-  }
-}
-
-class Books extends React.Component<Props> {
-
-  state: {
-    titleInput: string
-    showAddBook: boolean
-    files: File[]
-    uploading: boolean
-    isEditingUnlocked: boolean
-  } = {
+class Books extends React.Component<BooksProps> {
+  state: BooksState = {
     titleInput: '',
     showAddBook: false,
     files: [],
     uploading: false,
     isEditingUnlocked: false,
+    team: null,
   }
 
-  private addBook = async (e: React.FormEvent) => {
+  private addBook = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { titleInput: title, files } = this.state
+    const { titleInput: title, files, team } = this.state
+
+    if (!team) return
 
     this.setState({ uploading: true })
 
-    api.Book.create(title, files[0])
+    api.Book.create(title, team.id, files[0])
       .then(() => {
         this.props.fetchBooksMap()
         this.props.fetchModulesMap()
-        this.setState({ titleInput: '' })
+        this.setState({ titleInput: '', team: null, files: [] })
         store.dispatch(addAlert('success', 'book-list-add-book-alert-success'))
         this.closeAddBookDialog()
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
         this.closeAddBookDialog()
       })
   }
 
-  private showAddBookDialog = ()  => {
+  private showAddBookDialog = () => {
     this.setState({ showAddBook: true, uploading: false })
   }
 
@@ -98,6 +101,10 @@ class Books extends React.Component<Props> {
     this.setState({ titleInput: val })
   }
 
+  private onTeamChange = (team: api.Team) => {
+    this.setState({ team })
+  }
+
   private onFilesChange = (files: File[]) => {
     this.setState({ files })
   }
@@ -107,12 +114,12 @@ class Books extends React.Component<Props> {
   }
 
   private toggleEditing = () => {
-    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
+    this.setState((prevState: BooksState) => ({ isEditingUnlocked: !prevState.isEditingUnlocked }))
   }
 
   public render() {
-    const { isLoading, booksMap } = this.props.booksMap
-    const { titleInput, showAddBook, uploading, isEditingUnlocked } = this.state
+    const { booksMap: { isLoading, booksMap }, selectedTeams } = this.props
+    const { titleInput, showAddBook, uploading, isEditingUnlocked, team } = this.state
 
     return (
       <Section>
@@ -122,7 +129,7 @@ class Books extends React.Component<Props> {
               {
                 isEditingUnlocked ?
                   <Icon size="medium" name="unlock" />
-                : <Icon size="medium" name="lock" />
+                  : <Icon size="medium" name="lock" />
               }
             </Button>
             {
@@ -130,7 +137,7 @@ class Books extends React.Component<Props> {
                 <Button clickHandler={this.showAddBookDialog}>
                   <Icon size="medium" name="plus"/>
                 </Button>
-              : null
+                : null
             }
           </LimitedUI>
         </Header>
@@ -145,13 +152,17 @@ class Books extends React.Component<Props> {
               {
                 uploading ?
                   <Spinner />
-                :
+                  :
                   <form onSubmit={this.addBook}>
                     <Input
                       l10nId="book-list-add-book-title"
                       value={this.state.titleInput}
                       onChange={this.updateTitleInput}
-                      validation={{minLength: 3}}
+                      validation={{ minLength: 3 }}
+                    />
+                    <TeamSelector
+                      permission="book:edit"
+                      onChange={this.onTeamChange}
                     />
                     <FilesUploader
                       onFilesChange={this.onFilesChange}
@@ -167,28 +178,39 @@ class Books extends React.Component<Props> {
                         </Localized>
                       </Button>
                       <Localized id="book-list-add-book-confirm" attrs={{ value: true }}>
-                        <input type="submit" value="Confirm" disabled={titleInput.length === 0} />
+                        <input
+                          type="submit"
+                          value="Confirm"
+                          disabled={titleInput.length === 0 || !team}
+                        />
                       </Localized>
                     </div>
                   </form>
               }
             </Dialog>
-          : null
+            : null
         }
         {
           !isLoading ?
             <div className="section__content books">
               {
                 booksMap.size > 0 ?
-                  Array.from(booksMap.values()).map((book: api.Book) => (
-                    <BookCard key={book.id} book={book} isEditingUnlocked={isEditingUnlocked}/>
-                  ))
-                : <Localized id="book-list-empty">
+                  Array.from(booksMap.values()).map((book: api.Book) => {
+                    if (!selectedTeams.includes(book.team)) return null
+                    return (
+                      <BookCard
+                        key={book.id}
+                        book={book}
+                        isEditingUnlocked={isEditingUnlocked}
+                      />
+                    )
+                  })
+                  : <Localized id="book-list-empty">
                   No books found.
-                </Localized>
+                  </Localized>
               }
             </div>
-          :
+            :
             <Spinner/>
         }
       </Section>

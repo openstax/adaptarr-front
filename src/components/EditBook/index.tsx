@@ -3,26 +3,23 @@ import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
 import * as api from 'src/api'
-import { elevate } from 'src/api/utils'
 
 import Spinner from 'src/components/Spinner'
 import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 
-type Props = {
+interface EditBookProps {
   book: api.Book
   onClose: () => any
   onSuccess: () => any
 }
 
-class EditBook extends React.Component<Props> {
-
+class EditBook extends React.Component<EditBookProps> {
   state: {
     isLoading: boolean
     titleInput: string
@@ -41,8 +38,8 @@ class EditBook extends React.Component<Props> {
     const { titleInput: title, files } = this.state
     const { book } = this.props
 
-    let payload = {
-      title
+    const payload = {
+      title,
     }
 
     ;(files.length ? book.replaceContent(files[0]) : book.update(payload))
@@ -51,7 +48,7 @@ class EditBook extends React.Component<Props> {
         this.setState({ titleInput: '', isLoading: false })
         this.props.onSuccess()
       })
-      .catch((e) => {
+      .catch(e => {
         store.dispatch(addAlert('error', e.message))
         this.setState({ isLoading: false })
         this.props.onClose()
@@ -75,43 +72,41 @@ class EditBook extends React.Component<Props> {
     const bookTitle = this.props.book.title
 
     return (
-      <React.Fragment>
-        <Dialog
-          l10nId="book-edit-dialog-title"
-          placeholder="Edit book"
-          size="medium"
-          onClose={() => this.props.onClose()}
-        >
-          {
-            !isLoading ?
-              <form onSubmit={this.editBook}>
-                <Input
-                  l10nId="book-edit-title"
-                  value={bookTitle}
-                  onChange={this.updateTitleInput}
-                  validation={{minLength: 3}}
-                />
-                <FilesUploader
-                  onFilesChange={this.onFilesChange}
-                  onFilesError={this.onFilesError}
-                  accepts={['.zip', '.rar']}
-                  optional={true}
-                  multiple={false}
-                />
-                <div className="dialog__buttons dialog__buttons--center">
-                  <Localized id="book-edit-submit" attrs={{ value: true }}>
-                    <input
-                      type="submit"
-                      value="Confirm"
-                      disabled={titleInput.length === 0 && files.length === 0}
-                    />
-                  </Localized>
-                </div>
-              </form>
+      <Dialog
+        l10nId="book-edit-dialog-title"
+        placeholder="Edit book"
+        size="medium"
+        onClose={this.props.onClose}
+      >
+        {
+          !isLoading ?
+            <form onSubmit={this.editBook}>
+              <Input
+                l10nId="book-edit-title"
+                value={bookTitle}
+                onChange={this.updateTitleInput}
+                validation={{ minLength: 3 }}
+              />
+              <FilesUploader
+                onFilesChange={this.onFilesChange}
+                onFilesError={this.onFilesError}
+                accepts={['.zip', '.rar']}
+                optional={true}
+                multiple={false}
+              />
+              <div className="dialog__buttons dialog__buttons--center">
+                <Localized id="book-edit-submit" attrs={{ value: true }}>
+                  <input
+                    type="submit"
+                    value="Confirm"
+                    disabled={titleInput.length === 0 && files.length === 0}
+                  />
+                </Localized>
+              </div>
+            </form>
             : <Spinner/>
-          }
-        </Dialog>
-      </React.Fragment>
+        }
+      </Dialog>
     )
   }
 }

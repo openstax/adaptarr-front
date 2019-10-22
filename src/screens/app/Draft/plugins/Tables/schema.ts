@@ -2,19 +2,19 @@ function normalizeTable(change: any, error: any) {
   const { code: violation, child } = error
 
   switch (violation) {
-    case 'child_type_invalid':
-      if (child.type === 'title') {
-        change.setNodeByKey(child.key, { type: 'table_title' })
-      } else if (child.type === 'caption') {
-        change.setNodeByKey(child.key, { type: 'table_caption' })
-      } else {
-        console.warn('Unhandled table violation:', violation, JSON.stringify(error, null, 2))
-      }
-      break
+  case 'child_type_invalid':
+    if (child.type === 'title') {
+      change.setNodeByKey(child.key, { type: 'table_title' })
+    } else if (child.type === 'caption') {
+      change.setNodeByKey(child.key, { type: 'table_caption' })
+    } else {
+      console.warn('Unhandled table violation:', violation, JSON.stringify(error, null, 2))
+    }
+    break
 
-    default:
-      console.warn('Unhandled table violation:', violation)
-      break
+  default:
+    console.warn('Unhandled table violation:', violation)
+    break
   }
 }
 
@@ -65,9 +65,9 @@ export default {
         pgwide: () => true,
       },
       nodes: [
-        { match: { type: 'table_title' }, min: 0, max: 1, },
-        { match: { type: 'table_tgroup' }, min: 1, },
-        { match: { type: 'table_caption' }, min: 0, max: 1, },
+        { match: { type: 'table_title' }, min: 0, max: 1 },
+        { match: { type: 'table_tgroup' }, min: 1 },
+        { match: { type: 'table_caption' }, min: 0, max: 1 },
       ],
       normalize: normalizeTable,
     },
@@ -82,9 +82,9 @@ export default {
       },
       nodes: [
         { match: { type: 'table_colspec' } },
-        { match: { type: 'table_thead' }, min: 0, },
-        { match: { type: 'table_tbody' }, min: 1, max: 1, },
-        { match: { type: 'table_tfoot' }, min: 0, },
+        { match: { type: 'table_thead' }, min: 0 },
+        { match: { type: 'table_tbody' }, min: 1, max: 1 },
+        { match: { type: 'table_tfoot' }, min: 0 },
       ],
       normalize: normalizeTgroup,
     },

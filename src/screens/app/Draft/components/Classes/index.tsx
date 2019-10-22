@@ -1,15 +1,15 @@
-import './index.css'
-
 import * as React from 'react'
 import { List } from 'immutable'
-import { Editor, Block } from 'slate'
+import { Block, BlockProperties, Editor } from 'slate'
 import { WithContext as ReactTags } from 'react-tag-input'
-import { Localized, withLocalization, GetString } from 'fluent-react/compat'
+import { GetString, Localized, withLocalization } from 'fluent-react/compat'
 
-type Props = {
-  editor: Editor,
-  block: Block,
-  getString: GetString,
+import './index.css'
+
+interface ClassNameProps {
+  editor: Editor
+  block: Block
+  getString: GetString
 }
 
 type Tag = { id: string, text: string }
@@ -32,10 +32,13 @@ const allowedTypes = [
   'admonition',
 ]
 
-class ClassName extends React.Component<Props> {
-  state: {
-    tags: Tag[],
-  } = {
+
+interface ClassNameState {
+  tags: Tag[]
+}
+
+class ClassName extends React.Component<ClassNameProps> {
+  state: ClassNameState = {
     tags: [],
   }
 
@@ -48,9 +51,8 @@ class ClassName extends React.Component<Props> {
       let tags: Tag[] = []
       const classes = block.data.get('class')
       if (classes) {
-        tags = Array.from(classes).filter((c: string) => c.length).map((c: string) => {
-          return {id: c, text: c}
-        })
+        tags = Array.from(classes).filter((c: string) => c.length)
+          .map((c: string) => ({ id: c, text: c }))
       }
       this.setState({ tags })
     } else {
@@ -58,7 +60,7 @@ class ClassName extends React.Component<Props> {
     }
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ClassNameProps) {
     if (prevProps.block.key !== this.props.block.key) {
       this.convertClassesToTags()
     }
@@ -103,21 +105,26 @@ class ClassName extends React.Component<Props> {
   private handleDelete = (i: number) => {
     const { tags } = this.state
     this.setState({
-      tags: tags.filter((tag, index) => index !== i),
+      tags: tags.filter((_, index) => index !== i),
     }, this.handleClassChange)
   }
 
   private handleAddition = (tag: Tag) => {
-    this.setState({ tags: [...this.state.tags, tag] }, this.handleClassChange)
+    this.setState(
+      (prevState: ClassNameState) => ({ tags: [...prevState.tags, tag] }),
+      this.handleClassChange
+    )
   }
 
   private handleDrag = (tag: Tag, currPos: number, newPos: number) => {
-    const newTags = [...this.state.tags]
+    this.setState((prevState: ClassNameState) => {
+      const newTags = [...prevState.tags]
 
-    newTags.splice(currPos, 1)
-    newTags.splice(newPos, 0, tag)
+      newTags.splice(currPos, 1)
+      newTags.splice(newPos, 0, tag)
 
-    this.setState({ tags: newTags }, this.handleClassChange)
+      return { tags: newTags }
+    }, this.handleClassChange)
   }
 
   private handleClassChange = () => {
@@ -126,13 +133,9 @@ class ClassName extends React.Component<Props> {
 
     if (!block) return
 
-    let newElem = {
-      ...block.toJS()
-    }
+    const newData = block.data.set('class', List(tags.map(tag => tag.text.replace(/\s/g, ''))))
 
-    newElem.data.class = List(tags.map(tag => tag.text.replace(/\s/g, '')))
-
-    editor.setNodeByKey(block.key, newElem)
+    editor.setNodeByKey(block.key, { data: newData.toJS() } as BlockProperties)
   }
 }
 

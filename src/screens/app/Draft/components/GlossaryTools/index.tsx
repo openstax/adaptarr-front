@@ -6,23 +6,27 @@ import CharactersCounter from '../CharactersCounter'
 
 import { OnToggle } from '../ToolboxGlossary'
 
-export type Props = {
+interface GlossaryToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class GlossaryTools extends React.Component<Props> {
-  render() {
-    return (
-      <ToolGroup
-        title="editor-tools-glossary-title"
-        toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('glossaryTools')}
-      >
-        <CharactersCounter value={this.props.value} />
-      </ToolGroup>
-    )
+const GlossaryTools = (props: GlossaryToolsProps) => {
+  const onClickToggle = () => {
+    props.onToggle('glossaryTools')
   }
+
+  return (
+    <ToolGroup
+      title="editor-tools-glossary-title"
+      toggleState={props.toggleState}
+      onToggle={onClickToggle}
+    >
+      <CharactersCounter value={props.value} />
+    </ToolGroup>
+  )
 }
+
+export default GlossaryTools

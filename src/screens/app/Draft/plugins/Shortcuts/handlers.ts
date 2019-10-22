@@ -30,7 +30,7 @@ export default function onKeyDown(event: KeyboardEvent, editor: Editor, next: ()
     } else {
       editor.unwrapInlineByKey(inline.key, { type: 'code' })
     }
-    return
+    return true
   } else if (isTermShortcut(event)) {
     event.preventDefault()
     const inline = editor.value.startInline
@@ -39,11 +39,12 @@ export default function onKeyDown(event: KeyboardEvent, editor: Editor, next: ()
     } else {
       editor.unwrapInlineByKey(inline.key, { type: 'term' })
     }
-    return
+    return true
   } else {
     return next()
   }
 
   event.preventDefault()
   editor.toggleMark(mark)
+  return true
 }

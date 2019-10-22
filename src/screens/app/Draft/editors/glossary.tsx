@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
-import { Glossary, DocumentDB, Persistence } from 'cnx-designer'
-import { Value, Block, Text, Editor as Editor_ } from 'slate'
+import { DocumentDB, Glossary, Persistence } from 'cnx-designer'
+import { Block, Editor as Editor_, Text, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { Localized, ReactLocalization } from 'fluent-react/compat'
 import { List } from 'immutable'
@@ -9,7 +9,7 @@ import { List } from 'immutable'
 import { Storage } from 'src/api'
 import { SlotPermission } from 'src/api/process'
 
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 
@@ -22,10 +22,10 @@ import Shortcuts from '../plugins/Shortcuts'
 import Suggestions from '../plugins/Suggestions'
 import { SUGGESTION_TYPES } from '../plugins/Suggestions/types'
 
-type Props = {
+interface EditorGlossaryProps {
   draftPermissions: Set<SlotPermission>
   stepPermissions: Set<SlotPermission>
-  documentDB: DocumentDB
+  documentDB: DocumentDB | undefined
   readOnly: boolean
   storage: Storage
   value: Value
@@ -34,7 +34,7 @@ type Props = {
   onChange: (value: Value) => void
 }
 
-class EditorGlossary extends React.Component<Props> {
+class EditorGlossary extends React.Component<EditorGlossaryProps> {
   static contextTypes = {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }
@@ -53,7 +53,7 @@ class EditorGlossary extends React.Component<Props> {
       },
     }),
     Shortcuts(),
-    Persistence({ db: this.props.documentDB }),
+    this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
   onChange = ({ value }: Editor_) => {
@@ -85,17 +85,20 @@ class EditorGlossary extends React.Component<Props> {
       document: {
         object: 'document',
         nodes: [definition.toJS()],
-      }
+      },
     })
 
     this.props.onChange(valueGlossary)
-    this.props.documentDB.save(valueGlossary, this.props.documentDB.version!)
+    this.props.documentDB!.save(valueGlossary, this.props.documentDB!.version!)
   }
 
   removeGlossary = async () => {
-    const res = await confirmDialog('draft-remove-glossary-dialog', '', {
-      cancel: 'draft-cancel',
-      remove: 'draft-remove-glossary',
+    const res = await confirmDialog({
+      title: 'draft-remove-glossary-dialog',
+      buttons: {
+        cancel: 'draft-cancel',
+        remove: 'draft-remove-glossary',
+      },
     })
 
     if (res === 'remove') {
@@ -104,11 +107,11 @@ class EditorGlossary extends React.Component<Props> {
         document: {
           object: 'document',
           nodes: [],
-        }
+        },
       })
 
       this.props.onChange(valueGlossary)
-      this.props.documentDB.save(valueGlossary, this.props.documentDB.version!)
+      this.props.documentDB!.save(valueGlossary, this.props.documentDB!.version!)
     }
   }
 
@@ -116,12 +119,14 @@ class EditorGlossary extends React.Component<Props> {
 
   public render() {
     if (this.props.isGlossaryEmpty) {
-      return <GlossaryToggler
-        readOnly={this.props.readOnly}
-        isGlossaryEmpty={this.props.isGlossaryEmpty}
-        onAddGlossary={this.addGlossary}
-        onRemoveGlossary={this.removeGlossary}
-      />
+      return (
+        <GlossaryToggler
+          readOnly={this.props.readOnly}
+          isGlossaryEmpty={this.props.isGlossaryEmpty}
+          onAddGlossary={this.addGlossary}
+          onRemoveGlossary={this.removeGlossary}
+        />
+      )
     }
 
     return (
@@ -150,7 +155,7 @@ class EditorGlossary extends React.Component<Props> {
           {
             this.props.readOnly ?
               null
-            :
+              :
               <StorageContext storage={this.props.storage}>
                 <ToolboxGlossary
                   editor={this.editor.current as unknown as Editor_}
@@ -166,7 +171,7 @@ class EditorGlossary extends React.Component<Props> {
 
 export default EditorGlossary
 
-type GlossaryTogglerProps = {
+interface GlossaryTogglerProps {
   readOnly: boolean
   isGlossaryEmpty: boolean
   onAddGlossary: () => void
@@ -185,7 +190,7 @@ const GlossaryToggler = (props: GlossaryTogglerProps) => {
               Add glossary
             </Localized>
           </Button>
-        :
+          :
           <Button
             type="danger"
             clickHandler={props.onRemoveGlossary}

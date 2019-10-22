@@ -1,14 +1,16 @@
 const deserializeRules = {
   deserialize(el: Element, next: (nodes: any) => any) {
     const block = BLOCK_TAGS[el.tagName]
-    if (!block) return
+    if (!block) return undefined
 
-    const props = block instanceof Function ? block(el, next) : {
-      type: block,
-      nodes: next(Array.from(el.children)),
-    }
+    const props = block instanceof Function
+      ? block(el, next)
+      : {
+        type: block,
+        nodes: next(Array.from(el.children)),
+      }
 
-    if (props == null) return
+    if (props == null) return undefined
 
     if (props instanceof Array) {
       props[0].key = props[0].key || el.getAttribute('id') || undefined
@@ -22,7 +24,7 @@ const deserializeRules = {
       return props
     }
 
-    let data = {}
+    const data = {}
     Array.from(el.attributes).forEach(a => {
       data[a.name] = a.value
     })
@@ -33,14 +35,14 @@ const deserializeRules = {
       data,
       ...props,
     }
-  }
+  },
 }
 
 const BLOCK_TAGS = {
-  caption: caption,
+  caption,
   colspec: 'table_colspec',
-  entry: entry,
-  table: table,
+  entry,
+  table,
   tbody: 'table_tbody',
   tgroup: 'table_tgroup',
   thead: 'table_thead',
@@ -48,9 +50,7 @@ const BLOCK_TAGS = {
   row: 'table_row',
 }
 
-/**
-* Process data for captions.
-*/
+// Process data for captions.
 function caption(el: Element, next: (nodes: any) => any) {
   if (el.parentElement && el.parentElement.tagName === 'table') {
     return {
@@ -58,14 +58,12 @@ function caption(el: Element, next: (nodes: any) => any) {
       nodes: next(el.childNodes),
     }
   }
-  return
+  return undefined
 }
 
-/**
-* Process data for entries.
-*/
+// Process data for entries.
 function entry(el: Element, next: (nodes: any) => any) {
-  let data = {}
+  const data = {}
   Array.from(el.attributes).forEach(a => {
     data[a.name] = a.value
   })

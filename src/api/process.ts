@@ -1,18 +1,21 @@
 import axios from 'src/config/axios'
+import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import ProcessVersion from './processversion'
+import { TeamID } from './team'
+import { DraftData } from './draft'
 
 import { elevated } from './utils'
-import { AxiosResponse } from 'axios';
 
 /**
  * Process data.
  */
 export type ProcessData = {
-  id: number,
-  name: string,
-  version: string, // date this version was created
+  id: number
+  name: string
+  version: string // date this version was created
+  team: TeamID
 }
 
 /**
@@ -91,12 +94,9 @@ export type Link = {
  * Free slot.
  */
 export type FreeSlot = {
-  id: number,
-  name: string,
-  draft: {
-    module: string,
-    title: string,
-  },
+  id: number
+  name: string
+  draft: DraftData
 }
 
 export default class Process extends Base<ProcessData> {
@@ -121,8 +121,8 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  static async create(structure: ProcessStructure): Promise<Process> {
-    const rsp = await elevated(() => axios.post('processes', structure))
+  static async create(structure: ProcessStructure, team: TeamID): Promise<Process> {
+    const rsp = await elevated(() => axios.post('processes', { ...structure, team }))
     return new Process(rsp.data)
   }
 
@@ -137,8 +137,8 @@ export default class Process extends Base<ProcessData> {
   /**
    * Assign self to a free slot.
    */
-  static async takeSlot(data: { draft: string, slot: number }): Promise<AxiosResponse> {
-    return await axios.post('processes/slots', data)
+  static takeSlot(data: { draft: string, slot: number }): Promise<AxiosResponse> {
+    return axios.post('processes/slots', data)
   }
 
   /**
@@ -157,6 +157,11 @@ export default class Process extends Base<ProcessData> {
   version: string
 
   /**
+   * ID of team in for which this process was created.
+   */
+  team: TeamID
+
+  /**
    * Structure of process.
    */
   structureData?: ProcessStructure
@@ -170,11 +175,11 @@ export default class Process extends Base<ProcessData> {
   }
 
   /**
-   * Return structure for this process.
+   * Return structure for this process. If @param fromCache is true then cached data
+   * will be returned.
    */
-  async structure(): Promise<ProcessStructure> {
-    if (this.structureData) return this.structureData
-
+  async structure(fromCache = true): Promise<ProcessStructure> {
+    if (fromCache && this.structureData) return this.structureData
     const rsp = await axios.get(`processes/${this.id}/structure`)
     this.structureData = rsp.data
     return rsp.data
@@ -195,8 +200,8 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/slots/${slot}`, data))
+  updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`processes/${this.id}/slots/${slot}`, data))
   }
 
   /**
@@ -204,8 +209,8 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateStepName(step: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}`, { name }))
+  updateStepName(step: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`processes/${this.id}/steps/${step}`, { name }))
   }
 
   /**
@@ -213,8 +218,11 @@ export default class Process extends Base<ProcessData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.id}/steps/${step}/links/${slot}/${target}`, { name }))
+  updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(
+      `processes/${this.id}/steps/${step}/links/${slot}/${target}`,
+      { name },
+    ))
   }
 
   /**

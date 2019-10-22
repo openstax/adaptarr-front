@@ -1,23 +1,25 @@
-import './index.css'
-
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
-type Props = {
+import './index.css'
+
+interface LinkBoxProps {
   text?: string
   onAccept: (text: string, url: string) => void
   onCancel: () => void
 }
 
-class LinkBox extends React.Component<Props> {
-  state: {
-    text: string
-    url: string
-    isUrlValid: boolean
-  } = {
+interface LinkBoxState {
+  text: string
+  url: string
+  isUrlValid: boolean
+}
+
+class LinkBox extends React.Component<LinkBoxProps> {
+  state: LinkBoxState = {
     text: this.props.text || '',
     url: '',
     isUrlValid: false,
@@ -42,8 +44,10 @@ class LinkBox extends React.Component<Props> {
     '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
     '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
     '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
-    this.setState({ isUrlValid: !!pattern.test(this.state.url) })
+    '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
+    this.setState(
+      (prevState: LinkBoxState) => ({ isUrlValid: Boolean(pattern.test(prevState.url)) })
+    )
   }
 
   public render() {
@@ -75,14 +79,14 @@ class LinkBox extends React.Component<Props> {
               type="text"
               value={url}
               onChange={this.handleUrlChange}
-              validation={{custom: () => isUrlValid}}
+              validation={{ custom: () => isUrlValid }}
             />
           </label>
           <div className="dialog__buttons dialog__buttons">
             <Button clickHandler={this.props.onCancel}>
               <Localized id="editor-tools-link-cancel">Cancel</Localized>
             </Button>
-            <Localized id="editor-tools-link-confirm" attrs={{value: true}}>
+            <Localized id="editor-tools-link-confirm" attrs={{ value: true }}>
               <input className="button" type="submit" value="Confirm" disabled={!isUrlValid} />
             </Localized>
           </div>

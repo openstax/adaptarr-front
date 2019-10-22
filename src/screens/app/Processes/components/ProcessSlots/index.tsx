@@ -1,74 +1,85 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
+import Role from 'src/api/role'
 import { ProcessSlot } from 'src/api/process'
 
 import Slot from './Slot'
+
 import Button from 'src/components/ui/Button'
 
 import './index.css'
 
-type Props = {
+interface ProcessSlotsProps {
   slots: ProcessSlot[]
+  roles: Role[]
   onChange: (slots: ProcessSlot[]) => any
 }
 
-export default class ProcessSlots extends React.Component<Props> {
+interface ProcessSlotsState {
+  slots: ProcessSlot[]
+}
+
+export default class ProcessSlots extends React.Component<ProcessSlotsProps> {
   // We use index as an id for ProcessSlot which makes it easier
   // to update and remove elements. Ids are ignored when creating Process.
 
-  state: {
-    name: string
-    slots: ProcessSlot[]
-  } = {
-    name: '',
+  state: ProcessSlotsState = {
     slots: [],
   }
 
   private updateSlot = (slot: ProcessSlot) => {
-    let slots = [...this.state.slots]
-    slots[slot.id] = slot
-    this.setState({ slots })
-    this.props.onChange(slots)
+    this.setState((prevState: ProcessSlotsState) => {
+      const slots = [...prevState.slots]
+      slots[slot.id] = slot
+
+      this.props.onChange(slots)
+
+      return { slots }
+    })
   }
 
   private removeSlot = (slot: ProcessSlot) => {
-    let slots = [...this.state.slots]
-    slots.splice(slot.id, 1)
-    slots = slots.map((s, i) => {
-      return {...s, id: i}
+    this.setState((prevState: ProcessSlotsState) => {
+      let slots = [...prevState.slots]
+      slots.splice(slot.id, 1)
+      slots = slots.map((s, i) => ({ ...s, id: i }))
+
+      this.props.onChange(slots)
+
+      return { slots }
     })
-    this.setState({ slots })
-    this.props.onChange(slots)
   }
 
   private addEmptySlot = () => {
-    const slots = [
-      ...this.state.slots,
-      {
-        id: this.state.slots.length,
-        name: '',
-        autofill: false,
-        roles: [],
-      }
-    ]
-    this.setState({ slots })
-    this.props.onChange(slots)
+    this.setState((prevState: ProcessSlotsState) => {
+      const slots = [
+        ...prevState.slots,
+        {
+          id: prevState.slots.length,
+          name: '',
+          autofill: false,
+          roles: [],
+        },
+      ]
+
+      this.props.onChange(slots)
+
+      return { slots }
+    })
   }
 
   private updateSlots = () => {
     // Form expect indexes as an id.
-    const slots = this.props.slots.map((s, i) => {
-      return {
-        ...s,
-        id: i,
-      }
-    })
+    const slots = this.props.slots.map((s, i) => ({
+      ...s,
+      id: i,
+    }))
     this.setState({ slots })
     this.props.onChange(slots)
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ProcessSlotsProps) {
     const prevSlots = prevProps.slots
     const slots = this.props.slots
     if (JSON.stringify(prevSlots) !== JSON.stringify(slots)) {
@@ -89,14 +100,15 @@ export default class ProcessSlots extends React.Component<Props> {
           </Localized>
         </h3>
         {
-          this.state.slots.map((s, i) => {
-            return <Slot
+          this.state.slots.map((s, i) => (
+            <Slot
               key={i}
               slot={s}
               onChange={this.updateSlot}
               remove={this.removeSlot}
+              roles={this.props.roles}
             />
-          })
+          ))
         }
         <Button clickHandler={this.addEmptySlot}>
           <Localized id="process-form-slot-add">

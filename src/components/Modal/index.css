@@ -36,10 +36,11 @@
   padding: 20px;
   margin-top: 30px;
   max-width: 80%;
-  max-height: calc(100vh - 80px); /* 100vh - (mTop * 2 + padding * 2) */
+  max-height: calc(100% - 80px);
   font-size: 1rem;
   background-color: var(--light-bg);
   border-radius: 17px;
+  overflow: auto;
 }
 
 .modal__content.overflow-auto {

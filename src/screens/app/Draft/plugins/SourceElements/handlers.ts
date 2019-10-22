@@ -2,14 +2,14 @@ import { Editor } from 'slate'
 
 export default function onKeyDown(event: KeyboardEvent, change: Editor, next: () => any) {
   switch (event.key) {
-    case 'Enter':
-      return onEnter(event, change) || next()
+  case 'Enter':
+    return onEnter(event, change) || next()
 
-    case 'Backspace':
-      return onBackspace(event, change) || next()
+  case 'Backspace':
+    return onBackspace(event, change) || next()
 
-    default:
-      return next()
+  default:
+    return next()
   }
 }
 
@@ -35,17 +35,19 @@ function onEnter(event: KeyboardEvent, change: Editor) {
     isAtEnd = selection.start.isAtEndOfNode(startBlock)
     && selection.end.isAtEndOfNode(startBlock)
 
-    const lastNode = startBlock.getText().split(/\r?\n/).pop()
+    const lastNode = startBlock.getText().split(/\r?\n/)
+      .pop()
     lastNodeIsEmpty = lastNode ? lastNode.replace(/\s+/g, '') === '' : true
   } else if (sourceInline) {
     isAtEnd = selection.start.isAtEndOfNode(startInline)
     && selection.end.isAtEndOfNode(startInline)
 
-    const lastNode = startInline.getText().split(/\r?\n/).pop()
+    const lastNode = startInline.getText().split(/\r?\n/)
+      .pop()
     lastNodeIsEmpty = lastNode ? lastNode.replace(/\s+/g, '') === '' : true
   }
 
-  // Add new paragraph and unwrap block 
+  // Add new paragraph and unwrap block
   if (isAtEnd && lastNodeIsEmpty) {
     // remove last \n
     change.deleteBackward(1)

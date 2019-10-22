@@ -3,17 +3,19 @@ import axios from 'src/config/axios'
 import Base from './base'
 import Book from './book'
 import Module, { ModuleProcess } from './module'
+import { TeamID } from './team'
 import { elevated } from './utils'
 
 export type Kind = 'module' | 'group'
 
 export type ModuleData = {
-  kind: 'module',
-  number: number,
-  title: string,
-  id: string,
-  process: ModuleProcess | null,
-  language: string,
+  kind: 'module'
+  number: number
+  title: string
+  id: string
+  process: ModuleProcess | null
+  language: string
+  team: TeamID
 }
 
 export type GroupData = {
@@ -71,6 +73,12 @@ export default class BookPart extends Base<PartData> {
   language?: string
 
   /**
+   * Team ID in which this modules exists for this part (if {@link #kind} is
+   * {@code 'module'}).
+   */
+  team?: TeamID
+
+  /**
    * List of parts which make up this group (only if {@link #kind} is
    * {@code 'group'}).
    */
@@ -95,7 +103,8 @@ export default class BookPart extends Base<PartData> {
    * Fetch module this part references.
    */
   async module(): Promise<Module | null> {
-    return this.id ? await Module.load(this.id) : null
+    const res = this.id ? await Module.load(this.id) : null
+    return res
   }
 
   /**

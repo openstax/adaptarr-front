@@ -7,12 +7,19 @@
   margin-bottom: -10px;
 }
 
+.usersList__team {
+  margin-bottom: 20px;
+  background-color: #fff;
+}
+
+.usersList__team-name {
+  display: flex;
+  padding: 10px;
+}
+
 .usersList__list {
-  margin-top: 20px;
   max-height: 300px;
   overflow: auto;
-  border: 1px solid var(--dark-bg);
-  background-color: #fff;
 }
 
 .usersList__item {
@@ -30,11 +37,6 @@
 
 .usersList__item--no-results {
   padding: 10px;
-}
-
-.usersList__item--no-results:hover {
-  color: var(--font-dark);
-  background-color: var(--light-bg);
 }
 
 .usersList__info {

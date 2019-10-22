@@ -4,13 +4,13 @@
  * @param {number} t - time in milliseconds after which to reject
  */
 export default function timeout(t: number): Promise<TimeoutError> {
-    return new Promise((resolve, reject) => {
-        window.setTimeout(() => reject(new TimeoutError()), t)
-    })
+  return new Promise((_, reject) => {
+    window.setTimeout(() => reject(new TimeoutError()), t)
+  })
 }
 
 export class TimeoutError extends Error {
-    constructor() {
-        super("Timed out")
-    }
+  constructor() {
+    super("Timed out")
+  }
 }

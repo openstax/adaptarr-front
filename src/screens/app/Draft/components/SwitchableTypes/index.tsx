@@ -1,13 +1,13 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Block, Document, Range } from 'slate'
+import { Block, Document, Editor, Inline, Range, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import './index.css'
 
-type Props = {
-  editor: Editor,
-  value: Value,
+interface SwitchableTypesProps {
+  editor: Editor
+  value: Value
 }
 
 /**
@@ -18,9 +18,8 @@ type Props = {
  */
 const SWITCHABLE_TEXT_TYPES = ['paragraph', 'title']
 
-export default class SwitchableTypes extends React.Component<Props> {
-
-  private changeTextType = ({value: blockType}: {value: string, label: string}) => {
+export default class SwitchableTypes extends React.Component<SwitchableTypesProps> {
+  private changeTextType = ({ value: blockType }: {value: string, label: string}) => {
     const { editor, value: { startBlock, document } } = this.props
     const parent = document.getParent(startBlock.key) as Block | Document
 
@@ -30,7 +29,7 @@ export default class SwitchableTypes extends React.Component<Props> {
       if (parent.object === 'document' && blockType === 'title') {
         const index = parent.nodes.findIndex(n => n!.key === startBlock.key)
         const last = parent.nodes.findLast(
-          (node, inx) => node!.type !== 'section' && inx! >= index)
+          (node: Block | Inline, inx) => node!.type !== 'section' && inx! >= index)
 
         editor.moveStartToStartOfNode(startBlock)
         editor.moveEndToEndOfNode(last)
@@ -67,9 +66,9 @@ export default class SwitchableTypes extends React.Component<Props> {
       <div className={`switchable-types ${isDisabled ? 'disabled' : ''}`}>
         <Select
           className="toolbox__select react-select"
-          value={{ value: startBlock.type, label: startBlock.type}}
+          value={{ value: startBlock.type, label: startBlock.type }}
           onChange={this.changeTextType}
-          options={SWITCHABLE_TEXT_TYPES.map(t => {return {value: t, label: t}})}
+          options={SWITCHABLE_TEXT_TYPES.map(t => ({ value: t, label: t }))}
           isDisabled={isDisabled}
           formatOptionLabel={OptionLabel}
           isSearchable={false}
@@ -79,6 +78,6 @@ export default class SwitchableTypes extends React.Component<Props> {
   }
 }
 
-function OptionLabel({value: type}: {value: string, label: string}) {
+function OptionLabel({ value: type }: {value: string, label: string}) {
   return <Localized id="editor-tools-format-text-type" $type={type}>{type}</Localized>
 }

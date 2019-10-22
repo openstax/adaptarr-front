@@ -1,13 +1,19 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import User from 'src/api/user'
+import Team, { TeamID } from 'src/api/team'
 import Process, { ProcessStructure } from 'src/api/process'
 import { elevate } from 'src/api/utils'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { fetchProcesses } from 'src/store/actions/app'
+import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
+
+import { confirmDialog } from 'src/helpers'
 
 import ProcessForm from './components/ProcessForm'
 import ProcessesList from './components/ProcessesList'
@@ -15,27 +21,36 @@ import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-import Dialog from 'src/components/ui/Dialog'
 
 import ProcessPreview from 'src/containers/ProcessPreview'
 
 import './index.css'
 
-class Processes extends React.Component<{}> {
-  state: {
-    showForm: boolean
-    structure: ProcessStructure | null
-    process: Process | null
-    showPreview: boolean
-    previewStructure: ProcessStructure | null
-    showConfirmNewVersionCreation: boolean
-  } = {
+interface ProcessesProps {
+  teams: TeamsMap
+}
+
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
+
+interface ProcessesState {
+  showForm: boolean
+  structure: ProcessStructure | null
+  process: Process | null
+  team: Team | null
+  showPreview: boolean
+  previewStructure: ProcessStructure | null
+}
+
+class Processes extends React.Component<ProcessesProps> {
+  state: ProcessesState = {
     showForm: false,
     structure: null,
     process: null,
+    team: null,
     showPreview: false,
     previewStructure: null,
-    showConfirmNewVersionCreation: false,
   }
 
   private showForm = () => {
@@ -51,17 +66,23 @@ class Processes extends React.Component<{}> {
     this.setState({ showForm: true, structure, process: p })
   }
 
-  private createProcess = async (structure: ProcessStructure) => {
+  private createProcess = async (structure: ProcessStructure, team: TeamID) => {
     // Create new process if we are not editing existing one.
     if (!this.state.process) {
-      Process.create(structure)
+      Process.create(structure, team)
         .then(() => {
           this.closeForm()
-          store.dispatch(addAlert('success', 'process-create-success', {name: structure.name}))
+          store.dispatch(addAlert('success', 'process-create-success', { name: structure.name }))
           store.dispatch(fetchProcesses())
         })
-        .catch((e) => {
-          store.dispatch(addAlert('error', 'process-create-error', {details: e.response.data.raw}))
+        .catch(e => {
+          store.dispatch(
+            addAlert(
+              'error',
+              'process-create-error',
+              { details: e.response.data.raw }
+            )
+          )
         })
     } else {
       // Check if changes require creating new version.
@@ -84,7 +105,7 @@ class Processes extends React.Component<{}> {
           store.dispatch(addAlert('success', 'process-update-success'))
           store.dispatch(fetchProcesses())
         } catch (e) {
-          console.log(e)
+          console.error(e)
           store.dispatch(addAlert('error', 'process-update-error'))
         }
       } else {
@@ -94,38 +115,62 @@ class Processes extends React.Component<{}> {
     }
   }
 
-  private showConfirmNewVersionCreation = (structure: ProcessStructure) => {
-    this.setState({ showConfirmNewVersionCreation: true, structure })
+  private showConfirmNewVersionCreation = async (structure: ProcessStructure) => {
+    const res = await confirmDialog({
+      title: 'process-update-warning-new-version',
+      content: <Localized id="process-update-warning-new-version-content" p={<p/>}>
+        <div className="process__dialog-content" />
+      </Localized>,
+      buttons: {
+        cancel: 'process-update-warning-new-version-cancel',
+        confirm: 'process-update-warning-new-version-confirm',
+      },
+    })
+
+    if (res === 'confirm') {
+      this.createNewProcessVersion(structure)
+    }
   }
 
-  private closeConfirmNewVersionCreation = () => {
-    this.setState({ showConfirmNewVersionCreation: false })
-  }
-
-  private createNewProcessVersion = () => {
-    const { process, structure } = this.state
-    if (!process || !structure) return
+  private createNewProcessVersion = (structure: ProcessStructure) => {
+    const { process } = this.state
+    if (!process) return
 
     process.createVersion(structure)
       .then(() => {
         this.closeForm()
-        store.dispatch(addAlert('success', 'process-create-version-success', {name: structure.name}))
+        store.dispatch(
+          addAlert(
+            'success',
+            'process-create-version-success',
+            { name: structure.name }
+          )
+        )
         store.dispatch(fetchProcesses())
       })
-      .catch((e) => {
-        store.dispatch(addAlert('error', 'process-create-version-error', {details: e.response.data.raw}))
+      .catch(e => {
+        store.dispatch(
+          addAlert(
+            'error',
+            'process-create-version-error',
+            { details: e.response.data.raw }
+          )
+        )
       })
-
-    this.closeConfirmNewVersionCreation()
   }
 
   private closePreview = () => {
-    this.setState({ showPreview: false, previewStructure: null })
+    this.setState({ showPreview: false, previewStructure: null, team: null })
   }
 
   private onShowPreview = async (p: Process) => {
     const previewStructure = await p.structure()
-    this.setState({ showPreview: true, previewStructure, })
+    const team = this.props.teams.get(p.team)
+    if (!team) {
+      console.error(`Couldn't find team with id: ${p.team}`)
+      return
+    }
+    this.setState({ showPreview: true, previewStructure, team })
   }
 
   private compareOldWithNew = (oldStructure: ProcessStructure, newStructure: ProcessStructure): {
@@ -138,7 +183,7 @@ class Processes extends React.Component<{}> {
       throw new Error("Couldn't establish process to update.")
     }
 
-    let res: {
+    const res: {
       newVersionRequired: boolean
       updates: any[]
     } = {
@@ -150,7 +195,7 @@ class Processes extends React.Component<{}> {
       oldStructure.slots.length !== newStructure.slots.length
       || oldStructure.steps.length !== newStructure.steps.length
       || oldStructure.start !== newStructure.start
-      ) {
+    ) {
       return {
         newVersionRequired: true,
         updates: [],
@@ -174,7 +219,7 @@ class Processes extends React.Component<{}> {
           updates: [],
         }
       }
-      let slotUpdate: {name?: string, roles?: number[]} = {}
+      const slotUpdate: {name?: string, roles?: number[]} = {}
       if (slot.name !== newSlot.name) {
         slotUpdate.name = newSlot.name
       }
@@ -252,7 +297,7 @@ class Processes extends React.Component<{}> {
   }
 
   public render() {
-    const { showForm, structure, showPreview, previewStructure, process, showConfirmNewVersionCreation } = this.state
+    const { showForm, structure, showPreview, previewStructure, process, team } = this.state
 
     return (
       <div className={`container ${showPreview ? 'container--splitted' : ''}`}>
@@ -263,16 +308,12 @@ class Processes extends React.Component<{}> {
               showForm ?
                 <ProcessForm
                   structure={structure}
+                  process={process ? process : undefined}
                   onSubmit={this.createProcess}
                   onCancel={this.closeForm}
                 />
-              :
+                :
                 <>
-                  <ProcessesList
-                    onProcessEdit={this.onProcessEdit}
-                    onShowPreview={this.onShowPreview}
-                    activePreview={process ? process.id : undefined}
-                  />
                   <div className="processes__create-new">
                     <Button clickHandler={this.showForm}>
                       <Localized id="processes-view-add">
@@ -280,12 +321,17 @@ class Processes extends React.Component<{}> {
                       </Localized>
                     </Button>
                   </div>
+                  <ProcessesList
+                    onProcessEdit={this.onProcessEdit}
+                    onShowPreview={this.onShowPreview}
+                    activePreview={process ? process.id : undefined}
+                  />
                 </>
             }
           </div>
         </Section>
         {
-          showPreview && previewStructure ?
+          showPreview && previewStructure && team ?
             <Section>
               <Header
                 l10nId="processes-view-preview"
@@ -296,48 +342,24 @@ class Processes extends React.Component<{}> {
                 </Button>
               </Header>
               <div className="section__content">
-                <ProcessPreview structure={previewStructure} />
+                <ProcessPreview
+                  structure={previewStructure}
+                  team={team}
+                />
               </div>
             </Section>
-          : null
-        }
-        {
-          showConfirmNewVersionCreation ?
-            <Dialog
-              size="medium"
-              l10nId="process-update-warning-new-version"
-              placeholder="Warning! New version will be created."
-              onClose={this.closeConfirmNewVersionCreation}
-            >
-              <Localized id="process-update-warning-new-version-content" p={<p/>}>
-                <div className="process__dialog-content"></div>
-              </Localized>
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeConfirmNewVersionCreation}>
-                  <Localized id="process-update-warning-new-version-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.createNewProcessVersion}>
-                  <Localized id="process-update-warning-new-version-confirm">
-                    Create new version
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
+            : null
         }
       </div>
     )
   }
 }
 
-export default Processes
+export default connect(mapStateToProps)(Processes)
 
 function numberArrayDiff(a: number[], b: number[]) {
   if (a.length > b.length) {
     return a.filter(item => b.indexOf(item) < 0)
-  } else {
-    return b.filter(item => a.indexOf(item) < 0)
   }
+  return b.filter(item => a.indexOf(item) < 0)
 }

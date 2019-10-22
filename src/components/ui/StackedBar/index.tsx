@@ -1,15 +1,15 @@
-import './index.css'
-
 import * as React from 'react'
 
 import { ModuleStatus } from 'src/store/types'
 
-type Props = {
+import './index.css'
+
+interface StackedBarProps {
   data: ModuleStatus[]
 }
 
 const countRepeatedData = (data: string[]) => {
-  let obj = {}
+  const obj = {}
 
   for (let i = 0; i < data.length; i++) {
     if (obj[data[i]]) {
@@ -22,7 +22,7 @@ const countRepeatedData = (data: string[]) => {
   return obj
 }
 
-const stackedBar = ({ data }: Props) => {
+const StackedBar = ({ data }: StackedBarProps) => {
   const repeatedData = countRepeatedData(data)
   const total = data.length
 
@@ -33,9 +33,9 @@ const stackedBar = ({ data }: Props) => {
           const val = repeatedData[el]
           return (
             <span
-              key={`${el}-${index}-${val}`} 
-              className={`stacked__bar stacked__bar--${el}`} 
-              style={{width: `${val/total * 100}%`}}
+              key={`${el}-${index}-${val}`}
+              className={`stacked__bar stacked__bar--${el}`}
+              style={{ width: `${val/total * 100}%` }}
               title={`${val} - ${el}`}
             >
               {val}
@@ -47,4 +47,4 @@ const stackedBar = ({ data }: Props) => {
   )
 }
 
-export default stackedBar
+export default StackedBar

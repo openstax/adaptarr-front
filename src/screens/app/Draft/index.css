@@ -77,6 +77,8 @@
   line-height: 1.3;
   background-color: #fff;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
+
+  counter-reset: footnote;
 }
 
 .document--readonly .editor--glossary {
@@ -130,6 +132,11 @@
 
 .editor .suggestion--delete::before, .editor .suggestion--delete::after {
   background-color: var(--red)
+}
+
+.editor a {
+  cursor: pointer;
+  color: blue;
 }
 
 .editor p {
@@ -208,6 +215,16 @@
   padding-right: 48q;
   display: flex;
   align-items: start;
+}
+
+.editor .media__alt {
+  margin: 10px 0;
+}
+
+.editor .media__alt::before {
+  content: attr(data-label);
+  padding-right: 5px;
+  color: gray;
 }
 
 .editor img {
@@ -289,6 +306,36 @@
 
 div.editor figure > figcaption::before {
   content: attr(data-label);
+}
+
+.editor .footnote {
+  color: gray;
+  line-height: 0;
+  counter-increment: footnote;
+}
+
+.editor .footnote:before {
+  content: "(";
+}
+
+.editor .footnote:after {
+  content: ")";
+}
+
+.editor .footnote.collapse > * {
+  font-size: 0;
+}
+
+.editor .footnote.collapse:before {
+  content: counter(footnote);
+  position: relative;
+  top: -0.3em;
+  padding: 2px;
+  cursor: pointer;
+}
+
+.editor .footnote.collapse:after {
+  content: none;
 }
 
 .editor .adr-table {

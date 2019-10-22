@@ -1,14 +1,13 @@
 import * as React from 'react'
 import * as PropTypes from 'prop-types'
 import Select from 'react-select'
-import { Editor, Value, Operation } from 'slate'
-import { pick } from 'lodash'
+import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import store from 'src/store'
-import { setCurrentDraftLang } from 'src/store/actions/Drafts'
+import { setCurrentDraftLang } from 'src/store/actions/drafts'
 import Storage from 'src/api/storage'
 
 import ToolGroup from '../ToolGroup'
@@ -16,16 +15,20 @@ import CharactersCounter from '../CharactersCounter'
 
 import { OnToggle } from '../ToolboxDocument'
 
-export type Props = {
+interface DocumentToolsProps {
   editor: Editor,
   value: Value,
   toggleState: boolean,
   onToggle: OnToggle,
 }
 
-export default class DocumentTools extends React.Component<Props> {
+export default class DocumentTools extends React.Component<DocumentToolsProps> {
   static contextTypes = {
     storage: PropTypes.instanceOf(Storage),
+  }
+
+  private onClickToggle = () => {
+    this.props.onToggle('documentTools')
   }
 
   render() {
@@ -38,7 +41,7 @@ export default class DocumentTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-document-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('documentTools')}
+        onToggle={this.onClickToggle}
       >
         <label className="toolbox__label">
           <span className="toolbox__title">
@@ -48,9 +51,9 @@ export default class DocumentTools extends React.Component<Props> {
           </span>
           <Select
             className="toolbox__select react-select"
-            value={language ? {value: language.code, label: language.name} : null}
+            value={language ? { value: language.code, label: language.name } : null}
             onChange={this.setLanguage}
-            options={LANGUAGES.map(l => {return {value: l.code, label: l.name}})}
+            options={LANGUAGES.map(l => ({ value: l.code, label: l.name }))}
             getOptionLabel={getOptionLabel}
           />
         </label>

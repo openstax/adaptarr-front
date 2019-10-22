@@ -3,9 +3,9 @@ import { Node, Text } from 'slate'
 
 const serializeRules = {
   serialize(obj: Node, children: Element | Array<any>) {
-    if (obj instanceof Text) return
+    if (obj instanceof Text) return undefined
     const Block = BLOCK_TAGS[obj.type]
-    if (!Block) return
+    if (!Block) return undefined
 
     if (Block instanceof Function) return Block(obj, children)
 
@@ -14,7 +14,7 @@ const serializeRules = {
         {children}
       </Block>
     )
-  }
+  },
 }
 
 const BLOCK_TAGS = {

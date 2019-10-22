@@ -1,35 +1,29 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { connect } from 'react-redux'
 
-import { ProcessSlot } from 'src/api/process'
 import Role from 'src/api/role'
-import { State } from 'src/store/reducers'
+import { ProcessSlot } from 'src/api/process'
 
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-type SlotProps = {
+interface SlotProps {
   roles: Role[]
   slot: ProcessSlot
   onChange: (slot: ProcessSlot) => any
   remove: (slot: ProcessSlot) => any
 }
 
-const mapStateToProps = ({ app: { roles } }: State) => {
-  return {
-    roles,
-  }
+interface SlotState {
+  name: string
+  autofill: boolean
+  selectedRoles: Set<number>
 }
 
 class Slot extends React.Component<SlotProps> {
-  state: {
-    name: string
-    autofill: boolean
-    selectedRoles: Set<number>
-  } = {
+  state: SlotState = {
     name: '',
     autofill: false,
     selectedRoles: new Set(),
@@ -145,18 +139,23 @@ class Slot extends React.Component<SlotProps> {
   private handleRoleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const roleId = Number(e.currentTarget.dataset.id)
     if (!roleId) return
-    let selectedRoles = this.state.selectedRoles
-    if (selectedRoles.has(roleId)) {
-      selectedRoles.delete(roleId)
-    } else {
-      selectedRoles.add(roleId)
-    }
-    this.setState({ selectedRoles })
-    this.props.onChange({
-      ...this.props.slot,
-      roles: Array.from(selectedRoles),
+
+    this.setState((prevState: SlotState) => {
+      const selectedRoles = prevState.selectedRoles
+      if (selectedRoles.has(roleId)) {
+        selectedRoles.delete(roleId)
+      } else {
+        selectedRoles.add(roleId)
+      }
+
+      this.props.onChange({
+        ...this.props.slot,
+        roles: Array.from(selectedRoles),
+      })
+
+      return { selectedRoles }
     })
   }
 }
 
-export default connect(mapStateToProps)(Slot)
+export default Slot

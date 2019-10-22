@@ -1,18 +1,16 @@
-import './index.css'
-
 import * as React from 'react'
 
-type Props = {
+import './index.css'
+
+interface SectionProps {
   children?: any
   className?: string
 }
 
-const section = ({ children, className }: Props) => {
-  return (
-    <section className={`section--wrapper ${className ? className : ''}`}>
-      {children}
-    </section>
-  )
-}
+const Section = ({ children, className }: SectionProps) => (
+  <section className={`section--wrapper ${className ? className : ''}`}>
+    {children}
+  </section>
+)
 
-export default section
+export default Section

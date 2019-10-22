@@ -1,12 +1,12 @@
 import * as React from 'react'
 import { Portal } from 'react-portal'
 
-import './index.css'
-
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 
-export type Props = {
+import './index.css'
+
+interface ModalProps {
   target?: string,
   overflowAuto?: boolean,
   showCloseButton?: boolean,
@@ -16,7 +16,7 @@ export type Props = {
   onClose?: () => void,
 }
 
-export default class Modal extends React.Component<Props> {
+class Modal extends React.Component<ModalProps> {
   state: {
     open: boolean,
   } = {
@@ -39,6 +39,16 @@ export default class Modal extends React.Component<Props> {
     this.setState({ open: false })
   }
 
+  componentDidMount() {
+    document.addEventListener('keydown', this.onKeyDown)
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown)
+  }
+
+  setRef = (el: HTMLDivElement | null) => el && (this.back = el)
+
   render() {
     if (!this.state.open) return null
 
@@ -51,8 +61,7 @@ export default class Modal extends React.Component<Props> {
           className="modal"
           tabIndex={0}
           onClick={this.onClick}
-          onKeyDown={this.onKeyDown}
-          ref={el => el && (this.back = el)}
+          ref={this.setRef}
         >
           <div className={`modal__content ${overflowAuto ? 'overflow-auto' : ''}`}>
             {
@@ -63,7 +72,7 @@ export default class Modal extends React.Component<Props> {
                 >
                   <Icon name="close" />
                 </Button>
-              : null
+                : null
             }
             {c}
           </div>
@@ -80,10 +89,10 @@ export default class Modal extends React.Component<Props> {
     }
   }
 
-  onKeyDown = (ev: React.KeyboardEvent) => {
+  onKeyDown = (ev: Event) => {
     const { closeOnEsc = true } = this.props
 
-    if (ev.key === 'Escape' && closeOnEsc) {
+    if ((ev as KeyboardEvent).key === 'Escape' && closeOnEsc) {
       this.onClose()
     }
   }
@@ -95,3 +104,5 @@ export default class Modal extends React.Component<Props> {
     if (onClose) onClose()
   }
 }
+
+export default Modal

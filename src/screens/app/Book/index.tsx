@@ -1,13 +1,15 @@
-import './index.css'
-
 import * as React from 'react'
-import Nestable from 'react-nestable'
+import Nestable, { RenderItem } from 'react-nestable'
 import { History } from 'history'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import * as api from 'src/api'
-import { PartData, GroupData, ModuleData } from 'src/api/bookpart'
+import { GroupData, ModuleData, PartData } from 'src/api/bookpart'
+
+import * as types from 'src/store/types'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/alerts'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
@@ -25,53 +27,48 @@ import Input from 'src/components/ui/Input'
 import ModulePreview from 'src/containers/ModulePreview'
 import ModulesPicker from 'src/containers/ModulesPicker'
 
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import './index.css'
 
-type Props = {
+interface BookProps {
   match: {
     params: {
       id: string
     }
   }
   history: History
-  team: {
-    teamMap: types.TeamMap
-  }
   modules: {
     modulesMap: types.ModulesMap
   }
   addAlert: (kind: types.AlertDataKind, message: string, args?: object) => void
 }
 
-const mapStateToProps = ({ team, modules }: State) => {
-  return {
-    team,
-    modules,
-  }
+const mapStateToProps = ({ modules }: State) => ({
+  modules,
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  // eslint-disable-next-line arrow-body-style
+  addAlert: (kind: types.AlertDataKind, message: string, args: Object) => {
+    return dispatch(addAlert(kind, message, args))
+  },
+})
+
+interface BookState {
+  isLoading: boolean
+  book?: api.Book
+  parts: api.BookPart[]
+  showModuleDetails: api.Module | undefined
+  showEditBook: boolean
+  isEditingUnlocked: boolean
+  groupNameInput: string
+  showAddGroup: boolean
+  showAddModule: boolean
+  searchInput: string
+  selectedProcess: api.Process | null
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addAlert: (kind: types.AlertDataKind, message: string, args: Object) => dispatch(addAlert(kind, message, args)),
-  }
-}
-
-class Book extends React.Component<Props> {
-  state: {
-    isLoading: boolean
-    book?: api.Book
-    parts: api.BookPart[]
-    showModuleDetails: api.Module | undefined
-    showEditBook: boolean
-    isEditingUnlocked: boolean
-    groupNameInput: string
-    showAddGroup: boolean
-    showAddModule: boolean
-    searchInput: string
-    selectedProcess: api.Process | null
-  } = {
+class Book extends React.Component<BookProps> {
+  state: BookState = {
     isLoading: true,
     parts: [],
     showModuleDetails: undefined,
@@ -128,30 +125,36 @@ class Book extends React.Component<Props> {
    * Check if any of modules in @param {GroupData} part is matching
    * searchInput and / or selectedProcess.
    */
-  private testModulesInPart = (part: GroupData, cb: (mod: ModuleData) => boolean): boolean => {
-    return part.parts.some(part => {
-      if (part.kind === 'module' && cb(part)) return true
-      if (part.kind === 'group') return this.testModulesInPart(part, cb)
-      return false
-    })
-  }
+  private testModulesInPart = (
+    part: GroupData,
+    cb: (mod: ModuleData) => boolean
+  ): boolean => part.parts.some(part => {
+    if (part.kind === 'module' && cb(part)) return true
+    if (part.kind === 'group') return this.testModulesInPart(part, cb)
+    return false
+  })
 
   private toggleCollapseGroup = (num: number) => {
     this.nestable.current!.toggleCollapseGroup(num)
   }
 
-  private renderItem = ({ item, collapseIcon }: { item: PartData, index: number, collapseIcon: any, handler: any }) => {
+  private renderItem = ({ item, collapseIcon }: RenderItem<PartData>) => {
     const { selectedProcess, searchInput, isEditingUnlocked, book } = this.state
 
-    if (item.kind === 'module' && !this.testModule(item)) return null
-    if (item.kind === 'group' && !this.testModulesInPart(item as GroupData, this.testModule)) return null
+    if (selectedProcess || searchInput) {
+      if (item.kind === 'module' && !this.testModule(item)) return null
+      if (
+        item.kind === 'group' &&
+        !this.testModulesInPart(item as GroupData, this.testModule)
+      ) return null
+    }
 
     return (
       <div className={`bookpart__item bookpart__item--${item.kind}`}>
         {
           item.kind === 'group' ?
             <BookPartGroup
-              item={new api.BookPart((item as GroupData), book!)}
+              item={new api.BookPart(item as GroupData, book!)}
               book={book!}
               collapseIcon={collapseIcon}
               afterAction={this.fetchBook}
@@ -160,8 +163,9 @@ class Book extends React.Component<Props> {
               showStatsFor={selectedProcess}
               onTitleClick={this.toggleCollapseGroup}
             />
-          : <BookPartModule
-              item={new api.BookPart((item as ModuleData), book!)}
+            :
+            <BookPartModule
+              item={new api.BookPart(item as ModuleData, book!)}
               onModuleClick={this.showModuleDetails}
               afterAction={this.fetchBook}
               isEditingUnlocked={isEditingUnlocked}
@@ -172,7 +176,7 @@ class Book extends React.Component<Props> {
     )
   }
 
-  private renderCollapseIcon = ({isCollapsed}: {isCollapsed: boolean}) => {
+  private renderCollapseIcon = ({ isCollapsed }: {isCollapsed: boolean}) => {
     if (isCollapsed) {
       return <Icon size="medium" name="arrow-right"/>
     }
@@ -181,7 +185,7 @@ class Book extends React.Component<Props> {
   }
 
   private findParentWithinItems = (items: api.BookPart[], path: number[]) => {
-    let pathToParent = [...path]
+    const pathToParent = [...path]
     pathToParent.pop() // remove last index because it's pointing to changedItem
 
     let parent: api.BookPart
@@ -207,40 +211,52 @@ class Book extends React.Component<Props> {
     return parent
   }
 
-  private handleOnMove = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
+  private handleOnMove = (
+    newItems: api.BookPart[],
+    changedItem: api.BookPart,
+    realPathTo: number[]
+  ) => {
     // Do not move bookparts into modules
     // TODO: Create new part when user move module into module
     const parent: api.BookPart | api.Book = this.findParentWithinItems(newItems, realPathTo)
 
     if (typeof (parent as api.BookPart).number !== 'number') {
-      console.log('You can not move items outside book.')
+      console.warn('You can not move items outside book.')
       return false
     } else if ((parent as api.BookPart).kind === 'module') {
-      console.log('You can not move modules into modules.')
+      console.warn('You can not move modules into modules.')
       return false
     }
 
     return true
   }
 
-  private handlePositionChange = (newItems: api.BookPart[], changedItem: api.BookPart, realPathTo: number[]) => {
+  private handlePositionChange = (
+    newItems: api.BookPart[],
+    changedItem: api.BookPart,
+    realPathTo: number[]
+  ) => {
     const targetParent = this.findParentWithinItems(newItems, realPathTo)
     const targetPosition = {
       parent: targetParent.number,
-      index: realPathTo[realPathTo.length - 1]
+      index: realPathTo[realPathTo.length - 1],
     }
 
     if (!(changedItem instanceof api.BookPart)) {
       // While processing data trough react-nestable, instances are lost,
       // so we have to recreate it
       // TODO: Adjust / rewrite react-nestable to handle instances properly
-      changedItem = new api.BookPart((changedItem as PartData), this.state.book!)
+      changedItem = new api.BookPart(changedItem as PartData, this.state.book!)
     }
 
     changedItem.update(targetPosition)
       .then(() => {
         this.fetchBook()
-        this.props.addAlert('success', 'book-part-moving-alert-success', {item: changedItem.title, target: targetParent.title})
+        this.props.addAlert(
+          'success',
+          'book-part-moving-alert-success',
+          { item: changedItem.title, target: targetParent.title }
+        )
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
@@ -258,7 +274,11 @@ class Book extends React.Component<Props> {
           })
           .catch(e => {
             this.setState({ isLoading: false })
-            this.props.addAlert('error', 'book-fetch-error', {title: book.title, details: e.message})
+            this.props.addAlert(
+              'error',
+              'book-fetch-error',
+              { title: book.title, details: e.message }
+            )
           })
       })
       .catch(() => {
@@ -280,7 +300,7 @@ class Book extends React.Component<Props> {
   }
 
   private toggleEditing = () => {
-    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
+    this.setState((prevState: BookState) => ({ isEditingUnlocked: !prevState.isEditingUnlocked }))
   }
 
   private handleAddGroup = (e: React.FormEvent) => {
@@ -305,7 +325,7 @@ class Book extends React.Component<Props> {
         this.fetchBook()
         this.props.addAlert('success', 'book-add-group-alert-success')
       })
-      .catch((e) => {
+      .catch(e => {
         this.props.addAlert('error', e.message)
       })
     this.closeAddGroupDialog()
@@ -341,10 +361,10 @@ class Book extends React.Component<Props> {
       .then(() => {
         this.fetchBook()
         this.props.addAlert('success', 'book-group-add-module-alert-success', {
-          title: selectedModule.title
+          title: selectedModule.title,
         })
       })
-      .catch((e) => {
+      .catch(e => {
         this.props.addAlert('error', e.message)
       })
     this.closeAddModuleDialog()
@@ -362,7 +382,7 @@ class Book extends React.Component<Props> {
     this.setState({ showAddModule: false })
   }
 
-  componentDidMount () {
+  componentDidMount() {
     this.fetchBook()
   }
 
@@ -394,7 +414,7 @@ class Book extends React.Component<Props> {
               onClose={this.closeEditBook}
               onSuccess={this.handleEditBookSuccess}
             />
-          : null
+            : null
         }
         <Section className="book">
           <Header l10nId={titleKey} title={title}>
@@ -403,7 +423,7 @@ class Book extends React.Component<Props> {
                 {
                   isEditingUnlocked ?
                     <Icon size="medium" name="unlock" />
-                  : <Icon size="medium" name="lock" />
+                    : <Icon size="medium" name="lock" />
                 }
               </Button>
               {
@@ -413,7 +433,7 @@ class Book extends React.Component<Props> {
                   >
                     <Icon name="pencil"/>
                   </Button>
-                : null
+                  : null
               }
             </LimitedUI>
             <div className="book__search">
@@ -426,6 +446,7 @@ class Book extends React.Component<Props> {
           </Header>
           <ProcessSelector
             title="book-statistics-choose-process"
+            team={book ? book.team : undefined}
             onChange={this.handleProcessChange}
           />
           {
@@ -459,10 +480,10 @@ class Book extends React.Component<Props> {
                         </Button>
                       </LimitedUI>
                     </div>
-                  : null
+                    : null
                 }
               </>
-            : <Spinner />
+              : <Spinner />
           }
         </Section>
         {
@@ -482,7 +503,7 @@ class Book extends React.Component<Props> {
                 <ModulePreview moduleId={showModuleDetails.id}/>
               </div>
             </Section>
-          : null
+            : null
         }
         {
           showAddGroup ?
@@ -497,7 +518,7 @@ class Book extends React.Component<Props> {
                   l10nId="book-add-group-title"
                   onChange={this.updateGroupNameInput}
                   autoFocus
-                  validation={{minLength: 3}}
+                  validation={{ minLength: 3 }}
                 />
                 <div className="dialog__buttons">
                   <Button clickHandler={this.closeAddGroupDialog}>
@@ -513,7 +534,7 @@ class Book extends React.Component<Props> {
                 </div>
               </form>
             </Dialog>
-          : null
+            : null
         }
         {
           showAddModule ?
@@ -523,9 +544,13 @@ class Book extends React.Component<Props> {
               size="medium"
               onClose={this.closeAddModuleDialog}
             >
-              <ModulesPicker onModuleClick={this.handleModuleClick}/>
+              <ModulesPicker
+                team={book!.team}
+                filterByTeam={book!.team}
+                onModuleClick={this.handleModuleClick}
+              />
             </Dialog>
-          : null
+            : null
         }
       </div>
     )

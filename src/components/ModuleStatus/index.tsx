@@ -1,17 +1,17 @@
-import './index.css'
-
 import * as React from 'react'
 
 import { ModuleStatus } from 'src/store/types'
 
-type Props = {
+import './index.css'
+
+interface Props {
   status: ModuleStatus
 }
 
-const ModuleStatus = ({ status }: Props) => (
+const _ModuleStatus = ({ status }: Props) => (
   <span className={`moduleStatus moduleStatus--${status}`}>
     {status}
   </span>
 )
 
-export default ModuleStatus
+export default _ModuleStatus

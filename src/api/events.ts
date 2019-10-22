@@ -1,5 +1,5 @@
 import store from 'src/store'
-import { addNotification } from 'src/store/actions/Alerts'
+import { addNotification } from 'src/store/actions/alerts'
 
 export default class Events {
   private static instance: Events | null = null
@@ -12,6 +12,7 @@ export default class Events {
   }
 
   private socket: WebSocket
+
   private promise: Promise<Events>
 
   private constructor() {
@@ -25,31 +26,31 @@ export default class Events {
     this.socket.onmessage = this.onMessage
 
     this.promise = new Promise((resolve, reject) => {
-       this.socket.onopen = event => {
-         resolve(this)
-         this.socket.onopen = this.onOpen
-         this.onOpen(event)
-       }
+      this.socket.onopen = event => {
+        resolve(this)
+        this.socket.onopen = this.onOpen
+        this.onOpen(event)
+      }
 
-       this.socket.onerror = event => {
-         reject(event)
-         this.socket.onerror = this.onError
-         this.onError(event)
-       }
+      this.socket.onerror = event => {
+        reject(event)
+        this.socket.onerror = this.onError
+        this.onError(event)
+      }
     })
   }
 
 
   onOpen = (event: Event) => {
-    console.log('opened connection', event)
+    // console.log('opened connection', event)
   }
 
   onClose = (event: CloseEvent) => {
-    console.log('connection closed', event)
+    // console.log('connection closed', event)
   }
 
   onError = (event: Event) => {
-    console.log('connection error:', event)
+    console.error('connection error:', event)
   }
 
   onMessage = (event: MessageEvent) => {

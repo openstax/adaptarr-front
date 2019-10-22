@@ -1,7 +1,8 @@
 import * as React from 'react'
 import Select from 'react-select'
-import { Editor, Value, Block, Inline } from 'slate'
+import { Block, Editor, Inline, Text, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
+import { List } from 'immutable'
 
 import ToolGroup from '../ToolGroup'
 
@@ -11,14 +12,18 @@ import './index.css'
 
 const SOURCE_TYPES: string[] = ['inline', 'block']
 
-export type Props = {
-  editor: Editor,
-  value: Value,
-  toggleState: boolean,
-  onToggle: OnToggle,
+interface SourceToolsProps {
+  editor: Editor
+  value: Value
+  toggleState: boolean
+  onToggle: OnToggle
 }
 
-class SourceTools extends React.Component<Props> {
+class SourceTools extends React.Component<SourceToolsProps> {
+  private onClickToggle = () => {
+    this.props.onToggle('sourceTools')
+  }
+
   public render() {
     const source = this.getActiveSource()
 
@@ -28,7 +33,7 @@ class SourceTools extends React.Component<Props> {
       <ToolGroup
         title="editor-tools-source-title"
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('sourceTools')}
+        onToggle={this.onClickToggle}
       >
         <label className="toolbox__label">
           <Localized id="editor-tools-source-type-label">
@@ -37,9 +42,9 @@ class SourceTools extends React.Component<Props> {
         </label>
         <Select
           className="toolbox__select react-select"
-          value={{value: source.object, label: source.object}}
+          value={{ value: source.object, label: source.object }}
           onChange={this.onChange}
-          options={SOURCE_TYPES.map(t => {return {value: t, label: t}})}
+          options={SOURCE_TYPES.map(t => ({ value: t, label: t }))}
           formatOptionLabel={OptionLabel}
         />
         <div className="source__error">
@@ -49,7 +54,7 @@ class SourceTools extends React.Component<Props> {
     )
   }
 
-  onChange = ({value}: {value: string, label: string}) => {
+  onChange = ({ value }: {value: string, label: string}) => {
     const editor = this.props.editor
     const source = this.getActiveSource()
     if (!source) return
@@ -66,7 +71,7 @@ class SourceTools extends React.Component<Props> {
       editor.removeNodeByKey(source.key)
       editor.insertInline({
         type: 'source_element',
-        nodes: source.nodes,
+        nodes: source.nodes as List<Inline | Text>,
       })
     }
   }
@@ -87,7 +92,7 @@ class SourceTools extends React.Component<Props> {
   }
 
   validateSource = (source: Block | Inline): null | string => {
-    const parser = new DOMParser();
+    const parser = new DOMParser()
     const xmlDoc = parser.parseFromString(source.getText().trim(), 'text/xml')
     const error = xmlDoc.getElementsByTagName('parsererror')
     if (error.length) {
@@ -97,7 +102,7 @@ class SourceTools extends React.Component<Props> {
   }
 }
 
-function OptionLabel({value: type}: {value: string, label: string}) {
+function OptionLabel({ value: type }: {value: string, label: string}) {
   return <Localized id="editor-tools-source-type" $type={type}>{type}</Localized>
 }
 

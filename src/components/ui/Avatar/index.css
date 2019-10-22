@@ -37,7 +37,6 @@
 
 .avatar__image img {
   position: relative;
-  z-index: 1;
 }
 
 .avatar__status {

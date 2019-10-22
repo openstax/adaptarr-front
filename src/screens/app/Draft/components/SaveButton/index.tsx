@@ -5,32 +5,31 @@ import { DocumentDB } from 'cnx-designer'
 import { isKeyHotkey } from 'is-hotkey'
 
 import Storage from 'src/api/storage'
-import saveAsFile from 'src/helpers/saveAsFile'
-import confirmDialog from 'src/helpers/confirmDialog'
+import { confirmDialog, saveAsFile } from 'src/helpers'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
 import Dialog from 'src/components/ui/Dialog'
 import Spinner from 'src/components/Spinner'
 
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import store from 'src/store'
 
 import './index.css'
 
-export type Props = {
-  document: Value,
-  glossary: Value,
-  isGlossaryEmpty: boolean,
-  storage: Storage,
-  documentDbContent: DocumentDB,
-  documentDbGlossary: DocumentDB,
+interface SaveButtonProps {
+  document: Value
+  glossary: Value
+  isGlossaryEmpty: boolean
+  storage: Storage
+  documentDbContent: DocumentDB
+  documentDbGlossary: DocumentDB
 }
 
 // Ctrl / Command (MacOS) + S
 const isSaveHotkey = isKeyHotkey('mod+s')
 
-export default class SaveButton extends React.Component<Props> {
+export default class SaveButton extends React.Component<SaveButtonProps> {
   state: {
     saving: boolean,
     showErrorDialog: boolean,
@@ -44,7 +43,7 @@ export default class SaveButton extends React.Component<Props> {
   }
 
   private handleSaveWithShortcut = (e: KeyboardEvent) => {
-    if(isSaveHotkey(e)){
+    if (isSaveHotkey(e)) {
       e.preventDefault()
       this.onClick()
     }
@@ -83,7 +82,7 @@ export default class SaveButton extends React.Component<Props> {
               onClose={this.closeErrorDialog}
             >
               <Localized id="editor-tools-save-error-content" p={<p/>} $error={error}>
-                <div className="save-button__dialog-content"></div>
+                <div className="save-button__dialog-content" />
               </Localized>
               <div className="dialog__buttons dialog__buttons--center">
                 <Button clickHandler={this.exportDocument}>
@@ -93,14 +92,15 @@ export default class SaveButton extends React.Component<Props> {
                 </Button>
               </div>
             </Dialog>
-          : null
+            : null
         }
         {
           showAfterExportDialog ?
             <Dialog
               size="medium"
               l10nId="editor-tools-save-export-title"
-              placeholder="Please send downloaded file to the administrator so he can fix your problem."
+              placeholder={`Please send downloaded file to the administrator so
+              he can fix your problem.`}
               onClose={this.closeAfterExportDialog}
             >
               <div className="dialog__buttons dialog__buttons--center">
@@ -111,30 +111,38 @@ export default class SaveButton extends React.Component<Props> {
                 </Button>
               </div>
             </Dialog>
-          : null
+            : null
         }
       </>
     )
   }
 
   private onClick = async () => {
-    const { document, glossary, isGlossaryEmpty, storage, documentDbContent, documentDbGlossary } = this.props
+    const {
+      document,
+      glossary,
+      isGlossaryEmpty,
+      storage,
+      documentDbContent,
+      documentDbGlossary,
+    } = this.props
 
     this.setState({ saving: true })
 
     try {
       const glossaryContent = isGlossaryEmpty ? null : glossary
       const res = await storage.write(document, glossaryContent)
-        .catch(async (e) => {
+        .catch(async e => {
           if (e.response && e.response.status === 412) {
-            const res = await confirmDialog(
-              'draft-save-incorrect-version-title',
-              'draft-save-incorrect-version-content',
-              {
+            const res = await confirmDialog({
+              title: 'draft-save-incorrect-version-title',
+              content: 'draft-save-incorrect-version-content',
+              buttons: {
                 cancel: 'draft-save-incorrect-version-button-cancel',
                 overwrite: 'draft-save-incorrect-version-button-overwrite',
               },
-            )
+              showCloseButton: false,
+            })
             return res
           }
           throw e
@@ -142,7 +150,7 @@ export default class SaveButton extends React.Component<Props> {
       if (res) {
         if (res === 'overwrite') {
           await storage.write(document, glossaryContent, true)
-        } else if (res === 'cancel') {
+        } else if (res === 'cancel' || res === 'close') {
           this.setState({ saving: false })
           return
         } else {

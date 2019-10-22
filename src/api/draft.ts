@@ -3,8 +3,10 @@ import { AxiosResponse } from 'axios'
 
 import Base from './base'
 import Module from './module'
-import { SlotPermission, ProcessSingleStep } from './process'
+import { ProcessSingleStep, SlotPermission } from './process'
 import { UserData } from './user'
+import { TeamID } from './team'
+
 import { elevated } from './utils'
 
 /**
@@ -19,6 +21,7 @@ export type DraftData = {
   permissions?: SlotPermission[],
   step?: ProcessSingleStep,
   books: string[],
+  team: TeamID
 }
 
 /**
@@ -76,11 +79,11 @@ export default class Draft extends Base<DraftData> {
    *
    * This function requires editing-process:manage permission.
    */
-  static async assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId, {
+  static assignUser(draftId: string, slot: number, userId: number): Promise<AxiosResponse> {
+    return elevated(() => axios.put(`drafts/${draftId}/process/slots/${slot}`, userId, {
       headers: {
         'Content-Type': 'application/json',
-      }
+      },
     }))
   }
 
@@ -124,6 +127,11 @@ export default class Draft extends Base<DraftData> {
   books: string[]
 
   /**
+   * ID of team for which this draft belongs.
+   */
+  team: TeamID
+
+  /**
    * Advance this draft to the next step.
    *
    * @param target and @param slot together must name one of the links returned in
@@ -159,14 +167,14 @@ export default class Draft extends Base<DraftData> {
    *
    * All changes will be lost.
    */
-  async cancelProcess(): Promise<AxiosResponse> {
-    return await elevated(() => axios.delete(`drafts/${this.module}`))
+  cancelProcess(): Promise<AxiosResponse> {
+    return elevated(() => axios.delete(`drafts/${this.module}`))
   }
 
   /**
    * Write index.cnxml.
    */
-  async writeCNXML(text: string) {
-    return await axios.put(`drafts/${this.module}/files/index.cnxml`, text)
+  writeCNXML(text: string) {
+    return axios.put(`drafts/${this.module}/files/index.cnxml`, text)
   }
 }

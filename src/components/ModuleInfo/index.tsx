@@ -2,21 +2,14 @@ import * as React from 'react'
 
 import { Module } from 'src/api'
 
-type Props = {
+interface ModuleInfoProps {
   mod: Module
 }
 
-class ModuleInfo extends React.Component<Props> {
-
-  public render() {
-    const { mod } = this.props
-
-    return (
-      <div className="modulesList__info">
-        <h2 className="modulesList__title">{mod.title}</h2>
-      </div>
-    )
-  }
-}
+const ModuleInfo = (props: ModuleInfoProps) => (
+  <div className="modulesList__info">
+    <h2 className="modulesList__title">{props.mod.title}</h2>
+  </div>
+)
 
 export default ModuleInfo

@@ -35,7 +35,7 @@ type Handler = React.ComponentType<{ error: Error }>;
  */
 export default <Args extends {}, Value extends {}> (
   loader: Loader<Args, Value>,
-  propsToCompare: string[] = [],
+  propsToCompare?: string[],
   l10nId?: string,
   Handler: Handler = DefaultHandler,
   Progress: React.ComponentType<{l10nId?: string}> = Spinner,
@@ -60,7 +60,7 @@ export default <Args extends {}, Value extends {}> (
   }
 
   componentDidUpdate(prevProps: { [key: string]: any }) {
-    const update = propsToCompare.some(name => {
+    const update = (propsToCompare || []).some(name => {
       if (prevProps[name] !== this.props[name]) {
         return true
       }
@@ -85,13 +85,13 @@ export default <Args extends {}, Value extends {}> (
 
     return <Progress l10nId={l10nId} />
   }
-}
+  }
 
 function DefaultHandler({ error }: { error: Error }) {
   return (
     <div className="load-error">
       <Localized id="load-error-message" p={<p/>}>
-        <div className="load-error__message"></div>
+        <div className="load-error__message" />
       </Localized>
       <div className="load-error__content">
         {
@@ -99,7 +99,7 @@ function DefaultHandler({ error }: { error: Error }) {
             <Localized id="load-error-persistance">
               {error.toString()}
             </Localized>
-          : error.toString()
+            : error.toString()
         }
       </div>
     </div>

@@ -1,5 +1,3 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
 import { Localized } from 'fluent-react/compat'
@@ -8,17 +6,19 @@ import { connect } from 'react-redux'
 import User from 'src/api/user'
 import store from 'src/store'
 import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { setLocale } from 'src/store/actions/app'
 
+import { confirmDialog } from 'src/helpers'
+
 import Header from 'src/components/Header'
-import Button from 'src/components/ui/Button'
-import Dialog from 'src/components/ui/Dialog'
 import Input from 'src/components/ui/Input'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
-type Props = {
+import './index.css'
+
+interface SettingsProps {
   locale: string[],
   user: User,
 }
@@ -28,35 +28,41 @@ const mapStateToProps = ({ app: { locale }, user: { user } }: State) => ({
   user,
 })
 
-class Settings extends React.Component<Props> {
-  state: {
-    newSelectedLanguage: typeof LANGUAGES[0] | null
-    showChangeLanguage: boolean
-    arePasswordsValid: boolean
-    oldPassword: string
-    newPassword: string
-    newPassword2: string
-  } = {
-    newSelectedLanguage: null,
-    showChangeLanguage: false,
+interface SettingsState {
+  arePasswordsValid: boolean
+  oldPassword: string
+  newPassword: string
+  newPassword2: string
+}
+
+class Settings extends React.Component<SettingsProps> {
+  state: SettingsState = {
     arePasswordsValid: false,
     oldPassword: '',
     newPassword: '',
     newPassword2: '',
   }
 
-  private handleLanguageChange = ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
-    this.setState({ showChangeLanguage: true, newSelectedLanguage: value })
+  private handleLanguageChange = async (
+    { value }: { value: typeof LANGUAGES[0], label: string }
+  ) => {
+    const res = await confirmDialog({
+      title: 'settings-language-dialog-title',
+      buttons: {
+        cancel: 'settings-language-dialog-cancel',
+        confirm: 'settings-language-dialog-confirm',
+      },
+      showCloseButton: false,
+    })
+
+    if (res === 'confirm') {
+      this.changeLanguage(value)
+    }
   }
 
-  private changeLanguage = () => {
-    const newSelectedLanguage = this.state.newSelectedLanguage
-
-    if (!newSelectedLanguage) return
-
-    this.props.user.changeLanguage(newSelectedLanguage.code)
-    store.dispatch(setLocale([newSelectedLanguage.code]))
-    this.setState({ showChangeLanguage: false })
+  private changeLanguage = (value: typeof LANGUAGES[0]) => {
+    this.props.user.changeLanguage(value.code)
+    store.dispatch(setLocale([value.code]))
   }
 
   private validatePasswords = () => {
@@ -106,15 +112,10 @@ class Settings extends React.Component<Props> {
     })
   }
 
-  private closeChangeLanguage = () => {
-    this.setState({ showChangeLanguage: false })
-  }
-
   public render() {
     const { locale } = this.props
     const {
       arePasswordsValid,
-      showChangeLanguage,
       oldPassword,
       newPassword,
       newPassword2,
@@ -124,29 +125,6 @@ class Settings extends React.Component<Props> {
 
     return (
       <section className="section--wrapper">
-        {
-          showChangeLanguage ?
-            <Dialog
-              l10nId="settings-language-dialog-title"
-              placeholder="Are you sure you want to change language?"
-              onClose={this.closeChangeLanguage}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeChangeLanguage}>
-                  <Localized id="settings-language-dialog-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.changeLanguage}>
-                  <Localized id="settings-language-dialog-confirm">
-                    Confirm
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
         <Header l10nId="settings-view-title" title="Settings" />
         <div className="section__content">
           <div className="settings">
@@ -160,7 +138,7 @@ class Settings extends React.Component<Props> {
               value={language ? { value: language, label: language.name } : null}
               onChange={this.handleLanguageChange}
               options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
-              formatOptionLabel={option => option.label}
+              formatOptionLabel={formatOptionLabel}
             />
             <h2 className="settings__title">
               <Localized id="settings-section-password">
@@ -187,7 +165,7 @@ class Settings extends React.Component<Props> {
                 l10nId="settings-value-new-password-repeat"
                 value={newPassword2}
                 onChange={this.updateNewPassword2}
-                validation={{sameAs: newPassword}}
+                validation={{ sameAs: newPassword }}
                 errorMessage="settings-validation-password-no-match"
               />
               <Localized id="settings-password-change" attrs={{ value: true }}>
@@ -202,3 +180,5 @@ class Settings extends React.Component<Props> {
 }
 
 export default connect(mapStateToProps)(Settings)
+
+const formatOptionLabel = (option: { label: string, value: any }) => option.label

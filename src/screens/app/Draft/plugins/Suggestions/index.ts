@@ -1,39 +1,31 @@
 import { Plugin } from 'slate-react'
-import { Command, Editor, Node } from 'slate'
 
 import { renderInline } from './render'
 import onCommand from './onCommand'
 import make_schema from './schema'
 import normalizeNode from './normalizeNode'
 
-interface CustomPlugin extends Plugin {
-  schema: object
-  onCommand?: (command: Command, editor: Editor, next: () => any) => any
-  normalizeNode?: (node: Node, editor: Editor, next: () => any) => any
-}
-
-const ALLOWED_INLINES = ['code', 'link', 'source_element', 'term', 'xref']
+const ALLOWED_INLINES = ['code', 'docref', 'link', 'source_element', 'term', 'xref', 'footnote']
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }
 
-const Suggestions = (options: Options): CustomPlugin => {
-  const { isActive = true } = options
-  const allowedInlines = [
-    ...(options.allowedInlines || []),
+const Suggestions = ({ allowedInlines = [], isActive = true }: Options): Plugin => {
+  const inls = [
+    ...allowedInlines,
     ...ALLOWED_INLINES,
   ]
 
-  let plugin: CustomPlugin = {
-    schema: make_schema({ allowedInlines }),
+  const plugin = {
+    schema: make_schema({ allowedInlines: inls }),
     renderInline,
-  }
+  } as any
 
   if (isActive) {
     plugin.onCommand = onCommand
     plugin.normalizeNode = normalizeNode
   }
 
-  return plugin
+  return plugin as Plugin
 }
 
 export default Suggestions

@@ -1,9 +1,14 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
+import { Localized } from 'fluent-react/compat'
+
+import { Process } from 'src/api'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { fetchProcesses } from 'src/store/actions/app'
-import { Process } from 'src/api'
+import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -11,71 +16,85 @@ import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
 
-type Props = {
+interface ProcessInfoProps {
   process: Process
+  teams: TeamsMap
   onProcessEdit: (process: Process) => any
   onProcessPreview: (process: Process) => any
 }
 
-class ProcessInfo extends React.Component<Props> {
-  state: {
-    name: string,
-    focused: boolean,
-  } = {
-    name: '',
-    focused: false,
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
+
+interface ProcessInfoState {
+  name: string
+}
+
+class ProcessInfo extends React.Component<ProcessInfoProps> {
+  state: ProcessInfoState = {
+    name: this.props.process.name,
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ProcessInfoProps) {
     const prevName = prevProps.process.name
     const name = this.props.process.name
     if (prevName !== name) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ name: this.props.process.name })
     }
-  }
-
-  componentDidMount() {
-    this.setState({ name: this.props.process.name })
   }
 
   nameRef: React.RefObject<HTMLSpanElement> = React.createRef()
 
   public render() {
+    const { process, teams } = this.props
+
     return (
       <>
-        <form
-          className="processes__name"
-          onSubmit={this.onSubmit}
-        >
-          <span
-            className="process__content-editable"
-            contentEditable
-            onInput={this.handleNameChange}
-            onKeyDown={this.onKeyDown}
-            dangerouslySetInnerHTML={{ __html: this.props.process.name }}
-            ref={this.nameRef}
-          ></span>
-          {
-            this.state.name !== this.props.process.name ?
-              <div className="process__controls">
-                <span
-                  className="process__small-icon"
-                  onClick={this.onSubmit}
-                >
-                  <Icon name="check" />
-                </span>
-                <span
-                  className="process__small-icon"
-                  onClick={this.cancelEdit}
-                >
-                  <Icon name="close" />
-                </span>
-              </div>
-            : null
-          }
-        </form>
+        <div className="processes__name-wrapper">
+          <form
+            className="processes__name"
+            onSubmit={this.onSubmit}
+          >
+            <span
+              className="process__content-editable"
+              contentEditable
+              onInput={this.handleNameChange}
+              onKeyDown={this.onKeyDown}
+              dangerouslySetInnerHTML={{ __html: process.name }}
+              ref={this.nameRef}
+            />
+            {
+              this.state.name !== process.name ?
+                <div className="process__controls">
+                  <span
+                    className="process__small-icon"
+                    onClick={this.onSubmit}
+                  >
+                    <Icon name="check" />
+                  </span>
+                  <span
+                    className="process__small-icon"
+                    onClick={this.cancelEdit}
+                  >
+                    <Icon name="close" />
+                  </span>
+                </div>
+                : null
+            }
+          </form>
+          <span className="processes__team">
+            <Localized
+              id="processes-team"
+              $team={teams.has(process.team) ? teams.get(process.team)!.name : '...'}
+            >
+              Team: ...
+            </Localized>
+          </span>
+        </div>
         <div className="processes__controls">
-          <LimitedUI permissions="editing-process:edit">
+          <LimitedUI team={this.props.process.team} permissions="editing-process:edit">
             <Button clickHandler={this.editProcess}>
               <Icon name="pencil" />
             </Button>
@@ -103,15 +122,15 @@ class ProcessInfo extends React.Component<Props> {
 
   private onKeyDown = (e: React.KeyboardEvent<HTMLSpanElement>) => {
     switch (e.key) {
-      case 'Enter':
-        e.preventDefault()
-        this.onSubmit()
-        break
-      case 'Escape':
-        this.cancelEdit()
-        break
-      default:
-        return
+    case 'Enter':
+      e.preventDefault()
+      this.onSubmit()
+      break
+    case 'Escape':
+      this.cancelEdit()
+      break
+    default:
+      break
     }
   }
 
@@ -122,8 +141,14 @@ class ProcessInfo extends React.Component<Props> {
           store.dispatch(addAlert('success', 'process-update-name-success'))
           store.dispatch(fetchProcesses())
         })
-        .catch((e) => {
-          store.dispatch(addAlert('error', 'process-update-name-error', {details: e.response.data.raw}))
+        .catch(e => {
+          store.dispatch(
+            addAlert(
+              'error',
+              'process-update-name-error',
+              { details: e.response.data.raw }
+            )
+          )
         })
     }
   }
@@ -134,4 +159,4 @@ class ProcessInfo extends React.Component<Props> {
   }
 }
 
-export default ProcessInfo
+export default connect(mapStateToProps)(ProcessInfo)

@@ -13,6 +13,10 @@
   margin-right: 15px;
 }
 
+.editable-text__controls {
+  display: flex;
+}
+
 .editable-text__controls .disabled {
   cursor: not-allowed;
   opacity: 0.6;

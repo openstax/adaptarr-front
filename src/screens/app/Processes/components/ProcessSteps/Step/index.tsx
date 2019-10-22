@@ -1,17 +1,16 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessStep, Link, ProcessSlot, SlotPermission, StepSlot } from 'src/api/process'
+import { Link, ProcessSlot, ProcessStep, SlotPermission } from 'src/api/process'
 
 import Slot from '../Slot'
 import LinkComp from '../Link'
 import Button from 'src/components/ui/Button'
-import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-type StepProps = {
+interface StepProps {
   slots: ProcessSlot[]
   steps: ProcessStep[]
   step: ProcessStep
@@ -25,12 +24,14 @@ export interface StepSlotWithId {
   permission: SlotPermission
 }
 
+interface StepState {
+  name: string
+  slots: StepSlotWithId[],
+  links: Link[],
+}
+
 class Step extends React.Component<StepProps> {
-  state: {
-    name: string
-    slots: StepSlotWithId[],
-    links: Link[],
-  } = {
+  state: StepState = {
     name: '',
     slots: [{
       id: 0,
@@ -41,77 +42,99 @@ class Step extends React.Component<StepProps> {
   }
 
   private updateSlot = (slot: StepSlotWithId) => {
-    let slots = [...this.state.slots]
-    slots[slot.id] = slot
-    this.setState({ slots })
-    this.props.onChange({
-      ...this.props.step,
-      slots,
+    this.setState((prevState: StepState) => {
+      const slots = [...prevState.slots]
+      slots[slot.id] = slot
+
+      this.props.onChange({
+        ...this.props.step,
+        slots,
+      })
+
+      return { slots }
     })
   }
 
   private removeSlot = (slot: StepSlotWithId) => {
-    let slots = [...this.state.slots]
-    slots.splice(slot.id, 1)
-    slots = slots.map((s, i) => {
-      return {...s, id: i}
-    })
-    this.setState({ slots })
-    this.props.onChange({
-      ...this.props.step,
-      slots,
+    this.setState((prevState: StepState) => {
+      let slots = [...prevState.slots]
+      slots.splice(slot.id, 1)
+      slots = slots.map((s, i) => ({ ...s, id: i }))
+
+      this.props.onChange({
+        ...this.props.step,
+        slots,
+      })
+
+      return { slots }
     })
   }
 
   private updateLink = (link: Link, index: number) => {
-    let links = [...this.state.links]
-    links[index] = link
-    this.setState({ links })
-    this.props.onChange({
-      ...this.props.step,
-      links,
+    this.setState((prevState: StepState) => {
+      const links = [...prevState.links]
+      links[index] = link
+
+      this.props.onChange({
+        ...this.props.step,
+        links,
+      })
+
+      return { links }
     })
   }
 
   private removeLink = (index: number) => {
-    let links = [...this.state.links]
-    links.splice(index, 1)
-    this.setState({ links })
-    this.props.onChange({
-      ...this.props.step,
-      links,
+    this.setState((prevState: StepState) => {
+      const links = [...prevState.links]
+      links.splice(index, 1)
+
+      this.props.onChange({
+        ...this.props.step,
+        links,
+      })
+
+      return { links }
     })
   }
 
   private addEmptySlot = () => {
-    const slots = [
-      ...this.state.slots,
-      {
-        id: this.state.slots.length,
-        slot: 0,
-        permission: 'view',
-      } as StepSlotWithId
-    ]
-    this.setState({ slots })
-    this.props.onChange({
-      ...this.props.step,
-      slots,
+    this.setState((prevState: StepState) => {
+      const slots = [
+        ...prevState.slots,
+        {
+          id: prevState.slots.length,
+          slot: 0,
+          permission: 'view',
+        } as StepSlotWithId,
+      ]
+
+      this.props.onChange({
+        ...this.props.step,
+        slots,
+      })
+
+      return { slots }
     })
   }
 
   private addEmptyLink = () => {
-    const links = [
-      ...this.state.links,
-      {
-        name: '',
-        to: null, // When adding empty link we do not want to select origin as a target
-        slot: 0,
-      } as unknown  as Link
-    ]
-    this.setState({ links })
-    this.props.onChange({
-      ...this.props.step,
-      links,
+    this.setState((prevState: StepState) => {
+      const links = [
+        ...prevState.links,
+        {
+          name: '',
+          to: null, // When adding empty link we do not want to select origin as a target
+          slot: 0,
+        } as unknown as Link,
+      ]
+
+      this.props.onChange({
+        ...this.props.step,
+        links,
+      })
+
+      return { links }
     })
   }
 
@@ -120,12 +143,12 @@ class Step extends React.Component<StepProps> {
     // step.slots will be StepSlotWithId[] or StepSlot[] depends
     // if we are editing exsiting process or creating new one.
     // We need id to easier updating so we are just adding it.
-    const slots: StepSlotWithId[] = step.slots.map((s: StepSlotWithId, i) => {
-      return {...s, id: s.id || i}
-    })
+    const slots: StepSlotWithId[] = step.slots.map(
+      (s: StepSlotWithId, i) => ({ ...s, id: s.id || i })
+    )
     this.setState({
       name: step.name,
-      slots: slots,
+      slots,
       links: step.links,
     })
   }
@@ -178,15 +201,15 @@ class Step extends React.Component<StepProps> {
         </h3>
         <div className="process-step__slots">
           {
-            slots.map((s, i) => {
-              return <Slot
+            slots.map((s, i) => (
+              <Slot
                 key={i}
                 slots={this.props.slots}
                 slot={s}
                 onChange={this.updateSlot}
                 remove={this.removeSlot}
               />
-            })
+            ))
           }
           <Button clickHandler={this.addEmptySlot}>
             <Localized id="process-form-step-slots-add">
@@ -202,16 +225,24 @@ class Step extends React.Component<StepProps> {
         <div className="process-step__links">
           {
             links.map((l, i) => {
-              return <LinkComp
-                key={i}
-                link={l}
-                step={step}
-                steps={processSteps}
-                slots={processSlots}
-                stepSlots={slots}
-                onChange={(link) => this.updateLink(link, i)}
-                remove={() => this.removeLink(i)}
-              />
+              const onChange = (link: Link) => {
+                this.updateLink(link, i)
+              }
+              const onRemoveLink = () => {
+                this.removeLink(i)
+              }
+              return (
+                <LinkComp
+                  key={i}
+                  link={l}
+                  step={step}
+                  steps={processSteps}
+                  slots={processSlots}
+                  stepSlots={slots}
+                  onChange={onChange}
+                  remove={onRemoveLink}
+                />
+              )
             })
           }
           <Button clickHandler={this.addEmptyLink}>

@@ -1,30 +1,33 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
-import * as api from 'src/api'
-import getCurrentLng from 'src/helpers/getCurrentLng'
+import { Module, Team } from 'src/api'
+
+import * as modulesActions from 'src/store/actions/modules'
+import { AlertDataKind } from 'src/store/types'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/alerts'
+
+import { confirmDialog, getCurrentLng } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
 import ModulesList from 'src/components/ModulesList'
-import Dialog from 'src/components/ui/Dialog'
-import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 import FilesUploader from 'src/containers/FilesUploader'
 
-import * as modulesActions from 'src/store/actions/Modules'
-import { AlertDataKind } from 'src/store/types'
-import { State } from 'src/store/reducers'
-import { addAlert } from 'src/store/actions/Alerts'
+import './index.css'
 
-type Props = {
-  onModuleClick: (mod: api.Module) => any
-  addModuleToMap: (mod: api.Module) => any
+interface ModulesPickerProps {
+  // Team in which new module will be created.
+  team: Team | number
+  // Show only modules from specific team.
+  filterByTeam?: Team | number
+  onModuleClick: (mod: Module) => any
+  addModuleToMap: (mod: Module) => any
   removeModuleFromMap: (id: string) => any
   addAlert: (kind: AlertDataKind, message: string, args?: object) => void
 }
@@ -37,39 +40,35 @@ const LANGUAGES: SelectOption[] = [
   { value: 'pl', label: 'Polski' },
 ]
 
-const mapStateToProps = ({ modules }: State) => {
-  return {
-    modules,
-  }
+const mapStateToProps = ({ modules }: State) => ({
+  modules,
+})
+
+const mapDispatchToProps = (dispatch: any) => ({
+  addModuleToMap: (mod: Module) => dispatch(modulesActions.addModuleToMap(mod)),
+  removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
+  // eslint-disable-next-line arrow-body-style
+  addAlert: (kind: AlertDataKind, message: string, args: {}) => {
+    return dispatch(addAlert(kind, message, args))
+  },
+})
+
+interface ModulesPickerState {
+  moduleTitleValue: string
+  moduleLanguage: SelectOption
+  files: File[]
+  filterInput: string
 }
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addModuleToMap: (mod: api.Module) => dispatch(modulesActions.addModuleToMap(mod)),
-    removeModuleFromMap: (id: string) => dispatch(modulesActions.removeModuleFromMap(id)),
-    addAlert: (kind: AlertDataKind, message: string) => dispatch(addAlert(kind, message)),
-  }
-}
-
-class ModuleList extends React.Component<Props> {
-
-  state: {
-    moduleTitleValue: string
-    moduleLanguage: SelectOption
-    moduleToDelete: api.Module | null
-    showRemoveModule: boolean
-    files: File[]
-    filterInput: string
-  } = {
+class ModulesPicker extends React.Component<ModulesPickerProps> {
+  state: ModulesPickerState = {
     moduleTitleValue: '',
     moduleLanguage: LANGUAGES.find(lng => lng.value === getCurrentLng('iso')) || LANGUAGES[0],
-    moduleToDelete: null,
-    showRemoveModule: false,
     files: [],
     filterInput: '',
   }
 
-  private handleModuleClick = (mod: api.Module) => {
+  private handleModuleClick = (mod: Module) => {
     this.props.onModuleClick(mod)
   }
 
@@ -85,8 +84,12 @@ class ModuleList extends React.Component<Props> {
     e.preventDefault()
 
     const { moduleTitleValue: title, files, moduleLanguage: lang } = this.state
+    const { team } = this.props
+    const teamId = team instanceof Team ? team.id : team
 
-    ;(files.length ? api.Module.createFromZip(title, files[0]) : api.Module.create(title, lang.value))
+    ;(files.length
+      ? Module.createFromZip(title, files[0], teamId)
+      : Module.create(title, lang.value, teamId))
       .then(mod => {
         this.props.onModuleClick(mod)
         this.props.addModuleToMap(mod)
@@ -105,59 +108,47 @@ class ModuleList extends React.Component<Props> {
     this.props.addAlert('error', error.message)
   }
 
-  private showRemoveModuleDialog = (mod: api.Module) => {
-    this.setState({ showRemoveModule: true, moduleToDelete: mod })
+  private showRemoveModuleDialog = async (mod: Module) => {
+    const res = await confirmDialog({
+      title: 'module-list-delete-module-title',
+      buttons: {
+        cancel: 'module-list-delete-module-cancel',
+        confirm: 'module-list-delete-module-confirm',
+      },
+      showCloseButton: false,
+    })
+
+    if (res === 'confirm') {
+      this.removeModule(mod)
+    }
   }
 
-  private closeRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: false, moduleToDelete: null })
-  }
-
-  private removeModule = () => {
-    const mod = this.state.moduleToDelete
-
-    if (!mod) return
-
+  private removeModule = (mod: Module) => {
     mod.delete()
       .then(() => {
         this.props.removeModuleFromMap(mod.id)
-        this.props.addAlert('success', 'module-list-delete-module-alert-success', {title: mod.title})
+        this.props.addAlert(
+          'success',
+          'module-list-delete-module-alert-success',
+          { title: mod.title }
+        )
       })
       .catch(e => {
         this.props.addAlert('error', e.message)
       })
-    this.closeRemoveModuleDialog()
   }
 
   private handleFilterInput = (val: string) => {
     if (val !== this.state.filterInput) {
-      this.setState({ filterInput: val})
+      this.setState({ filterInput: val })
     }
   }
 
   public render() {
-    const { moduleTitleValue, moduleLanguage, showRemoveModule } = this.state
+    const { moduleTitleValue, moduleLanguage } = this.state
 
     return (
       <div className="modulesList">
-        {
-          showRemoveModule ?
-            <Dialog
-              l10nId="module-list-delete-module-title"
-              placeholder="Deleting module is permanent."
-              onClose={this.closeRemoveModuleDialog}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.removeModule}>
-                  <Localized id="module-list-delete-module-confirm">Delete</Localized>
-                </Button>
-                <Button type="danger" clickHandler={this.closeRemoveModuleDialog}>
-                  <Localized id="module-list-delete-module-cancel">Cancel</Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
         <LimitedUI permissions="module:edit">
           <div className="modulesList__new">
             <form onSubmit={this.addNewModule}>
@@ -166,7 +157,7 @@ class ModuleList extends React.Component<Props> {
                   l10nId="module-list-add-module-title"
                   value={moduleTitleValue}
                   onChange={this.updateModuleTitleValue}
-                  validation={{minLength: 3}}
+                  validation={{ minLength: 3 }}
                 />
                 <Select
                   className="react-select"
@@ -199,6 +190,7 @@ class ModuleList extends React.Component<Props> {
           />
         </div>
         <ModulesList
+          team={this.props.team}
           filter={this.state.filterInput}
           onModuleClick={this.handleModuleClick}
           onModuleRemoveClick={this.showRemoveModuleDialog}
@@ -208,4 +200,4 @@ class ModuleList extends React.Component<Props> {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ModuleList)
+export default connect(mapStateToProps, mapDispatchToProps)(ModulesPicker)

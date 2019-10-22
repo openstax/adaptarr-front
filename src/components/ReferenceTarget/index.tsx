@@ -9,7 +9,7 @@ import { renderXref } from 'src/screens/app/Draft/plugins/Xref'
 
 import './index.css'
 
-export type Props = {
+interface ReferenceTargetProps {
   /**
    * Module in which this reference target is located.
    */
@@ -31,7 +31,7 @@ export type Props = {
 /**
  * Component rendering a single (possibly compound) reference target.
  */
-export default class ReferenceTarget extends React.PureComponent<Props> {
+class ReferenceTarget extends React.PureComponent<ReferenceTargetProps> {
   static contextTypes = {
     l10n: PropTypes.instanceOf(ReactLocalization),
   }
@@ -51,11 +51,10 @@ export default class ReferenceTarget extends React.PureComponent<Props> {
             id={target.description ? 'reference-target-description' : 'reference-target'}
             $label={label}
             $description={target.description}
-            >
+          >
             { target.description
               ? `${label}: ${target.description}`
-              : label
-            }
+              : label}
           </Localized>
         </span>
         {target.children.length ?
@@ -71,7 +70,7 @@ export default class ReferenceTarget extends React.PureComponent<Props> {
               </li>
             ))}
           </ul>
-        : null}
+          : null}
       </div>
     )
   }
@@ -82,3 +81,5 @@ export default class ReferenceTarget extends React.PureComponent<Props> {
     onSelect(target, module)
   }
 }
+
+export default ReferenceTarget

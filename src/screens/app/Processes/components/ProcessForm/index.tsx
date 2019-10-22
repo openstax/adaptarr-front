@@ -1,31 +1,52 @@
 import * as React from 'react'
 import Select from 'react-select'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import { ProcessSlot, ProcessStep, ProcessStructure, SlotPermission } from 'src/api/process'
+import Team, { TeamID } from 'src/api/team'
+import Process, {
+  ProcessSlot,
+  ProcessStep,
+  ProcessStructure,
+  SlotPermission,
+} from 'src/api/process'
+
+import { State } from 'src/store/reducers'
+import { TeamsMap } from 'src/store/types'
 
 import ProcessSlots from '../ProcessSlots'
 import ProcessSteps from '../ProcessSteps'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Input from 'src/components/ui/Input'
 
 import './index.css'
 
-type Props = {
+interface ProcessFormProps {
   structure?: ProcessStructure | null
-  onSubmit: (structure: ProcessStructure) => any
+  process?: Process
+  teams: TeamsMap
+  onSubmit: (structure: ProcessStructure, team: TeamID) => any
   onCancel: () => any
 }
 
-class ProcessForm extends React.Component<Props> {
-  state: {
-    name: string
-    startingStep: number
-    slots: ProcessSlot[]
-    steps: ProcessStep[]
-    errors: Set<string>
-  } = {
+const mapStateToProps = ({ app: { teams } }: State) => ({
+  teams,
+})
+
+interface ProcessFormState {
+  name: string
+  team: Team | null
+  startingStep: number
+  slots: ProcessSlot[]
+  steps: ProcessStep[]
+  errors: Set<string>
+}
+
+class ProcessForm extends React.Component<ProcessFormProps> {
+  state: ProcessFormState = {
     name: '',
+    team: null,
     startingStep: 0,
     slots: [],
     steps: [],
@@ -37,6 +58,14 @@ class ProcessForm extends React.Component<Props> {
       if (this.state.errors.size) {
         // We validate form every each change only if validation failed before.
         // This way user is able to see that errors, are updating when he make actions.
+        this.validateForm()
+      }
+    })
+  }
+
+  private handleTeamChange = (team: Team) => {
+    this.setState({ team }, () => {
+      if (this.state.errors.size) {
         this.validateForm()
       }
     })
@@ -71,32 +100,47 @@ class ProcessForm extends React.Component<Props> {
 
     if (!this.validateForm()) return
 
-    const { name, startingStep, slots, steps } = this.state
+    const { name, startingStep, slots, steps, team } = this.state
+
+    if (!team) return
 
     this.props.onSubmit({
       start: startingStep,
       name,
       slots,
       steps,
-    })
+    }, team.id)
   }
 
   private updateStructure = () => {
-    const s = this.props.structure
+    const { structure: s, process, teams } = this.props
     if (s) {
       this.setState({
         name: s.name,
-        start: s.start,
+        startingStep: s.start,
         slots: s.slots,
         steps: s.steps,
       })
     }
+    if (!compareTeams(process ? process.team : null, this.state.team)) {
+      if (!process) {
+        this.setState({ team: null })
+      } else if (teams.has(process.team)) {
+        this.setState({ team: teams.get(process.team) })
+      } else {
+        this.setState({ team: null })
+        console.error(`Couldn find team with id: ${process.team}`)
+      }
+    }
   }
 
-  componentDidUpdate(prevProps: Props) {
-    const prevS = prevProps.structure
-    const s = this.props.structure
-    if (JSON.stringify(prevS) !== JSON.stringify(s)) {
+  componentDidUpdate(prevProps: ProcessFormProps) {
+    const prevTeam = prevProps.process ? prevProps.process.team : null
+    const currTeam = this.props.process ? this.props.process.team : null
+    if (
+      !compareTeams(prevTeam, currTeam) ||
+      !compareStructures(prevProps.structure, this.props.structure)
+    ) {
       this.updateStructure()
     }
   }
@@ -106,7 +150,8 @@ class ProcessForm extends React.Component<Props> {
   }
 
   public render() {
-    const { startingStep, slots, steps, errors, name } = this.state
+    const { startingStep, slots, steps, errors, name, team } = this.state
+    const { teams, process } = this.props
 
     return (
       <form
@@ -123,7 +168,7 @@ class ProcessForm extends React.Component<Props> {
                 <Localized id="process-form-create">
                   Create process
                 </Localized>
-              :
+                :
                 <Localized id="process-form-save-changes">
                   Save changes
                 </Localized>
@@ -139,12 +184,10 @@ class ProcessForm extends React.Component<Props> {
           errors.size ?
             <ul className="process-form__errors">
               {
-                [...errors].map(e => {
-                  return <li key={e}><Localized id={e}>{e}</Localized></li>
-                })
+                [...errors].map(e => <li key={e}><Localized id={e}>{e}</Localized></li>)
               }
             </ul>
-          : null
+            : null
         }
         <label>
           <h3>
@@ -161,25 +204,41 @@ class ProcessForm extends React.Component<Props> {
         </label>
         <label>
           <h3>
+            <Localized id="process-form-process-team">
+              Team
+            </Localized>
+          </h3>
+          <TeamSelector
+            isDisabled={process !== undefined}
+            team={process ? teams.get(process.team) : undefined}
+            permission="editing-process:edit"
+            onChange={this.handleTeamChange}
+          />
+        </label>
+        <label>
+          <h3>
             <Localized id="process-form-process-starting-step">
               Starting step
             </Localized>
           </h3>
           <Select
             className="react-select"
-            value={startingStep >= 0 && steps[startingStep] ? {value: startingStep, label: steps[startingStep].name} : null}
-            options={steps.map((s, i) => {
-              return {
-                value: i,
-                label: s.name,
-              }
-            })}
+            value={
+              startingStep >= 0 && steps[startingStep]
+                ? { value: startingStep, label: steps[startingStep].name }
+                : null
+            }
+            options={steps.map((s, i) => ({
+              value: i,
+              label: s.name,
+            }))}
             onChange={this.handleStartingStepChange}
           />
         </label>
         <div className="process-form__split">
           <ProcessSlots
             slots={slots}
+            roles={team ? team.roles : []}
             onChange={this.handleSlotsChange}
           />
           <ProcessSteps
@@ -194,9 +253,13 @@ class ProcessForm extends React.Component<Props> {
 
   private validateForm = (): boolean => {
     // List with l10n ids for error messages.
-    let errors: Set<string> = new Set()
+    const errors: Set<string> = new Set()
 
-    const { name, startingStep, slots, steps } = this.state
+    const { name, startingStep, slots, steps, team } = this.state
+
+    if (!team) {
+      errors.add('process-form-error-team')
+    }
 
     // Validate that name for process exists.
     if (!name.length) {
@@ -235,7 +298,7 @@ class ProcessForm extends React.Component<Props> {
     steps.forEach((s, i) => {
       // If there is propose-changes or accept-changes slot then the second one
       // is also required. Edit permission cannot exists with them.
-      let permissions: Set<SlotPermission> = new Set()
+      const permissions: Set<SlotPermission> = new Set()
       s.slots.forEach(sl => {
         permissions.add(sl.permission)
 
@@ -276,7 +339,11 @@ class ProcessForm extends React.Component<Props> {
         }
       }
 
-      if (permissions.has('edit') && (permissions.has('propose-changes') || permissions.has('accept-changes'))) {
+      if (
+        permissions.has('edit') &&
+        (permissions.has('propose-changes') ||
+        permissions.has('accept-changes'))
+      ) {
         errors.add('process-form-error-edit-and-changes')
       }
 
@@ -314,4 +381,75 @@ class ProcessForm extends React.Component<Props> {
   }
 }
 
-export default ProcessForm
+export default connect(mapStateToProps)(ProcessForm)
+
+/**
+ * Return true if teams are the same.
+ */
+function compareTeams(team1?: Team | number | null, team2?: Team | number | null): boolean {
+  if (team1 instanceof Team && team2 instanceof Team) {
+    if (team1.id === team2.id) return true
+    return false
+  }
+  if (team1 === team2) return true
+  return false
+}
+
+/**
+ * Return true if strucutres are the same.
+ */
+function compareStructures(s1?: ProcessStructure | null, s2?: ProcessStructure | null): boolean {
+  if (!s1 && !s2) return true
+  if (typeof s1 !== typeof s2) return false
+  if (
+    s1!.name !== s2!.name ||
+    s1!.start !== s2!.start ||
+    !compareSlots(s1!.slots, s2!.slots) ||
+    !compareSteps(s1!.steps, s2!.steps)
+  ) return false
+  return true
+}
+
+function compareSlots(s1: ProcessSlot[], s2: ProcessSlot[]): boolean {
+  if (s1.length !== s2.length) return false
+  return s1.every((el, i) => {
+    const el2 = s2[i]
+    if (
+      el.id !== el2.id ||
+      el.name !== el2.name ||
+      el.autofill !== el2.autofill ||
+      !el.roles.every((r1, ri) => {
+        if (r1 !== el2.roles[ri]) return false
+        return true
+      })
+    ) return false
+    return true
+  })
+}
+
+function compareSteps(s1: ProcessStep[], s2: ProcessStep[]): boolean {
+  if (s1.length !== s2.length) return false
+  return s1.every((el, i) => {
+    const el2 = s2[i]
+    if (
+      el.id !== el2.id ||
+      el.name !== el2.name ||
+      !el.links.every((l1, li) => {
+        if (
+          l1.name !== el2.links[li].name ||
+          l1.to !== el2.links[li].to ||
+          l1.slot !== el2.links[li].slot
+        ) return false
+        return true
+      }) ||
+      !el.slots.every((s1, si) => {
+        if (
+          s1.permission !== el2.slots[si].permission ||
+          s1.slot !== el2.slots[si].slot
+        ) return false
+        return true
+      })
+    ) return false
+    return true
+  })
+}

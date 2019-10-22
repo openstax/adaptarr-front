@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { Editor, Value, Inline } from 'slate'
+import { Editor, Inline, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
@@ -20,19 +20,17 @@ import { OnToggle as OnToggleGlossary } from '../ToolboxGlossary'
 
 import './index.css'
 
-type Props = {
-  editor: Editor,
-  value: Value,
-  toggleState: boolean,
-  onToggle: OnToggleDocument | OnToggleGlossary,
+interface SuggestionProps {
+  editor: Editor
+  value: Value
+  toggleState: boolean
+  onToggle: OnToggleDocument | OnToggleGlossary
   draftPermissions: SlotPermission[]
 }
 
-const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => {
-  return {
-    draftPermissions: currentDraftPermissions,
-  }
-}
+const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
+  draftPermissions: currentDraftPermissions,
+})
 
 export type SuggestionInsert = {
   type: 'insert'
@@ -60,80 +58,78 @@ export type SuggestionChange = {
 
 export type Suggestion = SuggestionInsert | SuggestionDelete | SuggestionChange
 
-type LocaleState = {
-  suggestion: Suggestion | undefined,
-  suggestions: Suggestion[],
-  activeIndex: number,
+interface LocaleState {
+  suggestions: Suggestion[]
+  activeIndex: number
 }
 
-class SuggestionsTools extends React.Component<Props> {
+class SuggestionsTools extends React.Component<SuggestionProps> {
   state: LocaleState = {
-    suggestion: undefined,
     suggestions: [],
     activeIndex: 0,
   }
 
-  componentDidUpdate = (prevProps: Props) => {
+  componentDidUpdate = (prevProps: SuggestionProps) => {
     if (
       prevProps.value.selection.start.key !== this.props.value.selection.start.key
       || prevProps.value.selection.start.offset !== this.props.value.selection.start.offset
-      ) {
+    ) {
       const { value: { document, startInline } } = this.props
 
       const inlines: Inline[] = document.filterDescendants(
         n => n.object === 'inline' && SUGGESTION_TYPES.includes(n.type)
       ).toArray() as Inline[]
 
-      let suggestions: Suggestion[] = []
+      const suggestions: Suggestion[] = []
 
       inlines.forEach(inl => {
         const lastSuggInx = suggestions.length-1
         const lastSugg = suggestions[lastSuggInx]
 
         switch (inl.type) {
-          case 'suggestion_insert': {
-            const suggInsert: SuggestionInsert = {
-              type: 'insert',
-              insert: inl,
-            }
+        case 'suggestion_insert': {
+          const suggInsert: SuggestionInsert = {
+            type: 'insert',
+            insert: inl,
+          }
 
-            if (lastSugg && lastSugg.type === 'delete') {
-              const change = this.createChangeSuggestion(lastSugg, suggInsert)
-              if (change) {
-                suggestions[lastSuggInx] = change
-                break
-              }
+          if (lastSugg && lastSugg.type === 'delete') {
+            const change = this.createChangeSuggestion(lastSugg, suggInsert)
+            if (change) {
+              suggestions[lastSuggInx] = change
+              break
             }
-            suggestions.push(suggInsert)
-            break
           }
-          case 'suggestion_delete': {
-            const suggDelete: SuggestionDelete = {
-              type: 'delete',
-              delete: inl,
-            }
+          suggestions.push(suggInsert)
+          break
+        }
+        case 'suggestion_delete': {
+          const suggDelete: SuggestionDelete = {
+            type: 'delete',
+            delete: inl,
+          }
 
-            if (lastSugg && lastSugg.type === 'insert') {
-              const change = this.createChangeSuggestion(lastSugg, suggDelete)
-              if (change) {
-                suggestions[lastSuggInx] = change
-                break
-              }
+          if (lastSugg && lastSugg.type === 'insert') {
+            const change = this.createChangeSuggestion(lastSugg, suggDelete)
+            if (change) {
+              suggestions[lastSuggInx] = change
+              break
             }
-            suggestions.push(suggDelete)
-            break
           }
-          default:{
-            break
-          }
+          suggestions.push(suggDelete)
+          break
+        }
+        default:
+          break
         }
       })
 
-      let activeIndex = this.state.activeIndex
-
       const selectionKey = startInline ? startInline.key : ''
-      const newIndex = !selectionKey ? -1 : suggestions.findIndex(sugg => {
-        switch (sugg.type) {
+      const newIndex = !selectionKey ?
+        -1
+        :
+        suggestions.findIndex(sugg => {
+          switch (sugg.type) {
           case 'change':
             if (
               sugg.insert.key === selectionKey
@@ -157,14 +153,19 @@ class SuggestionsTools extends React.Component<Props> {
 
           default:
             return false
+          }
+        })
+
+      // eslint-disable-next-line react/no-did-update-set-state
+      this.setState((prevState: LocaleState) => {
+        let activeIndex = prevState.activeIndex
+
+        if (newIndex >= 0) {
+          activeIndex = newIndex
         }
+
+        return { suggestions, activeIndex }
       })
-
-      if (newIndex >= 0) {
-        activeIndex = newIndex
-      }
-
-      this.setState({ suggestions, activeIndex })
     }
   }
 
@@ -175,13 +176,14 @@ class SuggestionsTools extends React.Component<Props> {
    */
   private createChangeSuggestion = (
     prevSugg: SuggestionInsert | SuggestionDelete,
-    sugg: SuggestionInsert | SuggestionDelete): SuggestionChange | null  => {
+    sugg: SuggestionInsert | SuggestionDelete): SuggestionChange | null => {
     if (prevSugg.type === sugg.type) return null
 
     const { document } = this.props.value
     const prevSuggInline = prevSugg.type === 'insert' ? prevSugg.insert : prevSugg.delete
     const suggInline = sugg.type === 'insert' ? sugg.insert : sugg.delete
-    let suggPrevSibling = document.getPreviousSibling(document.getPath(suggInline.key))
+    const path = document.getPath(suggInline.key)
+    let suggPrevSibling = path ? document.getPreviousSibling(path) : null
 
     // Check if previous sibling of @param sugg is the same Node as @param prevSugg
 
@@ -191,7 +193,8 @@ class SuggestionsTools extends React.Component<Props> {
     ) {
       // Slate is inserting empty Slate~Text Nodes before / after inlines
       // so we have to check one sibling further.
-      suggPrevSibling = document.getPreviousSibling(document.getPath(suggPrevSibling.key))
+      const path = document.getPath(suggPrevSibling.key)
+      suggPrevSibling = path ? document.getPreviousSibling(path) : null
     }
 
     if (
@@ -203,7 +206,7 @@ class SuggestionsTools extends React.Component<Props> {
       const del = prevSuggInline.type === 'suggestion_delete' ? prevSuggInline : suggInline
       return {
         type: 'change',
-        insert: insert,
+        insert,
         delete: del,
         start: {
           key: prevSuggInline.key,
@@ -212,7 +215,7 @@ class SuggestionsTools extends React.Component<Props> {
         end: {
           key: suggInline.key,
           offset: suggInline.text.length,
-        }
+        },
       }
     }
 
@@ -233,6 +236,10 @@ class SuggestionsTools extends React.Component<Props> {
     this.setState({ suggestions: [], activeIndex: 0 })
   }
 
+  private onClickToggle = () => {
+    this.props.onToggle('suggestionsTools')
+  }
+
   render() {
     const { suggestions, activeIndex } = this.state
 
@@ -241,7 +248,7 @@ class SuggestionsTools extends React.Component<Props> {
         title="editor-tools-suggestions-title"
         $counter={suggestions.length}
         toggleState={this.props.toggleState}
-        onToggle={() => this.props.onToggle('suggestionsTools')}
+        onToggle={this.onClickToggle}
       >
         <Button
           className="toolbox__button--only-icon suggestion-box__control"
@@ -266,7 +273,7 @@ class SuggestionsTools extends React.Component<Props> {
               onDecline={this.onDecline}
               draftPermissions={this.props.draftPermissions}
             />
-          : <Localized id="editor-tools-suggestion-undefined">Undefined suggesiton</Localized>
+            : <Localized id="editor-tools-suggestion-undefined">Undefined suggesiton</Localized>
         }
         <div className="suggestion__controls">
           {
@@ -276,7 +283,7 @@ class SuggestionsTools extends React.Component<Props> {
                   Accept all
                 </Localized>
               </Button>
-            : null
+              : null
           }
           <Button clickHandler={this.rejectAll}>
             <Localized id="editor-tools-suggestion-reject-all">
@@ -292,22 +299,22 @@ class SuggestionsTools extends React.Component<Props> {
     const editor = this.props.editor
 
     switch (suggestion.type) {
-      case 'insert':
-        editor.moveTo(suggestion.insert.key, 0).moveFocusToEndOfInline()
-        break
+    case 'insert':
+      editor.moveTo(suggestion.insert.key, 0).moveFocusToEndOfInline()
+      break
 
-      case 'delete':
-        editor.moveTo(suggestion.delete.key, 0).moveFocusToEndOfInline()
-        break
+    case 'delete':
+      editor.moveTo(suggestion.delete.key, 0).moveFocusToEndOfInline()
+      break
 
-      case 'change':
-        editor.moveAnchorTo(suggestion.start.key, 0)
-        editor.moveFocusTo(suggestion.end.key, suggestion.end.offset)
-        break
+    case 'change':
+      editor.moveAnchorTo(suggestion.start.key, 0)
+      editor.moveFocusTo(suggestion.end.key, suggestion.end.offset)
+      break
 
-      default:
-        console.error('Unhandled suggestion type in onAccept:', suggestion)
-        break
+    default:
+      console.error('Unhandled suggestion type in onAccept:', suggestion)
+      break
     }
   }
 
@@ -315,27 +322,35 @@ class SuggestionsTools extends React.Component<Props> {
     const { value: { document }, editor } = this.props
 
     switch (suggestion.type) {
-      case 'insert': {
-        const path = document.getPath(suggestion.insert.key)
+    case 'insert': {
+      const path = document.getPath(suggestion.insert.key)
+      if (!path) {
+        console.warn(`onAccept: Couldn't find path for suggestion: ${suggestion}`)
+        return
+      }
+      editor.unwrapChildrenByPath(path)
+      break
+    }
+    case 'delete': {
+      editor.removeNodeByKey(suggestion.delete.key)
+      break
+    }
+    case 'change': {
+      const path = document.getPath(suggestion.insert.key)
+      if (!path) {
+        console.warn(`onAccept: Couldn't find path for suggestion: ${suggestion}`)
+        return
+      }
+      editor.withoutNormalizing(() => {
         editor.unwrapChildrenByPath(path)
-        break
-      }
-      case 'delete': {
         editor.removeNodeByKey(suggestion.delete.key)
-        break
-      }
-      case 'change': {
-        const path = document.getPath(suggestion.insert.key)
-        editor.withoutNormalizing(() => {
-          editor.unwrapChildrenByPath(path)
-          editor.removeNodeByKey(suggestion.delete.key)
-        })
-        break
-      }
-      default: {
-        console.error('Unhandled suggestion type in onAccept:', suggestion)
-        break
-      }
+      })
+      break
+    }
+    default: {
+      console.error('Unhandled suggestion type in onAccept:', suggestion)
+      break
+    }
     }
 
     this.removeSuggestionFromState(suggestion)
@@ -348,27 +363,35 @@ class SuggestionsTools extends React.Component<Props> {
     const { value: { document }, editor } = this.props
 
     switch (suggestion.type) {
-      case 'insert': {
-        editor.removeNodeByKey(suggestion.insert.key)
-        break
+    case 'insert': {
+      editor.removeNodeByKey(suggestion.insert.key)
+      break
+    }
+    case 'delete': {
+      const path = document.getPath(suggestion.delete.key)
+      if (!path) {
+        console.warn(`onDecline: Couldn't find path for suggestion: ${suggestion}`)
+        return
       }
-      case 'delete': {
-        const path = document.getPath(suggestion.delete.key)
+      editor.unwrapChildrenByPath(path)
+      break
+    }
+    case 'change': {
+      const path = document.getPath(suggestion.delete.key)
+      if (!path) {
+        console.warn(`onDecline: Couldn't find path for suggestion: ${suggestion}`)
+        return
+      }
+      editor.withoutNormalizing(() => {
         editor.unwrapChildrenByPath(path)
-        break
-      }
-      case 'change': {
-        const path = document.getPath(suggestion.delete.key)
-        editor.withoutNormalizing(() => {
-          editor.unwrapChildrenByPath(path)
-          editor.removeNodeByKey(suggestion.insert.key)
-        })
-        break
-      }
-      default: {
-        console.error('Unhandled suggestion type in onDecline:', suggestion)
-        break
-      }
+        editor.removeNodeByKey(suggestion.insert.key)
+      })
+      break
+    }
+    default: {
+      console.error('Unhandled suggestion type in onDecline:', suggestion)
+      break
+    }
     }
 
     this.removeSuggestionFromState(suggestion)
@@ -378,29 +401,31 @@ class SuggestionsTools extends React.Component<Props> {
   }
 
   private removeSuggestionFromState = (suggestion: Suggestion) => {
-    const suggestions = this.state.suggestions.filter(sugg => {
-      if (sugg.type !== suggestion.type) return true
+    this.setState((prevState: LocaleState) => {
+      const suggestions = prevState.suggestions.filter(sugg => {
+        if (sugg.type !== suggestion.type) return true
 
-      if (
-        suggestion.type === 'insert'
-        && (sugg as SuggestionInsert).insert.key === suggestion.insert.key
+        if (
+          suggestion.type === 'insert'
+          && (sugg as SuggestionInsert).insert.key === suggestion.insert.key
         ) return false
 
-      if (
-        suggestion.type === 'delete'
-        && (sugg as SuggestionDelete).delete.key === suggestion.delete.key
+        if (
+          suggestion.type === 'delete'
+          && (sugg as SuggestionDelete).delete.key === suggestion.delete.key
         ) return false
 
-      if (
-        suggestion.type === 'change'
-        && (sugg as SuggestionChange).start.key === suggestion.start.key
-        && (sugg as SuggestionChange).end.key === suggestion.end.key
+        if (
+          suggestion.type === 'change'
+          && (sugg as SuggestionChange).start.key === suggestion.start.key
+          && (sugg as SuggestionChange).end.key === suggestion.end.key
         ) return false
 
-      return true
+        return true
+      })
+
+      return { suggestions }
     })
-
-    this.setState({ suggestions })
   }
 
   private previousSuggestion = () => {

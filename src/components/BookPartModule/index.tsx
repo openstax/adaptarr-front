@@ -2,14 +2,17 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
-import store from 'src/store'
 import * as api from 'src/api'
-import ProcessVersion from 'src/api/processversion'
 import { ProcessStructure } from 'src/api/process'
-import { addAlert } from 'src/store/actions/Alerts'
+
+import * as types from 'src/store/types'
+import store from 'src/store'
+import { State } from 'src/store/reducers'
+import { addAlert } from 'src/store/actions/alerts'
+
+import { confirmDialog } from 'src/helpers'
 
 import LimitedUI from 'src/components/LimitedUI'
-import EditableText from 'src/components/EditableText'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
@@ -17,65 +20,81 @@ import BeginProcess from 'src/containers/BeginProcess'
 import ProcessPreview from 'src/containers/ProcessPreview'
 import UpdateSlots from 'src/containers/UpdateSlots'
 
-import * as types from 'src/store/types'
-import { State } from 'src/store/reducers'
-
 import './index.css'
 
-type Props = {
+interface ModuleProps {
   item: api.BookPart
   modulesMap: types.ModulesMap
   processes: Map<number, api.Process>
+  teams: Map<number, api.Team>
   isEditingUnlocked: boolean
   highlightText: string
   onModuleClick: (item: api.BookPart) => any
   afterAction: () => any
 }
 
-const mapStateToProps = ({ modules: { modulesMap }, app: { processes } }: State) => ({
+const mapStateToProps = ({ modules: { modulesMap }, app: { processes, teams } }: State) => ({
   modulesMap,
   processes,
+  teams,
 })
 
-class Module extends React.Component<Props> {
-  state: {
-    showRemoveModule: boolean
-    showBeginProcess: boolean
-    showCancelProcess: boolean
-    processStructure: ProcessStructure | null
-    module: api.Module | undefined
-  } = {
-    showRemoveModule: false,
+interface ModuleState {
+  showBeginProcess: boolean
+  processStructure: ProcessStructure | null
+  module: api.Module | undefined
+  team: api.Team | null
+}
+
+class Module extends React.Component<ModuleProps> {
+  state: ModuleState = {
     showBeginProcess: false,
-    showCancelProcess: false,
     processStructure: null,
     module: this.props.modulesMap.get(this.props.item.id!),
+    team: null,
   }
 
-  private showRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: true })
+  private onClick = () => {
+    this.props.onModuleClick(this.props.item)
   }
 
-  private closeRemoveModuleDialog = () => {
-    this.setState({ showRemoveModule: false })
+  private showRemoveModuleDialog = async () => {
+    const res = await confirmDialog({
+      title: 'book-remove-module-title',
+      buttons: {
+        cancel: 'book-remove-module-cancel',
+        confirm: 'book-remove-module-confirm',
+      },
+      showCloseButton: false,
+    })
+
+    if (res === 'confirm') {
+      this.removeModule()
+    }
   }
 
   private removeModule = () => {
     const { item: targetModule } = this.props
 
     if (!targetModule) {
-      return console.error('targetModule:', targetModule)
+      console.error('targetModule:', targetModule)
+      return
     }
 
     targetModule.delete()
       .then(() => {
         this.props.afterAction()
-        store.dispatch(addAlert('success', 'book-remove-module-alert-success', { title: targetModule.title }))
+        store.dispatch(
+          addAlert(
+            'success',
+            'book-remove-module-alert-success',
+            { title: targetModule.title },
+          )
+        )
       })
       .catch(e => {
         store.dispatch(addAlert('error', e.message))
       })
-    this.closeRemoveModuleDialog()
   }
 
   private showBeginProcessDialog = () => {
@@ -88,21 +107,34 @@ class Module extends React.Component<Props> {
 
   private showProcessDetails = async () => {
     const { process: processId, version } = this.state.module!.process!
-    const process = await ProcessVersion.load(processId, version)
+    const { processes } = this.props
+    const process = await api.ProcessVersion.load(processId, version)
     const structure = await process.structure()
-    this.setState({ processStructure: structure })
+    const team = this.props.teams.get(processes.get(processId)!.team)
+    if (!team) {
+      console.error(`Couldn't find team for process: ${process.id}`)
+      return
+    }
+    this.setState({ processStructure: structure, team })
   }
 
   private closeProcessDetails = () => {
-    this.setState({ processStructure: null })
+    this.setState({ processStructure: null, team: null })
   }
 
-  private showCancelProcess = () => {
-    this.setState({ showCancelProcess: true })
-  }
+  private showCancelProcess = async () => {
+    const res = await confirmDialog({
+      title: 'book-process-cancel-title',
+      buttons: {
+        cancel: 'book-process-cancel-button-cancel',
+        cancelProcess: 'book-process-cancel-button',
+      },
+      showCloseButton: false,
+    })
 
-  private closeCancelProcess = () => {
-    this.setState({ showCancelProcess: false })
+    if (res === 'cancelProcess') {
+      this.cancelProcess()
+    }
   }
 
   private cancelProcess = async () => {
@@ -113,22 +145,23 @@ class Module extends React.Component<Props> {
       const draft = await api.Draft.load(item.id!)
       await draft.cancelProcess()
 
-      this.props.modulesMap.set(mod!.id, new api.Module({...mod!, process: null}))
+      this.props.modulesMap.set(mod!.id, new api.Module({ ...mod!, process: null }))
+      this.props.item.process = null
       store.dispatch(addAlert('success', 'book-process-cancel-success'))
       this.closeProcessDetails()
     } catch (e) {
       console.error(e)
-      store.dispatch(addAlert('success', 'book-process-cancel-error', {details: e.toString()}))
+      store.dispatch(addAlert('success', 'book-process-cancel-error', { details: e.toString() }))
     }
-    this.closeCancelProcess()
   }
 
   private afterBeginProcess = () => {
     this.props.afterAction()
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ModuleProps) {
     if (this.props.item !== prevProps.item) {
+      // eslint-disable-next-line react/no-did-update-set-state
       this.setState({ module: this.props.modulesMap.get(this.props.item.id!) })
     }
   }
@@ -136,38 +169,31 @@ class Module extends React.Component<Props> {
   public render() {
     const { item, processes, isEditingUnlocked, highlightText } = this.props
     const {
-      showRemoveModule,
       showBeginProcess,
       processStructure,
       module: mod,
-      showCancelProcess,
+      team,
     } = this.state
 
     let titleWithHighlights = ''
     if (highlightText) {
       const rgx = new RegExp(highlightText, 'gi')
-      titleWithHighlights = item.title.replace(rgx, match => `<span class="highlight">${match}</span>`)
+      titleWithHighlights = item.title.replace(
+        rgx,
+        match => `<span class="highlight">${match}</span>`
+      )
     }
 
     return (
       <>
         <span
           className="bookpart__title"
-          onClick={() => this.props.onModuleClick(item)}
+          onClick={this.onClick}
         >
           {
-            // Currently only users with proper permissions in process can change module title.
-            /* isEditingUnlocked ?
-              <EditableText
-                text={item.title}
-                onAccept={this.updateModuleTitle}
-              />
-            : item.title */
-          }
-          {
             highlightText ?
-              <span dangerouslySetInnerHTML={{__html: titleWithHighlights}}></span>
-            : item.title
+              <span dangerouslySetInnerHTML={{ __html: titleWithHighlights }} />
+              : item.title
           }
         </span>
         <span className="bookpart__info">
@@ -181,7 +207,7 @@ class Module extends React.Component<Props> {
                   <Localized id="book-button-remove">Remove</Localized>
                 </Button>
               </LimitedUI>
-            : null
+              : null
           }
           <LimitedUI permissions="editing-process:manage">
             {
@@ -198,40 +224,13 @@ class Module extends React.Component<Props> {
                     {`{ $step } in { $process }`}
                   </Localized>
                 </Button>
-              :
+                :
                 <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>
                 </Button>
             }
           </LimitedUI>
         </span>
-        {
-          showRemoveModule ?
-            <Dialog
-              l10nId="book-remove-module-title"
-              placeholder="Are you sure?"
-              size="medium"
-              onClose={this.closeRemoveModuleDialog}
-              showCloseButton={false}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeRemoveModuleDialog}>
-                  <Localized id="book-remove-module-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button
-                  type="danger"
-                  clickHandler={this.removeModule}
-                >
-                  <Localized id="book-remove-module-confirm">
-                    Delete
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
-        }
         {
           showBeginProcess && mod ?
             <Dialog
@@ -247,10 +246,10 @@ class Module extends React.Component<Props> {
                 afterUpdate={this.afterBeginProcess}
               />
             </Dialog>
-          : null
+            : null
         }
         {
-          processStructure ?
+          processStructure && team ?
             <Dialog
               l10nId="book-process-preview-title"
               placeholder="Process details:"
@@ -259,8 +258,10 @@ class Module extends React.Component<Props> {
             >
               <UpdateSlots
                 module={this.state.module}
+                team={team}
               />
               <ProcessPreview
+                team={team}
                 structure={processStructure}
               />
               <div className="dialog__buttons dialog__buttons--center">
@@ -271,30 +272,7 @@ class Module extends React.Component<Props> {
                 </Button>
               </div>
             </Dialog>
-          : null
-        }
-        {
-          showCancelProcess ?
-            <Dialog
-              l10nId="book-process-cancel-title"
-              placeholder="Cancel process without saving changes"
-              size="medium"
-              onClose={this.closeCancelProcess}
-            >
-              <div className="dialog__buttons">
-                <Button clickHandler={this.closeCancelProcess}>
-                  <Localized id="book-process-cancel-button-cancel">
-                    Cancel
-                  </Localized>
-                </Button>
-                <Button clickHandler={this.cancelProcess}>
-                  <Localized id="book-process-cancel-button">
-                    Cancel process
-                  </Localized>
-                </Button>
-              </div>
-            </Dialog>
-          : null
+            : null
         }
       </>
     )

@@ -2,7 +2,7 @@ import axios from 'src/config/axios'
 import { AxiosResponse } from 'axios'
 
 import Base from './base'
-import Process, { ProcessStructure, ProcessSlot, Link, ProcessSingleStep } from './process'
+import Process, { Link, ProcessSingleStep, ProcessSlot, ProcessStructure } from './process'
 
 import { elevated } from './utils'
 
@@ -10,9 +10,9 @@ import { elevated } from './utils'
  * Versions's data.
  */
 export type VersionData = {
-  id: number,
-  name: string,
-  version: string, // date this version was created
+  id: number
+  name: string
+  version: string // date this version was created
 }
 
 export default class ProcessVersion extends Base<VersionData> {
@@ -85,8 +85,11 @@ export default class ProcessVersion extends Base<VersionData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.process}/versions/${this.id}/slots/${slot}`, data))
+  updateSlot(slot: number, data: { name?: string, roles?: number[] }): Promise<AxiosResponse> {
+    return elevated(() => axios.put(
+      `processes/${this.process}/versions/${this.id}/slots/${slot}`,
+      data,
+    ))
   }
 
   /**
@@ -108,15 +111,19 @@ export default class ProcessVersion extends Base<VersionData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateStepName(step: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.process}/versions/${this.id}/steps/${step}`, { name }))
+  updateStepName(step: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(
+      `processes/${this.process}/versions/${this.id}/steps/${step}`,
+      { name },
+    ))
   }
 
   /**
    * Return list of links for given step this version.
    */
   async links(step: number): Promise<Link[]> {
-    return (await axios.get(`processes/${this.process}/versions/${this.id}/steps/${step}/links`)).data
+    const res = await axios.get(`processes/${this.process}/versions/${this.id}/steps/${step}/links`)
+    return res.data
   }
 
   /**
@@ -124,7 +131,10 @@ export default class ProcessVersion extends Base<VersionData> {
    * which have target set to @param target in this version of process.
    */
   async link(step: number, slot: number, target: number): Promise<Link> {
-    return (await axios.get(`processes/${this.process}/versions/${this.id}/steps/${step}/links/${slot}/${target}`)).data
+    const res = await axios.get(
+      `processes/${this.process}/versions/${this.id}/steps/${step}/links/${slot}/${target}`
+    )
+    return res.data
   }
 
   /**
@@ -132,7 +142,10 @@ export default class ProcessVersion extends Base<VersionData> {
    *
    * This function requires editing-process:edit permission.
    */
-  async updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
-    return await elevated(() => axios.put(`processes/${this.process}/versions/${this.id}/steps/${step}/links/${slot}/${target}`, { name }))
+  updateLinkName(step: number, slot: number, target: number, name: string): Promise<AxiosResponse> {
+    return elevated(() => axios.put(
+      `processes/${this.process}/versions/${this.id}/steps/${step}/links/${slot}/${target}`,
+      { name },
+    ))
   }
 }

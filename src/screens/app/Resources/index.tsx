@@ -1,16 +1,20 @@
 import * as React from 'react'
+import { connect } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 import { FilesError } from 'react-files'
 
+import Team from 'src/api/team'
 import Resource, { ResourceKind } from 'src/api/resource'
 
 import store from 'src/store'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
+import { State } from 'src/store/reducers'
 
 import Header from 'src/components/Header'
 import Section from 'src/components/Section'
 import Spinner from 'src/components/Spinner'
 import LimitedUI from 'src/components/LimitedUI'
+import TeamSelector from 'src/components/TeamSelector'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 import Icon from 'src/components/ui/Icon'
@@ -30,26 +34,34 @@ export const ACCEPTED_FILE_TYPES = [
   'video/*',
 ]
 
-type Props = {
+interface ResourcesProps {
   match: {
     params: {
       id: string
     }
   }
+  selectedTeams: number[]
 }
 
-class Resources extends React.Component<Props> {
-  state: {
-    isLoading: boolean
-    resources: Resource[]
-    currentFolder: Resource | undefined
-    isEditingUnlocked: boolean
-    showAddResource: boolean
-    resourceType: ResourceKind | null
-    resourceName: string
-    files: File[]
-    isUploading: boolean
-  } = {
+const mapStateToProps = ({ app: { selectedTeams } }: State) => ({
+  selectedTeams,
+})
+
+interface ResourcesState {
+  isLoading: boolean
+  resources: Resource[]
+  currentFolder: Resource | undefined
+  isEditingUnlocked: boolean
+  showAddResource: boolean
+  resourceType: ResourceKind | null
+  resourceName: string
+  files: File[]
+  isUploading: boolean
+  team: Team | null
+}
+
+class Resources extends React.Component<ResourcesProps> {
+  state: ResourcesState = {
     isLoading: true,
     resources: [],
     currentFolder: undefined,
@@ -59,10 +71,13 @@ class Resources extends React.Component<Props> {
     resourceName: '',
     files: [],
     isUploading: false,
+    team: null,
   }
 
   private toggleEditing = () => {
-    this.setState({ isEditingUnlocked: !this.state.isEditingUnlocked })
+    this.setState((prevState: ResourcesState) => ({
+      isEditingUnlocked: !prevState.isEditingUnlocked,
+    }))
   }
 
   private showAddResource = () => {
@@ -70,11 +85,20 @@ class Resources extends React.Component<Props> {
   }
 
   private closeAddResource = () => {
-    this.setState({ showAddResource: false, resourceName: '', resourceType: null, files: [] })
+    this.setState({
+      showAddResource: false,
+      resourceName: '',
+      resourceType: null,
+      files: [],
+    })
   }
 
   private handleResourceNameChange = (val: string) => {
     this.setState({ resourceName: val })
+  }
+
+  private onTeamChange = (team: Team) => {
+    this.setState({ team })
   }
 
   private addFolder = () => {
@@ -95,10 +119,13 @@ class Resources extends React.Component<Props> {
 
   private addResource = async () => {
     this.setState({ isUploading: true })
-    const { resourceName, resourceType, files, currentFolder } = this.state
+    const { resourceName, resourceType, files, currentFolder, team } = this.state
 
-    let data: { name: string, parent?: string, file?: File } = {
+    if (!team) return
+
+    const data: { name: string, team: number, parent?: string, file?: File } = {
       name: resourceName,
+      team: team.id,
     }
 
     if (currentFolder) {
@@ -112,9 +139,10 @@ class Resources extends React.Component<Props> {
     await Resource.create(data).then(() => {
       store.dispatch(addAlert('success', 'resources-add-success'))
       this.fetchResources(this.props.match.params.id)
-    }).catch(() => {
-      store.dispatch(addAlert('error', 'resources-add-error'))
     })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'resources-add-error'))
+      })
 
     this.setState({
       showAddResource: false,
@@ -122,12 +150,14 @@ class Resources extends React.Component<Props> {
       resourceType: null,
       files: [],
       isUploading: false,
+      team: null,
     })
   }
 
   private fetchResources = async (parentId?: string) => {
+    this.setState({ isLoading: true })
     let resources = await Resource.all()
-    let currentFolder = resources.find(r => r.id === parentId)
+    const currentFolder = resources.find(r => r.id === parentId)
     if (parentId) {
       resources = resources.filter(r => r.parent && r.parent === parentId)
     } else {
@@ -136,16 +166,14 @@ class Resources extends React.Component<Props> {
     this.setState({ resources, isLoading: false, currentFolder })
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps: ResourcesProps) {
     if (prevProps.match.params.id !== this.props.match.params.id) {
-      this.setState({ isLoading: true, currentFolder: undefined })
       this.fetchResources(this.props.match.params.id)
     }
   }
 
   componentDidMount() {
     const id = this.props.match.params.id
-    this.setState({ isLoading: true })
     this.fetchResources(id)
   }
 
@@ -160,41 +188,49 @@ class Resources extends React.Component<Props> {
       resourceName,
       files,
       isUploading,
+      team,
     } = this.state
+    const { selectedTeams } = this.props
 
     return (
       <Section>
         <Header l10nId={currentFolder ? undefined : "resources-view-title"} title="Resources">
           {
             currentFolder ?
-              <h2 className="header__title">{currentFolder.name}</h2>
-            : null
+              <h2 className="header__title">{currentFolder.name}</h2> :
+              null
           }
           <LimitedUI permissions="resources:manage">
             <Button clickHandler={this.toggleEditing}>
               {
                 isEditingUnlocked ?
-                  <Icon size="medium" name="unlock" />
-                : <Icon size="medium" name="lock" />
+                  <Icon size="medium" name="unlock" /> :
+                  <Icon size="medium" name="lock" />
               }
             </Button>
             {
               isEditingUnlocked ?
                 <Button clickHandler={this.showAddResource}>
                   <Icon size="medium" name="plus" />
-                </Button>
-              : null
+                </Button> :
+                null
             }
           </LimitedUI>
         </Header>
         <div className="section__content resources">
           {
-            isLoading ?
-              <Spinner />
-            :
-              resources.map(r => (
-                <ResourceCard key={r.id} resource={r} isEditingUnlocked={isEditingUnlocked} />
-              ))
+            isLoading
+              ? <Spinner />
+              : resources.map(r => {
+                if (!selectedTeams.includes(r.team)) return null
+                return (
+                  <ResourceCard
+                    key={r.id}
+                    resource={r}
+                    isEditingUnlocked={isEditingUnlocked}
+                  />
+                )
+              })
           }
           {
             showAddResource ?
@@ -218,16 +254,19 @@ class Resources extends React.Component<Props> {
                         </Localized>
                       </Button>
                     </div>
-                  :
-                    isUploading ?
+                    : isUploading ?
                       <Spinner />
-                    :
+                      :
                       <div className="resources__dialog-content">
                         <Input
                           l10nId="resources-name-placeholder"
                           value={resourceName}
                           onChange={this.handleResourceNameChange}
                           validation={{ minLength: 2 }}
+                        />
+                        <TeamSelector
+                          permission="resources:manage"
+                          onChange={this.onTeamChange}
                         />
                         {
                           resourceType === 'file' ?
@@ -237,8 +276,8 @@ class Resources extends React.Component<Props> {
                               multiple={false}
                               accepts={ACCEPTED_FILE_TYPES}
                               optional={false}
-                            />
-                          : null
+                            /> :
+                            null
                         }
                         <div className="dialog__buttons">
                           <Button clickHandler={this.closeAddResource}>
@@ -248,17 +287,21 @@ class Resources extends React.Component<Props> {
                           </Button>
                           <Button
                             clickHandler={this.addResource}
-                            isDisabled={resourceName.length < 3 || (resourceType === 'file' && !files[0])}
+                            isDisabled={
+                              resourceName.length < 3 ||
+                              (resourceType === 'file' && !files[0]) || !team
+                            }
                           >
                             <Localized id="resources-add-confirm">
                               Confirm
                             </Localized>
                           </Button>
                         </div>
-                    </div>
+                      </div>
                 }
               </Dialog>
-            : null
+              :
+              null
           }
         </div>
       </Section>
@@ -266,4 +309,4 @@ class Resources extends React.Component<Props> {
   }
 }
 
-export default Resources
+export default connect(mapStateToProps)(Resources)

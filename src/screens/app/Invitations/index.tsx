@@ -1,131 +1,182 @@
-import './index.css'
-
 import * as React from 'react'
 import Select from 'react-select'
-import { Localized } from 'fluent-react/compat'
+import { GetString, Localized, withLocalization } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
+import Role from 'src/api/role'
+import User from 'src/api/user'
+import Invitation, { InvitationData } from 'src/api/invitation'
+import Team, { TeamPermission } from 'src/api/team'
+
 import store from 'src/store'
-import { Invitation, Role } from 'src/api'
-import { addAlert } from 'src/store/actions/Alerts'
+import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers/'
+
+import { useIsInSuperMode } from 'src/hooks'
+
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
+import TeamPermissions, { TEAM_PERMISSIONS } from 'src/components/TeamPermissions'
+import TeamSelector from 'src/components/TeamSelector'
 import Input from 'src/components/ui/Input'
 
-type Props = {
-  roles: Role[]
+import './index.css'
+
+interface InvitationsProps {
+  user: User
+  getString: GetString
 }
 
-const mapStateToProps = ({ app: { roles } }: State) => {
-  return {
-    roles,
-  }
-}
+const mapStateToProps = ({ user: { user } }: State) => ({
+  user,
+})
 
-class Invitations extends React.Component<Props> {
+const Invitations = (props: InvitationsProps) => {
+  const [email, setEmail] = React.useState('')
+  const [isEmailVaild, setIsEmailVaild] = React.useState(false)
+  const [language, setLanguage] = React.useState<typeof LANGUAGES[0]>(LANGUAGES[0])
+  const [team, setTeam] = React.useState<Team | null>(null)
+  const [role, setRole] = React.useState<Role | null>(null)
+  const [permissions, setPermissions] = React.useState<TeamPermission[]>([])
+  const isInSuperMode = useIsInSuperMode(props.user)
 
-  state: {
-    emailValue: string
-    isEmailVaild: boolean
-    language: typeof LANGUAGES[0]
-    role: Role | null
-  } = {
-    emailValue: '',
-    isEmailVaild: false,
-    language: LANGUAGES[0],
-    role: null,
-  }
-
-  private sendInvitation = (e: React.FormEvent) => {
+  const sendInvitation = (e: React.FormEvent) => {
     e.preventDefault()
 
-    const { emailValue: email, isEmailVaild, language, role } = this.state
+    if (!isEmailVaild || !team) return
 
-    if (!isEmailVaild) return
+    const data: InvitationData = {
+      email,
+      language: language.code,
+      team: team.id,
+      permissions,
+    }
 
-    Invitation.create({ email, role: role ? role.id : null, language: language.code })
+    if (role) {
+      data.role = role.id
+    }
+
+    Invitation.create(data)
       .then(() => {
-        this.setState({ emailValue: '', role: null })
-        this.input!.unTouch()
-        store.dispatch(addAlert('success', 'invitation-send-alert-success', {email: email}))
+        setEmail('')
+        setRole(null)
+        setTeam(null)
+        setPermissions([])
+        setLanguage(LANGUAGES[0])
+        inputRef!.current!.unTouch()
+        store.dispatch(addAlert('success', 'invitation-send-alert-success', { email }))
       })
-      .catch((e) => {
-        store.dispatch(addAlert('error', 'invitation-send-alert-error', {details: e.response.data.error}))
+      .catch(e => {
+        store.dispatch(addAlert('error', 'invitation-send-alert-error', {
+          details: e.response.data.error,
+        }))
       })
   }
 
-  private hanleInputChange = (val: string) => {
-    this.setState({ emailValue: val })
+  const hanleInputChange = (val: string) => {
+    setEmail(val)
     if (val.length === 0) {
-      this.input!.unTouch()
+      inputRef!.current!.unTouch()
     }
   }
 
-  private handleInputValidation = (status: boolean) => {
-    if (this.state.isEmailVaild !== status) {
-      this.setState({ isEmailVaild: status})
+  const handleInputValidation = (status: boolean) => {
+    if (isEmailVaild !== status) {
+      setIsEmailVaild(status)
     }
   }
 
-  private setLanguage = ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
-    this.setState({ language: value })
+  const handleLanguageChange = ({ value }: { value: typeof LANGUAGES[0], label: string }) => {
+    setLanguage(value)
   }
 
-  private handleRoleChange = ({ value }: { value: Role, label: string }) => {
-    this.setState({ role: value })
+  const handleTeamChange = (team: Team) => {
+    setTeam(team)
+    setPermissions([])
   }
 
-  input: Input | null
+  const handleRoleChange = (option: { value: Role, label: string } | null) => {
+    setRole(option ? option.value : option)
+  }
 
-  private setInputRef = (el: Input | null) => el && (this.input = el)
+  const handlePermissionsChange = (permissions: TeamPermission[]) => {
+    setPermissions(permissions)
+  }
 
-  public render() {
-    const { emailValue, isEmailVaild, language, role } = this.state
+  const inputRef = React.useRef<Input>(null)
 
-    return (
-      <div className="container">
-        <Section>
-          <Header l10nId="invitation-view-title" title="Invite new user" />
-          <div className="section__content">
-            <div className="invitations">
-              <form onSubmit={this.sendInvitation}>
-                <Input
-                  ref={this.setInputRef}
-                  type="email"
-                  l10nId="invitation-email"
-                  value={emailValue}
-                  onChange={this.hanleInputChange}
-                  isValid={this.handleInputValidation}
-                  validation={{email: true}}
-                  errorMessage="invitation-email-validation-invalid"
-                />
-                <Select
-                  className="react-select"
-                  value={{ value: language, label: language.name }}
-                  options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
-                  formatOptionLabel={option => option.label}
-                  onChange={this.setLanguage}
-                />
-                <Select
-                  className="react-select"
-                  value={role ? { value: role, label: role.name } : null}
-                  options={this.props.roles.map(role => ({ value: role, label: role.name}))}
-                  formatOptionLabel={option => option.label}
-                  onChange={this.handleRoleChange}
-                />
-                <Localized id="invitation-send" attrs={{ value: true }}>
-                  <input type="submit" value="Send invitation" disabled={!isEmailVaild || !emailValue} />
-                </Localized>
-              </form>
-            </div>
+  const { user, getString } = props
+
+  // User can give another user only subset of his permission in team
+  let disabledPermissions: TeamPermission[] = TEAM_PERMISSIONS
+  if (team) {
+    if (isInSuperMode) {
+      disabledPermissions = []
+    } else {
+      const usrTeam = user.teams.find(t => t.id === team.id)
+      if (usrTeam && usrTeam.role && usrTeam.role.permissions) {
+        disabledPermissions = TEAM_PERMISSIONS.filter(p => !usrTeam.role!.permissions!.includes(p))
+      }
+    }
+  }
+
+  return (
+    <div className="container">
+      <Section>
+        <Header l10nId="invitation-view-title" title="Invite new user" />
+        <div className="section__content">
+          <div className="invitations">
+            <form onSubmit={sendInvitation}>
+              <Input
+                ref={inputRef}
+                type="email"
+                l10nId="invitation-email"
+                value={email}
+                onChange={hanleInputChange}
+                isValid={handleInputValidation}
+                validation={{ email: true }}
+                errorMessage="invitation-email-validation-invalid"
+              />
+              <Select
+                className="react-select"
+                placeholder={getString('invitation-select-language')}
+                value={{ value: language, label: language.name }}
+                options={LANGUAGES.map(lan => ({ value: lan, label: lan.name }))}
+                formatOptionLabel={formatOptionLabel}
+                onChange={handleLanguageChange}
+              />
+              <TeamSelector
+                permission="member:add"
+                onChange={handleTeamChange}
+              />
+              <Select
+                className="react-select"
+                placeholder={getString('invitation-select-role')}
+                isClearable={true}
+                isDisabled={!team}
+                value={role ? { value: role, label: role.name } : null}
+                options={team ? team.roles.map(role => ({ value: role, label: role.name })) : []}
+                formatOptionLabel={formatOptionLabel}
+                onChange={handleRoleChange}
+              />
+              <TeamPermissions
+                selected={permissions}
+                disabled={disabledPermissions}
+                onChange={handlePermissionsChange}
+              />
+              <Localized id="invitation-send" attrs={{ value: true }}>
+                <input type="submit" value="Send invitation" disabled={!isEmailVaild || !email} />
+              </Localized>
+            </form>
           </div>
-        </Section>
-      </div>
-    )
-  }
+        </div>
+      </Section>
+    </div>
+  )
 }
 
-export default connect(mapStateToProps)(Invitations)
+export default connect(mapStateToProps)(withLocalization(Invitations))
+
+const formatOptionLabel = (option: { label: string, value: any }) => option.label

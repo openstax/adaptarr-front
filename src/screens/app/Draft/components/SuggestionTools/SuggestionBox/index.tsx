@@ -11,7 +11,7 @@ import { Suggestion } from '..'
 
 import './index.css'
 
-type Props = {
+interface SuggestionBoxProps {
   suggestion: Suggestion
   draftPermissions: SlotPermission[]
   onClick: (suggestion: Suggestion) => any
@@ -19,7 +19,7 @@ type Props = {
   onDecline: (suggestion: Suggestion) => any
 }
 
-const SuggestionBox = (props: Props) => {
+const SuggestionBox = (props: SuggestionBoxProps) => {
   const onClick = (ev: React.MouseEvent<HTMLDivElement>) => {
     ev.preventDefault()
     props.onClick(props.suggestion)
@@ -49,16 +49,21 @@ const SuggestionBox = (props: Props) => {
     let insertContent = ""
     let deleteContent = ""
     switch (suggestion.type) {
-      case 'change':
-        insertContent = getInlineContent(suggestion.insert)
-        deleteContent = getInlineContent(suggestion.delete)
-        break
-      case 'insert':
-        insertContent = getInlineContent(suggestion.insert)
-        break
-      case 'delete':
-        deleteContent = getInlineContent(suggestion.delete)
-        break
+    case 'change':
+      insertContent = getInlineContent(suggestion.insert)
+      deleteContent = getInlineContent(suggestion.delete)
+      break
+
+    case 'insert':
+      insertContent = getInlineContent(suggestion.insert)
+      break
+
+    case 'delete':
+      deleteContent = getInlineContent(suggestion.delete)
+      break
+
+    default:
+      console.error(`Incorrect suggestion type: ${suggestion}`)
     }
     return [insertContent, deleteContent]
   }
@@ -67,20 +72,28 @@ const SuggestionBox = (props: Props) => {
 
   const localizedId = `editor-tools-suggestion-${props.suggestion.type}`
 
+  const onAcceptClick = () => {
+    props.onAccept(props.suggestion)
+  }
+
+  const onDeclineClick = () => {
+    props.onDecline(props.suggestion)
+  }
+
   return (
     <div
-      className={`suggestion-box`}
+      className="suggestion-box"
       onClick={onClick}
     >
       <div className="suggestion-box__buttons">
         {
           props.draftPermissions.includes('accept-changes') ?
-            <Button clickHandler={() => props.onAccept(props.suggestion)}>
+            <Button clickHandler={onAcceptClick}>
               <Icon name="check" />
             </Button>
-          : null
+            : null
         }
-        <Button clickHandler={() => props.onDecline(props.suggestion)}>
+        <Button clickHandler={onDeclineClick}>
           <Icon name="close" />
         </Button>
       </div>
@@ -92,6 +105,7 @@ const SuggestionBox = (props: Props) => {
           action={<strong/>}
           content={<span/>}
         >
+          {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
           <></>
         </Localized>
       </span>
