@@ -2012,3 +2012,36 @@ chat-input-placeholder =
 chat-today = Dzisiaj
 
 chat-yesterday = Wczoraj
+
+
+
+## Reusable containers - tickets
+
+tickets-conversation-not-found = Nie udało się znaleźć konwersacji dla tego zgłoszenia.
+
+tickets-create-new = Utwórz zgłoszenie
+
+tickets-create-new-placeholder =
+  .placeholder = Tytuł nowego zgłoszenia
+
+tickets-create-new-error = Nie udało się utworzyć nowego zgłoszenia
+
+tickets-author = Autor:
+
+tickets-other-members = Inni członkowie:
+
+tickets-join-ticket = Dołącz do zgłoszenia
+
+# Variables:
+# - $ticket (string): ticket title
+tickets-join-ticket-confirm = Chcesz dołączyć go zgłoszenia: { $ticket }?
+
+tickets-join-cancel = Anuluj
+
+tickets-join-error = Nie udało się dołączyć do zgłoszenia
+
+tickets-status-open = Otwarte
+
+tickets-status-closed = Zamknięte
+
+tickets-no-tickets = Nie znaleziono zgłoszeń

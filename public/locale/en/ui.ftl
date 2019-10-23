@@ -2005,3 +2005,36 @@ chat-input-placeholder =
 chat-today = Today
 
 chat-yesterday = Yesterday
+
+
+
+## Reusable containers - tickets
+
+tickets-conversations-error = Couldn't load conversation for this ticket.
+
+tickets-create-new = Create new ticket
+
+tickets-create-new-placeholder =
+  .placeholder = Title for new ticket
+
+tickets-create-new-error = Couldn't create new ticket
+
+tickets-author = Author:
+
+tickets-other-members = Other members:
+
+tickets-join-ticket = Join ticket
+
+# Variables:
+# - $ticket (string): ticket title
+tickets-join-ticket-confirm = Do you want to join ticket: { $ticket }?
+
+tickets-join-cancel = Cancel
+
+tickets-join-error = Couldn't join to the ticket
+
+tickets-status-open = Open
+
+tickets-status-closed = Closed
+
+tickets-no-tickets = No tickets were found

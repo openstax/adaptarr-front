@@ -119,6 +119,9 @@ const UserProfile = (props: UserProfileProps) => {
               <DraftsList drafts={drafts} />
             </LimitedUI>
           </div>
+          <LimitedUI onlySuper={true}>
+            <div className="profile__flags" />
+          </LimitedUI>
         </div>
       </div>
     </Section>
