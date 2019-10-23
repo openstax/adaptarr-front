@@ -634,6 +634,8 @@ settings-language-dialog-cancel = Cancel
 
 helpdesk-view-title = Helpdesk
 
+helpdesk-view-tickets-title = Tickets manager
+
 helpdesk-export-local-database = Export database
 
 helpdesk-export-local-database-loading = Exporting...

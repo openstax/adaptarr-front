@@ -11,6 +11,6 @@
   margin-top: 20px;
 }
 
-.helpdesk .chat {
-  height: calc(100% - 72px);
+.helpdesk .tickets {
+  height: calc(100% - 126px);
 }

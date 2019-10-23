@@ -633,6 +633,8 @@ settings-language-dialog-cancel = Anuluj
 
 helpdesk-view-title = Centrum pomocy
 
+helpdesk-view-tickets-title = Zarządzaj zgłoszeniami
+
 helpdesk-export-local-database = Wyeksportuj bazę danych
 
 helpdesk-export-local-database-loading = Eksportowanie...
