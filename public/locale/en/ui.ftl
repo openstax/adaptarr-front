@@ -519,6 +519,20 @@ user-profile-team-list-search =
 
 user-profile-team-list-no-results = There are no users with specified criteria
 
+user-profile-support-flag-remove = Remove user from support team
+
+# Variables:
+# - $user (string): user name
+user-profile-support-flag-remove-confirm = Remove user: { $user } from support team?
+
+user-profile-support-flag-remove-confirm-cancel = Cancel
+
+user-profile-support-flag-remove-confirm-remove = Remove
+
+user-profile-support-flag-add = Add user to support team
+
+user-profile-support-flag-error = Couldn't change user's position.
+
 
 
 ## Screens - user's profile - update dialog

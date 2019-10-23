@@ -9,7 +9,7 @@ import { addAlert } from 'src/store/actions/alerts'
 import { updateUserInUsersMap } from 'src/store/actions/user'
 import { State } from 'src/store/reducers'
 
-import { decodeHtmlEntity } from 'src/helpers'
+import { confirmDialog, decodeHtmlEntity } from 'src/helpers'
 
 import { useIsInSuperMode } from 'src/hooks'
 
@@ -20,6 +20,7 @@ import Load from 'src/components/Load'
 import DraftsList from 'src/components/DraftsList'
 import EditableText from 'src/components/EditableText'
 import Avatar from 'src/components/ui/Avatar'
+import Button from 'src/components/ui/Button'
 import LimitedUI from 'src/components/LimitedUI'
 
 import './index.css'
@@ -42,6 +43,7 @@ async function loader({ userId }: { userId: string }) {
 const UserProfile = (props: UserProfileProps) => {
   const [userName, setUserName] = React.useState(props.user.name)
   const [drafts, setDrafts] = React.useState<Draft[]>([])
+  const [isSupport, setIsSupport] = React.useState(props.user.is_support)
   const isInSuperMode = useIsInSuperMode(props.user)
 
   const handleNameChange = (name: string) => {
@@ -55,6 +57,32 @@ const UserProfile = (props: UserProfileProps) => {
       .catch(() => {
         store.dispatch(addAlert('success', 'user-profile-update-name-error'))
         setUserName(props.user.name)
+      })
+  }
+
+  const toggleIsSupporFlag = async () => {
+    const newState = !isSupport
+    if (!newState) {
+      const res = await confirmDialog({
+        title: 'user-profile-support-flag-remove-confirm',
+        size: 'medium',
+        $user: user.name,
+        buttons: {
+          cancel: 'user-profile-support-flag-remove-confirm-cancel',
+          remove: 'user-profile-support-flag-remove-confirm-remove',
+        },
+      })
+
+      if (res !== 'remove') return
+    }
+
+    await user.setIsSupportFlag(newState)
+      .then(() => {
+        setIsSupport(newState)
+        user.is_support = newState
+      })
+      .catch(() => {
+        store.dispatch(addAlert('error', 'user-profile-support-flag-error'))
       })
   }
 
@@ -120,7 +148,17 @@ const UserProfile = (props: UserProfileProps) => {
             </LimitedUI>
           </div>
           <LimitedUI onlySuper={true}>
-            <div className="profile__flags" />
+            <div className="profile__flags">
+              <Button clickHandler={toggleIsSupporFlag}>
+                <Localized
+                  id={isSupport
+                    ? 'user-profile-support-flag-remove'
+                    : 'user-profile-support-flag-add'}
+                >
+                  Toggle support flag
+                </Localized>
+              </Button>
+            </div>
           </LimitedUI>
         </div>
       </div>

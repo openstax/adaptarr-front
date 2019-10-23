@@ -519,6 +519,20 @@ user-profile-team-list-search =
 
 user-profile-team-list-no-results = Brak wyników dla określonych kryteriów
 
+user-profile-support-flag-remove = Usuń użytkownika z grupy promocy
+
+# Variables:
+# - $user (string): user name
+user-profile-support-flag-remove-confirm = Usunąć użytkownika: { $user } z grupy pomocy?
+
+user-profile-support-flag-remove-confirm-cancel = Anuluj
+
+user-profile-support-flag-remove-confirm-remove = Usuń
+
+user-profile-support-flag-add = Dodaj użytkownika do grupy pomocy
+
+user-profile-support-flag-error = Nie udało się zmienić roli użytkownika.
+
 
 
 ## Screens - user's profile - update dialog
