@@ -25,6 +25,7 @@ export const initialState = {
     name: 'Loading...',
     language: 'en',
     is_super: false,
+    is_support: false,
     teams: [],
   }),
   users: new Map(),
