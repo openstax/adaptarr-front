@@ -1,6 +1,6 @@
 import { Editor } from "slate"
 
-export function onClick(event: MouseEvent, editor: Editor, next: () => void) {
+export function onClick(event: React.MouseEvent, editor: Editor, next: () => void) {
   const target = event.target as HTMLElement
   if (target.classList.contains('footnote')) {
     const key = target.dataset.key as string
@@ -10,7 +10,7 @@ export function onClick(event: MouseEvent, editor: Editor, next: () => void) {
   }
 }
 
-export function onKeyDown(event: KeyboardEvent, editor: Editor, next: () => void) {
+export function onKeyDown(event: React.KeyboardEvent, editor: Editor, next: () => void) {
   const inl = editor.value.startInline
   if (!inl || inl.type !== 'footnote') return next()
 
