@@ -53,22 +53,22 @@ class HighlightContent extends React.Component<HighlightContentProps> {
       >
         {
           onlyView
-          ?
-          <>
-            <span className="highlight__message">
-              {text}
-            </span>
-            <span className="highlight__author">
-              <Avatar size="small" withName={true} user={creator} />
-            </span>
-          </>
-          :
-          <textarea
-            onChange={this.onChange}
-            value={text}
-            placeholder={placeholder}
-            rows={5}
-          />
+            ?
+            <>
+              <span className="highlight__message">
+                {text}
+              </span>
+              <span className="highlight__author">
+                <Avatar size="small" withName={true} user={creator} />
+              </span>
+            </>
+            :
+            <textarea
+              onChange={this.onChange}
+              value={text}
+              placeholder={placeholder}
+              rows={5}
+            />
         }
       </span>
     )

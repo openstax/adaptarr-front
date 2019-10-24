@@ -32,12 +32,12 @@ const Highlight = ({ node, children, attributes, slateEditor, editor }: Highligh
       {children}
       {
         isSelected ?
-        <HighlightContent
-          text={node.data.get('text')}
-          creator={Number(node.data.get('user'))}
-          onUpdate={onUpdate}
-        />
-        : null
+          <HighlightContent
+            text={node.data.get('text')}
+            creator={Number(node.data.get('user'))}
+            onUpdate={onUpdate}
+          />
+          : null
       }
     </span>
   )

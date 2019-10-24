@@ -1,4 +1,4 @@
-import { Editor, SlateError, InlineProperties, Data } from 'slate'
+import { Data, Editor, InlineProperties, SlateError } from 'slate'
 
 export type HighlightColor =
   'lightblue' |
@@ -17,7 +17,7 @@ function normalizeHighlight(editor: Editor, error: SlateError) {
   const { code, node, key } = error
 
   switch (code) {
-  case 'node_data_invalid':
+  case 'node_data_invalid': {
     let newData: Data
 
     if (key === 'color') {
@@ -39,6 +39,7 @@ function normalizeHighlight(editor: Editor, error: SlateError) {
 
     editor.setNodeByKey(node.key, { data: newData } as InlineProperties)
     break
+  }
 
   default:
     console.warn('Unhandled highlight violation:', error)
@@ -54,6 +55,6 @@ export default {
         user: (n: number) => typeof n === 'number',
       },
       normalize: normalizeHighlight,
-    }
-  }
+    },
+  },
 }

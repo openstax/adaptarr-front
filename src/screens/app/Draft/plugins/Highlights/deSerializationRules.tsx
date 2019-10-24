@@ -50,7 +50,7 @@ const deSerializeRules = {
       }
     }
     return undefined
-  }
+  },
 }
 
 export default deSerializeRules

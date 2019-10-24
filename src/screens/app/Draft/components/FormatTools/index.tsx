@@ -143,7 +143,7 @@ class FormatTools extends React.Component<FormatToolsProps> {
           </Button>
         </Tooltip>
         <Tooltip
-          l10nId={'editor-tools-format-button-highlight'}
+          l10nId="editor-tools-format-button-highlight"
           direction="up"
           className="toolbox__button--with-tooltip"
         >
@@ -156,7 +156,7 @@ class FormatTools extends React.Component<FormatToolsProps> {
           </Button>
         </Tooltip>
         <Tooltip
-          l10nId={'editor-tools-format-button-clear'}
+          l10nId="editor-tools-format-button-clear"
           direction="up"
           className="toolbox__button--with-tooltip"
         >

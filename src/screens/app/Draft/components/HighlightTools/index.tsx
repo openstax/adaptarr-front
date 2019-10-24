@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { connect } from 'react-redux'
-import { Editor, Value, InlineProperties } from 'slate'
+import { Editor, InlineProperties, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
 import { User } from 'src/api'

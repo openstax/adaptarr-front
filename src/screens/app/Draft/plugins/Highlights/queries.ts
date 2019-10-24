@@ -7,7 +7,7 @@ export const getActiveHighlight = (editor: Editor, value: Value) => {
 
   let node: Document | Inline = document
   for (const index of start.path as unknown as Iterable<number>) {
-    node = node.nodes.get(+index) as Inline
+    node = node.nodes.get(Number(index)) as Inline
 
     if (node.type === 'highlight') {
       return node

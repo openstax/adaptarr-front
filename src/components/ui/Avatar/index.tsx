@@ -36,13 +36,13 @@ const Avatar = (props: AvatarProps) => {
   const title = userData && userData.name ? decodeHtmlEntity(userData.name) : 'Unknow user'
   const linkToProfile = userData ? '/users/' + userData.id : '/settings'
 
-  let avatarSrc = '/images/unknown-user.svg'
+  const avatarSrc = '/images/unknown-user.svg'
 
   const body = (
     <>
       <Tooltip content={title} tagName="span">
         <span className="avatar__image">
-          <span className={statusClasses.join(' ')}></span>
+          <span className={statusClasses.join(' ')} />
           <img src={avatarSrc} alt={title}/>
         </span>
       </Tooltip>
