@@ -2029,6 +2029,14 @@ chat-today = Dzisiaj
 
 chat-yesterday = Wczoraj
 
+chat-users-joined = Nowi użytkownicy dołączyli:
+
+# Variables
+# - $user (stirng): user name
+# Fragments:
+# - <anchor> ... </anchor>: link to user's profile.
+chat-user-joined = <anchor>{ $user }</anchor> dołączył/a.
+
 
 
 ## Reusable containers - tickets

@@ -5,6 +5,8 @@ import Conversation, {
   DateSeparator,
   LoadingMessages,
   NewMessageEventData,
+  UserJoined,
+  UserJoinedEventData,
   UserMessages,
 } from 'src/api/conversation'
 
@@ -26,7 +28,7 @@ export interface State {
 }
 
 export const initialState: State = {
-  conversations: new Map([[1, { id: 1, members: [1, 2], knownMessages: new Set() }]]),
+  conversations: new Map(),
   sockets: new Map(),
   messages: new Map(),
 }
@@ -64,19 +66,25 @@ export function reducer(state: State = initialState, action: ConversationsAction
     convData.knownMessages.add(id)
 
 
-    // Last message should be always UserMessages or undefined if there are no messages.
+    // Last message should be always UserMessages, UserJoined
+    // or undefined if there are no messages.
     // Optionally it can be LoadingMessages for a second until loading is done.
-    const last = messages[messages.length - 1] as (UserMessages | LoadingMessages | undefined)
+    const last = messages[messages.length - 1] as (
+      UserMessages | UserJoined | LoadingMessages | undefined)
 
     if (!last || last.kind === 'message:loading') {
       // There was no messages so just add first with DateSeparator.
       messages.push(createMessage('message:separator', time))
       messages.push(createMessage('message:user', action.data))
     } else {
-      const sameDay = isSameDay(last.messages[last.messages.length-1].time, time)
+      const lastMsgTime = last.kind === 'message:userjoined'
+        ? last.date
+        : last.messages[last.messages.length - 1].time
+
+      const sameDay = isSameDay(lastMsgTime, time)
 
       // Check if new msg is from the same user.
-      if (last.userId === userId) {
+      if (last.kind === 'message:user' && last.userId === userId) {
         if (sameDay) {
           // If msg is from the same day as last known message, just push it.
           last.messages.push({ id, time, message })
@@ -199,7 +207,7 @@ export function reducer(state: State = initialState, action: ConversationsAction
       }
       convData.knownMessages.add(msg.id)
       return true
-    }) as NewMessageEventData[]
+    }) as (NewMessageEventData | UserJoinedEventData)[]
 
     if (newMessages.length === 0) {
       // There are no new messages to add. Just delete loading message.
@@ -276,17 +284,26 @@ type LoadingMessagesData = {
  *
  * @param {ConversationMessageKind} kind 'message:separator' | 'message:user'
  * @param data Date for kind === 'message:separator', NewMessageEvent for kind === 'message:user'
- *             LoadingMessagesData for kind === 'message:loading'
+ *             LoadingMessagesData for kind === 'message:loading',
+ *             UserJoinedEventData for kind === 'message:userjoined'
  */
 const createMessage = (
   kind: ConversationMessageKind,
-  data: Date | NewMessageEventData | LoadingMessagesData
+  data: Date | NewMessageEventData | LoadingMessagesData | UserJoinedEventData
 ): ConversationMessage => {
   switch (kind) {
   case 'message:separator':
     return {
       kind,
       date: data as Date,
+    }
+
+  case 'message:userjoined':
+    return {
+      kind,
+      id: (data as UserJoinedEventData).id,
+      date: (data as UserJoinedEventData).date,
+      users: (data as UserJoinedEventData).users,
     }
 
   case 'message:user':
@@ -315,54 +332,128 @@ const createMessage = (
 }
 
 /**
- * Convert array of NewMessageEventData objects into ConversationMessage array.
+ * Convert array of NewMessageEventData and UserJoinedEvetData objects
+ * into ConversationMessage array.
  */
-const convertMsgEventsToConvMessages = (messages: NewMessageEventData[]): ConversationMessage[] => {
+const convertMsgEventsToConvMessages = (
+  messages: (NewMessageEventData | UserJoinedEventData)[]
+): ConversationMessage[] => {
   const convertedMessages: ConversationMessage[] = []
 
+  // We will proess every message and unshift it to the convertedMessages as proper object.
+  // First element in array will be always DateSeparator. Messages will be inserted below
+  // this separator if they are from the same day and above if not (new separator should be created)
   for (const msg of messages) {
     // First message should be always DateSeparator or undefined when there are no messages.
     const first = convertedMessages[0] as (DateSeparator | undefined)
-    const { id, userId, time, message } = msg
 
     if (!first) {
-      // If there was no messages then just add new one.
-      convertedMessages.push(createMessage('message:separator', time))
-      convertedMessages.push(createMessage('message:user', msg))
-    } else {
-      // Second message should be always UserMessages.
-      // This might change in the future.
-      const second = convertedMessages[1] as UserMessages
-      const sameDay = isSameDay(second.messages[0].time, time)
+      // If there were no messages just add new one.
+      const date = (msg as NewMessageEventData).time
+        ? (msg as NewMessageEventData).time
+        : (msg as UserJoinedEventData).date
 
-      // Check if new msg is from the same user.
-      if (second.userId === userId) {
-        if (sameDay) {
-          // If msg is from the same day as last known message, just unshift it.
-          second.messages.unshift({ id, time, message })
-        } else {
-          // If it is from other day then add it as new UserMessages
-          // and add new DateSeparator.
-          convertedMessages.unshift(createMessage('message:user', msg))
-          convertedMessages.unshift(createMessage('message:separator', time))
-        }
-      } else if (sameDay) {
-        // If msg is from other user...
+      convertedMessages.push(createMessage('message:separator', date))
 
+      if ((msg as UserJoinedEventData).users) {
+        convertedMessages.push(createMessage('message:userjoined', msg))
+        continue
+      }
+
+      if ((msg as NewMessageEventData).userId) {
+        convertedMessages.push(createMessage('message:user', msg))
+      } else {
+        convertedMessages.push(createMessage('message:userjoined', msg))
+      }
+
+      continue
+    }
+
+    const thisMsgTime = (msg as UserJoinedEventData).date || (msg as NewMessageEventData).time
+
+    // Second message should always be UserMessages or UserJoined.
+    const second = convertedMessages[1] as UserMessages | UserJoined
+    const sameDay = second.kind === 'message:userjoined'
+      ? isSameDay(second.date, thisMsgTime)
+      : isSameDay(second.messages[second.messages.length - 1].time, thisMsgTime)
+
+    // If msg is UserJoinedEventData determine if it is from the same day as previouse message
+    // and add it to the array or create new dateseparator.
+    if ((msg as UserJoinedEventData).users) {
+      if (sameDay) {
+        // If msg is from the same day, then take DateSeparator out,
+        // add new UserJoined and put DateSeparator in.
+        const separator = convertedMessages.shift()!
+        convertedMessages.unshift(createMessage('message:userjoined', msg))
+        convertedMessages.unshift(separator)
+        continue
+      }
+
+      // If msg is from the other day, then just add it as new UserJoined
+      // and create new DateSeparator.
+      convertedMessages.unshift(createMessage('message:userjoined', msg))
+      convertedMessages.unshift(createMessage('message:separator', thisMsgTime))
+
+      continue
+    }
+
+    // Current message is NewMessageEventData
+    const { id, userId, time, message } = msg as NewMessageEventData
+
+    // If previous message was UserJoined then we want to add current message as new UserMessages
+    if (second.kind === 'message:userjoined') {
+      if (sameDay) {
         // If msg is from the same day, then take DateSeparator out,
         // add new UserMessages and put DateSeparator in.
         const separator = convertedMessages.shift()!
         convertedMessages.unshift(createMessage('message:user', msg))
         convertedMessages.unshift(separator)
-      } else {
-        // If msg is from other user...
+        continue
+      }
 
-        // If msg is from the other day, then just add is as new UserMessages
-        // and create new DateSeparator.
+      // If msg is from the other day, then just add it as new UserMessages
+      // and create new DateSeparator.
+      convertedMessages.unshift(createMessage('message:user', msg))
+      convertedMessages.unshift(createMessage('message:separator', time))
+
+      continue
+    }
+
+    // Second message is UserMessages and current msg is NewMessageEvetData
+    // We will determine if it's from the same user and from same day
+    // If it is we can add this message to UserMessages.messages array
+
+    // Check if new msg is from the same user.
+    if (second.userId === userId) {
+      if (sameDay) {
+        // If msg is from the same day as second message, just unshift it.
+        second.messages.unshift({ id, time, message })
+      } else {
+        // If it is from other day then add it as new UserMessages
+        // and add new DateSeparator.
         convertedMessages.unshift(createMessage('message:user', msg))
         convertedMessages.unshift(createMessage('message:separator', time))
       }
+
+      continue
     }
+
+    // Current msg is from other user. Lets just determine if it's from same day or not.
+
+    if (sameDay) {
+      // If msg is from the same day, then take DateSeparator out,
+      // add new UserMessages and put DateSeparator in.
+      const separator = convertedMessages.shift()!
+      convertedMessages.unshift(createMessage('message:user', msg))
+      convertedMessages.unshift(separator)
+
+      continue
+    }
+
+    // If msg is from the other day, then just add is as new UserMessages
+    // and create new DateSeparator.
+    convertedMessages.unshift(createMessage('message:user', msg))
+    convertedMessages.unshift(createMessage('message:separator', time))
   }
 
   return convertedMessages
@@ -382,8 +473,11 @@ const mergeMessages = (
     if (!msgs) continue
     for (const msg of msgs) {
       if (!msg) continue
-      // Keep LoadingMessages
-      if (msg.kind === 'message:loading') {
+      // Keep LoadingMessages and UserJoined
+      if (
+        msg.kind === 'message:loading'
+        || msg.kind === 'message:userjoined'
+      ) {
         merged.push(msg)
         continue
       }

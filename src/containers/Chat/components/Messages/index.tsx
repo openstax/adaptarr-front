@@ -1,19 +1,23 @@
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 import { Localized } from 'fluent-react/compat'
 
 import Conversation, {
   DateSeparator as DateSeparatorType,
   LoadingMessages as LoadingMessagesType,
+  UserJoined as UserJoinedType,
   UserMessages as UserMessagesType,
 } from 'src/api/conversation'
 
 import store from 'src/store'
 import { replaceLoadingMessage } from 'src/store/actions/conversations'
+import { State } from 'src/store/reducers'
 
 import { isSameDay } from 'src/helpers'
 
 import Message from '../Message'
 import Avatar from 'src/components/ui/Avatar'
+import { Link } from 'react-router-dom'
 
 interface UserMessagesProps {
   data: UserMessagesType
@@ -203,4 +207,35 @@ export class LoadingMessages extends React.Component<LoadingMessagesProps> {
       }
     }
   }
+}
+
+export const UserJoined = ({ data: { id, users } }: { data: UserJoinedType }) => {
+  const usersMap = useSelector((state: State) => state.user.users)
+
+  return (
+    <div className="chat__msg chat__msg--user-joined" data-id={id}>
+      {
+        users.length > 1
+          ? <>
+            <Localized id="chat-users-joined">
+              New users has joined:
+            </Localized>
+            {
+              users.map(usrId => (
+                <Link key={usrId} to={`/users/${usrId}`}>{usersMap.get(usrId)!.name}</Link>
+              ))
+            }
+          </>
+          :
+          <Localized
+            id="chat-user-joined"
+            $user={usersMap.get(users[0])!.name}
+            anchor={<Link to={`/users/${users[0]}`}/>}
+          >
+            {/* eslint-disable-next-line react/jsx-no-useless-fragment */}
+            <></>
+          </Localized>
+      }
+    </div>
+  )
 }

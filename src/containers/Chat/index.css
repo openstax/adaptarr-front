@@ -105,3 +105,12 @@
   padding: 0 15px;
   background-color: var(--lighter-bg);
 }
+
+.chat__msg--user-joined {
+  display: flex;
+}
+
+.chat__msg--user-joined a {
+  margin: 0 5px;
+  color: var(--font-dark);
+}

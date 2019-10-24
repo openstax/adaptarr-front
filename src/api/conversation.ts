@@ -13,6 +13,7 @@ const CONNECTED = 0
 const NEW_MESSAGE = 1
 const SEND_MESSAGE = 2
 const GET_HISTORY = 3
+const USER_JOINED = 4
 const UNKNOWN_EVENT = 0x8000
 const MESSAGE_RECEIVED = 0x8001
 const MESSAGE_INVALID = 0x8002
@@ -68,14 +69,14 @@ TYPES[MESSAGE_INVALID] = {
 }
 
 export type HistoryEntriesEventData = {
-  before: NewMessageEventData[]
-  after: NewMessageEventData[]
+  before: (NewMessageEventData | UserJoinedEventData)[]
+  after: (NewMessageEventData | UserJoinedEventData)[]
 }
 
 export interface ReplaceLoadingMessageData extends HistoryEntriesEventData {
   loadingMsgId: string
   isLoadingDone: boolean
-  ref?: NewMessageEventData
+  ref?: NewMessageEventData | UserJoinedEventData
 }
 
 TYPES[HISTORY_ENTRIES] = {
@@ -106,6 +107,24 @@ TYPES[HISTORY_ENTRIES] = {
   },
 }
 
+export type UserJoinedEventData = { id: number, date: Date, users: number[] }
+;TYPES[USER_JOINED] = {
+  event: 'userjoined',
+
+  parser(body: Uint8Array, dv: DataView): UserJoinedEventData {
+    const metalen = dv.getUint16(0, true)
+    const id = dv.getInt32(2, true)
+    const date = new Date((dv.getBigInt64(6, true) as unknown as number) * 1000)
+    const users = body.slice(metalen)
+
+    return {
+      id,
+      date,
+      users: Array.from(users).filter(usrId => usrId),
+    }
+  },
+}
+
 export type ConversationEventData =
   ConnectedEventData |
   NewMessageEventData |
@@ -129,7 +148,11 @@ export type Message = {
   message: MessageBody
 }
 
-export type ConversationMessageKind = 'message:user' | 'message:separator' | 'message:loading'
+export type ConversationMessageKind =
+  'message:user'
+  | 'message:separator'
+  | 'message:loading'
+  | 'message:userjoined'
 
 export type UserMessages = {
   kind: 'message:user'
@@ -150,7 +173,18 @@ export type LoadingMessages = {
   direction: 'before' | 'after'
 }
 
-export type ConversationMessage = UserMessages | DateSeparator | LoadingMessages
+export type UserJoined = {
+  kind: 'message:userjoined'
+  id: number
+  date: Date,
+  users: number[]
+}
+
+export type ConversationMessage =
+  UserMessages
+  | DateSeparator
+  | LoadingMessages
+  | UserJoined
 
 export class DelegatedEventTarget implements EventTarget {
   private delegate = document.createDocumentFragment();

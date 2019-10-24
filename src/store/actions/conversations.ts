@@ -5,6 +5,7 @@ import Conversation, {
   ConversationEventData,
   NewMessageEventData,
   ReplaceLoadingMessageData,
+  UserJoinedEventData,
 } from 'src/api/conversation'
 
 import {
@@ -49,7 +50,7 @@ export interface AddMessage {
 }
 
 export type AddMessagesData = {
-  messages: NewMessageEventData[]
+  messages: (NewMessageEventData | UserJoinedEventData)[]
   conversationId: number
   position: 'start' | 'end'
   addLoadingMsgBefore: boolean
@@ -124,9 +125,11 @@ export const fetchConversationsMap = (): FetchConversationsMap => (
 ) => {
   Conversation.all()
     .then(convs => {
-      dispatch(setConversationsMap(new Map(
-        convs.map((conv: ConversationData): [number, ConversationData] => [conv.id, conv])
-      )))
+      if (convs.length) {
+        dispatch(setConversationsMap(new Map(
+          convs.map((conv: ConversationData): [number, ConversationData] => [conv.id, conv])
+        )))
+      }
     })
     .catch(e => {
       console.error('fetchConversationsMap():', e.message)

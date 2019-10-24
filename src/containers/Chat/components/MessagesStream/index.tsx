@@ -3,7 +3,13 @@ import { Localized } from 'fluent-react/compat'
 
 import Conversation, { ConversationData, ConversationMessage } from 'src/api/conversation'
 
-import { DateSeparator, HISTORY_LIMIT, LoadingMessages, UserMessages } from '../Messages'
+import {
+  DateSeparator,
+  HISTORY_LIMIT,
+  LoadingMessages,
+  UserJoined,
+  UserMessages,
+} from '../Messages'
 
 import store from 'src/store'
 import { addMessages, AddMessagesData } from 'src/store/actions/conversations'
@@ -109,6 +115,8 @@ class MessagesStream extends React.Component<MessagesStreamProps> {
             chatContainer={this.chatContainer.current!}
           />
         )
+      } else if (msg.kind === 'message:userjoined') {
+        rendered.push(<UserJoined key={i} data={msg} />)
       }
       i++
     }
@@ -164,13 +172,13 @@ class MessagesStream extends React.Component<MessagesStreamProps> {
       '.chat__msg--loading') as NodeListOf<HTMLDivElement>
     if (loadingMessages.length === 0) return
     const loadingMessagesInView = new Set<string>()
-    loadingMessages.forEach(msg => {
+    // Load messages only from one LoadingMessages at the time.
+    Array.from(loadingMessages).some(msg => {
       if (this.isElemInChatView(msg)) {
-        if (loadingMessagesInView.size === 0) {
-          // Load messages only from one LoadingMessages at the time.
-          loadingMessagesInView.add(msg.dataset.id!)
-        }
+        loadingMessagesInView.add(msg.dataset.id!)
+        return true
       }
+      return false
     })
     this.setState({ loadingMessagesInView })
   }
@@ -181,7 +189,7 @@ class MessagesStream extends React.Component<MessagesStreamProps> {
     const top = elRect.top
     const height = elRect.height
 
-    if (top <= chatRect.bottom) return false
+    if (!(top <= chatRect.bottom)) return false
     // Check if the element is out of view due to a container scrolling
     if ((top + height) <= chatRect.top) return false
     // Check its within the document viewport
