@@ -110,7 +110,7 @@ const Xref = connect(mapStateTopProps)(class Xref extends React.Component<XrefPr
 
       localization = l10n
 
-      const cnts = counters.get(targetKey) || Map()
+      const cnts = counters && counters.get(targetKey) || Map()
       for (const [name, value] of cnts) {
         // Temporary solution until we will support all types of notes
         if (name === 'admonition') {
