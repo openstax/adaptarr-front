@@ -429,6 +429,12 @@ module-create-draft-alert-success = Szkic został utworzony
 
 
 
+## Screens - module labels
+
+module-labels-screen-title = Zarządzaj etykietami
+
+
+
 ## Screens - notification centre
 
 notification-centre-view-title = Powiadomienia
@@ -1682,6 +1688,8 @@ editor-tools-format-button-code = Kod (Ctrl+`)
 
 editor-tools-format-button-term = Termin (Ctrl+K)
 
+editor-tools-format-button-highlight = Zaznaczenie
+
 
 
 ## Editor toolboxes - figures
@@ -1717,6 +1725,8 @@ editor-tools-insert-title = Nagłówek
 editor-tools-insert-quotation = Cytat
 
 editor-tools-insert-link = WWW
+
+editor-tools-insert-preformat = Tekst pre- formatowany
 
 editor-tools-insert-source = Kod źródłowy
 
@@ -1946,6 +1956,23 @@ editor-tools-seealso-remove-term = Usuń termin
 
 
 
+## Editor toolboxes - preformat
+
+editor-tools-preformat-title = Tekst preformatowany
+
+editor-tools-preformat-type-label = Wyświetlaj element jako:
+
+# Entry on the list of possible source types.
+#
+# Variables:
+# - $type (string): source's type. Possible values are 'inline' and 'block'
+editor-tools-source-type = { $type ->
+ *[inline] Linia
+  [block] Blok
+}
+
+
+
 ## Editor toolboxes - source elements
 
 editor-tools-source-title = Kod źródłowy
@@ -2010,6 +2037,20 @@ editor-tools-footnote-hide = Ukryj treść
 
 
 
+## Editor toolboxes - highlight
+
+editor-tools-highlight-title = Zaznaczenie
+
+editor-tools-highlight-remove = Usuń zaznaczenie
+
+
+
+## Highlight component
+
+editor-highlight-message-placeholder = Twoja wiadomość...
+
+
+
 ## Reusable component - confirm dialog
 
 confirm-dialog-button-cancel = Anuluj
@@ -2071,3 +2112,60 @@ tickets-status-open = Otwarte
 tickets-status-closed = Zamknięte
 
 tickets-no-tickets = Nie znaleziono zgłoszeń
+
+
+
+## Resusable component  - modules labels
+
+module-labels-selector-title = Przypisz etykiety do tego modułu
+
+
+
+## Resusable component - module labels list
+
+module-labels-list-filter =
+  .placeholder = Filtruj etykiety
+
+# - $name (string): name for new label
+module-labels-list-create-label = Utwórz nową etykietę: { $name }
+
+module-labels-list-no-labels-found = Nie znaleziono etykiety
+
+module-labels-list-edit-labels = Edytuj etykiety
+
+
+
+## Reusable container - module labels editor
+
+module-labels-editor-search =
+  .placeholder = Szukaj etykiety
+
+module-labels-editor-new-label = Nowa etykieta
+
+module-labels-editor-no-labels = Nie ma żadnej etykiety
+
+module-labels-editor-edit = Edytuj
+
+module-labels-editor-cancel = Anuluj
+
+module-labels-editor-remove = Usuń
+
+# - $label (string): name of label to remove
+module-labels-editor-remove-confirm = Usuń etykietę: { $label }
+
+
+# Container's component - module label manager
+
+module-labels-editor-label-name-placeholder =
+  .placeholder = Nazwa etykiety
+
+module-labels-editor-label-name-taken = Nazwa jest już zajęta
+
+module-labels-editor-update-label = Zapisz zmiany
+
+
+# Container's component - module label creator
+
+module-label-editor-label-name = Nazwa etykiety
+
+module-labels-editor-create-label = Utwórz etykietę

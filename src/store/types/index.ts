@@ -29,15 +29,33 @@ export interface BookPartGroup extends BookPart {
 export type BookParts = (BookPart | BookPartGroup | BookPartModule)[]
 
 
+export type ModuleID = string
+export interface ModuleLabelData {
+  name: string
+  color: string
+}
+export interface ModuleLabelProperites {
+  name?: string
+  color?: string
+}
+export type LabelID = string
+export interface ModuleLabel extends ModuleLabelData {
+  id: LabelID
+}
+// We are using object because we will store those in localStorage until we decide
+// if we want to develop this feature further and transfer it to backend.
+export type Labels = { [key: string /* LabelID */]: ModuleLabel }
+export type ModulesWithLabels = { [key: string /* ModuleID */]: LabelID[] }
+
 export type ModuleStatus = 'ready' | 'translation' | 'review' | 'done'
 export type Module = {
-  id: string
+  id: ModuleID
   title: string
   book: string
   assignee: number | null
   status: ModuleStatus
 }
-export type ModulesMap = Map<string, Module>
+export type ModulesMap = Map<ModuleID, Module>
 
 export type ReferenceTargetType
   = 'commentary'

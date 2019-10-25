@@ -20,20 +20,8 @@
 
 .avatar__image {
   position: relative;
-}
-
-/* .avatar__image:before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  top: calc(var(--border) / -2);
-  left: calc(var(--border) / -2);
   display: block;
-  width: calc(100% + var(--border));
-  height: calc(100% + var(--border));
-  background-image: linear-gradient(var(--main-decoration), var(--secondary-decoration));
-  border-radius: 50%;
-} */
+}
 
 .avatar__image img {
   position: relative;

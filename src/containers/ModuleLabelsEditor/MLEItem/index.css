@@ -1,0 +1,10 @@
+.module-labels-editor__item {
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.module-labels-editor__buttons .button {
+  margin-left: 10px;
+}

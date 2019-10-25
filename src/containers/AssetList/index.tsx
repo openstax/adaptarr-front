@@ -1,9 +1,8 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import Storage, { FileDescription } from 'src/api/storage'
+import { FileDescription, StorageContext } from 'src/api/storage'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'
@@ -29,9 +28,7 @@ const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
 })
 
 class AssetList extends React.Component<AssetListProps> {
-  static contextTypes = {
-    storage: PropTypes.instanceOf(Storage),
-  }
+  static contextType = StorageContext
 
   constructor(a: any, b?: any) {
     super(a, b)
@@ -44,7 +41,7 @@ class AssetList extends React.Component<AssetListProps> {
   fileInput: HTMLInputElement
 
   render() {
-    const { storage } = this.context
+    const storage = this.context
     const pattern = mimeToRegExp(this.props.filter || '*/*')
 
     return (
@@ -79,7 +76,7 @@ class AssetList extends React.Component<AssetListProps> {
   // TODO: there should be some visual interface for previewing selected files
   // before upload, tracking upload progress, etc.
   private onFilesSelected = async () => {
-    const { storage } = this.context
+    const storage = this.context
 
     try {
       await Promise.all(

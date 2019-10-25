@@ -67,6 +67,15 @@ const VALID_PARENTS_TITLE = [
   'admonition',
   'quotation',
 ]
+const VALID_PARENTS_PREFORMAT = [
+  'document',
+  'section',
+  'admonition',
+  'exercise_problem',
+  'exercise_solution',
+  'quotation',
+  'preformat',
+]
 const VALID_PARENTS_SOURCE_ELEMENT = [
   'document',
   'section',
@@ -77,6 +86,7 @@ const VALID_PARENTS_SOURCE_ELEMENT = [
 ]
 const INVALID_PARENTS_FOOTNOTE = [
   'image',
+  'preformat',
   'footnote',
 ]
 
@@ -191,6 +201,16 @@ class InsertTools extends React.Component<InsertToolsProps> {
           <Icon size="small" name="plus" />
           <Localized id="editor-tools-insert-title">
             Title
+          </Localized>
+        </Button>
+        <Button
+          clickHandler={this.insertPreformat}
+          className="toolbox__button--insert"
+          isDisabled={!this.validateParents(VALID_PARENTS_PREFORMAT)}
+        >
+          <Icon size="small" name="preformat" />
+          <Localized id="editor-tools-insert-preformat">
+            Preformatted
           </Localized>
         </Button>
         <Button
@@ -412,6 +432,25 @@ class InsertTools extends React.Component<InsertToolsProps> {
     }))
   }
 
+  private insertPreformat = () => {
+    const { editor, value: { selection, selection: { start }, startBlock } } = this.props
+
+    if (startBlock && startBlock.type === 'preformat') {
+      editor.setNodeByKey(startBlock.key, 'paragraph')
+      return
+    }
+
+    if (selection.isCollapsed) {
+      editor.insertBlock('preformat')
+    } else {
+      editor.moveToEnd()
+        .splitBlock()
+        .moveTo(start.path!, start.offset)
+        .splitBlock()
+        .setNodeByKey(editor.value.startBlock.key, 'preformat')
+    }
+  }
+
   private insertSourceElement = () => {
     this.props.editor.insertInline({ type: 'source_element', nodes: List([Text.create(' ')]) })
     this.props.editor.moveBackward()
@@ -446,7 +485,7 @@ const unwrapChildrenFromNode = (editor: Editor, node: Node) => {
     return
   }
   if (node.object === 'text') return
-  node.nodes.forEach(n => {
+  node.nodes.forEach((n: Block | Inline) => {
     if (n && n.object === 'block' && n.type === 'title') {
       editor.setNodeByKey(n.key, { type: 'paragraph' })
     }

@@ -1,0 +1,59 @@
+.highlight {
+  position: relative;
+  padding: 0 2px;
+}
+
+.highlight--lightblue {
+  background-color: #37abc8;
+}
+
+.highlight--green {
+  background-color: #37c8ab;
+}
+
+.highlight--red {
+  background-color: #ff5555;
+}
+
+.highlight--yellow {
+  background-color: #ffeb55;
+}
+
+.highlight__content {
+  position: absolute;
+  top: -60px;
+  left: 0;
+  z-index: 1;
+  width: 300px;
+}
+
+.highlight__content textarea {
+  min-height: auto;
+  padding: 5px;
+  height: 60px;
+}
+
+.highlight__message {
+  display: block;
+  background-color: #fff;
+  border: 1px solid var(--dark-bg);
+  border-radius: 5px;
+  overflow: auto;
+  height: 50px;
+  padding: 5px;
+}
+
+.highlight__author {
+  position: absolute;
+  right: 0;
+  bottom: -30px;
+  background-color: #fff;
+  border: 1px solid var(--dark-bg);
+  border-top: none;
+  padding: 5px;
+}
+
+.highlight__author .avatar__image {
+  width: 20px;
+  height: 20px;
+}

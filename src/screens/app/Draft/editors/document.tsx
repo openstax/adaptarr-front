@@ -6,7 +6,7 @@ import { Editor as Editor_, Value } from 'slate'
 import { Editor } from 'slate-react'
 import { ReactLocalization } from 'fluent-react/compat'
 
-import { Storage } from 'src/api'
+import Storage, { StorageContext } from 'src/api/storage'
 import { SlotPermission } from 'src/api/process'
 
 import LocalizationLoader from '../components/LocalizationLoader'
@@ -14,7 +14,7 @@ import ToolboxDocument from '../components/ToolboxDocument'
 
 import Docref from '../plugins/Docref'
 import Footnotes from '../plugins/Footnotes'
-import StorageContext from '../plugins/Storage'
+import Highlights from '../plugins/Highlights'
 import I10nPlugin from '../plugins/I10n'
 import XrefPlugin from '../plugins/Xref'
 import TablesPlugin from '../plugins/Tables'
@@ -50,16 +50,21 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
       : {},
     Footnotes(),
+    Highlights(),
     Counters(),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
       media: {
-        inlines: SUGGESTION_TYPES,
+        inlines: SUGGESTION_TYPES.concat('highlight'),
+        mediaUrl: (name: string) => `/api/v1/drafts/${this.props.storage.id}/files/${name}`,
       },
       text: {
         code: {
           inlines: SUGGESTION_TYPES,
+        },
+        preformat: {
+          inlines: SUGGESTION_TYPES.concat(['code', 'docref', 'highlight', 'link', 'term', 'xref']),
         },
         term: {
           inlines: SUGGESTION_TYPES,
@@ -82,27 +87,25 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
         <LocalizationLoader
           locale={this.props.language}
         >
-          <StorageContext storage={this.props.storage}>
-            <Editor
-              ref={this.editor}
-              className="editor editor--document"
-              value={this.props.value}
-              plugins={this.plugins}
-              onChange={this.onChange}
-              readOnly={this.props.readOnly}
-            />
-          </StorageContext>
+          <Editor
+            ref={this.editor}
+            className="editor editor--document"
+            value={this.props.value}
+            plugins={this.plugins}
+            onChange={this.onChange}
+            readOnly={this.props.readOnly}
+          />
         </LocalizationLoader>
         {
-          this.props.readOnly ?
-            null
+          this.props.readOnly
+            ? null
             :
-            <StorageContext storage={this.props.storage}>
+            <StorageContext.Provider value={this.props.storage}>
               <ToolboxDocument
                 editor={this.editor.current as unknown as Editor_}
                 value={this.props.value}
               />
-            </StorageContext>
+            </StorageContext.Provider>
         }
       </div>
     )

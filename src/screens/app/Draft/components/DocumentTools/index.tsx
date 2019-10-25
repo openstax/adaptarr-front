@@ -1,14 +1,14 @@
 import * as React from 'react'
-import * as PropTypes from 'prop-types'
 import Select from 'react-select'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
+
+import { StorageContext } from 'src/api/storage'
 
 import { languages as LANGUAGES } from 'src/locale/data.json'
 
 import store from 'src/store'
 import { setCurrentDraftLang } from 'src/store/actions/drafts'
-import Storage from 'src/api/storage'
 
 import ToolGroup from '../ToolGroup'
 import CharactersCounter from '../CharactersCounter'
@@ -23,9 +23,7 @@ interface DocumentToolsProps {
 }
 
 export default class DocumentTools extends React.Component<DocumentToolsProps> {
-  static contextTypes = {
-    storage: PropTypes.instanceOf(Storage),
-  }
+  static contextType = StorageContext
 
   private onClickToggle = () => {
     this.props.onToggle('documentTools')
@@ -34,7 +32,7 @@ export default class DocumentTools extends React.Component<DocumentToolsProps> {
   render() {
     const { value } = this.props
 
-    const code = this.context.storage.language
+    const code = this.context.language
     const language = LANGUAGES.find(lang => lang.code === code)
 
     return (
@@ -63,7 +61,7 @@ export default class DocumentTools extends React.Component<DocumentToolsProps> {
   }
 
   setLanguage = ({ value: code }: {value: string, label: string}) => {
-    this.context.storage.setLanguage(code)
+    this.context.setLanguage(code)
 
     store.dispatch(setCurrentDraftLang(code))
   }

@@ -16,7 +16,7 @@ import Button from 'src/components/ui/Button'
 import LocalizationLoader from '../components/LocalizationLoader'
 import ToolboxGlossary from '../components/ToolboxGlossary'
 
-import StorageContext from '../plugins/Storage'
+import Highlights from '../plugins/Highlights'
 import I10nPlugin from '../plugins/I10n'
 import Shortcuts from '../plugins/Shortcuts'
 import Suggestions from '../plugins/Suggestions'
@@ -41,6 +41,7 @@ class EditorGlossary extends React.Component<EditorGlossaryProps> {
 
   plugins = [
     I10nPlugin,
+    Highlights(),
     this.props.stepPermissions.has('propose-changes')
     || this.props.stepPermissions.has('accept-changes') ?
       Suggestions({ isActive: this.props.draftPermissions.has('propose-changes') })
@@ -141,27 +142,23 @@ class EditorGlossary extends React.Component<EditorGlossaryProps> {
           <LocalizationLoader
             locale={this.props.language}
           >
-            <StorageContext storage={this.props.storage}>
-              <Editor
-                ref={this.editor}
-                className="editor editor--glossary"
-                value={this.props.value}
-                plugins={this.plugins}
-                onChange={this.onChange}
-                readOnly={this.props.readOnly}
-              />
-            </StorageContext>
+            <Editor
+              ref={this.editor}
+              className="editor editor--glossary"
+              value={this.props.value}
+              plugins={this.plugins}
+              onChange={this.onChange}
+              readOnly={this.props.readOnly}
+            />
           </LocalizationLoader>
           {
             this.props.readOnly ?
               null
               :
-              <StorageContext storage={this.props.storage}>
-                <ToolboxGlossary
-                  editor={this.editor.current as unknown as Editor_}
-                  value={this.props.value}
-                />
-              </StorageContext>
+              <ToolboxGlossary
+                editor={this.editor.current as unknown as Editor_}
+                value={this.props.value}
+              />
           }
         </div>
       </>

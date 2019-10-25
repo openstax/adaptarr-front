@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { Block, Document, Editor, Inline, Text, Value } from 'slate'
 import { List } from 'immutable'
+import { connect } from 'react-redux'
+
+import { User } from 'src/api'
+
+import { State } from 'src/store/reducers'
 
 import SwitchableTypes from '../SwitchableTypes'
 import Button from 'src/components/ui/Button'
@@ -14,7 +19,12 @@ interface FormatToolsProps {
   value: Value,
   selectionParent: Document | Block | Inline | null,
   showSwitchableTypes?: boolean,
+  user: User
 }
+
+const mapStateToProps = ({ user: { user } }: State) => ({
+  user,
+})
 
 const INVALID_FORMAT_TOOLS_PARENTS = [
   'code',
@@ -45,7 +55,14 @@ const VALID_LIST_PARENTS = [
   'list_item',
 ]
 
-export default class FormatTools extends React.Component<FormatToolsProps> {
+const INVALID_HIGHLIGHT_PARENTS = [
+  'image',
+  'term',
+  'link',
+  'xref',
+]
+
+class FormatTools extends React.Component<FormatToolsProps> {
   render() {
     const { editor, value, showSwitchableTypes = true } = this.props
     const { startBlock, startInline } = value
@@ -123,6 +140,19 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
             clickHandler={this.formatList}
           >
             <Icon size="small" name="list-ul" />
+          </Button>
+        </Tooltip>
+        <Tooltip
+          l10nId="editor-tools-format-button-highlight"
+          direction="up"
+          className="toolbox__button--with-tooltip"
+        >
+          <Button
+            className="toolbox__button--only-icon"
+            isDisabled={this.validateParents(INVALID_HIGHLIGHT_PARENTS)}
+            clickHandler={this.toggleHighlight}
+          >
+            <Icon size="small" name="highlight" />
           </Button>
         </Tooltip>
         <Tooltip
@@ -205,6 +235,17 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
     }
   }
 
+  private toggleHighlight = () => {
+    const { editor, value, value: { selection }, user } = this.props
+    const highlight = editor.getActiveHighlight(value)
+    if (highlight) {
+      editor.unwrapInlineByKey(highlight.key, { type: 'highlight' })
+      return
+    }
+    if (selection.isCollapsed) return
+    editor.wrapInline({ type: 'highlight', data: { color: 'red', text: '', user: user.id } })
+  }
+
   private validateParents = (validParents: string[]): boolean => {
     const sp = this.props.selectionParent
     if (!sp) return false
@@ -212,3 +253,5 @@ export default class FormatTools extends React.Component<FormatToolsProps> {
     return false
   }
 }
+
+export default connect(mapStateToProps)(FormatTools)

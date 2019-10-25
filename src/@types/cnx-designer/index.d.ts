@@ -1,4 +1,5 @@
 declare module 'cnx-designer' {
+  import * as React from 'react'
   import {
     Block,
     Data,
@@ -26,10 +27,6 @@ declare module 'cnx-designer' {
   export class APIError extends Error {
     status: number
     statusText: string
-  }
-
-  export class Storage {
-    mediaUrl(name: string): string
   }
 
   export type PersistDBData = {
@@ -146,13 +143,17 @@ declare module 'cnx-designer' {
     code?: {
       inlines: string[],
     },
+    preformat?: {
+      inlines: string[],
+    },
     term?: {
       inlines: string[],
     },
   }
 
   export type MediaOptions = {
-    inlines: string[]
+    inlines?: string[]
+    mediaUrl?: (name: string) => string
   }
 
   export function Document(options?: {

@@ -2108,10 +2108,11 @@ clone@^1.0.2:
 
 "cnx-designer@https://github.com/katalysteducation/cnx-designer":
   version "0.1.0"
-  resolved "https://github.com/katalysteducation/cnx-designer#0977a56639e0058598a84aa49c3b90eacf6e5945"
+  resolved "https://github.com/katalysteducation/cnx-designer#16327de6a3840e14fbe1fa3c6bced0b13a7f9c47"
   dependencies:
     "@babel/runtime" "^7.1.5"
     immutable "^3.8.2"
+    prop-types "^15.7.2"
     react "^16.4.1"
     slate "^0.47.0"
     slate-counters "https://github.com/katalysteducation/slate-counters.git"
@@ -7693,7 +7694,7 @@ react-input-trigger@^1.1.2:
   dependencies:
     textarea-caret "^3.1.0"
 
-react-is@^16.6.0:
+react-is@^16.6.0, react-is@^16.9.0:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.10.2.tgz#984120fd4d16800e9a738208ab1fba422d23b5ab"
   integrity sha512-INBT1QEgtcCCgvccr5/86CfD71fw9EPmDxgiJX4I2Ddr6ZsV6iFXsuby+qWJPtmNuMY0zByTsG4468P7nHuNWA==
@@ -7745,7 +7746,7 @@ react-redux@^7.1.1:
 
 react-route-guard@^1.0.7:
   version "1.0.7"
-  resolved "https://npm.pkg.naukosfera.com:443/react-route-guard/-/react-route-guard-1.0.7.tgz#2a2c5a31974cf9d52ba0655ec8cc79b2960df344"
+  resolved "https://registry.yarnpkg.com/react-route-guard/-/react-route-guard-1.0.7.tgz#2a2c5a31974cf9d52ba0655ec8cc79b2960df344"
   integrity sha1-KixaMZdM+dUroGVeyMx5spYN80Q=
   dependencies:
     react "^15.6.1"
@@ -8547,7 +8548,7 @@ slate-base64-serializer@^0.2.107:
 
 "slate-counters@https://github.com/katalysteducation/slate-counters.git", "slate-counters@https://github.com/katalysteducation/slate-counters.git#use-onsetvalue":
   version "0.6.0"
-  resolved "https://github.com/katalysteducation/slate-counters.git#47abee33d6303cea4161f2395b79ba6c34ea4707"
+  resolved "https://github.com/katalysteducation/slate-counters.git#e08129ea2745cd7f87558d9b3076b5466b74b9ee"
   dependencies:
     "@babel/runtime" "^7.0.0"
 

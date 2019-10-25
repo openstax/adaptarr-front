@@ -9,6 +9,7 @@ import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import FootnoteTools from '../FootnoteTools'
+import HighlightTools from '../HighlightTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
 import SectionTools from '../SectionTools'
@@ -40,6 +41,7 @@ type ToolName =
   'exerciseTools' |
   'figureTools' |
   'footnoteTools' |
+  'highlightTools' |
   'sectionTools' |
   'documentTools' |
   'quotationTools'
@@ -57,6 +59,7 @@ interface ToolboxState {
   xrefTools: boolean
   docrefTools: boolean
   footnoteTools: boolean
+  highlightTools: boolean
   sourceTools: boolean
   listTools: boolean
   quotationTools: boolean
@@ -79,6 +82,7 @@ const DEFAULT_TOGGLERS = {
   xrefTools: true,
   docrefTools: true,
   footnoteTools: true,
+  highlightTools: true,
   sourceTools: true,
   listTools: false,
   quotationTools: false,
@@ -189,6 +193,12 @@ class Toolbox extends React.Component<ToolboxProps> {
           editor={editor}
           value={value}
           toggleState={this.state.footnoteTools}
+          onToggle={this.toggleTool}
+        />
+        <HighlightTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.highlightTools}
           onToggle={this.toggleTool}
         />
         <SourceTools
@@ -305,6 +315,9 @@ class Toolbox extends React.Component<ToolboxProps> {
       break
     case 'footnote':
       newState.footnoteTools = true
+      break
+    case 'highlight':
+      newState.highlightTools = true
       break
     case 'source_element':
       newState.sourceTools = true

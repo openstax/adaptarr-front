@@ -429,6 +429,12 @@ module-create-draft-alert-success = Draft has been created
 
 
 
+## Screens - module labels
+
+module-labels-screen-title = Manage labels
+
+
+
 ## Screens - notification centre
 
 notification-centre-view-title = Notifications
@@ -1699,6 +1705,8 @@ editor-tools-format-button-code = Code (Ctrl+`)
 
 editor-tools-format-button-term = Term (Ctrl+K)
 
+editor-tools-format-button-highlight = Highlight
+
 
 
 ## Editor toolboxes - figures
@@ -1734,6 +1742,8 @@ editor-tools-insert-title = Title
 editor-tools-insert-quotation = Quotation
 
 editor-tools-insert-link = Link
+
+editor-tools-insert-preformat = Prefromatted
 
 editor-tools-insert-source = Source element
 
@@ -1939,6 +1949,23 @@ editor-tools-seealso-remove-term = Remove term
 
 
 
+## Editor toolboxes - preformat
+
+editor-tools-preformat-title = Prefromatted
+
+editor-tools-preformat-type-label = Show element as:
+
+# Entry on the list of possible source types.
+#
+# Variables:
+# - $type (string): source's type. Possible values are 'inline' and 'block'
+editor-tools-source-type = { $type ->
+ *[inline] Inline
+  [block] Block
+}
+
+
+
 ## Editor toolboxes - source elements
 
 editor-tools-source-title = Source element
@@ -2003,6 +2030,20 @@ editor-tools-footnote-hide = Hide content
 
 
 
+## Editor toolboxes - highlight
+
+editor-tools-highlight-title = Highlight
+
+editor-tools-highlight-remove = Remove highlight
+
+
+
+## Highlight component
+
+editor-highlight-message-placeholder = Write your message...
+
+
+
 ## Reusable component - confirm dialog
 
 confirm-dialog-button-cancel = Cancel
@@ -2064,3 +2105,60 @@ tickets-status-open = Open
 tickets-status-closed = Closed
 
 tickets-no-tickets = No tickets were found
+
+
+
+## Resusable component  - modules labels
+
+module-labels-selector-title = Assign labels to this module
+
+
+
+## Resusable component - module labels list
+
+module-labels-list-filter =
+  .placeholder = Filter labels
+
+# - $name (string): name for new label
+module-labels-list-create-label = Create new label: { $name }
+
+module-labels-list-no-labels-found = No labels found
+
+module-labels-list-edit-labels = Edit labels
+
+
+
+## Reusable container - module labels editor
+
+module-labels-editor-search =
+  .placeholder = Search label
+
+module-labels-editor-new-label = New label
+
+module-labels-editor-no-labels = No labels found
+
+module-labels-editor-edit = Edit
+
+module-labels-editor-cancel = Cancel
+
+module-labels-editor-remove = Remove
+
+# - $label (string): name of label to remove
+module-labels-editor-remove-confirm = Remove label: { $label }
+
+
+# Container's component - module label manager
+
+module-labels-editor-label-name-placeholder =
+  .placeholder = Label name
+
+module-labels-editor-label-name-taken = Name has already been taken
+
+module-labels-editor-update-label = Update label
+
+
+# Container's component - module label creator
+
+module-label-editor-label-name = Label name
+
+module-labels-editor-create-label = Create label

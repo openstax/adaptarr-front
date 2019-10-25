@@ -1,11 +1,14 @@
+import * as React from 'react'
+import { APIError as BaseError, CNXML } from 'cnx-designer'
+import { Value } from 'slate'
+import { AxiosResponse } from 'axios'
+
 import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
 import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
 import sourceElementsSerialize from 'src/screens/app/Draft/plugins/SourceElements/serialize'
 import suggestionRules from 'src/screens/app/Draft/plugins/Suggestions/deSerializationRules'
-import { APIError as BaseError, CNXML, Storage as StorageBase } from 'cnx-designer'
-import { Value } from 'slate'
-import { AxiosResponse } from 'axios'
+import highlightsRules from 'src/screens/app/Draft/plugins/Highlights/deSerializationRules'
 
 import axios from 'src/config/axios'
 import { DraftData } from './draft'
@@ -51,7 +54,7 @@ export type FileDescription = {
   mime: string,
 }
 
-export default class Storage extends StorageBase {
+export default class Storage {
   id: string
 
   url: string
@@ -185,13 +188,17 @@ export default class Storage extends StorageBase {
 
   static serializer = new CNXML({
     documentRules: [
+      highlightsRules,
       tablesDeserialize,
       tablesSerialize,
       sourceElementsDeserialize,
       sourceElementsSerialize,
       suggestionRules,
     ],
-    glossaryRules: [suggestionRules],
+    glossaryRules: [
+      highlightsRules,
+      suggestionRules,
+    ],
   })
 }
 
@@ -209,3 +216,5 @@ export class Index {
     return Storage.serializer.deserialize(this.content)
   }
 }
+
+export const StorageContext = React.createContext(new Storage())
