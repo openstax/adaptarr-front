@@ -47,6 +47,7 @@ class NotificationComp extends React.Component<NotificationCompProps> {
     const { users, modules } = this.props
     const noti = this.props.notification
     const who: User | undefined = users.get(noti.who!)
+    const author: string | undefined = noti.author ? users.get(noti.author!)!.name : undefined
     const mod = noti.module ? modules.get(noti.module) : undefined
     const linkToNotification = '/modules/' + noti.module
     const avatarSize = this.props.avatarSize ? this.props.avatarSize : 'small'
@@ -64,6 +65,7 @@ class NotificationComp extends React.Component<NotificationCompProps> {
               actor={<strong/>}
               $actor={who ? decodeHtmlEntity(who.name) : null}
               $module={mod && mod.title}
+              $author={author}
             >
               <div className="notification__action" />
             </Localized>

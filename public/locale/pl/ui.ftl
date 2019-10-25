@@ -1319,6 +1319,7 @@ asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
 #   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
+# - $author (string): only for kind === new_message - name of message author.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -1334,6 +1335,7 @@ notification = { $kind ->
   [slot_filled] Zostałeś/aś przypisany/a do funkcji w <module>{ $module }</module>.
   [slot_vacated] Zostałeś/aś usunięty/a z funkcji w <module>{ $module }</module>.
   [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
+  [new_message] Masz nową wiadomość od { $author }.
  *[notavalidkind] Nieznana akcja
 }
 

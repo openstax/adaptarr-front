@@ -2,16 +2,22 @@ import axios from 'src/config/axios'
 
 import Base from './base'
 
-export type NotificationData = AssignedData
+export type Kind =
+  'assigned'
+  | 'process-ended'
+  | 'process-cancelled'
+  | 'slot-filled'
+  | 'slot-vacated'
+  | 'draft-advanced'
+  | 'new-message'
 
-export type Kind = 'assigned'
-
-export type AssignedData = {
-  kind: 'assigned',
-  id: number,
-  timestamp: string,
-  module?: string,
-  who?: number,
+export type NotificationData = {
+  kind: Kind
+  id: number
+  timestamp: string
+  module?: string
+  who?: number
+  author?: number
 }
 
 export default class Notification extends Base<NotificationData> {
@@ -51,6 +57,13 @@ export default class Notification extends Base<NotificationData> {
    * This field is present if {@link #kind} is {@code 'assigned'}.
    */
   who?: number
+
+  /**
+   * User which is the subject of this notification.
+   *
+   * This field is present if {@link #kind} is {@code 'new-message'}.
+   */
+  author?: number
 
   /**
    * Mark this notification as read.

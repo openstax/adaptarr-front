@@ -1333,6 +1333,7 @@ asset-list-add-error = Couldn't add media. Details: { $details }
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
 #   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
+# - $author (string): only for kind === new_message - name of message author.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -1348,6 +1349,7 @@ notification = { $kind ->
   [slot_filled] You were assigned to slot in <module>{ $module }</module>.
   [slot_vacated] You were removed from slot in <module>{ $module }</module>.
   [draft_advanced] Step in <module>{ $module }</module> has changed.
+  [new_message] You have new message from { $author }.
  *[notavalidkind] Unknown action
 }
 
