@@ -1,6 +1,5 @@
 import * as React from 'react'
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom'
-import { SecureRoute } from 'react-route-guard'
+import { Redirect, Route, RouteProps, BrowserRouter as Router, Switch } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import * as api from 'src/api'
@@ -85,28 +84,22 @@ export const ROUTE_TEAMS_PERMISSIONS: TeamPermission[] = [
 ]
 
 class App extends React.Component<AppProps> {
-  private InvitationsGuard = {
-    shouldRoute: async () => {
-      const user = this.props.user.user
-      const isSuper = await user.isInSuperMode()
-      return isSuper || user.allPermissions.has('member:add')
-    },
+  private InvitationsGuard = async () => {
+    const user = this.props.user.user
+    const isSuper = await user.isInSuperMode()
+    return isSuper || user.allPermissions.has('member:add')
   }
 
-  private TeamsGuard = {
-    shouldRoute: async () => {
-      const user = this.props.user.user
-      const isSuper = await user.isInSuperMode()
-      return isSuper || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
-    },
+  private TeamsGuard = async () => {
+    const user = this.props.user.user
+    const isSuper = await user.isInSuperMode()
+    return isSuper || ROUTE_TEAMS_PERMISSIONS.some(p => user.allPermissions.has(p))
   }
 
-  private ProcessesGuard = {
-    shouldRoute: async () => {
-      const user = this.props.user.user
-      const isSuper = await user.isInSuperMode()
-      return isSuper || user.allPermissions.has('editing-process:edit')
-    },
+  private ProcessesGuard = async () => {
+    const user = this.props.user.user
+    const isSuper = await user.isInSuperMode()
+    return isSuper || user.allPermissions.has('editing-process:edit')
   }
 
   componentDidMount() {
@@ -177,3 +170,29 @@ class App extends React.Component<AppProps> {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
+
+interface SecureRouteProps extends RouteProps {
+  redirectToPathWhenFail: string
+  routeGuard: () => Promise<boolean>
+}
+
+const SecureRoute = ({ routeGuard, redirectToPathWhenFail, ...routeProps }: SecureRouteProps) => {
+  const [loading, setLoading] = React.useState(true)
+  const [passedGuard, setPassedGuard] = React.useState(false)
+
+  const checkRouteGuard = async () => {
+    const temp = await routeGuard()
+    setPassedGuard(temp)
+    setLoading(false)
+  }
+
+  React.useEffect(() => {
+    checkRouteGuard()
+  })
+
+  if (loading) return null
+
+  if (passedGuard) return <Route {...routeProps} />
+
+  return <Redirect to={redirectToPathWhenFail} />
+}
