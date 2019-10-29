@@ -83,6 +83,10 @@ const setReferenceTargets = (moduleId: string, targets: ReferenceTarget[]): SetR
 })
 
 export const fetchReferenceTargets = (forModule: Module) => async (dispatch: any) => {
+  if (!forModule) {
+    console.error('ForModule was not provided... could be that the CNXML refers to a module that is not in the book')
+    return
+  }
   const rsp = await forModule.referenceTargets()
   const targets = new Map<string, ReferenceTarget>()
 
