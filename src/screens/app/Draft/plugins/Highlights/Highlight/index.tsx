@@ -25,7 +25,7 @@ const Highlight = ({ node, children, attributes, slateEditor, editor }: Highligh
       return
     }
     setIsSelected(false)
-  }, [editor.value.selection.start.key])
+  }, [editor.value.selection.start.key, editor.value.selection.start.offset])
 
   return (
     <span className={`highlight highlight--${node.data.get('color')}`} {...attributes}>
