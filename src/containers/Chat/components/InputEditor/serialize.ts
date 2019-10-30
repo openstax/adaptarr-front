@@ -121,7 +121,7 @@ function inline(bytes: number[], node: Inline) {
 /**
  * Encode a text block as a series of line frames
  */
-function textBlock(block: Block) {
+function textBlock(block: Block | Inline) {
   const bytes: number[] = []
   let format = 0
 
@@ -146,10 +146,14 @@ function textBlock(block: Block) {
 export default function serialize(value: Value) {
   const bytes: number[] = []
 
-  for (const block of value.document.nodes.toArray() as Block[]) {
+  for (const block of value.document.nodes.toArray() as Block[] | Inline[]) {
     switch (block.type) {
     case 'paragraph':
       frame(bytes, FRAME_PARA, textBlock(block))
+      break
+
+    case 'hyperlink':
+      frame(bytes, FRAME_HYPERLINK, textBlock(block))
       break
 
     default:

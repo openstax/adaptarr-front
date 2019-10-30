@@ -44,10 +44,10 @@ export function renderInline(props: RenderInlineProps, editor: CoreEditor, next:
   switch (node.type) {
   case 'hyperlink': {
     const url = node.data.get('url')
-    if (url.text.length === 0) {
-      return <a href={url} {...attributes}>{url}</a>
+    if (url.length > 0) {
+      return <a href={url} {...attributes} target="_blank" rel="noopener noreferrer">{url}</a>
     }
-    return <a href={url} {...attributes}>{children}</a>
+    return <a href="#" {...attributes} target="_blank" rel="noopener noreferrer">{children}</a>
   }
 
   case 'mention':

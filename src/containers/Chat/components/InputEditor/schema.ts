@@ -1,5 +1,7 @@
 import { Block, Editor, SlateError } from 'slate'
 
+import { VALID_URL_PATTERN } from 'src/helpers/isValidUrl'
+
 import { CONTEXT_ANNOTATION_TYPE } from '../InputEditor'
 
 function normalizeDocument(editor: Editor, error: SlateError) {
@@ -14,6 +16,10 @@ function normalizeDocument(editor: Editor, error: SlateError) {
   }
 }
 
+function normalizeHyperLink(editor: Editor, error: SlateError) {
+  console.warn('Unhandled hyperlink error', error.code)
+}
+
 export default {
   document: {
     nodes: [
@@ -25,7 +31,11 @@ export default {
     normalize: normalizeDocument,
   },
   inlines: {
-    link: {
+    hyperlink: {
+      data: {
+        url: (u: any) => VALID_URL_PATTERN.test(u),
+      },
+      normalize: normalizeHyperLink,
     },
     mention: {
       isVoid: true,

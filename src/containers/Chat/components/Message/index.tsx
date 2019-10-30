@@ -150,11 +150,23 @@ function Line({ data }: { data: Data }): JSX.Element[] {
       break
 
     case FRAME_HYPERLINK: {
-      const [len, inx] = leb128(data, 0)
-      const label = decode_utf8(data.subarray(inx, inx + len))
-      const url = String.fromCodePoint.apply(null, data.subarray(inx + len))
+      const [len, inx] = leb128(body, 0)
+      const label = decode_utf8(body.subarray(inx, inx + len))
+      let url = String.fromCodePoint.apply(null, body.subarray(inx + len))
+      if (!url.match(/https?:\/\//)) {
+        url = 'http://' + url
+      }
 
-      ctx.addInline(<a href={url}>{label}</a>)
+      ctx.addInline(
+        <a
+          key={ctx.key++}
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {label}
+        </a>
+      )
       break
     }
 
@@ -173,7 +185,7 @@ function Line({ data }: { data: Data }): JSX.Element[] {
 
 function Paragraph({ data }: { data: Data }) {
   const elements = Line({ data })
-  return <p>{elements.map(el => el)}</p>
+  return <p>{elements}</p>
 }
 
 function decode_utf8(data: Data) {

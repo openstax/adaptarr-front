@@ -13,6 +13,8 @@ import { Localized } from 'fluent-react/compat'
 
 import { Conversation, User } from 'src/api'
 
+import { VALID_URL_PATTERN } from 'src/helpers/isValidUrl'
+
 import SCHEMA from './schema'
 import serialize from './serialize'
 import { renderAnnotation, renderBlock, renderInline, renderMark } from './render'
@@ -64,8 +66,40 @@ class InputEditor extends React.Component<Props> {
     this.editor.current!.focus()
   }
 
-  sendMessage() {
-    this.props.socket.sendMessage(serialize(this.state.value))
+  async sendMessage() {
+    const editor = this.editor.current!
+
+    const textsToConvert: Function[] = []
+
+    // Convert urls in texts to hyperlink inlines
+    for (const [text, path] of editor.value.document.texts({ includeInlines: false })) {
+      if (text.text.length === 0) continue
+      const splitted = text.text.split(' ')
+
+      let offset = 0
+
+      for (const str of splitted) {
+        if (VALID_URL_PATTERN.test(str)) {
+          const startOffset = offset
+
+          // Unshift because we want to convert texts from end to start since
+          // wrapping with inline would affect offset for next strings.
+          textsToConvert.unshift(() => {
+            editor
+              .moveAnchorTo(path, startOffset)
+              .moveFocusTo(path, startOffset + str.length)
+              .wrapInline({ type: 'hyperlink', data: { url: str } })
+          })
+        }
+
+        // +1 is for removed space
+        offset += str.length + 1
+      }
+    }
+
+    await Promise.all(textsToConvert.map(u => u()))
+
+    this.props.socket.sendMessage(serialize(editor.value))
     this.setState({ value: INITIAL })
   }
 
