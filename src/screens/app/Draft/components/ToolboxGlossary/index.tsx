@@ -90,16 +90,6 @@ class Toolbox extends React.Component<ToolboxProps> {
       )
     }
 
-    if (selection.start.key !== selection.end.key) {
-      return (
-        <div className="toolbox">
-          <Localized id="editor-toolbox-mulit-selection">
-            Selection across elements is not yet supported.
-          </Localized>
-        </div>
-      )
-    }
-
     return (
       <div className="toolbox" onMouseDown={onMouseDown}>
         <FormatTools
