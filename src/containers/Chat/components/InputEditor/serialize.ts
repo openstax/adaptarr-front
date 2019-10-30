@@ -20,13 +20,9 @@ const FRAME_MENTION = 6
  * Write a LEB128 encoded number to a buffer.
  */
 function leb128(buf: number[], v: number) {
-  let s = 0
-  // eslint-disable-next-line no-empty
-  for (; (v >> s) > 0 ; s += 7) {}
-  s -= 7
-
-  for (; s > 0 ; s -= 7) {
-    buf.push(((v >> s) & 0x7f) | 0x80)
+  while (v >= 0x80) {
+    buf.push((v & 0x7f) | 0x80)
+    v >>= 7
   }
 
   buf.push(v & 0x7f)
@@ -87,10 +83,10 @@ function text(bytes: number[], node: Text, lastFormat: number) {
   // NOTE: Push and pop formatting are fixed-length frames, so we can
   // hard-code then and skip allocation for frame().
   if (pop !== 0) {
-    bytes.push(...bytes, FRAME_POP_FORMAT, 0x02, pop & 0xff, pop >> 8)
+    bytes.push(FRAME_POP_FORMAT, 0x02, pop & 0xff, pop >> 8)
   }
   if (push !== 0) {
-    bytes.push(...bytes, FRAME_PUSH_FORMAT, 0x02, push & 0xff, push >> 8)
+    bytes.push(FRAME_PUSH_FORMAT, 0x02, push & 0xff, push >> 8)
   }
 
   const text = encodeUtf8(node.text)

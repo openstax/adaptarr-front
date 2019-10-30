@@ -321,8 +321,9 @@ export default class Conversation extends DelegatedEventTarget {
    *
    * @param {number[]|ArrayBuffer|Uint8Array} message - serialized message.
    */
-  sendMessage(message: MessageBody) {
-    return this.send(SEND_MESSAGE, MUST_PROCESS | RESPONSE_REQUIRED, message)
+  sendMessage(message: MessageBody): Promise<MessageReceivedEventData> {
+    // eslint-disable-next-line max-len
+    return this.send(SEND_MESSAGE, MUST_PROCESS | RESPONSE_REQUIRED, message) as Promise<MessageReceivedEventData>
   }
 
   /**
@@ -361,7 +362,7 @@ export default class Conversation extends DelegatedEventTarget {
       throw ev
     }
 
-    const prefix = process.env.PRODUCTION ? 'wss' : 'ws'
+    const prefix = window.location.protocol === 'https:' ? 'wss' : 'ws'
     const uri = `${prefix}://${window.location.host}/api/v1/conversations/${this.id}/socket`
     this._ws = new WebSocket(uri)
     this._ws.binaryType = 'arraybuffer'
@@ -432,8 +433,6 @@ export default class Conversation extends DelegatedEventTarget {
         this._ws!.close(ERR_UNKNOWN_EVENT)
       } else {
         this.respond(UNKNOWN_EVENT, [])
-        // this.respond(cookie, [])
-        // this.respond(cookie, UNKNOWN_EVENT, [])
       }
       return
     }

@@ -1,5 +1,3 @@
-import axios from 'src/config/axios'
-
 import Conversation, {
   ConversationData,
   ConversationEventData,
@@ -27,10 +25,6 @@ export interface FetchConversation {
 export interface SetConversationsMap {
   type: SET_CONVERSATIONS_MAP
   data: Map<number, ConversationData>
-}
-
-export interface CreateConversation {
-  (dispatch: React.Dispatch<OpenConversation>): void
 }
 
 export interface OpenConversation {
@@ -74,15 +68,6 @@ export type ConversationsAction =
   | AddMessages
   | SetConversationsMap
   | ReplaceLoadingMessage
-
-// TODO: This should handle other cases, like conversation with helpdesk
-export function createConversation(members: number[]): CreateConversation {
-  return async (dispatch: React.Dispatch<OpenConversation>) => {
-    const data = (await axios.post('conversations', { members })).data
-
-    dispatch(openConversation(data.id, data))
-  }
-}
 
 export const openConversation = (
   id: number,

@@ -146,8 +146,6 @@ class DraftsList extends React.Component<DraftsListProps> {
     this.fetchBooks()
   }
 
-  nestable = React.createRef<Nestable>()
-
   public render() {
     const { isLoading, books } = this.state
     const { selectedTeams, booksMap: { booksMap } } = this.props
