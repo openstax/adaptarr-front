@@ -67,20 +67,26 @@ export const DateSeparator = ({ data: { date } }: { data: DateSeparatorType }) =
             <Localized id="chat-today">Today</Localized>
             : isYesterday ?
               <Localized id="chat-yesterday">Yesterday</Localized>
-              : new Intl.DateTimeFormat(
-                'default', { weekday: 'long', month: 'short', day: 'numeric' }).format(date)
+              :
+              <Localized
+                id="date-weekday-monthday-month"
+                $weekday={date.getDay()}
+                $monthday={date.getDate()}
+                $month={date.getMonth()}
+              >
+                {`{ $weekday }, { $monthday } { $month }`}
+              </Localized>
         }
       </span>
     </div>
   )
 }
 
-const Time = ({ time }: { time?: Date }) => (
+const Time = ({ time }: { time: Date }) => (
   <span className="chat__msg-time">
-    {
-      new Intl.DateTimeFormat(
-        'default', { hour: '2-digit', minute: '2-digit' }).format(time)
-    }
+    <Localized id="date-hour-min" $hour={time.getHours()} $min={time.getMinutes()}>
+      {`{ $hour }:{ $min }`}
+    </Localized>
   </span>
 )
 

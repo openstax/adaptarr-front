@@ -2107,6 +2107,43 @@ tickets-status-closed = Closed
 tickets-no-tickets = No tickets were found
 
 
+## Dates formatting
+
+# Variables:
+# - $weekday (number)
+# - $monthday (number)
+# - $month (number)
+date-weekday-monthday-month = { $weekday ->
+  [0] Sunday
+  [1] Monday
+  [2] Tuesday
+  [3] Wednesday
+  [4] Thursday
+  [5] Friday
+  [6] Saturday
+ *[other] { $weekday }
+}, { $monthday } { $month ->
+  [0] January
+  [1] February
+  [2] March
+  [3] April
+  [4] May
+  [5] Jun
+  [6] July
+  [7] August
+  [8] September
+  [9] October
+  [10] November
+  [11] December
+ *[other] { $month }
+}
+
+# Variables:
+# - $hour (number)
+# - $min (number)
+date-hour-min = { $hour }:{ $min }
+
+
 
 ## Resusable component  - modules labels
 
