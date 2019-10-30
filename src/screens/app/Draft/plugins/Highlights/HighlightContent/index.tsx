@@ -15,6 +15,7 @@ interface HighlightContentProps {
   creator: number
   loggedUser: User
   onUpdate: (text: string) => void
+  onBlur: () => void
 }
 
 const mapStateToProps = ({ user: { user } }: State) => ({
@@ -42,7 +43,7 @@ class HighlightContent extends React.Component<HighlightContentProps> {
 
   public render() {
     const { text } = this.state
-    const { loggedUser, creator } = this.props
+    const { loggedUser, creator, onBlur } = this.props
     const onlyView = loggedUser.id !== creator
     const placeholder = this.context.uiL10n.getString('editor-highlight-message-placeholder')
 
@@ -65,6 +66,7 @@ class HighlightContent extends React.Component<HighlightContentProps> {
             :
             <textarea
               onChange={this.onChange}
+              onBlur={onBlur}
               value={text}
               placeholder={placeholder}
               rows={5}

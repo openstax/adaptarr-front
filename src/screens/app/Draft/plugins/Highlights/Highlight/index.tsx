@@ -18,7 +18,15 @@ const Highlight = ({ node, children, attributes, slateEditor, editor }: Highligh
     ).blur()
   }
 
-  React.useEffect(() => {
+  const select = () => {
+    setIsSelected(true)
+  }
+
+  const onBlur = () => {
+    setIsSelected(false)
+  }
+
+  React.useLayoutEffect(() => {
     const highlight = slateEditor.getActiveHighlight(editor.value)
     if (highlight && highlight.key === node.key) {
       setIsSelected(true)
@@ -28,7 +36,11 @@ const Highlight = ({ node, children, attributes, slateEditor, editor }: Highligh
   }, [editor.value.selection.start.key, editor.value.selection.start.offset])
 
   return (
-    <span className={`highlight highlight--${node.data.get('color')}`} {...attributes}>
+    <span
+      className={`highlight highlight--${node.data.get('color')}`}
+      {...attributes}
+      onClick={select}
+    >
       {children}
       {
         isSelected ?
@@ -36,6 +48,7 @@ const Highlight = ({ node, children, attributes, slateEditor, editor }: Highligh
             text={node.data.get('text')}
             creator={Number(node.data.get('user'))}
             onUpdate={onUpdate}
+            onBlur={onBlur}
           />
           : null
       }
