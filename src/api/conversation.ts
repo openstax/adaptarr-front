@@ -362,7 +362,7 @@ export default class Conversation extends DelegatedEventTarget {
       throw ev
     }
 
-    const prefix = window.location.protocol === 'https:' ? 'wss' : 'ws'
+    const prefix = window.location.protocol === 'https:' || process.env.PRODUCTION ? 'wss' : 'ws'
     const uri = `${prefix}://${window.location.host}/api/v1/conversations/${this.id}/socket`
     this._ws = new WebSocket(uri)
     this._ws.binaryType = 'arraybuffer'
