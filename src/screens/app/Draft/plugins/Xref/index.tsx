@@ -38,7 +38,7 @@ export function renderXref(
   const key = 'xref-label-' + target.type
   const args = { case: case_ }
 
-  for (const [name, value] of counters) {
+  for (const [name, value] of counters as IterableIterator<[string, number]>) {
     args[name] = value
   }
 

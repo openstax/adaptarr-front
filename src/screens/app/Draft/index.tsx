@@ -62,7 +62,7 @@ async function loader(
         throw new PersistanceError()
       }),
       timeout(10000),
-    ]),
+    ]) as unknown as DocumentDB[],
     api.Storage.load(id),
     api.Draft.load(id),
   ])

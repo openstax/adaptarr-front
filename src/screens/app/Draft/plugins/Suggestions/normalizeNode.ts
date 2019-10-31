@@ -68,7 +68,7 @@ function normalizeNode(node: Node, editor: Editor, next: () => any) {
   // We join in reverse order, so that multiple suggestions folds onto the first one
   return () => editor.withoutNormalizing(() => {
     invalids.reverse().forEach(pair => {
-      const [first, second] = pair
+      const [first, second] = pair || []
       const updatedSecond = editor.value.document.getDescendant(second.key)! as Inline
       updatedSecond.nodes.forEach((secondNode, index) => {
         editor.moveNodeByKey(
