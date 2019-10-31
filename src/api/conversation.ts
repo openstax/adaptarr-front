@@ -40,7 +40,8 @@ export type NewMessageEventData = { id: number, time: Date, userId: number, mess
     const metalen = dv.getUint16(0, true)
     const id = dv.getInt32(2, true)
     const userId = dv.getInt32(6, true)
-    const time = new Date((dv.getBigInt64(10, true) as unknown as number) * 1000)
+    /* global BigInt - fix eslint error no-undef */
+    const time = new Date(Number(dv.getBigInt64(10, true) * BigInt(1000)))
     const message = body.slice(metalen)
 
     return { id, time, userId, message }
@@ -114,7 +115,7 @@ export type UserJoinedEventData = { id: number, date: Date, users: number[] }
   parser(body: Uint8Array, dv: DataView): UserJoinedEventData {
     const metalen = dv.getUint16(0, true)
     const id = dv.getInt32(2, true)
-    const date = new Date((dv.getBigInt64(6, true) as unknown as number) * 1000)
+    const date = new Date(Number(dv.getBigInt64(10, true) * BigInt(1000)))
     const users = body.slice(metalen)
 
     return {
@@ -577,36 +578,4 @@ function decode_utf8(data: Uint8Array): string {
   }
 
   return String.fromCodePoint.apply(null, text)
-}
-
-/**
- * TODO: Add description
- */
-// eslint-disable-next-line no-extend-native
-DataView.prototype.getBigInt64 = function getBigInt64(offset: number, little: boolean) {
-  const negative = (this.getUint8(little ? offset + 7 : 0) & 0x80) !== 0
-
-  if (!negative) {
-    const low = this.getUint32(little ? offset : offset + 4, little)
-    const high = this.getUint32(little ? offset + 4 : offset, little)
-    return (high * 0x100000000) + low
-  }
-
-  let start = offset
-  let step = 1
-  let end = offset + 8
-
-  if (little) {
-    start = offset + 7
-    step = -1
-    end = offset - 1
-  }
-
-  let r = 0
-
-  for (let i = start ; i !== end ; i += step) {
-    r = (r * 0x100) + (~this.getUint8(i) & 0xff)
-  }
-
-  return -r - 1
 }
