@@ -70,9 +70,7 @@ export const DateSeparator = ({ data: { date } }: { data: DateSeparatorType }) =
               :
               <Localized
                 id="date-weekday-monthday-month"
-                $weekday={date.getDay()}
-                $monthday={date.getDate()}
-                $month={date.getMonth()}
+                $date={date}
               >
                 {`{ $weekday }, { $monthday } { $month }`}
               </Localized>
@@ -84,7 +82,7 @@ export const DateSeparator = ({ data: { date } }: { data: DateSeparatorType }) =
 
 const Time = ({ time }: { time: Date }) => (
   <span className="chat__msg-time">
-    <Localized id="date-hour-min" $hour={time.getHours()} $min={time.getMinutes()}>
+    <Localized id="date-hour-min" $date={time}>
       {`{ $hour }:{ $min }`}
     </Localized>
   </span>

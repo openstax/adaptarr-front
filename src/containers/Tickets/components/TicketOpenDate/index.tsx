@@ -8,15 +8,13 @@ const TicketOpenDate = ({ date }: { date: Date }) => (
     <span>
       <Localized
         id="date-weekday-monthday-month"
-        $weekday={date.getDay()}
-        $monthday={date.getDate()}
-        $month={date.getMonth()}
+        $date={date}
       >
         {`{ $weekday }, { $monthday } { $month }`}
       </Localized>
     </span>
     <span>
-      <Localized id="date-hour-min" $hour={date.getHours()} $min={date.getMinutes()}>
+      <Localized id="date-hour-min" $date={date}>
         {`{ $hour }:{ $min }`}
       </Localized>
     </span>

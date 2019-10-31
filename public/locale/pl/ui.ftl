@@ -2120,38 +2120,12 @@ tickets-no-tickets = Nie znaleziono zgłoszeń
 ## Dates formatting
 
 # Variables:
-# - $weekday (number)
-# - $monthday (number)
-# - $month (number)
-date-weekday-monthday-month = { $weekday ->
-  [0] Niedziela
-  [1] Poniedziałek
-  [2] Wtorek
-  [3] Środa
-  [4] Czwartek
-  [5] Piątek
-  [6] Sobota
- *[other] { $weekday }
-}, { $monthday } { $month ->
-  [0] Styczeń
-  [1] Luty
-  [2] Marzec
-  [3] Kwiecień
-  [4] Maj
-  [5] Czerwiec
-  [6] Lipiec
-  [7] Sierpień
-  [8] Wrzesień
-  [9] Październik
-  [10] Listopad
-  [11] Grudzień
- *[other] { $month }
-}
+# - $date (date)
+date-weekday-monthday-month = { DATETIME($date, weekday: "long", month: "short", day: "numeric") }
 
 # Variables:
-# - $hour (number)
-# - $min (number)
-date-hour-min = { $hour }:{ $min }
+# - $date (date)
+date-hour-min = { DATETIME($date, hour: "2-digit", minute: "2-digit") }
 
 
 
