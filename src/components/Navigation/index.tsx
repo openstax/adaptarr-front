@@ -203,14 +203,6 @@ class Navigation extends React.Component<RouteComponentProps & NavigationProps> 
                     Settings
                   </Localized>
                 </NavLink>
-                <a
-                  className="nav__link"
-                  href="/logout"
-                >
-                  <Localized id="navigation-logout">
-                    Logout
-                  </Localized>
-                </a>
               </div>
             </li>
             <li className="nav__link">
@@ -280,6 +272,18 @@ class Navigation extends React.Component<RouteComponentProps & NavigationProps> 
               </li>
             </LimitedUI>
           </ul>
+          <div className="nav__link">
+            <a href="/logout">
+              <span className="nav__content">
+                <Icon size="medium" name="logout" />
+                <span className="nav__text">
+                  <Localized id="navigation-logout">
+                    Logout
+                  </Localized>
+                </span>
+              </span>
+            </a>
+          </div>
         </nav>
       </aside>
     )
