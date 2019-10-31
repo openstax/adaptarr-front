@@ -65,7 +65,10 @@ const UserProfile = (props: UserProfileProps) => {
 
   React.useEffect(() => {
     setUserName(props.user.name)
-    if (props.loggedUser.allPermissions.has('editing-process:manage')) {
+    if (
+      props.loggedUser.is_super
+      || props.loggedUser.allPermissions.has('editing-process:manage')
+    ) {
       fetchUsersDrafts()
     }
   }, [props.user.id])
