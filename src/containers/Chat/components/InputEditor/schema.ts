@@ -1,4 +1,4 @@
-import { Block, Editor, SlateError } from 'slate'
+import { Block, Editor, Inline, SlateError } from 'slate'
 
 import { VALID_URL_PATTERN } from 'src/helpers/isValidUrl'
 
@@ -17,7 +17,22 @@ function normalizeDocument(editor: Editor, error: SlateError) {
 }
 
 function normalizeHyperLink(editor: Editor, error: SlateError) {
-  console.warn('Unhandled hyperlink error', error.code)
+  switch (error.code) {
+  case 'node_data_invalid':
+    if (error.key === 'url') {
+      const node = error.node as Inline
+      const text = node.text
+      editor.removeNodeByKey(node.key)
+      editor.insertText(text)
+      break
+    }
+    console.warn('Unhandled hyperlink node_data_invalid violation for key:', error.key)
+    break
+
+  default:
+    console.warn('Unhandled hyperlink violation:', error)
+    break
+  }
 }
 
 export default {
