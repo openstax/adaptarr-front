@@ -62,7 +62,7 @@
     "redux": "^4.0.1",
     "redux-thunk": "^2.3.0",
     "resolve": "^1.6.0",
-    "slate": "^0.47.4",
+    "slate": "^0.47.3",
     "slate-counters": "https://github.com/katalysteducation/slate-counters.git#use-onsetvalue",
     "slate-react": "^0.22.4",
     "source-map-loader": "^0.2.1",

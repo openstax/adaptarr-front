@@ -7694,7 +7694,7 @@ react-input-trigger@^1.1.2:
   dependencies:
     textarea-caret "^3.1.0"
 
-react-is@^16.6.0, react-is@^16.9.0:
+react-is@^16.6.0:
   version "16.10.2"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.10.2.tgz#984120fd4d16800e9a738208ab1fba422d23b5ab"
   integrity sha512-INBT1QEgtcCCgvccr5/86CfD71fw9EPmDxgiJX4I2Ddr6ZsV6iFXsuby+qWJPtmNuMY0zByTsG4468P7nHuNWA==
@@ -8652,24 +8652,10 @@ slate-react@^0.22.4:
     tiny-invariant "^1.0.1"
     tiny-warning "^0.0.3"
 
-slate@^0.47.0:
+slate@^0.47.0, slate@^0.47.3:
   version "0.47.3"
   resolved "https://npm.pkg.naukosfera.com:443/slate/-/slate-0.47.3.tgz#d2950c08d58de044cccffa09bca1d9d73bc437d8"
   integrity sha512-TzFM5MCbvLD1Z5hP9eeM3s71PZv60fKPrHBtan1di/jHvFvtzr73pBBb0hbRNOrDVAiKaOu6TObSFA6DzheFnQ==
-  dependencies:
-    debug "^3.1.0"
-    direction "^0.1.5"
-    esrever "^0.2.0"
-    is-plain-object "^2.0.4"
-    lodash "^4.17.4"
-    tiny-invariant "^1.0.1"
-    tiny-warning "^0.0.3"
-    type-of "^2.0.1"
-
-slate@^0.47.4:
-  version "0.47.4"
-  resolved "https://registry.yarnpkg.com/slate/-/slate-0.47.4.tgz#9c8e7a73dac78d14615c68c576f0cfd2338daa84"
-  integrity sha512-kyZDN0NgjCtfYm2CrWZ7FixoO+dA6M3EFDb5q+Ig6zEmnt9IUKT1AlRNwN2mWCqTpRSY3SxEdgoUuzbvbUScUg==
   dependencies:
     debug "^3.1.0"
     direction "^0.1.5"
