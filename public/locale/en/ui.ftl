@@ -2079,6 +2079,9 @@ chat-user-joined = <anchor>{ $user }</anchor> has joined.
 
 tickets-conversations-error = Couldn't load conversation for this ticket.
 
+tickets-filter-placeholder =
+  .placeholder = Filter tickets
+
 tickets-create-new = Create new ticket
 
 tickets-create-new-placeholder =
