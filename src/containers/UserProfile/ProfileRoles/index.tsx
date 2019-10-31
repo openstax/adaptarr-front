@@ -88,6 +88,10 @@ const ProfileRoles = (props: ProfileRolesProps) => {
       })
   }
 
+  React.useEffect(() => {
+    setUserTeams(props.user.teams)
+  }, [props.user.id])
+
   const { loggedUser, teams } = props
 
   return (
