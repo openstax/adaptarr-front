@@ -271,7 +271,7 @@ dashboard-drafts-view = View draft
 
 dashboard-drafts-delete = Delete
 
-dashboard-drafts-empty = You don't have any drafts
+dashboard-drafts-empty = There are no drafts to display
 
 dashboard-drafts-details = Details
 

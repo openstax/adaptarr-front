@@ -210,7 +210,7 @@ class DraftsList extends React.Component<DraftsListProps> {
               </ul>
               :
               <Localized id="dashboard-drafts-empty">
-                You do not have any drafts.
+                There are no drafts to display
               </Localized>
         }
       </div>
