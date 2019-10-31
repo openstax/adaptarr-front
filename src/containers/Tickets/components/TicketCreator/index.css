@@ -1,10 +1,22 @@
 .tickets__creator {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px 0;
+  flex-direction: column;
 }
 
-.tickets__creator .input {
-  width: 400px;
+.tickets__creator .tickets__controls {
+  justify-content: flex-start;
+}
+
+.tickets__creator .tickets__controls h2 {
+  margin-left: 20px;
+}
+
+.tickets__creator .chat__input-editor {
+  border-radius: 10px;
+  height: 250px;
+  margin-top: 20px;
+}
+
+.chat__input-editor > div {
+  height: 100%;
 }

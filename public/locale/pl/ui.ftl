@@ -2091,8 +2091,7 @@ tickets-filter-placeholder =
 
 tickets-create-new = Utwórz zgłoszenie
 
-tickets-create-new-placeholder =
-  .placeholder = Tytuł nowego zgłoszenia
+tickets-create-new-title = Opisz swój problem i wciśnij enter
 
 tickets-create-new-error = Nie udało się utworzyć nowego zgłoszenia
 

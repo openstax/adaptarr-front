@@ -28,11 +28,14 @@ const CAPTURE_MENTIONS_REGEXP = /\B@\w+$/
 
 const INITIAL = Value.fromJSON({})
 
-type Props = {
-  socket: Conversation
+// If socket is provided message will be sent using it.
+// If onEnter is provided it will be called with message.
+interface InputEditorProps {
+  socket?: Conversation
+  onEnter?: (msg: Uint8Array, text: string) => void
 }
 
-class InputEditor extends React.Component<Props> {
+class InputEditor extends React.Component<InputEditorProps> {
   state: {
     value: Value
     searchQuery: string
@@ -99,7 +102,16 @@ class InputEditor extends React.Component<Props> {
 
     await Promise.all(textsToConvert.map(u => u()))
 
-    this.props.socket.sendMessage(serialize(editor.value))
+    const msg = serialize(editor.value)
+
+    if (this.props.socket) {
+      this.props.socket.sendMessage(msg)
+    }
+
+    if (this.props.onEnter) {
+      this.props.onEnter(msg, editor.value.document.text)
+    }
+
     this.setState({ value: INITIAL })
   }
 

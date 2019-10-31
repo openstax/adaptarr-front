@@ -2084,8 +2084,7 @@ tickets-filter-placeholder =
 
 tickets-create-new = Create new ticket
 
-tickets-create-new-placeholder =
-  .placeholder = Title for new ticket
+tickets-create-new-title = Describe your problem and hit enter
 
 tickets-create-new-error = Couldn't create new ticket
 

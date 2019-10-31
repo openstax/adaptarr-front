@@ -35,6 +35,11 @@ const Tickets = () => {
   const addTicket = (ticket: Ticket) => {
     setTickets([ticket, ...tickets])
     setShowTicketCreator(false)
+    setSelectedTicket(ticket)
+  }
+
+  const closeAddTicket = () => {
+    setShowTicketCreator(false)
   }
 
   const onTicketClick = (ticket: Ticket) => {
@@ -60,7 +65,7 @@ const Tickets = () => {
         selectedTicket
           ? <TicketManager ticket={selectedTicket} onCloseChat={unselectTicket} />
           : showTicketCreator
-            ? <TicketCreator onCreate={addTicket} />
+            ? <TicketCreator onCreate={addTicket} onClose={closeAddTicket} />
             : <>
               <div className="tickets__filter">
                 <SearchInput
