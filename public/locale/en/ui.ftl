@@ -1493,6 +1493,18 @@ error-boundary-title = Something went wrong
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
+  <p>Unknown error has been detected.</p>
+  { $hasReport ->
+    [true] <p>We have already received an automatic error report, but we would appreciate if
+    you could spare some time and give us more detailed feedback.</p>
+   *[false] {""}
+  }
+
+# Variables:
+# - $hasReport (string): true | false depends if Sentry received automatic report.
+# Fragments:
+# - <p> ... </p>: text in new paragraph
+error-boundary-info-editors-error =
   <p>To prevent errors from corrupting your document we disabled editing until
   you reload the page. Don't worry about your work, it has been auto-saved and
   will be restored after reloading the page.</p>
@@ -1501,6 +1513,8 @@ error-boundary-info =
     you could spare some time and give us more detailed feedback.</p>
    *[false] {""}
   }
+
+error-boundary-button-continue-working = Continue working
 
 error-boundary-button-go-to-dashboard = Go to Dashboard
 

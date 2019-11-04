@@ -25,6 +25,7 @@ import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
 import StepChanger from './components/StepChanger'
 import SaveButton from './components/SaveButton'
+import EditorsErrorBoundary from './components/EditorsErrorBoundary'
 
 import { collectForeignDocuments } from './plugins/Xref'
 
@@ -274,27 +275,29 @@ class Draft extends React.Component<DraftProps> {
               <div className="document__header">
                 <Title draft={draft} />
               </div>
-              <EditorDocument
-                documentDB={documentDbContent}
-                storage={storage}
-                value={valueDocument}
-                readOnly={readOnly}
-                draftPermissions={this.draftPermissions}
-                stepPermissions={this.stepPermissions}
-                language={editorLanguage}
-                onChange={this.onChangeDocument}
-              />
-              <EditorGlossary
-                documentDB={documentDbGlossary}
-                storage={storage}
-                value={valueGlossary}
-                readOnly={readOnly}
-                draftPermissions={this.draftPermissions}
-                stepPermissions={this.stepPermissions}
-                language={editorLanguage}
-                isGlossaryEmpty={isGlossaryEmpty}
-                onChange={this.onChangeGlossary}
-              />
+              <EditorsErrorBoundary>
+                <EditorDocument
+                  documentDB={documentDbContent}
+                  storage={storage}
+                  value={valueDocument}
+                  readOnly={readOnly}
+                  draftPermissions={this.draftPermissions}
+                  stepPermissions={this.stepPermissions}
+                  language={editorLanguage}
+                  onChange={this.onChangeDocument}
+                />
+                <EditorGlossary
+                  documentDB={documentDbGlossary}
+                  storage={storage}
+                  value={valueGlossary}
+                  readOnly={readOnly}
+                  draftPermissions={this.draftPermissions}
+                  stepPermissions={this.stepPermissions}
+                  language={editorLanguage}
+                  isGlossaryEmpty={isGlossaryEmpty}
+                  onChange={this.onChangeGlossary}
+                />
+              </EditorsErrorBoundary>
             </div>
           </div>
         </div>

@@ -1479,11 +1479,24 @@ error-boundary-title = Coś poszło nie tak
 # Fragments:
 # - <p> ... </p>: text in new paragraph
 error-boundary-info =
+  <p>Wykryto nieznany błąd.</p>
+  { $hasReport ->
+    [true] <p>Automatyczny raport o błędzie już został do nas wysłany. Łatwiej nam będzie wyeliminować ten błąd w przyszłości, gdy teraz dodatkowo dostaniemy od Ciebie bardziej szczegółowy opis zdarzenia. Dziękujemy za pomoc!</p>
+   *[false] {""}
+  }
+
+# Variables:
+# - $hasReport (string): true | false depends if Sentry received automatic report.
+# Fragments:
+# - <p> ... </p>: text in new paragraph
+error-boundary-info-editors-error =
   <p>Chwilowo wyłączyliśmy edycję tego dokumentu, a Twoja praca została automatycznie zachowana. Przeładuj stronę, by bezpiecznie powrócić do pracy.</p>
   { $hasReport ->
     [true] <p>Automatyczny raport o błędzie już został do nas wysłany. Łatwiej nam będzie wyeliminować ten błąd w przyszłości, gdy teraz dodatkowo dostaniemy od Ciebie bardziej szczegółowy opis zdarzenia. Dziękujemy za pomoc!</p>
    *[false] {""}
   }
+
+error-boundary-button-continue-working = Kontynuuj pracę
 
 error-boundary-button-go-to-dashboard = Przejdź do panelu głównego
 

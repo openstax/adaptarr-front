@@ -4,8 +4,6 @@ import { Localized } from 'fluent-react/compat'
 
 import Button from 'src/components/ui/Button'
 
-import './index.css'
-
 interface ErrorBoundaryState {
   error: null
   eventId?: string
@@ -26,7 +24,8 @@ export default class ErrorBoundary extends React.Component<{ children: React.Rea
     })
   }
 
-  private continueWorking = () => {
+  private moveToDashboard = () => {
+    window.history.pushState(null, "", "/")
     this.setState({ error: null, eventId: undefined })
   }
 
@@ -45,13 +44,13 @@ export default class ErrorBoundary extends React.Component<{ children: React.Rea
               Something went wrong
             </Localized>
           </h1>
-          <Localized id="error-boundary-info" p={<p/>} $hasReport={hasReport}>
+          <Localized id="error-boundary-info-editors-error" p={<p/>} $hasReport={hasReport}>
             <div />
           </Localized>
           <div className="buttons">
-            <Button clickHandler={this.continueWorking}>
-              <Localized id="error-boundary-button-continue-working">
-                Continue working
+            <Button clickHandler={this.moveToDashboard}>
+              <Localized id="error-boundary-button-go-to-dashboard">
+                Go to dashboard
               </Localized>
             </Button>
             <Button clickHandler={window.location.reload}>
