@@ -16,6 +16,7 @@ import Docref from '../plugins/Docref'
 import Footnotes from '../plugins/Footnotes'
 import Highlights from '../plugins/Highlights'
 import I10nPlugin from '../plugins/I10n'
+import MediaText from '../plugins/MediaText'
 import XrefPlugin from '../plugins/Xref'
 import TablesPlugin from '../plugins/Tables'
 import SourceElements from '../plugins/SourceElements'
@@ -52,12 +53,20 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
     Footnotes(),
     Highlights(),
     Counters(),
+    MediaText({
+      inlines: SUGGESTION_TYPES,
+    }),
     ...Document({
       document_content: ['table', 'source_element'],
       content: ['source_element'],
       media: {
         inlines: SUGGESTION_TYPES.concat('highlight'),
         mediaUrl: (name: string) => `/api/v1/drafts/${this.props.storage.id}/files/${name}`,
+        nodes: [
+          { match: { type: 'image' }, min: 1 },
+          { match: { type: 'media_text' }, min: 0, max: 1 },
+          { match: { type: 'media_alt' }, min: 1, max: 1 },
+        ],
       },
       text: {
         code: {

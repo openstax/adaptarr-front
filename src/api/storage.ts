@@ -3,6 +3,7 @@ import { APIError as BaseError, CNXML } from 'cnx-designer'
 import { Value } from 'slate'
 import { AxiosResponse } from 'axios'
 
+import mediaRules from 'src/screens/app/Draft/plugins/MediaText/deSerializationRules'
 import tablesDeserialize from 'src/screens/app/Draft/plugins/Tables/deserialize'
 import tablesSerialize from 'src/screens/app/Draft/plugins/Tables/serialize'
 import sourceElementsDeserialize from 'src/screens/app/Draft/plugins/SourceElements/deserialize'
@@ -189,6 +190,7 @@ export default class Storage {
   static serializer = new CNXML({
     documentRules: [
       highlightsRules,
+      mediaRules,
       tablesDeserialize,
       tablesSerialize,
       sourceElementsDeserialize,

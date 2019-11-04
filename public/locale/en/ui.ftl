@@ -1701,7 +1701,13 @@ editor-tools-figure-remove-subfigure = Remove subfigure
 
 editor-tools-figure-add-caption = Add caption
 
+editor-tools-figure-add-media-text = Add description of text from image
+
+editor-tools-figure-remove-media-text = Remove description of text from image
+
 media-alt-label = Alternative text:
+
+media-text-label = Text on media:
 
 
 

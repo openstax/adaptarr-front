@@ -1684,7 +1684,13 @@ editor-tools-figure-remove-subfigure = Usuń ilustrację
 
 editor-tools-figure-add-caption = Dodaj opis
 
+editor-tools-figure-add-media-text = Dodaj opis tekstu z obrazka
+
+editor-tools-figure-remove-media-text = Usuń opis tekstu z obrazka
+
 media-alt-label = Tekst alternatywny:
+
+media-text-label = Tekst na obrazie:
 
 
 

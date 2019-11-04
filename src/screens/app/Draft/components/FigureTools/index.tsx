@@ -44,6 +44,8 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
     const subfigure = editor.getActiveSubfigure(value)
     const image = (subfigure!.nodes.first() as Block).nodes.first() as Block
     const src = image.data.get('src')
+    const media = editor.getActiveMedia(value)
+    const mediaText = media && media.nodes.find(m => (m as Block).type === 'media_text')
 
     return (
       <ToolGroup
@@ -83,6 +85,19 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
           </Localized>
         </Button>
         <Classes editor={editor} block={figure} />
+        <div>
+          <Button clickHandler={this.toggleMediaText}>
+            {
+              mediaText
+                ? <Localized id="editor-tools-figure-remove-media-text">
+                  Remove description of text from image
+                </Localized>
+                : <Localized id="editor-tools-figure-add-media-text">
+                  Add description of text from image
+                </Localized>
+            }
+          </Button>
+        </div>
         <Modal
           ref={this.setModal}
           content={this.renderModal}
@@ -131,5 +146,21 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
     this.modal!.close()
     this.action!(asset as MediaDescription)
     this.action = null
+  }
+
+  private toggleMediaText = () => {
+    const { editor, value } = this.props
+    const media = editor.getActiveMedia(value)
+    if (media) {
+      const mediaText = media && media.nodes.find(m => (m as Block).type === 'media_text')
+      if (mediaText) {
+        editor.removeNodeByKey(mediaText.key)
+      } else {
+        editor.insertNodeByKey(media.key, 1, {
+          object: 'block',
+          type: 'media_text',
+        } as Block)
+      }
+    }
   }
 }

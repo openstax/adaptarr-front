@@ -9,6 +9,7 @@ declare module 'cnx-designer' {
     Value,
     Path,
     ValueJSON,
+    ObjectAndType,
   } from 'slate'
   import { Plugin } from 'slate-react'
   import { List } from 'immutable'
@@ -154,6 +155,11 @@ declare module 'cnx-designer' {
   export type MediaOptions = {
     inlines?: string[]
     mediaUrl?: (name: string) => string
+    nodes?: {
+      min?: number
+      max?: number
+      match?: ObjectAndType | ObjectAndType[]
+    }[]
   }
 
   export function Document(options?: {

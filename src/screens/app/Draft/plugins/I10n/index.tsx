@@ -73,6 +73,7 @@ const I10nPlugin: Plugin = {
         <Labelled
           className="media__text"
           l10nKey="media-text-label"
+          textFromUI={true}
           {...props}
         />
       )

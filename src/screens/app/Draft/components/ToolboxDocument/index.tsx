@@ -329,6 +329,7 @@ class Toolbox extends React.Component<ToolboxProps> {
     case 'figure_caption':
     case 'image':
     case 'media_alt':
+    case 'media_text':
       newState.figureTools = true
       newState.insertTools = false
       break

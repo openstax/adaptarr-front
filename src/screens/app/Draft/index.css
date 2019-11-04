@@ -217,11 +217,13 @@
   align-items: start;
 }
 
-.editor .media__alt {
+.editor .media__alt,
+.editor .media__text {
   margin: 10px 0;
 }
 
-.editor .media__alt::before {
+.editor .media__alt::before,
+.editor .media__text::before {
   content: attr(data-label);
   padding-right: 5px;
   color: gray;
