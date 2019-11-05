@@ -21,11 +21,11 @@ import Section from 'src/components/Section'
 import InfoBox from 'src/components/InfoBox'
 import Header from 'src/components/Header'
 import DraftInfo from 'src/components/DraftInfo'
+import ErrorBoundary from 'src/components/ErrorBoundary'
 import Title from './components/Title'
 import StyleSwitcher from './components/StyleSwitcher'
 import StepChanger from './components/StepChanger'
 import SaveButton from './components/SaveButton'
-import EditorsErrorBoundary from './components/EditorsErrorBoundary'
 
 import { collectForeignDocuments } from './plugins/Xref'
 
@@ -275,7 +275,14 @@ class Draft extends React.Component<DraftProps> {
               <div className="document__header">
                 <Title draft={draft} />
               </div>
-              <EditorsErrorBoundary>
+              <ErrorBoundary
+                extraMessage="error-boundary-info-editors-error"
+                buttons={{
+                  continueWorking: false,
+                  goToDashboard: true,
+                  reloadPage: true,
+                }}
+              >
                 <EditorDocument
                   documentDB={documentDbContent}
                   storage={storage}
@@ -297,7 +304,7 @@ class Draft extends React.Component<DraftProps> {
                   isGlossaryEmpty={isGlossaryEmpty}
                   onChange={this.onChangeGlossary}
                 />
-              </EditorsErrorBoundary>
+              </ErrorBoundary>
             </div>
           </div>
         </div>

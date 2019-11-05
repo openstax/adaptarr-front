@@ -6,12 +6,22 @@ import Button from 'src/components/ui/Button'
 
 import './index.css'
 
+interface ErrorBoundaryProps {
+  children: React.ReactNode
+  extraMessage?: string
+  buttons?: {
+    continueWorking?: boolean
+    goToDashboard?: boolean
+    reloadPage?: boolean
+  }
+}
+
 interface ErrorBoundaryState {
   error: null
   eventId?: string
 }
 
-export default class ErrorBoundary extends React.Component<{ children: React.ReactNode }> {
+export default class ErrorBoundary extends React.Component<ErrorBoundaryProps> {
   state: ErrorBoundaryState = {
     error: null,
     eventId: undefined,
@@ -30,12 +40,25 @@ export default class ErrorBoundary extends React.Component<{ children: React.Rea
     this.setState({ error: null, eventId: undefined })
   }
 
+  private moveToDashboard = () => {
+    window.history.pushState(null, "", "/")
+    this.setState({ error: null, eventId: undefined })
+  }
+
   private showReportDialog = () => {
     Sentry.showReportDialog({ eventId: this.state.eventId })
   }
 
   render() {
     const hasReport = this.state.eventId ? 'true' : 'false'
+    const {
+      extraMessage = 'error-boundary-info',
+      buttons: {
+        continueWorking = true,
+        goToDashboard = false,
+        reloadPage = true,
+      } = {},
+    } = this.props
 
     if (this.state.error) {
       return (
@@ -45,20 +68,31 @@ export default class ErrorBoundary extends React.Component<{ children: React.Rea
               Something went wrong
             </Localized>
           </h1>
-          <Localized id="error-boundary-info" p={<p/>} $hasReport={hasReport}>
+          <Localized id={extraMessage} p={<p/>} $hasReport={hasReport}>
             <div />
           </Localized>
           <div className="buttons">
-            <Button clickHandler={this.continueWorking}>
-              <Localized id="error-boundary-button-continue-working">
-                Continue working
-              </Localized>
-            </Button>
-            <Button clickHandler={window.location.reload}>
-              <Localized id="error-boundary-button-reload">
-                Reload page
-              </Localized>
-            </Button>
+            {
+              continueWorking && <Button clickHandler={this.continueWorking}>
+                <Localized id="error-boundary-button-continue-working">
+                  Continue working
+                </Localized>
+              </Button>
+            }
+            {
+              goToDashboard && <Button clickHandler={this.moveToDashboard}>
+                <Localized id="error-boundary-button-go-to-dashboard">
+                  Go to dashboard
+                </Localized>
+              </Button>
+            }
+            {
+              reloadPage && <Button clickHandler={window.location.reload}>
+                <Localized id="error-boundary-button-reload">
+                  Reload page
+                </Localized>
+              </Button>
+            }
             {
               hasReport ?
                 <Button clickHandler={this.showReportDialog} >
