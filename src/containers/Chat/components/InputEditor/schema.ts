@@ -1,6 +1,6 @@
 import { Block, Editor, Inline, SlateError } from 'slate'
 
-import { VALID_URL_PATTERN } from 'src/helpers/isValidUrl'
+import { isValidUrl } from 'src/helpers'
 
 import { CONTEXT_ANNOTATION_TYPE } from '../InputEditor'
 
@@ -48,7 +48,7 @@ export default {
   inlines: {
     hyperlink: {
       data: {
-        url: (u: any) => VALID_URL_PATTERN.test(u),
+        url: (u: any) => isValidUrl(u),
       },
       normalize: normalizeHyperLink,
     },

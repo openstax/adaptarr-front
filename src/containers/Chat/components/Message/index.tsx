@@ -153,7 +153,7 @@ function Line({ data }: { data: Data }): JSX.Element[] {
       const [len, inx] = leb128(body, 0)
       const label = decode_utf8(body.subarray(inx, inx + len))
       let url = String.fromCodePoint.apply(null, body.subarray(inx + len))
-      if (!url.match(/https?:\/\//)) {
+      if (/^www\./.test(url)) {
         url = 'http://' + url
       }
 

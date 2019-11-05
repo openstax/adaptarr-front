@@ -13,7 +13,7 @@ import { Localized } from 'fluent-react/compat'
 
 import { Conversation, User } from 'src/api'
 
-import { VALID_URL_PATTERN } from 'src/helpers/isValidUrl'
+import { isValidUrl } from 'src/helpers'
 
 import SCHEMA from './schema'
 import serialize from './serialize'
@@ -82,7 +82,7 @@ class InputEditor extends React.Component<InputEditorProps> {
       let offset = 0
 
       for (const str of splitted) {
-        if (VALID_URL_PATTERN.test(str)) {
+        if (isValidUrl(str)) {
           const startOffset = offset
 
           // Unshift because we want to convert texts from end to start since
