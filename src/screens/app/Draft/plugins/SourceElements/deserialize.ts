@@ -37,7 +37,6 @@ const deserializeRules = {
 
 const SOURCE_TAGS = [
   'equation',
-  'foreign',
   'math',
   'proof',
   'statement',

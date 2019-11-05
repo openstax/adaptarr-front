@@ -32,7 +32,15 @@ const INVALID_FORMAT_TOOLS_PARENTS = [
   'source_element',
 ]
 
-type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
+type Format =
+  'strong'
+  | 'emphasis'
+  | 'underline'
+  | 'superscript'
+  | 'subscript'
+  | 'code'
+  | 'term'
+  | 'foreign'
 
 const FORMATS: Format[] = [
   'strong',
@@ -42,6 +50,7 @@ const FORMATS: Format[] = [
   'subscript',
   'code',
   'term',
+  'foreign',
 ]
 
 const VALID_LIST_PARENTS = [
@@ -193,32 +202,29 @@ class FormatTools extends React.Component<FormatToolsProps> {
   private applyFormat = (ev: React.MouseEvent<HTMLButtonElement>) => {
     ev.preventDefault()
 
+    const { editor, value: { selection, startInline } } = this.props
     const format = (ev.currentTarget as HTMLButtonElement).dataset.id
     if (!format) return
 
-    if (format === 'code') {
-      const inline = this.props.value.startInline
-      if (!inline || inline.type !== 'code') {
-        if (this.props.value.selection.isCollapsed) {
-          this.props.editor.insertInline({ type: 'code', nodes: List([Text.create(' ')]) })
-          this.props.editor.moveBackward()
+    switch (format) {
+    case 'code':
+    case 'foreign':
+    case 'term':
+      if (!startInline || startInline.type !== format) {
+        if (selection.isCollapsed) {
+          editor.insertInline({ type: format, nodes: List([Text.create(' ')]) })
+          editor.moveBackward()
         } else {
-          this.props.editor.wrapInline({ type: 'code' })
+          editor.wrapInline({ type: format })
         }
       } else {
-        this.props.editor.unwrapInlineByKey(inline.key, { type: 'code' })
-      }
-    } else if (format === 'term') {
-      const inline = this.props.value.startInline
-      if (!inline || inline.type !== 'term') {
-        this.props.editor.wrapInline({ type: 'term' })
-      } else {
-        this.props.editor.unwrapInlineByKey(inline.key, { type: 'term', data: inline.data.toJS() })
+        editor.unwrapInlineByKey(startInline.key, { type: format, data: startInline.data.toJS() })
       }
       return
-    }
 
-    this.props.editor.toggleMark(format)
+    default:
+      editor.toggleMark(format)
+    }
   }
 
   private clear = (ev: React.MouseEvent<HTMLButtonElement>) => {

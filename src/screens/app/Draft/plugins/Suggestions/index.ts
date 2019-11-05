@@ -14,6 +14,7 @@ const ALLOWED_INLINES = [
   'term',
   'xref',
   'footnote',
+  'foreign',
 ]
 
 type Options = { isActive?: boolean, allowedInlines?: string[] }

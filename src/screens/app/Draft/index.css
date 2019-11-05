@@ -338,6 +338,10 @@ div.editor figure > figcaption::before {
   content: none;
 }
 
+.editor .foreign {
+  font-style: italic;
+}
+
 .editor .adr-table {
   display: table;
   width: 100%;

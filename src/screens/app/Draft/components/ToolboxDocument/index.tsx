@@ -9,6 +9,7 @@ import ExerciseTools from '../ExerciseTools'
 import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import FootnoteTools from '../FootnoteTools'
+import ForeignTools from '../ForeignTools'
 import HighlightTools from '../HighlightTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
@@ -41,6 +42,7 @@ type ToolName =
   'exerciseTools' |
   'figureTools' |
   'footnoteTools' |
+  'foreignTools' |
   'highlightTools' |
   'sectionTools' |
   'documentTools' |
@@ -59,6 +61,7 @@ interface ToolboxState {
   xrefTools: boolean
   docrefTools: boolean
   footnoteTools: boolean
+  foreignTools: boolean
   highlightTools: boolean
   sourceTools: boolean
   listTools: boolean
@@ -82,6 +85,7 @@ const DEFAULT_TOGGLERS = {
   xrefTools: true,
   docrefTools: true,
   footnoteTools: true,
+  foreignTools: true,
   highlightTools: true,
   sourceTools: true,
   listTools: false,
@@ -118,7 +122,7 @@ class Toolbox extends React.Component<ToolboxProps> {
   }
 
   public render() {
-    const { value: { selection }, editor, value } = this.props
+    const { editor, value } = this.props
     const { selectionParent } = this.state
 
     if (!editor) {
@@ -183,6 +187,12 @@ class Toolbox extends React.Component<ToolboxProps> {
           editor={editor}
           value={value}
           toggleState={this.state.footnoteTools}
+          onToggle={this.toggleTool}
+        />
+        <ForeignTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.foreignTools}
           onToggle={this.toggleTool}
         />
         <HighlightTools
@@ -305,6 +315,9 @@ class Toolbox extends React.Component<ToolboxProps> {
       break
     case 'footnote':
       newState.footnoteTools = true
+      break
+    case 'foreign':
+      newState.foreignTools = true
       break
     case 'highlight':
       newState.highlightTools = true

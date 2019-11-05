@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Block, Document, Editor, Inline, Node, Value } from 'slate'
 
 import FormatTools from '../FormatTools'
+import ForeignTools from '../ForeignTools'
 import HighlightTools from '../HighlightTools'
 import DefinitionTools from '../DefinitionTools'
 import MeaningTools from '../MeaningTools'
@@ -24,13 +25,15 @@ type ToolName =
   'definitionTools' |
   'glossaryTools' |
   'suggestionsTools' |
-  'highlightTools'
+  'highlightTools' |
+  'foreignTools'
 
 export type OnToggle = (toolName: ToolName, state?: boolean) => void
 
 interface ToolboxState {
   selectionParent: Document | Block | Inline | null
   definitionTools: boolean
+  foreignTools: boolean
   termTools: boolean
   meaningTools: boolean
   seeAlsoTools: boolean
@@ -44,6 +47,7 @@ interface ToolboxState {
  */
 const DEFAULT_TOGGLERS = {
   definitionTools: true,
+  foreignTools: false,
   termTools: false,
   meaningTools: false,
   seeAlsoTools: false,
@@ -77,7 +81,7 @@ class Toolbox extends React.Component<ToolboxProps> {
   }
 
   public render() {
-    const { value: { selection }, editor, value } = this.props
+    const { editor, value } = this.props
     const { selectionParent } = this.state
 
     if (!editor) {
@@ -103,6 +107,12 @@ class Toolbox extends React.Component<ToolboxProps> {
           editor={editor}
           value={value}
           toggleState={this.state.definitionTools}
+          onToggle={this.toggleTool}
+        />
+        <ForeignTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.foreignTools}
           onToggle={this.toggleTool}
         />
         <TermTools
@@ -190,6 +200,9 @@ class Toolbox extends React.Component<ToolboxProps> {
     case 'suggestion_delete':
       newState.suggestionsTools = true
       newState.glossaryTools = false
+      break
+    case 'foreignTools':
+      newState.foreignTools = true
       break
     case 'term':
       newState.termTools = true

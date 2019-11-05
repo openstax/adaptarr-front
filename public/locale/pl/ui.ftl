@@ -1670,6 +1670,8 @@ editor-tools-format-button-code = Kod (Ctrl+`)
 
 editor-tools-format-button-term = Termin (Ctrl+K)
 
+editor-tools-format-button-foreign = Obcy tekst
+
 editor-tools-format-button-highlight = Zaznaczenie
 
 
@@ -2030,6 +2032,16 @@ editor-tools-highlight-remove = Usuń zaznaczenie
 ## Highlight component
 
 editor-highlight-message-placeholder = Twoja wiadomość...
+
+
+
+## Editor toolboxes - foreign
+
+editor-tools-foreign-title = Obcy tekst
+
+editor-tools-foreign-select-language = Wybierz język dla obcego tekstu
+
+editor-tools-foreign-select-placeholder = Wybierz język
 
 
 
