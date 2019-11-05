@@ -75,7 +75,7 @@ class EditorDocument extends React.Component<EditorDocumentProps> {
     this.props.readOnly || !this.props.documentDB ? {} : Persistence({ db: this.props.documentDB }),
   ]
 
-  onChange = ({ value }: { value: Value }) => {
+  onChange = ({ value }: Editor_) => {
     this.props.onChange(value)
   }
 

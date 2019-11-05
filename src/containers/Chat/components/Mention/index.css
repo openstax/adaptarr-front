@@ -1,0 +1,6 @@
+.mention {
+  padding: 2px;
+  color: var(--font-dark);
+  border-radius: 2px;
+  background-color: var(--lighter-bg);
+}

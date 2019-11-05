@@ -153,8 +153,8 @@ class DraftsList extends React.Component<DraftsListProps> {
     return (
       <div className="draftsList">
         {
-          isLoading ?
-            <Spinner />
+          isLoading
+            ? <Spinner />
             :
             books.size ?
               <ul className="list">

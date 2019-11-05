@@ -20,7 +20,8 @@ export default class Events {
       throw new Error("Attempted to re-create Events")
     }
 
-    this.socket = new WebSocket(`wss://${window.location.host}/api/v1/events`)
+    const prefix = window.location.protocol === 'https:' || process.env.PRODUCTION ? 'wss' : 'ws'
+    this.socket = new WebSocket(`${prefix}://${window.location.host}/api/v1/events`)
 
     this.socket.onclose = this.onClose
     this.socket.onmessage = this.onMessage

@@ -17,6 +17,7 @@ export type UserData = {
   id: number
   name: string
   is_super: boolean
+  is_support: boolean
   language: string
   teams: {
     id: TeamID
@@ -114,6 +115,11 @@ export default class User extends Base<UserData> {
    * Determine if user is super user.
    */
   is_super: boolean
+
+  /**
+   * Determine if user is member of support team.
+   */
+  is_support: boolean
 
   /**
    * User's language.
@@ -239,6 +245,14 @@ export default class User extends Base<UserData> {
       return axios.put('users/me', { language })
     }
     return elevated(() => axios.put(`users/${this.apiId}`, { language }))
+  }
+
+  /**
+   * Set or disbale is_support flag for this user.
+   * This method is available only for super users.
+   */
+  setIsSupportFlag(is_support: boolean) {
+    return elevated(() => axios.put(`users/${this.id}`, { is_support }))
   }
 
   /**

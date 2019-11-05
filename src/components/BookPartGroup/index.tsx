@@ -315,11 +315,11 @@ class Group extends React.Component<GroupProps> {
           }
           {
             showStatsFor ?
-              modStatuses.size ?
-                <ModStatuses statuses={modStatuses} />
+              modStatuses.size
+                ? <ModStatuses statuses={modStatuses} />
                 : null
-              : partsNotInProcess ?
-                <Button clickHandler={this.showBeginProcessDialog}>
+              : partsNotInProcess
+                ? <Button clickHandler={this.showBeginProcessDialog}>
                   <Localized id="book-begin-process">Begin process</Localized>
                 </Button>
                 : null

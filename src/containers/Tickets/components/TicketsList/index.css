@@ -1,0 +1,19 @@
+.tickets__list {
+  border: 1px solid var(--dark-bg);
+}
+
+.tickets__list-item {
+  border-bottom: 1px solid var(--dark-bg);
+}
+
+.tickets__list-item--no-tickets {
+  display: flex;
+  align-content: center;
+  justify-content: center;
+  padding: 30px;
+  background-color: #fff;
+}
+
+.tickets__list-item:last-child {
+  border-bottom: none;
+}

@@ -149,7 +149,7 @@ class RemoteReferenceTargets extends React.Component<RemoteReferenceTargetsProps
 
 export default connect(mapStateToProps, mapDispatchToProps)(RemoteReferenceTargets)
 
-type NestableCustomizedProps = {
+interface NestableCustomizedProps {
   parts: api.BookPart[]
   modules: ModulesMap
   onModuleClick: (ev: React.MouseEvent) => void
@@ -186,7 +186,7 @@ const NestableCustomized = ({ parts, modules, onModuleClick }: NestableCustomize
     )
   }
 
-  const renderCollapseIcon = ({ isCollapsed }: {isCollapsed: boolean}) => {
+  const renderCollapseIcon = ({ isCollapsed }: { isCollapsed: boolean }) => {
     if (isCollapsed) {
       return <Icon name="arrow-right"/>
     }

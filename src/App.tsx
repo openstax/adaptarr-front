@@ -30,6 +30,7 @@ import Teams from 'src/screens/app/Teams'
 import * as userActions from 'src/store/actions/user'
 import * as appActions from 'src/store/actions/app'
 import * as notificationsActions from 'src/store/actions/notifications'
+import * as conversationsActions from 'src/store/actions/conversations'
 import * as booksActions from 'src/store/actions/books'
 import * as modulesActions from 'src/store/actions/modules'
 import * as types from 'src/store/types'
@@ -48,6 +49,7 @@ interface AppProps {
   fetchProcesses: () => void
   fetchTeams: () => void
   fetchNotifications: () => void
+  fetchConversationsMap: () => void
   fetchBooksMap: () => void
   fetchModulesMap: () => void
 }
@@ -60,6 +62,7 @@ const mapDispatchToProps = (
   dispatch:
     userActions.FetchUser |
     notificationsActions.FetchNotifications |
+    conversationsActions.FetchConversationsMap |
     booksActions.FetchBooksMap |
     modulesActions.FetchModulesMap
 ) => ({
@@ -68,6 +71,7 @@ const mapDispatchToProps = (
   fetchProcesses: () => dispatch(appActions.fetchProcesses()),
   fetchTeams: () => dispatch(appActions.fetchTeams()),
   fetchNotifications: () => dispatch(notificationsActions.fetchNotifications()),
+  fetchConversationsMap: () => dispatch(conversationsActions.fetchConversationsMap()),
   fetchBooksMap: () => dispatch(booksActions.fetchBooksMap()),
   fetchModulesMap: () => dispatch(modulesActions.fetchModulesMap()),
 })
@@ -108,6 +112,7 @@ class App extends React.Component<AppProps> {
     this.props.fetchProcesses()
     this.props.fetchTeams()
     this.props.fetchNotifications()
+    this.props.fetchConversationsMap()
     this.props.fetchBooksMap()
     this.props.fetchModulesMap()
 

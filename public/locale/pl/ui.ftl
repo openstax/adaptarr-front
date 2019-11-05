@@ -525,6 +525,20 @@ user-profile-team-list-search =
 
 user-profile-team-list-no-results = Brak wyników dla określonych kryteriów
 
+user-profile-support-flag-remove = Usuń użytkownika z grupy promocy
+
+# Variables:
+# - $user (string): user name
+user-profile-support-flag-remove-confirm = Usunąć użytkownika: { $user } z grupy pomocy?
+
+user-profile-support-flag-remove-confirm-cancel = Anuluj
+
+user-profile-support-flag-remove-confirm-remove = Usuń
+
+user-profile-support-flag-add = Dodaj użytkownika do grupy pomocy
+
+user-profile-support-flag-error = Nie udało się zmienić roli użytkownika.
+
 
 
 ## Screens - user's profile - update dialog
@@ -638,6 +652,8 @@ settings-language-dialog-cancel = Anuluj
 ## Screens - helpdesk
 
 helpdesk-view-title = Centrum pomocy
+
+helpdesk-view-tickets-title = Zarządzaj zgłoszeniami
 
 helpdesk-export-local-database = Wyeksportuj bazę danych
 
@@ -1309,6 +1325,7 @@ asset-list-add-error = Nie można dodać pliku. Szczegóły: { $details }
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
 #   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
+# - $author (string): only for kind === new_message - name of message author.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -1324,6 +1341,7 @@ notification = { $kind ->
   [slot_filled] Zostałeś/aś przypisany/a do funkcji w <module>{ $module }</module>.
   [slot_vacated] Zostałeś/aś usunięty/a z funkcji w <module>{ $module }</module>.
   [draft_advanced] Krok w <module>{ $module }</module> zmienił się.
+  [new_message] Masz nową wiadomość od { $author }.
  *[notavalidkind] Nieznana akcja
 }
 
@@ -2037,7 +2055,77 @@ editor-highlight-message-placeholder = Twoja wiadomość...
 
 confirm-dialog-button-cancel = Anuluj
 
-confirm-dialog-button-ok = OK
+confirm-dialog-button-ok = Ok
+
+
+
+## Reusable components - chat
+
+chat-message-loading-messages = Ładowanie wiadomości...
+
+chat-message-begining = To jest początek Twojej historii wiadomości.
+
+chat-input-placeholder =
+  .placeholder = Wpisz swoją wiadomość
+
+chat-today = Dzisiaj
+
+chat-yesterday = Wczoraj
+
+chat-users-joined = Nowi użytkownicy dołączyli:
+
+# Variables
+# - $user (stirng): user name
+# Fragments:
+# - <anchor> ... </anchor>: link to user's profile.
+chat-user-joined = <anchor>{ $user }</anchor> dołączył/a.
+
+
+
+## Reusable containers - tickets
+
+tickets-conversation-not-found = Nie udało się znaleźć konwersacji dla tego zgłoszenia.
+
+tickets-filter-placeholder =
+  .placeholder = Filtruj zgłoszenia
+
+tickets-create-new = Utwórz zgłoszenie
+
+tickets-create-new-title = Opisz swój problem i wciśnij enter
+
+tickets-create-new-error = Nie udało się utworzyć nowego zgłoszenia
+
+tickets-author = Autor:
+
+tickets-other-members = Inni członkowie:
+
+tickets-join-ticket = Dołącz do zgłoszenia
+
+# Variables:
+# - $ticket (string): ticket title
+tickets-join-ticket-confirm = Chcesz dołączyć go zgłoszenia: { $ticket }?
+
+tickets-join-cancel = Anuluj
+
+tickets-join-error = Nie udało się dołączyć do zgłoszenia
+
+tickets-status-open = Otwarte
+
+tickets-status-closed = Zamknięte
+
+tickets-no-tickets = Nie znaleziono zgłoszeń
+
+
+
+## Dates formatting
+
+# Variables:
+# - $date (date)
+date-weekday-monthday-month = { DATETIME($date, weekday: "long", month: "short", day: "numeric") }
+
+# Variables:
+# - $date (date)
+date-hour-min = { DATETIME($date, hour: "2-digit", minute: "2-digit") }
 
 
 

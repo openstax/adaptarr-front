@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Editor, Value } from 'slate'
 import { Localized } from 'fluent-react/compat'
 
+import { isValidUrl } from 'src/helpers'
+
 import ToolGroup from '../ToolGroup'
 import Input from 'src/components/ui/Input'
 import Button from 'src/components/ui/Button'
@@ -22,7 +24,7 @@ export default class LinkTools extends React.Component<LinkToolsProps> {
     const link = this.getActiveLink()
     if (!link) return
 
-    if (!this.validateUrl(val)) return
+    if (!isValidUrl(val)) return
 
     const newLink = {
       type: 'link',
@@ -45,17 +47,6 @@ export default class LinkTools extends React.Component<LinkToolsProps> {
     return startInline && startInline.type === 'link' ? startInline : null
   }
 
-  private validateUrl = (url: string) => {
-    const pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
-    '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
-    '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
-    '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
-    '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
-    '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
-    const isValid = Boolean(pattern.test(url))
-    return isValid
-  }
-
   private onClickToggle = () => {
     this.props.onToggle('linkTools')
   }
@@ -74,7 +65,7 @@ export default class LinkTools extends React.Component<LinkToolsProps> {
           l10nId="editor-tools-link-url"
           value={link.data.get('url')}
           onChange={this.onChange}
-          validation={{ custom: this.validateUrl }}
+          validation={{ custom: isValidUrl }}
         />
         <Button
           className="link__button"

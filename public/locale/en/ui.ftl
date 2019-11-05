@@ -525,6 +525,20 @@ user-profile-team-list-search =
 
 user-profile-team-list-no-results = There are no users with specified criteria
 
+user-profile-support-flag-remove = Remove user from support team
+
+# Variables:
+# - $user (string): user name
+user-profile-support-flag-remove-confirm = Remove user: { $user } from support team?
+
+user-profile-support-flag-remove-confirm-cancel = Cancel
+
+user-profile-support-flag-remove-confirm-remove = Remove
+
+user-profile-support-flag-add = Add user to support team
+
+user-profile-support-flag-error = Couldn't change user's position.
+
 
 
 ## Screens - user's profile - update dialog
@@ -639,6 +653,8 @@ settings-language-dialog-cancel = Cancel
 ## Screens - helpdesk
 
 helpdesk-view-title = Helpdesk
+
+helpdesk-view-tickets-title = Tickets manager
 
 helpdesk-export-local-database = Export database
 
@@ -1323,6 +1339,7 @@ asset-list-add-error = Couldn't add media. Details: { $details }
 # Variables:
 # - $kind (string): what kind of notification is this. Possible values are
 #   'assigned', 'process_ended, 'slot_filled', 'slot_vacated', 'draft_advanced'.
+# - $author (string): only for kind === new_message - name of message author.
 #
 # Variables ($kind = assigned):
 # - $actor (string): name of the user who assigned $module to recipient
@@ -1338,6 +1355,7 @@ notification = { $kind ->
   [slot_filled] You were assigned to slot in <module>{ $module }</module>.
   [slot_vacated] You were removed from slot in <module>{ $module }</module>.
   [draft_advanced] Step in <module>{ $module }</module> has changed.
+  [new_message] You have new message from { $author }.
  *[notavalidkind] Unknown action
 }
 
@@ -2030,7 +2048,76 @@ editor-highlight-message-placeholder = Write your message...
 
 confirm-dialog-button-cancel = Cancel
 
-confirm-dialog-button-ok = OK
+confirm-dialog-button-ok = Ok
+
+
+
+## Reusable components - chat
+
+chat-message-loading-messages = Loading messages...
+
+chat-message-begining = This is very beggining of your message history.
+
+chat-input-placeholder =
+  .placeholder = Type your message
+
+chat-today = Today
+
+chat-yesterday = Yesterday
+
+chat-users-joined = New users has joined:
+
+# Variables
+# - $user (stirng): user name
+# Fragments:
+# - <anchor> ... </anchor>: link to user's profile.
+chat-user-joined = <anchor>{ $user }</anchor> has joined.
+
+
+
+## Reusable containers - tickets
+
+tickets-conversations-error = Couldn't load conversation for this ticket.
+
+tickets-filter-placeholder =
+  .placeholder = Filter tickets
+
+tickets-create-new = Create new ticket
+
+tickets-create-new-title = Describe your problem and hit enter
+
+tickets-create-new-error = Couldn't create new ticket
+
+tickets-author = Author:
+
+tickets-other-members = Other members:
+
+tickets-join-ticket = Join ticket
+
+# Variables:
+# - $ticket (string): ticket title
+tickets-join-ticket-confirm = Do you want to join ticket: { $ticket }?
+
+tickets-join-cancel = Cancel
+
+tickets-join-error = Couldn't join to the ticket
+
+tickets-status-open = Open
+
+tickets-status-closed = Closed
+
+tickets-no-tickets = No tickets were found
+
+
+## Dates formatting
+
+# Variables:
+# - $date (date)
+date-weekday-monthday-month = { DATETIME($date, weekday: "long", month: "short", day: "numeric") }
+
+# Variables:
+# - $date (date)
+date-hour-min = { DATETIME($date, hour: "2-digit", minute: "2-digit") }
 
 
 

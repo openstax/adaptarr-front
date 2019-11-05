@@ -1,0 +1,40 @@
+.ticket {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  padding: 30px;
+  background-color: #fff;
+  cursor: pointer;
+}
+
+.ticket__title {
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+}
+
+.ticket__authors {
+  display: flex;
+  align-items: center;
+}
+
+.ticket__authors .avatar {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.ticket__members {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.ticket__members__avatars {
+  display: flex;
+  margin-top: 5px;
+}
+
+.ticket__members__avatars .avatar {
+  margin-right: 10px;
+}
