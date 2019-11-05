@@ -93,6 +93,7 @@ const UserProfile = (props: UserProfileProps) => {
 
   React.useEffect(() => {
     setUserName(props.user.name)
+    setIsSupport(props.user.is_support)
     if (props.loggedUser.allPermissions.has('editing-process:manage')) {
       fetchUsersDrafts()
     }

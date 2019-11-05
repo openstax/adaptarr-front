@@ -72,3 +72,7 @@
 .profile__update-dialog button {
   margin-top: 10px;
 }
+
+.profile__flags {
+  margin: 20px 0;
+}
