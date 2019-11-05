@@ -187,26 +187,7 @@ export type ConversationMessage =
   | LoadingMessages
   | UserJoined
 
-export class DelegatedEventTarget implements EventTarget {
-  private delegate = document.createDocumentFragment();
-
-  addEventListener(...args: any): void {
-    // eslint-disable-next-line prefer-spread
-    this.delegate.addEventListener.apply(this.delegate, args)
-  }
-
-  dispatchEvent(...args: any): boolean {
-    // eslint-disable-next-line prefer-spread
-    return this.delegate.dispatchEvent.apply(this.delegate, args)
-  }
-
-  removeEventListener(...args: any): void {
-    // eslint-disable-next-line prefer-spread
-    return this.delegate.removeEventListener.apply(this.delegate, args)
-  }
-}
-
-export default class Conversation extends DelegatedEventTarget {
+export default class Conversation extends EventTarget {
   /**
    * Fetch conversation data by ID.
    */
