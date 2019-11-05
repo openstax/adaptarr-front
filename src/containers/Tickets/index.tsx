@@ -21,7 +21,7 @@ const Tickets = () => {
 
   const regExp = new RegExp(searchValue.text, 'gi')
   const filteredTickets = searchValue.text
-    ? tickets.filter(t => regExp.test(t.title))
+    ? tickets.filter(t => t.title.match(regExp))
     : tickets
 
   const onSearchChange = (val: SearchQueries) => {
