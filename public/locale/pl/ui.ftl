@@ -2087,7 +2087,7 @@ chat-user-joined = <anchor>{ $user }</anchor> dołączył/a.
 tickets-conversation-not-found = Nie udało się znaleźć konwersacji dla tego zgłoszenia.
 
 tickets-filter-placeholder =
-  .placeholder = Filter tickets
+  .placeholder = Filtruj zgłoszenia
 
 tickets-create-new = Utwórz zgłoszenie
 
