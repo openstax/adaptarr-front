@@ -56,12 +56,6 @@ book-process-cancel-success = Process has been canceled
 # - $error (string): error details.
 book-process-cancel-error = Something went wrong. Details: { $error }
 
-book-assign-user = Assign user
-
-book-assign-different-user = Assign other user
-
-book-unassign-user = Unassign
-
 # Alert displayed when book could not be downloaded.
 #
 # Variables:
@@ -84,27 +78,6 @@ book-remove-module-cancel = Cancel
 # Variables:
 # - $title (string): module's title
 book-remove-module-alert-success = Module { $title } was removed successfully
-
-
-
-## Screens - book view - user assignment dialog
-
-book-assign-user-title = Select user from a list to assign them
-
-# Alert displayed when a user was assigned to a module.
-#
-# Variables:
-# - $user (string): user's name
-# - $module (string): module's title
-book-assign-user-alert-success = { $user } was assigned to { $module }
-
-book-assign-user-alert-error = Target module or user are undefined
-
-# Alert displayed when a user was unassigned from a module.
-#
-# Variables:
-# - $module (string): module's title
-book-unassign-user-alert-success = User was unassigned from { $module }
 
 
 
@@ -173,17 +146,6 @@ book-remove-group-alert-success = chapter { $title } has been removed
 
 ## Screens - book view - change group title dialog
 
-book-group-change-title-dialog-title = Change chapter title
-
-# Placeholder text for group title
-book-group-change-title-value =
-  .placeholder = New title
-
-book-group-change-title-confirm =
-  .value = Confirm
-
-book-group-change-title-cancel = Cancel
-
 # Alert displayed when group's title was changed.
 #
 # Variables:
@@ -251,32 +213,13 @@ book-list-add-book-alert-success = Book has been added
 
 ## Screens - dashboard
 
-dashboard-view-title = Dashboard
-
-dashboard-section-assigned = Assigned to you:
-
-dashboard-assigned-view-draft = View draft
-
-dashboard-assigned-new-draft = New draft
-
-dashboard-assigned-view-module = View module
-
-dashboard-assigned-empty = You are not assigned to any module
-
 dashboard-section-drafts = Your drafts
 
 dashboard-drafts-section-not-assigned = Not assigned to any book
 
-dashboard-drafts-view = View draft
-
-dashboard-drafts-delete = Delete
-
 dashboard-drafts-empty = There are no drafts to display
 
 dashboard-drafts-details = Details
-
-# Alert displayed when draft of a module was created.
-dashboard-create-draft-alert-success = Draft has been created
 
 dashboard-section-free-slots = Free slots:
 
@@ -361,19 +304,6 @@ draft-details-import-error = We couldn't import this file. Details: { $details }
 
 
 
-## Screens - dashboard - draft deletion dialog
-
-dashboard-delete-draft-dialog-title = Are you sure you want to delete { $title } draft?
-
-dashboard-delete-draft-confirm = Delete
-
-dashboard-delete-draft-cancel = Cancel
-
-# Alert displayed when a draft was deleted.
-dashboard-delete-draft-alert-success = Draft has been deleted
-
-
-
 ## Screens - invitations
 
 invitation-view-title = Invite new user
@@ -418,14 +348,7 @@ module-view-title = { $title }
 
 module-go-to = Go to module
 
-module-assignee = Assignee:
-
-module-create-draft = New Draft
-
 module-open-draft = View draft
-
-# Alert displayed when draft of a module was created.
-module-create-draft-alert-success = Draft has been created
 
 
 
@@ -456,10 +379,6 @@ user-profile-view-title-named = { $name }'s profile
 
 user-profile-section-teams-members = Your teams' members
 
-user-profile-section-bio = Bio
-
-user-profile-section-contact = Contact
-
 user-profile-section-role = User's role
 
 # Variables:
@@ -470,8 +389,6 @@ user-profile-role-in-team = { $role } in team { $team }
 # Variables:
 # - $team (string): team name
 user-profile-no-role-in-team = No role in the team { $team }
-
-user-profile-role-unknown = Unknown role
 
 user-profile-section-role-unassign =  Unassign user from role
 
@@ -509,12 +426,6 @@ user-profile-unassign-role-error = Something went wrong. Details: { $details }
 
 user-profile-users-drafts = User's drafts
 
-user-profile-system-permissions = User's system permissions
-
-user-profile-system-permissions-change-success = Successfully updated user's permissions
-
-user-profile-system-permissions-change-error = Couldn't update user's permissions
-
 # Variables:
 # - $team (string): team name.
 user-profile-team-list-team = Members of team { $team }
@@ -547,18 +458,9 @@ user-profile-update-name-success = Name has been changed
 
 user-profile-update-name-error = Couldn't change name
 
-user-profile-update-avatar-title = Upload file for your avatar
-
-user-profile-update-name-title = Update your name
-
 # Placeholder text for name input.
 user-profile-update-name =
   .placeholder = Name
-
-user-profile-update-confirm = Confirm
-
-# Message displayed below name input when it has fewer than three characters.
-user-profile-name-validation-error = Name has to be at least 3 characters long.
 
 
 
@@ -784,18 +686,6 @@ role-manager-edit = Edit
 
 role-manager-remove = Remove
 
-# Alert displayed when role has been created.
-#
-# Variables:
-# - $name (string): name of role which user created.
-role-manager-create-success = New role “{ $name }” has been created
-
-# Alert displayed when role has not been created.
-#
-# Variables:
-# - $details (string): error details.
-role-manager-create-error = Couldn't create new role. Details: { $details }
-
 # Dialog displayed when user want to delete role.
 #
 # Variables:
@@ -921,8 +811,6 @@ process-form-slot-title = List of slots:
 
 process-form-slot-add = Add slot
 
-process-form-slot-remove = Remove slot
-
 process-form-slot-name = Slot name:
 
 process-form-slot-autofill = Automatically assign users:
@@ -932,8 +820,6 @@ process-form-slot-role = Roles:
 process-form-step-title = List of steps:
 
 process-form-step-add = Add step
-
-process-form-step-remove = Remove step
 
 process-form-step-name = Step name:
 
@@ -954,8 +840,6 @@ process-form-step-link-name = Link name:
 process-form-step-link-to = Next step:
 
 process-form-step-link-slot = Slot allowed to use this link:
-
-process-form-step-link-remove = Remove link
 
 process-form-error-team = Please specify in which team you want create process.
 
@@ -1094,8 +978,6 @@ update-slots-name = { $roles ->
 
 update-slots-assign-user = Select user
 
-update-slots-unassign-user = Unassign user
-
 # Variables:
 # - $slot (string): slot name.
 # - $roles (string): role names for this slot.
@@ -1177,10 +1059,6 @@ free-slots-confirm = Confirm
 ## Reusable components - step changer
 
 step-changer-main-button = Advance my work to the next step
-
-step-changer-choose = Choose link:
-
-step-changer-move = Move using selected link
 
 # Alert displayed when draft was advanced to the next step.
 #
@@ -1294,8 +1172,6 @@ navigation-logout = Logout
 navigation-helpdesk = Helpdesk
 
 navigation-invite = Invitations
-
-navigation-roles = Roles
 
 navigation-teams = Teams and Roles
 
@@ -1458,18 +1334,6 @@ module-list-delete-module-alert-success = { $title } has been deleted
 
 
 
-## Reusable components - chat and message input
-
-message-input-textarea =
-  .placeholder = Type your message...
-
-message-input-send = Send
-
-message-input-alert-select-user-error =
-  Something went wrong while selecting user
-
-
-
 ## Reusable components - list of reference targets
 
 reference-target-list-go-back = Back
@@ -1477,8 +1341,6 @@ reference-target-list-go-back = Back
 reference-target-list-tab-local = This document
 
 reference-target-list-tab-remote = Other documents
-
-reference-target-list-tab-remote-not-assigned = Not assigned to any book
 
 reference-target-link-module = Link to this module
 
@@ -1572,10 +1434,6 @@ process-selector-placeholder =
 
 ## Editor - document title
 
-# Placeholder text for document title
-editor-document-title-value =
-  .placeholder = Title of draft
-
 # Alert displayed when document title was changed.
 editor-document-title-save-alert-success = Title has been updated
 
@@ -1588,8 +1446,6 @@ editor-document-title-save-alert-error = Couldn't update the title
 
 editor-toolbox-no-selection = Please click on text to show toolbox.
 
-editor-toolbox-multi-selection = Selection across elements is not yet supported
-
 
 
 ## Editor - toolboxes - save
@@ -1598,9 +1454,6 @@ editor-tools-save = Save
 
 # Alert displayed when document was saved.
 editor-tools-save-alert-success = Draft has been saved
-
-# Alert displayed when document could not be saved.
-editor-tools-save-alert-error = Draft couldn't be saved
 
 editor-tools-save-error-title = Backup
 
@@ -1963,23 +1816,6 @@ editor-tools-seealso-remove-term = Remove term
 
 
 
-## Editor toolboxes - preformat
-
-editor-tools-preformat-title = Prefromatted
-
-editor-tools-preformat-type-label = Show element as:
-
-# Entry on the list of possible source types.
-#
-# Variables:
-# - $type (string): source's type. Possible values are 'inline' and 'block'
-editor-tools-source-type = { $type ->
- *[inline] Inline
-  [block] Block
-}
-
-
-
 ## Editor toolboxes - source elements
 
 editor-tools-source-title = Source element
@@ -2091,7 +1927,7 @@ chat-user-joined = <anchor>{ $user }</anchor> has joined.
 
 ## Reusable containers - tickets
 
-tickets-conversations-error = Couldn't load conversation for this ticket.
+tickets-conversation-not-found = Couldn't load conversation for this ticket.
 
 tickets-filter-placeholder =
   .placeholder = Filter tickets
@@ -2115,10 +1951,6 @@ tickets-join-ticket-confirm = Do you want to join ticket: { $ticket }?
 tickets-join-cancel = Cancel
 
 tickets-join-error = Couldn't join to the ticket
-
-tickets-status-open = Open
-
-tickets-status-closed = Closed
 
 tickets-no-tickets = No tickets were found
 

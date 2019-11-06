@@ -56,12 +56,6 @@ book-process-cancel-success = Pomyślnie przerwano proces
 # - $error (string): error details.
 book-process-cancel-error = Coś poszło nie tak. Szczegóły: { $error }
 
-book-assign-user = Przypisz użytkownika
-
-book-assign-different-user = Przypisz innego użytkownika
-
-book-unassign-user = Cofnij przypisanie
-
 # Alert displayed when book could not be downloaded.
 #
 # Variables:
@@ -85,27 +79,6 @@ book-remove-module-cancel = Anuluj
 # Variables:
 # - $title (string): module's title
 book-remove-module-alert-success = Moduł { $title } został usunięty
-
-
-
-## Screens - book view - user assignment dialog
-
-book-assign-user-title = Wybierz użytkownika z listy, aby go przypisać
-
-# Alert displayed when a user was assigned to a module.
-#
-# Variables:
-# - $user (string): user's name
-# - $module (string): module's title
-book-assign-user-alert-success = { $user } został/a przypisany do { $module }
-
-book-assign-user-alert-error = Błędny użytkownik lub moduł
-
-# Alert displayed when a user was unassigned from a module.
-#
-# Variables:
-# - $module (string): module's title
-book-unassign-user-alert-success = Użytkownik został usunięty z { $module }
 
 
 
@@ -174,17 +147,6 @@ book-remove-group-alert-success = Rozdział { $title } został usunięty
 
 ## Screens - book view - change group title dialog
 
-book-group-change-title-dialog-title = Zmień nazwę rozdziału
-
-# Placeholder text for group title
-book-group-change-title-value =
-  .placeholder = Nowy tytuł
-
-book-group-change-title-confirm =
-  .value = Potwierdź
-
-book-group-change-title-cancel = Anuluj
-
 # Alert displayed when group's title was changed.
 #
 # Variables:
@@ -252,32 +214,13 @@ book-list-add-book-alert-success = Książka została dodana
 
 ## Screens - dashboard
 
-dashboard-view-title = Panel główny
-
-dashboard-section-assigned = Przypisane do Ciebie:
-
-dashboard-assigned-view-draft = Zobacz szkic
-
-dashboard-assigned-new-draft = Nowy szkic
-
-dashboard-assigned-view-module = Zobacz moduł
-
-dashboard-assigned-empty = Brak przypisanych tekstów
-
 dashboard-section-drafts = Dostęp do moich tekstów
 
 dashboard-drafts-section-not-assigned = Nie przypisano do żadnej książki
 
-dashboard-drafts-view = Zobacz szkic
-
-dashboard-drafts-delete = Usuń
-
 dashboard-drafts-empty = Brak tekstów do wyświetlenia
 
 dashboard-drafts-details = Szczegóły
-
-# Alert displayed when draft of a module was created.
-dashboard-create-draft-alert-success = Szkic został utworzony
 
 dashboard-section-free-slots = Wolne funkcje do podjęcia
 
@@ -361,19 +304,6 @@ draft-details-import-error = Nie udało się zaimportować pliku. Szczegóły: {
 
 
 
-## Screens - dashboard - draft deletion dialog
-
-dashboard-delete-draft-dialog-title = Usunąć szkic „{ $title }”?
-
-dashboard-delete-draft-confirm = Usuń
-
-dashboard-delete-draft-cancel = Anuluj
-
-# Alert displayed when a draft was deleted.
-dashboard-delete-draft-alert-success = Szkic został usunięty
-
-
-
 ## Screens - invitations
 
 invitation-view-title = Zaproś nowego użytkownika
@@ -418,14 +348,7 @@ module-view-title = { $title }
 
 module-go-to = Przejdź do modułu
 
-module-assignee = Przypisany:
-
-module-create-draft = Nowy szkic
-
 module-open-draft = Zobacz szkic
-
-# Alert displayed when draft of a module was created.
-module-create-draft-alert-success = Szkic został utworzony
 
 
 
@@ -456,13 +379,7 @@ user-profile-view-title-named = Profil { $name }
 
 user-profile-section-teams-members = Członkowie twoich zespołów
 
-user-profile-section-bio = Bio:
-
-user-profile-section-contact = Kontakt
-
 user-profile-section-role = Rola użytkownika
-
-user-profile-role-unknown = Nieznana rola
 
 # Variables:
 # - $role (string): role name
@@ -509,16 +426,6 @@ user-profile-unassign-role-error = Coś poszło nie tak. Szczegóły: { $details
 
 user-profile-users-drafts = Teksty użytkownika
 
-user-profile-system-permissions = Systemowe uprawnienia użytkownika
-
-user-profile-system-permissions-change-success = Pomyślnie zaktualizowano uprawnienia
-
-user-profile-system-permissions-change-error = Nie udało się zaktualizować uprawnień
-
-# Variables:
-# - $team (string): team name.
-user-profile-team-list-team-members = Członkowie zespołu { $team }
-
 # Placeholder text for team search box.
 user-profile-team-list-search =
   .placeholder = Szukaj użytkownika
@@ -547,18 +454,9 @@ user-profile-update-name-success = Nazwa użytkownika została zmieniona
 
 user-profile-update-name-error = Nie udało się zmienić nazwy użytkownika
 
-user-profile-update-avatar-title = Wgraj swoje zdjęcie
-
-user-profile-update-name-title = Zmień nazwę użytkownika
-
 # Placeholder text for name input.
 user-profile-update-name =
   .placeholder = Nazwa użytkownika
-
-user-profile-update-confirm = Potwierdź
-
-# Message displayed below name input when it has fewer than three characters.
-user-profile-name-validation-error = Nazwa użytkownika musi mieć co najmniej 3 znaki.
 
 
 
@@ -908,8 +806,6 @@ process-form-slot-title = Lista funkcji:
 
 process-form-slot-add = Dodaj funkcję
 
-process-form-slot-remove = Usuń funkcję
-
 process-form-slot-name = Nazwa funkcji:
 
 process-form-slot-autofill = Automatycznie przypisz użytkownika:
@@ -919,8 +815,6 @@ process-form-slot-role = Role:
 process-form-step-title = Lista kroków:
 
 process-form-step-add = Dodaj krok
-
-process-form-step-remove = Usuń krok
 
 process-form-step-name = Nazwa kroku:
 
@@ -941,8 +835,6 @@ process-form-step-link-name = Nazwa linku:
 process-form-step-link-to = Następny krok:
 
 process-form-step-link-slot = Funkcja, która może używać tego linku:
-
-process-form-step-link-remove = Usuń link
 
 process-form-error-team = Określ, w jakim zespole chcesz utworzyć proces.
 
@@ -1084,8 +976,6 @@ update-slots-name = { $roles ->
 
 update-slots-assign-user = Wybierz użytkownika
 
-update-slots-unassign-user = Cofnij przypisanie
-
 # Variables:
 # - $slot (string): slot name.
 # - $roles (string): role names for this slot.
@@ -1167,10 +1057,6 @@ free-slots-confirm = Potwierdź
 ## Reusable components - step changer
 
 step-changer-main-button = Przekazuję pracę do kolejnego etapu
-
-step-changer-choose = Wybierz link:
-
-step-changer-move = Przenieś, używając wybranego linku
 
 # Alert displayed when draft was advanced to the next step.
 #
@@ -1281,8 +1167,6 @@ navigation-logout = Wyloguj
 navigation-helpdesk = Pomoc
 
 navigation-invite = Zaproszenia
-
-navigation-roles = Role
 
 navigation-teams = Zespoły i role
 
@@ -1444,18 +1328,6 @@ module-list-delete-module-alert-success = { $title } został usunięty
 
 
 
-## Reusable components - chat and message input
-
-message-input-textarea =
-  .placeholder = Napisz wiadomość...
-
-message-input-send = Wyślij
-
-message-input-alert-select-user-error =
-  Coś poszło nie tak podczas wybierania użytkownika
-
-
-
 ## Reusable components - list of reference targets
 
 reference-target-list-go-back = Wstecz
@@ -1463,8 +1335,6 @@ reference-target-list-go-back = Wstecz
 reference-target-list-tab-local = Ten dokument
 
 reference-target-list-tab-remote = Inne dokumenty
-
-reference-target-list-tab-remote-not-assigned = Nie przypisany do żadnej książki
 
 reference-target-link-module = Połącz z tym modułem
 
@@ -1554,10 +1424,6 @@ process-selector-placeholder =
 
 ## Editor - document title
 
-# Placeholder text for document title
-editor-document-title-value =
-  .placeholder = Tytuł szkicu
-
 # Alert displayed when document title was changed.
 editor-document-title-save-alert-success = Tytuł został zmieniony
 
@@ -1570,8 +1436,6 @@ editor-document-title-save-alert-error = Nie udało się zmienić tytułu
 
 editor-toolbox-no-selection = Proszę kliknąć w tekst, wtedy wyświetlą się dostępne narzędzia.
 
-editor-toolbox-multi-selection = Zaznaczanie wielu elementów nie jest jeszcze wspierane.
-
 
 
 ## Editor - toolboxes - save
@@ -1580,9 +1444,6 @@ editor-tools-save = Zapisz
 
 # Alert displayed when document was saved.
 editor-tools-save-alert-success = Szkic został zapisany
-
-# Alert displayed when document could not be saved.
-editor-tools-save-alert-error = Nie udało się zapisać szkicu
 
 editor-tools-save-error-title = Tworzenie kopii zapasowej
 
@@ -1969,23 +1830,6 @@ editor-tools-seealso-remove-term = Usuń termin
 
 
 
-## Editor toolboxes - preformat
-
-editor-tools-preformat-title = Tekst preformatowany
-
-editor-tools-preformat-type-label = Wyświetlaj element jako:
-
-# Entry on the list of possible source types.
-#
-# Variables:
-# - $type (string): source's type. Possible values are 'inline' and 'block'
-editor-tools-source-type = { $type ->
- *[inline] Linia
-  [block] Blok
-}
-
-
-
 ## Editor toolboxes - source elements
 
 editor-tools-source-title = Kod źródłowy
@@ -2121,10 +1965,6 @@ tickets-join-ticket-confirm = Chcesz dołączyć go zgłoszenia: { $ticket }?
 tickets-join-cancel = Anuluj
 
 tickets-join-error = Nie udało się dołączyć do zgłoszenia
-
-tickets-status-open = Otwarte
-
-tickets-status-closed = Zamknięte
 
 tickets-no-tickets = Nie znaleziono zgłoszeń
 
