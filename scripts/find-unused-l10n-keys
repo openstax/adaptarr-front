@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cd "$(dirname "$(realpath "$0")")"/..
+
+for file in public/locale/en/*.ftl ; do
+  echo "Searching for unused keys in $file"
+  grep "^[[:alpha:]][[:alnum:]-]*" --only-matching "$file" | while read -r line ; do
+    if ! grep -R -q $line src -m 1; then
+      echo "Not found: $line"
+    fi
+  done
+done

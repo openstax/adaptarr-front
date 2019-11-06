@@ -71,7 +71,7 @@ configuration in `config.toml` in `adaptarr-server`. The same applies for other 
 │        └── pl
 │             ├── document.ftl
 │             └── ui.flt
-├── scripts - webpack standard scripts.
+├── scripts - webpack standard scripts + custom script for finding unused l10n keys.
 ├── src
 │    ├── @types - types declaration for modules which doesn't provide them or our modification of those which does.
 │    ├── api - declarations of classes which we use to handle api endpoints.
@@ -192,6 +192,15 @@ Always remember to add description for used `Variables` and `Fragments`:
 # Fragments ($kind = assigned):
 # - <actor> ... </actor>: link to actor's profile
 ```
+
+Please use `./scripts/find-unused-l10n-keys` script to find unused l10n keys in project.
+
+Please make sure that you are NOT creating l10n keys dynamically, for ex.:
+```js
+const id = 'some-id-' + someVar
+```
+
+because those will not be found by `find-unused-l10n-keys` script.
 
 ## Api classes
 
