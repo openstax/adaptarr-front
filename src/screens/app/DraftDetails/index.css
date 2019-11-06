@@ -8,3 +8,8 @@
 .draft-details .section__content .button {
   margin-right: 20px;
 }
+
+.draft-details .draft-files {
+  margin: 20px 0;
+  max-width: 800px;
+}

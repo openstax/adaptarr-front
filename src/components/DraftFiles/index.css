@@ -1,0 +1,33 @@
+.draft-files__title {
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 46px;
+  background-color: var(--light-bg);
+}
+
+.draft-files__list {
+  background-color: #fff;
+}
+
+.draft-files__link {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  color: var(--font-dark);
+}
+
+.draft-files__link:hover {
+  color: var(--font-light);
+  background-color: var(--dark-bg);
+}
+
+.draft-files__thumb {
+  min-width: auto;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 10px;
+}

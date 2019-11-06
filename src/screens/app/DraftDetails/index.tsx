@@ -15,6 +15,7 @@ import Header from 'src/components/Header'
 import Section from 'src/components/Section'
 import Spinner from 'src/components/Spinner'
 import DraftInfo from 'src/components/DraftInfo'
+import DraftFiles from 'src/components/DraftFiles'
 import Button from 'src/components/ui/Button'
 import Dialog from 'src/components/ui/Dialog'
 
@@ -133,6 +134,7 @@ class DraftDetais extends React.Component<DraftDetailsProps> {
             }
           </Button>
         </div>
+        <DraftFiles draft={draft} />
         {
           showImportDialog ?
             <Dialog

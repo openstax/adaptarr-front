@@ -1127,6 +1127,12 @@ draft-info-permission = { $permission ->
 
 
 
+## Reusable components - draft files
+
+draft-files-title = Pliki powiązane z tym szkicem:
+
+
+
 ## Reusable components - free slots
 
 free-slots-not-assigned = Nie przypisano do żadnej książki
