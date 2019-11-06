@@ -70,7 +70,12 @@ const SuggestionBox = (props: SuggestionBoxProps) => {
 
   const [insertContent, deleteContent] = getSuggestionContent(props.suggestion)
 
-  const localizedId = `editor-tools-suggestion-${props.suggestion.type}`
+  let localizedId = 'editor-tools-suggestion-insert'
+  if (props.suggestion.type === 'delete') {
+    localizedId = 'editor-tools-suggestion-delete'
+  } else if (props.suggestion.type === 'change') {
+    localizedId = 'editor-tools-suggestion-change'
+  }
 
   const onAcceptClick = () => {
     props.onAccept(props.suggestion)

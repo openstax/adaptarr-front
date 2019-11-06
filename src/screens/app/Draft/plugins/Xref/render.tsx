@@ -10,6 +10,8 @@ import { connect } from 'react-redux'
 import { State } from 'src/store/reducers'
 import { ReferenceTarget } from 'src/store/types'
 
+import { createL10nKeyForXrefLabel } from '.'
+
 function renderInline(
   props: RenderInlineProps,
   editor: Editor,
@@ -110,11 +112,11 @@ class _Xref extends React.Component<XrefProps> {
     if (target) {
       switch (target.type) {
       case 'admonition':
-        l10nKey = 'xref-label-' + target.data.get('type')
+        l10nKey = createL10nKeyForXrefLabel(target.data.get('type'))
         break
 
       default:
-        l10nKey = 'xref-label-' + target.type
+        l10nKey = createL10nKeyForXrefLabel(target.type)
         break
       }
 
@@ -173,7 +175,7 @@ class _Xref extends React.Component<XrefProps> {
       l10nKey = 'editor-tools-xref-label-remote-loading'
       localization = uiL10n
     } else if (target) {
-      l10nKey = 'xref-label-' + target.type
+      l10nKey = createL10nKeyForXrefLabel(target.type)
       args[target.type] = target.counter
       localization = l10n
     } else {

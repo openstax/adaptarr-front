@@ -34,14 +34,14 @@ const INVALID_FORMAT_TOOLS_PARENTS = [
 
 type Format = 'strong' | 'emphasis' | 'underline' | 'superscript' | 'subscript' | 'code' | 'term'
 
-const FORMATS: Format[] = [
-  'strong',
-  'emphasis',
-  'underline',
-  'superscript',
-  'subscript',
-  'code',
-  'term',
+const FORMATS: [Format, string][] = [
+  ['strong', 'editor-tools-format-button-strong'],
+  ['emphasis', 'editor-tools-format-button-emphasis'],
+  ['underline', 'editor-tools-format-button-underline'],
+  ['superscript', 'editor-tools-format-button-superscript'],
+  ['subscript', 'editor-tools-format-button-subscript'],
+  ['code', 'editor-tools-format-button-code'],
+  ['term', 'editor-tools-format-button-term'],
 ]
 
 const VALID_LIST_PARENTS = [
@@ -113,9 +113,9 @@ class FormatTools extends React.Component<FormatToolsProps> {
               : null
           }
         </div>
-        {FORMATS.map(format => (
+        {FORMATS.map(([format, l10nId]) => (
           <Tooltip
-            l10nId={`editor-tools-format-button-${format}`}
+            l10nId={l10nId}
             direction="up"
             className="toolbox__button--with-tooltip"
             key={format}

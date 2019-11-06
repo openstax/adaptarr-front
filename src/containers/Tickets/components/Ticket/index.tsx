@@ -76,7 +76,7 @@ const Ticket = ({ ticket, onTicketClick }: TicketProps) => {
       {
         otherMembers.length
           ? <div className="ticket__members">
-            <Localized id="ticket-other-members">
+            <Localized id="tickets-other-members">
               Other members:
             </Localized>
             <div className="ticket__members__avatars">

@@ -12,7 +12,7 @@ interface EditableTextProps {
   onAccept: (text: string) => void
 }
 
-type EditableTextError = 'min-length' | 'max-length'
+type EditableTextError = 'editable-text-error-min-length' | 'editable-text-error-max-length'
 
 interface EditableTextState {
   text: string,
@@ -74,7 +74,7 @@ class EditableText extends React.Component<EditableTextProps> {
                 this.state.errors.map(e => (
                   <span key={e} className="editable-text__error">
                     <Localized
-                      id={`editable-text-error-${e}`}
+                      id={e}
                       $min={this.props.minLength}
                       $max={this.props.maxLength}
                     >
@@ -95,10 +95,10 @@ class EditableText extends React.Component<EditableTextProps> {
     const errors: EditableTextError[] = []
     const text = e.currentTarget.innerText
     if (minLength && text.length < minLength) {
-      errors.push('min-length')
+      errors.push('editable-text-error-min-length')
     }
     if (maxLength && text.length > maxLength) {
-      errors.push('max-length')
+      errors.push('editable-text-error-max-length')
     }
     this.setState({ text, errors })
   }

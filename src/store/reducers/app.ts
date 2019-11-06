@@ -27,8 +27,8 @@ const DEFAULT_CONFIRM_DIALOG_OPTIONS: ConfirmDialogOptions = {
   title: 'confirm-dialog-title',
   content: '',
   buttons: {
-    ok: 'cofirm-dialog-button-ok',
-    cancel: 'cofirm-dialog-button-cancel',
+    ok: 'confirm-dialog-button-ok',
+    cancel: 'confirm-dialog-button-cancel',
   },
   callback: (key: string) => key,
 }
