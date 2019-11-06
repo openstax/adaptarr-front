@@ -24,6 +24,11 @@ export type DraftData = {
   team: TeamID
 }
 
+export type DraftFile = {
+  name: string
+  mime: string
+}
+
 /**
  * Result data for POST /api/v1/drafts/:id/advance
  */
@@ -144,7 +149,7 @@ export default class Draft extends Base<DraftData> {
   /**
    * Fetch list of files in this draft. This list does not include index.cnxml.
    */
-  async files(): Promise<string[]> {
+  async files(): Promise<DraftFile[]> {
     return (await axios.get(`drafts/${this.module}/files`)).data
   }
 
