@@ -3,6 +3,8 @@ import { Localized } from 'fluent-react/compat'
 
 import { Ticket } from 'src/api'
 
+import { escapeStringRegExp } from 'src/helpers'
+
 import TicketManager from './components/TicketManager'
 import TicketCreator from './components/TicketCreator'
 import TicketsList from './components/TicketsList'
@@ -19,7 +21,7 @@ const Tickets = () => {
   const [showTicketCreator, setShowTicketCreator] = React.useState(false)
   const [searchValue, setSearchValue] = React.useState<SearchQueries>({ text: '' })
 
-  const regExp = new RegExp(searchValue.text, 'gi')
+  const regExp = new RegExp(escapeStringRegExp(searchValue.text), 'gi')
   const filteredTickets = searchValue.text
     ? tickets.filter(t => t.title.match(regExp))
     : tickets

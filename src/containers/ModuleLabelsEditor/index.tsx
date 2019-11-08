@@ -4,6 +4,8 @@ import { Localized } from 'fluent-react/compat'
 
 import { State } from 'src/store/reducers'
 
+import { escapeStringRegExp } from 'src/helpers'
+
 import ModuleLabelCreator from './ModuleLabelCreator'
 import MLEItem from './MLEItem'
 import Button from 'src/components/ui/Button'
@@ -14,7 +16,7 @@ import './index.css'
 const ModuleLabelsEditor = () => {
   const labels = useSelector((state: State) => state.modules.labels)
   const [search, setSearch] = React.useState('')
-  const regExp = new RegExp(search, 'i')
+  const regExp = new RegExp(escapeStringRegExp(search), 'i')
   const filteredLabels = Object.values(labels).filter(l => l.name.match(regExp))
   const [showCreateForm, setShowCreateForm] = React.useState(false)
 

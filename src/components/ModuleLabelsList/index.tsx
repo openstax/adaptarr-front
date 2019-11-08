@@ -6,9 +6,9 @@ import { Link } from 'react-router-dom'
 import store from 'src/store'
 import { State } from 'src/store/reducers'
 import { createLabel } from 'src/store/actions/modules'
-import { Labels, ModuleLabel as ModuleLabelType } from 'src/store/types'
+import { ModuleLabel as ModuleLabelType } from 'src/store/types'
 
-import { getRandomColor } from 'src/helpers'
+import { escapeStringRegExp, getRandomColor } from 'src/helpers'
 
 import Icon from 'src/components/ui/Icon'
 import Input from 'src/components/ui/Input'
@@ -28,7 +28,7 @@ const ModuleLabelsList = (
 ) => {
   const labels = useSelector((state: State) => state.modules.labels)
   const [filter, setFilter] = React.useState('')
-  const regExp = new RegExp(filter, 'i')
+  const regExp = new RegExp(escapeStringRegExp(filter), 'i')
   const filteredLabels = Object.values(labels).filter(label => label.name.match(regExp))
 
   const onChange = (text: string) => {

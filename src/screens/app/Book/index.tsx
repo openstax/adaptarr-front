@@ -11,6 +11,8 @@ import * as types from 'src/store/types'
 import { State } from 'src/store/reducers'
 import { addAlert } from 'src/store/actions/alerts'
 
+import { escapeStringRegExp } from 'src/helpers'
+
 import Section from 'src/components/Section'
 import Header from 'src/components/Header'
 import Spinner from 'src/components/Spinner'
@@ -120,7 +122,7 @@ class Book extends React.Component<BookProps> {
     const { selectedProcess, search } = this.state
     const { modules: { modulesWithLabels } } = this.props
 
-    const rgx = new RegExp(search.text, 'gi')
+    const rgx = new RegExp(escapeStringRegExp(search.text), 'gi')
 
     let passed = true
     if (selectedProcess) {
