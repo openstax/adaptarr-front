@@ -1,6 +1,8 @@
 import * as React from 'react'
 import { Node, Text } from 'slate'
 
+import { EDITING_NAMESPACE } from '../config'
+
 declare global {
   namespace JSX {
     interface IntrinsicElements {
@@ -17,6 +19,9 @@ declare global {
   }
 }
 
+// This is replaced by single namespace: http://adaptarr.naukosfera.com/editing/1.0
+// This namespace should be removed after few weeks when all drafs will no longer
+// contain it.
 const HIGHLIGHTS_NAMESPACE = 'http://adaptarr.naukosfera.com/highlights/1.0'
 
 const deSerializeRules = {
@@ -25,7 +30,7 @@ const deSerializeRules = {
     if (obj.type === 'highlight') {
       return (
         <highlight
-          xmlns={HIGHLIGHTS_NAMESPACE}
+          xmlns={EDITING_NAMESPACE}
           color={obj.data.get('color')}
           text={obj.data.get('text')}
           user={obj.data.get('user')}
@@ -37,7 +42,10 @@ const deSerializeRules = {
     return undefined
   },
   deserialize(el: Element, next: (nodes: any) => any) {
-    if (el.namespaceURI === HIGHLIGHTS_NAMESPACE && el.tagName === 'highlight') {
+    if (
+      [HIGHLIGHTS_NAMESPACE, EDITING_NAMESPACE].includes(el.namespaceURI!)
+      && el.tagName === 'highlight'
+    ) {
       return {
         object: 'inline',
         type: 'highlight',
