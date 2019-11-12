@@ -1737,6 +1737,24 @@ media-alt-label = Alternative text:
 
 
 
+## Editor toolboxes - audio tools
+
+editor-tools-audio-title = Audio
+
+
+
+## Editor toolboxes - image tools
+
+editor-tools-image-title = Image
+
+
+
+## Editor toolboxes - video tools
+
+editor-tools-video-title = Video
+
+
+
 ## Editor toolboxes - node attribute
 
 node-attr-autoplay = Autoplay

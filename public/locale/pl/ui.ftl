@@ -1719,6 +1719,24 @@ media-alt-label = Tekst alternatywny:
 
 
 
+## Editor toolboxes - audio tools
+
+editor-tools-audio-title = Plik audio
+
+
+
+## Editor toolboxes - image tools
+
+editor-tools-image-title = Obraz
+
+
+
+## Editor toolboxes - video tools
+
+editor-tools-video-title = Plik wideo
+
+
+
 ## Editor toolboxes - node attribute
 
 node-attr-autoplay = Automatyczne odtwarzanie
