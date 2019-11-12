@@ -1810,7 +1810,7 @@ editor-tools-insert-admonition = Notka
 
 editor-tools-insert-exercise = Ćwiczenie
 
-editor-tools-insert-figure = Ilustracja
+editor-tools-insert-media = Plik multimedialny
 
 editor-tools-insert-code = Kod
 

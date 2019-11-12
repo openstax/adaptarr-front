@@ -3,6 +3,7 @@ import { Localized } from 'fluent-react/compat'
 import { Block, Document, Editor, Inline, Node, Value } from 'slate'
 
 import AdmonitionTools from '../AdmonitionTools'
+import AudioTools from '../AudioTools'
 import CodeTools from '../CodeTools'
 import DocumentTools from '../DocumentTools'
 import ExerciseTools from '../ExerciseTools'
@@ -10,8 +11,10 @@ import FigureTools from '../FigureTools'
 import FormatTools from '../FormatTools'
 import FootnoteTools from '../FootnoteTools'
 import HighlightTools from '../HighlightTools'
+import ImageTools from '../ImageTools'
 import InsertTools from '../InsertTools'
 import ListTools from '../ListTools'
+import MediaTools from '../MediaTools'
 import SectionTools from '../SectionTools'
 import SuggestionsTools from '../SuggestionTools'
 import XrefTools from '../XrefTools'
@@ -19,6 +22,7 @@ import DocrefTools from '../DocrefTools'
 import LinkTools from '../LinkTools'
 import TermTools from '../TermTools'
 import SourceTools from '../SourceTools'
+import VideoTools from '../VideoTools'
 
 import './index.css'
 
@@ -40,6 +44,10 @@ type ToolName =
   'admonitionTools' |
   'exerciseTools' |
   'figureTools' |
+  'mediaTools' |
+  'audioTools' |
+  'imageTools' |
+  'videoTools' |
   'footnoteTools' |
   'highlightTools' |
   'sectionTools' |
@@ -59,6 +67,10 @@ interface ToolboxState {
   xrefTools: boolean
   docrefTools: boolean
   footnoteTools: boolean
+  mediaTools: boolean
+  audioTools: boolean
+  imageTools: boolean
+  videoTools: boolean
   highlightTools: boolean
   sourceTools: boolean
   listTools: boolean
@@ -89,6 +101,10 @@ const DEFAULT_TOGGLERS = {
   admonitionTools: false,
   exerciseTools: false,
   figureTools: false,
+  mediaTools: false,
+  audioTools: false,
+  imageTools: false,
+  videoTools: false,
   sectionTools: false,
   documentTools: false,
 }
@@ -227,6 +243,30 @@ class Toolbox extends React.Component<ToolboxProps> {
           toggleState={this.state.figureTools}
           onToggle={this.toggleTool}
         />
+        <MediaTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.mediaTools}
+          onToggle={this.toggleTool}
+        />
+        <AudioTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.audioTools}
+          onToggle={this.toggleTool}
+        />
+        <ImageTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.imageTools}
+          onToggle={this.toggleTool}
+        />
+        <VideoTools
+          editor={editor}
+          value={value}
+          toggleState={this.state.videoTools}
+          onToggle={this.toggleTool}
+        />
         <SectionTools
           editor={editor}
           value={value}
@@ -327,10 +367,19 @@ class Toolbox extends React.Component<ToolboxProps> {
       break
     case 'figure':
     case 'figure_caption':
-    case 'image':
-    case 'media_alt':
       newState.figureTools = true
       newState.insertTools = false
+      break
+    case 'media':
+    case 'media_alt':
+      newState.mediaTools = true
+      newState.insertTools = false
+      break
+    case 'image':
+    case 'audio':
+    case 'video':
+      newState.insertTools = false
+      newState[node.type + 'Tools'] = true
       break
     case 'section':
       newState.sectionTools = true

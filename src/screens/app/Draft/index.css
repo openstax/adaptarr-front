@@ -227,7 +227,11 @@
   color: gray;
 }
 
-.editor img {
+.editor img,
+.editor .video,
+.editor .audio {
+  display: block;
+  margin: 0 auto;
   /* By changing padding from 2px to 0 when rendering selection we ensure
    * the total width doesn't change, avoiding layout ‘jumping’ when user
    * selects an image.
@@ -235,7 +239,9 @@
   padding: 2px;
 }
 
-.editor img[data-selected=true] {
+.editor img[data-selected=true],
+.editor .video[data-selected=true],
+.editor .audio[data-selected=true] {
   border: 2px solid var(--dark-bg);
   padding: 0;
 }

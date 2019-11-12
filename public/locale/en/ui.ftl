@@ -1828,7 +1828,7 @@ editor-tools-insert-admonition = Admonition
 
 editor-tools-insert-exercise = Exercise
 
-editor-tools-insert-figure = Figure
+editor-tools-insert-media = Media
 
 editor-tools-insert-code = Code
 

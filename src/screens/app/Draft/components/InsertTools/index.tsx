@@ -104,7 +104,7 @@ const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
 })
 
 class InsertTools extends React.Component<InsertToolsProps> {
-  figureModal: Modal | null = null
+  mediaModal: Modal | null = null
 
   xrefModal: Modal | null = null
 
@@ -174,13 +174,13 @@ class InsertTools extends React.Component<InsertToolsProps> {
           </Localized>
         </Button>
         <Button
-          clickHandler={this.openFigureModal}
+          clickHandler={this.openMediaModal}
           className="toolbox__button--insert"
           isDisabled={!this.validateParents(VALID_PARENTS_FIGURE)}
         >
           <Icon size="small" name="image" />
-          <Localized id="editor-tools-insert-figure">
-            Figure
+          <Localized id="editor-tools-insert-media">
+            Media
           </Localized>
         </Button>
         <Button
@@ -237,8 +237,8 @@ class InsertTools extends React.Component<InsertToolsProps> {
           </Localized>
         </Button>
         <Modal
-          ref={this.setFigureModal}
-          content={this.renderFigureModal}
+          ref={this.setMediaModal}
+          content={this.renderMediaModal}
         />
         <Modal
           ref={this.setXrefModal}
@@ -254,10 +254,9 @@ class InsertTools extends React.Component<InsertToolsProps> {
     )
   }
 
-  private renderFigureModal = () => (
+  private renderMediaModal = () => (
     <AssetList
-      filter="image/*"
-      onSelect={this.insertFigure}
+      onSelect={this.insertMedia}
     />
   )
 
@@ -286,13 +285,13 @@ class InsertTools extends React.Component<InsertToolsProps> {
     )
   }
 
-  private setFigureModal = (el: Modal | null) => el && (this.figureModal = el)
+  private setMediaModal = (el: Modal | null) => el && (this.mediaModal = el)
 
   private setXrefModal = (el: Modal | null) => el &&(this.xrefModal = el)
 
   private setLinkModal = (el: Modal | null) => el &&(this.linkModal = el)
 
-  private openFigureModal = () => this.figureModal!.open()
+  private openMediaModal = () => this.mediaModal!.open()
 
   private openXrefModal = () => this.xrefModal!.open()
 
@@ -335,8 +334,8 @@ class InsertTools extends React.Component<InsertToolsProps> {
     this.props.editor.insertExercise()
   }
 
-  private insertFigure = (asset: FileDescription) => {
-    this.figureModal!.close()
+  private insertMedia = (asset: FileDescription) => {
+    this.mediaModal!.close()
     // XXX: We cast FileDescription as MediaDescription, as currently there
     // is no way to add alt-texts, server doesn't store it yet, and it is not
     // used anywhere.
