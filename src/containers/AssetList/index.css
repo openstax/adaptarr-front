@@ -1,4 +1,25 @@
-.assetList {
+.assetList__controls {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: var(--dark-bg);
+  border-radius: 6px;
+}
+
+.assetList__controls .search-input {
+  width: 300px;
+}
+
+.assetList__controls .button {
+  margin-left: 10px;
+}
+
+.assetList__controls .button.active {
+  color: var(--font-dark);
+  background-color: #fff;
+}
+
+.assetList__list {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;

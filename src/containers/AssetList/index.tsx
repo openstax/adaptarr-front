@@ -2,23 +2,21 @@ import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
 import { connect } from 'react-redux'
 
-import { FileDescription, StorageContext } from 'src/api/storage'
+import Storage, { FileDescription, StorageContext } from 'src/api/storage'
+import { SlotPermission } from 'src/api/process'
 
 import store from 'src/store'
 import { addAlert } from 'src/store/actions/alerts'
 import { State } from 'src/store/reducers'
-import { SlotPermission } from 'src/api/process'
 
 import AssetPreview from 'src/components/AssetPreview'
+import SearchInput, { SearchQueries } from 'src/components/SearchInput'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
-
-import { mimeToRegExp } from 'src/helpers'
 
 import './index.css'
 
 interface AssetListProps {
-  filter?: string,
   onSelect?: (asset: FileDescription) => void,
   draftPermissions: SlotPermission[],
 }
@@ -27,7 +25,17 @@ const mapStateToProps = ({ draft: { currentDraftPermissions } }: State) => ({
   draftPermissions: currentDraftPermissions,
 })
 
+interface AssetListState {
+  search: SearchQueries
+}
+
 class AssetList extends React.Component<AssetListProps> {
+  state: AssetListState = {
+    search: {
+      text: '',
+    },
+  }
+
   static contextType = StorageContext
 
   constructor(a: any, b?: any) {
@@ -38,34 +46,113 @@ class AssetList extends React.Component<AssetListProps> {
     this.fileInput.addEventListener('change', this.onFilesSelected)
   }
 
+  private handleSearch = (search: SearchQueries) => {
+    this.setState({ search })
+  }
+
+  private filterAudio = () => {
+    this.filterByMimeCategory('audio/')
+  }
+
+  private filterImages = () => {
+    this.filterByMimeCategory('image/')
+  }
+
+  private filterVideos = () => {
+    this.filterByMimeCategory('video/')
+  }
+
+  private filterAll = () => {
+    this.setState({ search: { text: '' } })
+  }
+
+  private filterByMimeCategory = (cat: string) => {
+    this.setState((state: AssetListState) => ({
+      search: {
+        ...state.search,
+        mimeCategory: cat,
+      },
+    }))
+  }
+
   fileInput: HTMLInputElement
 
   render() {
-    const storage = this.context
-    const pattern = mimeToRegExp(this.props.filter || '*/*')
+    const { search, search: { text, mimeCategory } } = this.state
+    const storage: Storage = this.context
+    const filteredFiles = storage.files.filter(({ name, mime }: FileDescription) => {
+      if (mimeCategory && !mime.match(mimeCategory)) return false
+      if (text && !name.toLowerCase().match(text.toLowerCase())) return false
+      return true
+    })
 
     return (
-      <ul className="assetList">
-        <li className="assetList__item">
+      <div className="assetList">
+        <div className="assetList__controls">
+          <SearchInput
+            value={search}
+            onChange={this.handleSearch}
+            placeholder="asset-list-search-placeholder"
+            slowMode={true}
+          />
           <Button
-            clickHandler={this.onAddMedia}
-            isDisabled={!this.props.draftPermissions.includes('edit')}
+            clickHandler={this.filterAll}
+            className={!text && !mimeCategory ? 'active' : ''}
+            withBorder={true}
           >
-            <Icon size="medium" name="plus" />
-            <Localized id="asset-list-add-media">Add media</Localized>
+            <Localized id="asset-list-filter-all">
+              All
+            </Localized>
           </Button>
-        </li>
-        {storage.files
-          .filter(({ mime }: FileDescription) => mime.match(pattern) !== null)
-          .map((file: FileDescription) => (
-            <li key={file.name} className="assetList__item">
-              <AssetPreview
-                asset={file}
-                onClick={this.onClickAsset}
-              />
-            </li>
-          ))}
-      </ul>
+          <Button
+            clickHandler={this.filterAudio}
+            className={mimeCategory && mimeCategory.match('audio') ? 'active' : ''}
+            withBorder={true}
+          >
+            <Localized id="asset-list-filter-audio">
+              Audio
+            </Localized>
+          </Button>
+          <Button
+            clickHandler={this.filterImages}
+            className={mimeCategory && mimeCategory.match('image') ? 'active' : ''}
+            withBorder={true}
+          >
+            <Localized id="asset-list-filter-images">
+              Images
+            </Localized>
+          </Button>
+          <Button
+            clickHandler={this.filterVideos}
+            className={mimeCategory && mimeCategory.match('video') ? 'active' : ''}
+            withBorder={true}
+          >
+            <Localized id="asset-list-filter-videos">
+              Videos
+            </Localized>
+          </Button>
+        </div>
+        <ul className="assetList__list">
+          <li className="assetList__item">
+            <Button
+              clickHandler={this.onAddMedia}
+              isDisabled={!this.props.draftPermissions.includes('edit')}
+            >
+              <Icon size="medium" name="plus" />
+              <Localized id="asset-list-add-media">Add media</Localized>
+            </Button>
+          </li>
+          {filteredFiles
+            .map((file: FileDescription) => (
+              <li key={file.name} className="assetList__item">
+                <AssetPreview
+                  asset={file}
+                  onClick={this.onClickAsset}
+                />
+              </li>
+            ))}
+        </ul>
+      </div>
     )
   }
 

@@ -1321,6 +1321,17 @@ select-list-select-all = Select all
 
 ## Reusable components - list of assets
 
+asset-list-search-placeholder =
+  .placeholder = Filter assets
+
+asset-list-filter-all = All
+
+asset-list-filter-audio = Audio
+
+asset-list-filter-images = Images
+
+asset-list-filter-videos = Videos
+
 # Button for adding new assets (files).
 asset-list-add-media = Add media
 

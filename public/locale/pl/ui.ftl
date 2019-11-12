@@ -1307,6 +1307,17 @@ select-list-select-all = Zaznacz wszystkie
 
 ## Reusable components - list of assets
 
+asset-list-search-placeholder =
+  .placeholder = Filtruj pliki
+
+asset-list-filter-all = Wszystkie
+
+asset-list-filter-audio = Audio
+
+asset-list-filter-images = Obrazy
+
+asset-list-filter-videos = Filmy
+
 # Button for adding new assets (files).
 asset-list-add-media = Dodaj
 

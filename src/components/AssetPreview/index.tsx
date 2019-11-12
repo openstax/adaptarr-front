@@ -2,6 +2,8 @@ import * as React from 'react'
 
 import { FileDescription, StorageContext } from 'src/api/storage'
 
+import Icon from 'src/components/ui/Icon'
+
 import './index.css'
 
 interface AssetPreviewProps {
@@ -9,7 +11,7 @@ interface AssetPreviewProps {
   onClick?: (event: React.MouseEvent, asset: FileDescription) => void,
 }
 
-const KNOWN_MIME = ['image']
+const KNOWN_MIME = ['audio', 'image', 'video']
 
 const AssetPreview = ({ onClick, asset }: AssetPreviewProps) => {
   const handleClick = (ev: React.MouseEvent) => {
@@ -40,10 +42,11 @@ const AssetPreview = ({ onClick, asset }: AssetPreviewProps) => {
 
   return (
     <div
-      className={"asset " + type}
+      className={"asset asset--with-icon " + type}
       data-name={asset.name}
       onClick={handleClick}
     >
+      <Icon name={['audio', 'video'].includes(type) ? type as 'audio' | 'video' : 'file'}/>
       <span className="asset__name">{asset.name}</span>
       <span className="asset__mime">{asset.mime}</span>
     </div>
