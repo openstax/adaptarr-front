@@ -1,0 +1,9 @@
+.node-attr {
+  width: 100%;
+  margin: 5px 0;
+}
+
+.node-attr .react-select,
+.node-attr .input {
+  margin: 3px 0 0 0;
+}

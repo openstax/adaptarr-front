@@ -1719,6 +1719,50 @@ media-alt-label = Tekst alternatywny:
 
 
 
+## Editor toolboxes - node attribute
+
+node-attr-autoplay = Automatyczne odtwarzanie
+
+node-attr-controller = Kontroler osi czasu
+
+node-attr-for = Wyświetlaj w
+
+node-attr-for-default = Obu
+
+node-attr-for-online = W internecie
+
+node-attr-for-pdf = W PDF
+
+node-attr-height = Wysokość (w pikselach)
+
+node-attr-height-error = Wysokość powinna być liczbą
+
+node-attr-longdesc = Długi opis (url)
+
+node-attr-longdesc-error = Proszę podać link do pliku z długim opisem
+
+node-attr-loop = Zapętlaj
+
+node-attr-print-width = Szerokość w PDF (5cm, 4in, 2pt)
+
+node-attr-print-width-error = Proszę użyć formatu takiego jak w przykładach
+
+node-attr-standby = Tekst podczas ładowania
+
+node-attr-thumbnail = Miniatura (url)
+
+node-attr-thumbnail-error = Proszę podać link do pliku z miniaturą
+
+node-attr-volume = Głośność (1 - 100)
+
+node-attr-volume-error = Głośność musi być liczbą pomiędzy 1 a 100
+
+node-attr-width = Szerokość (w pikselach)
+
+node-attr-width-error = Szerokość powinna być liczbą
+
+
+
 ## Editor toolboxes - insertion tools
 
 editor-tools-insert-tools-title = Wstaw

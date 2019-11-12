@@ -1737,6 +1737,50 @@ media-alt-label = Alternative text:
 
 
 
+## Editor toolboxes - node attribute
+
+node-attr-autoplay = Autoplay
+
+node-attr-controller = Timeline controller
+
+node-attr-for = Display in
+
+node-attr-for-default = Both
+
+node-attr-for-online = Online
+
+node-attr-for-pdf = PDF
+
+node-attr-height = Height (in pixels)
+
+node-attr-height-error = Height should be a number
+
+node-attr-longdesc = Long description (url)
+
+node-attr-longdesc-error = Please provide url to file with long description
+
+node-attr-loop = Loop
+
+node-attr-print-width = Width in PDF (5cm, 4in, 2pt)
+
+node-attr-print-width-error = Please use format like in examples
+
+node-attr-standby = Text while loading
+
+node-attr-thumbnail = Thumbnail (url)
+
+node-attr-thumbnail-error = Please provide url to file with thumbnail
+
+node-attr-volume = Volume (1 - 100)
+
+node-attr-volume-error = Volume should be number between 1 and 100
+
+node-attr-width = Width (in pixels)
+
+node-attr-width-error = Width should be a number
+
+
+
 ## Editor toolboxes - insertion tools
 
 editor-tools-insert-tools-title = Insert
