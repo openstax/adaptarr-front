@@ -4,11 +4,13 @@ import { useSelector } from 'react-redux'
 import { State } from 'src/store/reducers/'
 import { ModuleLabel } from 'src/store/types'
 
+import Spinner from 'src/components/Spinner'
 import Input from 'src/components/ui/Input'
 
 export type SearchQueries = {
   text: string
   label?: ModuleLabel | null
+  mimeCategory?: string
 }
 
 interface SearchInputProps {
@@ -32,15 +34,27 @@ const SearchInput = ({ value, placeholder, slowMode = false, onChange }: SearchI
     // Match label:Name and label:"Name with spaces"
     const labelRgx = new RegExp(/label:(("|').+("|')|\w+)/, 'g')
 
+    // Match mime:cat/
+    const mimeCategoryRgx = new RegExp(/mime:(\w|\d)+\//, 'g')
+
     const result: SearchQueries = {
-      text: input.replace(labelRgx, '').trim(),
+      text: input
+        .replace(labelRgx, '')
+        .replace(mimeCategoryRgx, '')
+        .trim(),
     }
 
     const labelMatch = input.match(labelRgx)
     if (labelMatch) {
-      const labelName = labelMatch[0].replace(/("|'|label:)/g, '').toLowerCase()
+      const labelName = labelMatch[0].replace(/("|'|label:)/, '').toLowerCase()
       const label = Object.values(labels).find(l => l.name.toLowerCase() === labelName) || null
       result.label = label
+    }
+
+    const mimeCategoryMatch = input.match(mimeCategoryRgx)
+    if (mimeCategoryMatch) {
+      const mimeCategory = mimeCategoryMatch[0].replace(/mime:/, '').toLowerCase()
+      result.mimeCategory = mimeCategory
     }
 
     if (slowMode) {
@@ -53,7 +67,11 @@ const SearchInput = ({ value, placeholder, slowMode = false, onChange }: SearchI
   }
 
   const val = value
-    ? `${value.text} ${value.label ? 'label:"' + value.label.name + '"' : ''}`.trim()
+    ? [
+      value.label ? 'label:"' + value.label.name + '"' : '',
+      value.mimeCategory ? 'mime:' + value.mimeCategory : '',
+      value.text,
+    ].join(' ').trim()
     : undefined
 
   return (
