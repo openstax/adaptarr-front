@@ -1,0 +1,17 @@
+.media-tools__asset {
+  position: relative;
+}
+
+.media-tools__remove {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 9;
+  padding: 10px;
+  min-width: 0;
+  background-color: transparent;
+}
+
+.media-tools__remove .icon svg {
+  fill: var(--danger) !important;
+}

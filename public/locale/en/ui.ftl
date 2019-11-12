@@ -1744,6 +1744,14 @@ editor-tools-figure-remove-subfigure = Remove subfigure
 
 editor-tools-figure-add-caption = Add caption
 
+
+
+## Editor toolboxes - media tools
+
+editor-tools-media-title = Media files
+
+editor-tools-media-add = Add media file
+
 media-alt-label = Alternative text:
 
 

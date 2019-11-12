@@ -1726,6 +1726,14 @@ editor-tools-figure-remove-subfigure = Usuń ilustrację
 
 editor-tools-figure-add-caption = Dodaj opis
 
+
+
+## Editor toolboxes - media tools
+
+editor-tools-media-title = Pliki multimedialne
+
+editor-tools-media-add = Dodaj plik
+
 media-alt-label = Tekst alternatywny:
 
 
