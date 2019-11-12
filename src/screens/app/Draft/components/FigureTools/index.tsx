@@ -1,12 +1,10 @@
 import * as React from 'react'
 import { Localized } from 'fluent-react/compat'
-import { Block, BlockProperties, Editor, Value } from 'slate'
-import { MediaDescription } from 'cnx-designer'
+import { Block, Editor, Value } from 'slate'
 
 import { FileDescription } from 'src/api/storage'
 
 import Modal from 'src/components/Modal'
-import AssetPreview from 'src/components/AssetPreview'
 import AssetList from 'src/containers/AssetList'
 import Button from 'src/components/ui/Button'
 import Icon from 'src/components/ui/Icon'
@@ -28,8 +26,6 @@ interface FigureToolsProps {
 export default class FigureTools extends React.Component<FigureToolsProps> {
   modal: Modal | null = null
 
-  action: ((asset: MediaDescription) => void) | null = null
-
   private onClickToggle = () => {
     this.props.onToggle('figureTools')
   }
@@ -42,8 +38,6 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
 
     // This will return figure if there is no subfigure
     const subfigure = editor.getActiveSubfigure(value)
-    const image = (subfigure!.nodes.first() as Block).nodes.first() as Block
-    const src = image.data.get('src')
 
     return (
       <ToolGroup
@@ -51,21 +45,15 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
         toggleState={this.props.toggleState}
         onToggle={this.onClickToggle}
       >
-        <div className="assetPreview">
-          <AssetPreview
-            asset={{ name: src, mime: 'image/any' }}
-            onClick={this.changeSubfigure}
-          />
-          {
-            figure !== subfigure &&
-            <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
-              <Icon size="small" name="close" />
-              <Localized id="editor-tools-figure-remove-subfigure">
-                Remove subfigure
-              </Localized>
-            </Button>
-          }
-        </div>
+        {
+          figure !== subfigure &&
+          <Button clickHandler={this.removeSubfigure} className="toolbox__button--insert">
+            <Icon size="small" name="close" />
+            <Localized id="editor-tools-figure-remove-subfigure">
+              Remove subfigure
+            </Localized>
+          </Button>
+        }
         <Button clickHandler={this.insertSubfigure} className="toolbox__button--insert">
           <Icon size="small" name="image" />
           <Localized id="editor-tools-figure-add-subfigure">
@@ -95,27 +83,11 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
 
   private renderModal = () => (
     <AssetList
-      filter="image/*"
       onSelect={this.onAssetSelected}
     />
   )
 
   private insertSubfigure = () => {
-    this.action = this.props.editor.insertSubfigure
-    this.modal!.open()
-  }
-
-  private changeSubfigure = () => {
-    const { editor, value } = this.props
-
-    this.action = (asset: MediaDescription) => {
-      const subfigure = editor.getActiveSubfigure(value)
-      const image = (subfigure!.nodes.first() as unknown as Block).nodes.first() as unknown as Block
-
-      editor.setNodeByKey(image.key, {
-        data: { src: asset.name },
-      } as unknown as BlockProperties)
-    }
     this.modal!.open()
   }
 
@@ -129,7 +101,9 @@ export default class FigureTools extends React.Component<FigureToolsProps> {
 
   private onAssetSelected = (asset: FileDescription) => {
     this.modal!.close()
-    this.action!(asset as MediaDescription)
-    this.action = null
+    this.props.editor.insertSubfigure({
+      ...asset,
+      alt: '',
+    })
   }
 }
