@@ -7,12 +7,14 @@ import './index.css'
 
 const leadingSpace = new RegExp(/^\s+/)
 
+export type InputValue = string | boolean | number
+
 interface InputProps {
-  onChange: (value: string | boolean) => void
+  onChange: (value: InputValue) => void
   isValid?: (status: boolean) => void
   l10nId?: string,
   errorMessage?: string
-  value?: string | boolean
+  value?:InputValue
   type?: string
   autoFocus?: boolean
   trim?: boolean
@@ -22,7 +24,7 @@ interface InputProps {
     maxLength?: number
     email?: boolean
     sameAs?: string
-    custom?: (val: string) => boolean
+    custom?: (val: InputValue) => boolean
   }
 }
 

@@ -48,7 +48,7 @@ const ColorGenerator = ({ startColor, onChange }: ColorGeneratorProps) => {
         value={color}
         onChange={handleInput}
         validation={{
-          custom: input => isValidHex(input),
+          custom: input => isValidHex(input as string),
         }}
       />
     </div>
