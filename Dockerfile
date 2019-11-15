@@ -21,11 +21,12 @@ COPY ./tsconfig.json \
   ./tsconfig.prod.json \
   ./tsconfig.test.json \
   ./tslint.yaml \
-  ./src/ \
-  ./scripts/ \
-  ./public/ \
-  ./config/ \
   ./
+
+COPY ./src ./src
+COPY ./scripts ./scripts
+COPY ./public ./public
+COPY ./config ./config
 
 EXPOSE 80
 ENTRYPOINT ["npm", "start"]
