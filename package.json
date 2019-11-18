@@ -20,7 +20,7 @@
     "babel-preset-react-app": "^3.1.2",
     "case-sensitive-paths-webpack-plugin": "^2.1.1",
     "chalk": "^1.1.3",
-    "cnx-designer": "https://github.com/katalysteducation/cnx-designer#0977a56639e0058598a84aa49c3b90eacf6e5945",
+    "cnx-designer": "https://github.com/philschatz/cnx-designer#d3c9a752c9f8a7df9ac22ecbc9fd4a4b61e62342",
     "css-loader": "^0.28.7",
     "dotenv": "^4.0.0",
     "dotenv-expand": "^4.2.0",
@@ -61,7 +61,7 @@
     "resolve": "^1.6.0",
     "slate": "^0.47.8",
     "slate-customized-for-openstax": "https://github.com/katalysteducation/slate.git#master",
-    "slate-counters": "https://github.com/katalysteducation/slate-counters.git#use-onsetvalue",
+    "slate-counters": "https://github.com/philschatz/slate-counters.git#phil-works",
     "slate-react": "^0.22.3",
     "source-map-loader": "^0.2.1",
     "style-loader": "^0.19.0",
@@ -84,7 +84,7 @@
     "js-yaml": "^3.13.1",
     "mem": "^4.0.0",
     "slate": "^0.47.0",
-    "slate-counters": "https://github.com/katalysteducation/slate-counters.git#use-onsetvalue"
+    "slate-counters": "https://github.com/philschatz/slate-counters.git#phil-works"
   },
   "scripts": {
     "start": "node scripts/start.js",

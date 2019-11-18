@@ -16,6 +16,11 @@ COPY ./package.json \
 
 RUN npm install
 
+# HACK: This builds the cnx-designer package.
+# Instead, it should already be built or built using postinstall hook.
+# RUN cd ./node_modules/cnx-designer && ls -al
+RUN cd ./node_modules/cnx-designer && npm install && npm run-script build && npm run-script build:style
+RUN cd ./node_modules/slate-counters && npm install && npm run-script build
 
 COPY ./tsconfig.json \
   ./tsconfig.prod.json \
@@ -23,10 +28,10 @@ COPY ./tsconfig.json \
   ./tslint.yaml \
   ./
 
-COPY ./src ./src
+COPY ./config ./config
 COPY ./scripts ./scripts
 COPY ./public ./public
-COPY ./config ./config
+COPY ./src ./src
 
 EXPOSE 80
 ENTRYPOINT ["npm", "start"]
